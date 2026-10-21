@@ -24,7 +24,8 @@ building earns a medal and walks the player to the next building; 8 buildings in
   placeholder prototype (moving to URP later means converting the generated materials). The code uses Unity 6 APIs
   (`Rigidbody.linearVelocity`, `FindAnyObjectByType`). Do not downgrade to 2022.
 - **Input System** package (sensors: `Gyroscope`, `Accelerometer`, `GravitySensor`,
-  `LinearAccelerationSensor`). Active Input Handling: Input System (or Both).
+  `LinearAccelerationSensor`). Active Input Handling: **Both** (committed in `ProjectSettings.asset`), because the
+  placeholder IMGUI HUD gets no input with "Input System Package" alone. A uGUI-only HUD could switch to Input System.
 - **TextMeshPro** plus **RTLTMPro** (or another correct Persian shaping solution). All UI is Persian, right-to-left.
   Plain TMP does not join Persian letters.
 - Portrait only. Targets Android and iOS.

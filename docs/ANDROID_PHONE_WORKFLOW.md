@@ -48,8 +48,35 @@ Ways to get past it, in order of practicality:
    browser): same steps. Not tested here.
 3. **GitHub Codespaces with a desktop** (a browser-accessible Linux desktop): in theory Unity Hub for Linux
    can run there and produce the file. Not tested here, and awkward on a phone screen.
-4. **Unity Build Automation** (Unity's paid cloud build service) avoids GameCI licensing entirely; check its
-   current pricing and whether it still connects to GitHub.
+4. **Unity Build Automation** (Unity's own cloud build): see the next section.
+
+### Routes that do not need a `.ulf` (investigated 2026-10-21, none tried yet)
+
+**A. GameCI's new CLI-based actions, email and password only (free, experimental).**
+- `game-ci/cli` merged a "personal" licensing strategy on 2026-09-05 (PR #246, later fixes #254-#290). It asks
+  Unity's licensing service for a Personal seat with `UNITY_EMAIL` + `UNITY_PASSWORD`; with no `UNITY_LICENSE`
+  secret its automatic order (file, serial, floating, personal) falls through to it.
+- The actions that run this CLI are `game-ci/unity-test-runner` **v4.4.0** (the current `v4` tag) and
+  `game-ci/unity-builder` **v6.0.0**. This repository's workflow is pinned to the older classic releases
+  (v4.3.2 / v4.8.2), which need the `.ulf`.
+- Caveats stated in the PR: the licensing-client flags it uses are undocumented by Unity and can change without
+  notice; it cannot answer two-factor or device-verification challenges; it recommends a dedicated CI-only Unity
+  account and calls sharing a Personal seat with CI a grey area under Unity's terms; the seat must be returned
+  after each run. GameCI's public activation page still documents only the `.ulf` route.
+- Cost: none beyond GitHub Actions minutes. Switching would mean a separate workflow on the new actions; not done.
+
+**B. Unity Build Automation (Unity's cloud build).**
+- Unity handles the licence itself, it connects to a GitHub repository, and it is configured in a web dashboard
+  (usable from a phone browser).
+- Free tier, from Unity's 2025 pricing-update page and forum posts (Unity's own sites were not reachable from
+  the review machine, so not confirmed first-hand): 200 Windows build minutes and 100 Mac build minutes per month
+  from Q1 2026; beyond that, pay-as-you-go, which requires adding a credit card.
+- Unknown: whether a card is needed to start, how many minutes one Android IL2CPP build of this project takes,
+  and whether the build script here needs changes for it. **Not set up: it can cost money past the free tier.**
+
+**C. Unity Hub command line.** Unity's documentation says Personal licences are activated by signing in to Unity
+Hub; command-line activation is documented only for paid serials. A community report describes an experimental
+Hub CLI (`unity license activate --personal`), unverified.
 
 Not verified and worth knowing:
 - If your Unity account uses two-factor authentication, signing in from the CI machine with email and
@@ -58,6 +85,9 @@ Not verified and worth knowing:
   least every 30 days). If CI builds start failing with licence errors after a while, regenerate the `.ulf`.
 
 Sources:
+- GameCI CLI, personal licence strategy: https://github.com/game-ci/cli/pull/246
+- Unity pricing updates (Build Automation free tier): https://unity.com/products/pricing-updates
+- Unity forum, DevOps updates in 2026: https://discussions.unity.com/t/unity-devops-updates-in-2026/1711090
 - GameCI activation docs: https://github.com/game-ci/documentation/blob/main/docs/03-github/02-activation.mdx
 - Unity forum, manual activation removed for Personal: https://discussions.unity.com/t/unity-no-longer-supports-manual-activation-of-personal-licenses/926760
 - GameCI builder docs (buildMethod, customBuildPath, androidExportType): https://github.com/game-ci/documentation/blob/main/docs/03-github/04-builder.mdx

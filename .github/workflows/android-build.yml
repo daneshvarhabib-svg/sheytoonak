@@ -57,7 +57,10 @@ jobs:
           path: Library
           key: Library-tests-${{ hashFiles('Packages/manifest.json', 'ProjectSettings/ProjectVersion.txt') }}
           restore-keys: Library-tests-
-      - uses: game-ci/unity-test-runner@v4
+      # Pinned by commit. The floating v4 tag moved to v4.4.0 (2026-08-29), a rewrite that downloads
+      # the game-ci CLI ("latest" unless pinned) at run time. v4.3.2 is the last classic release: it
+      # runs Unity in the unityci image and writes artifacts/<testmode>-results.xml.
+      - uses: game-ci/unity-test-runner@fa6ced25861c16ef56187828c43f76d00df43a23 # v4.3.2
         id: tests
         env:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
@@ -65,8 +68,25 @@ jobs:
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
           testMode: EditMode
-          coverageEnabled: false
           githubToken: ${{ secrets.GITHUB_TOKEN }}
+      # Unity treats "no tests found" as a passing run, so a broken test assembly would look green.
+      - name: Fail if no Sheytoonak tests ran
+        env:
+          RESULTS: ${{ steps.tests.outputs.artifactsPath }}/editmode-results.xml
+        run: |
+          python3 - <<'PY'
+          import os, sys, xml.etree.ElementTree as ET
+          path = os.environ["RESULTS"]
+          if not os.path.isfile(path):
+              print(f"::error title=No test results::{path} was not written"); sys.exit(1)
+          root = ET.parse(path).getroot()
+          total = int(root.get("total", "0"))
+          ours = [c for c in root.iter("test-case") if (c.get("fullname") or "").startswith("Sheytoonak.Tests.")]
+          print(f"test-run total={total} passed={root.get('passed')} failed={root.get('failed')} sheytoonak={len(ours)}")
+          if total == 0 or not ours:
+              print("::error title=Zero tests::The EditMode run found no Sheytoonak tests. Check the test assembly definition and the Unity log.")
+              sys.exit(1)
+          PY
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -88,7 +108,7 @@ jobs:
           key: Library-Android-${{ hashFiles('Packages/manifest.json', 'ProjectSettings/ProjectVersion.txt') }}
           restore-keys: Library-Android-
       - uses: jlumbroso/free-disk-space@v1.3.1 # the Unity Android image is large
-      - uses: game-ci/unity-builder@v4
+      - uses: game-ci/unity-builder@4423ee75828dff56037d1d1cfdac6b68e3a6ba00 # v4.8.2 (pinned, same as v4 on 2026-10-21)
         id: build
         env:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}

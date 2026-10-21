@@ -25,44 +25,67 @@ namespace Sheytoonak.EditorTools
         const string DefaultApkPath = "Builds/Android/Sheytoonak.apk";
 
         // ------------------------------------------------------------------ player settings
+        //
+        // The player settings live in the committed file ProjectSettings/ProjectSettings.asset, so the
+        // editor already has them when it opens the project. CI only verifies them; it never changes
+        // them at the last moment.
+        //
+        // Active Input Handling is "Both" (activeInputHandler: 2 in that file): gameplay reads sensors
+        // and touch through the Input System package, and the placeholder HUD uses IMGUI (OnGUI), which
+        // the Input System package documentation says receives no input events at runtime unless the
+        // setting is "Both". Unity has no public API to change this setting, and its documentation says
+        // a change needs an editor restart, so it is set only in the committed file.
 
+        public const string ProjectSettingsFile = "ProjectSettings/ProjectSettings.asset";
+        public const int MinAndroidApi = 26;
+
+        /// <summary>
+        /// Editor convenience: writes the settings that have a public API and saves them. Active Input
+        /// Handling is not touched here (see above); <see cref="VerifyProjectSettings"/> reports it.
+        /// </summary>
         [MenuItem("Sheytoonak/Apply Player Settings")]
         public static void ApplyPlayerSettings()
         {
             PlayerSettings.companyName = "Sheytoonak";
             PlayerSettings.productName = "Sheytoonak";
-            PlayerSettings.bundleVersion = "0.1.0";
             PlayerSettings.SetApplicationIdentifier(NamedBuildTarget.Android, PackageId);
-
-            // Portrait only.
             PlayerSettings.defaultInterfaceOrientation = UIOrientation.Portrait;
-
             // IL2CPP + ARM64: required by Google Play, and some recent phones no longer run 32-bit apps.
             PlayerSettings.SetScriptingBackend(NamedBuildTarget.Android, ScriptingImplementation.IL2CPP);
             PlayerSettings.Android.targetArchitectures = AndroidArchitecture.ARM64;
-            PlayerSettings.Android.minSdkVersion = AndroidSdkVersions.AndroidApiLevel26;
-
-            // The gameplay code reads sensors and touch through the Input System package.
-            SetActiveInputHandler(1); // 0 = old Input Manager, 1 = Input System package, 2 = both
-
+            PlayerSettings.Android.minSdkVersion = (AndroidSdkVersions)MinAndroidApi;
             AssetDatabase.SaveAssets();
-            Debug.Log("SHEYTOONAK SETTINGS applied: " + PackageId + ", portrait, IL2CPP ARM64, Input System");
+            foreach (var problem in VerifyProjectSettings()) Debug.LogWarning("SHEYTOONAK SETTINGS " + problem);
+            Debug.Log("SHEYTOONAK SETTINGS applied and saved: " + PackageId + ", portrait, IL2CPP ARM64");
         }
 
-        static void SetActiveInputHandler(int value)
+        /// <summary>Returns every mismatch between the current settings and what the build needs (empty = all good).</summary>
+        public static List<string> VerifyProjectSettings()
         {
-            // There is no public API for this setting; the serialized PlayerSettings property is the
-            // documented-by-practice way to set it from a script.
-            var playerSettings = Unsupported.GetSerializedAssetInterfaceSingleton("PlayerSettings");
-            var so = new SerializedObject(playerSettings);
-            var prop = so.FindProperty("activeInputHandler");
-            if (prop == null)
-            {
-                Debug.LogWarning("SHEYTOONAK SETTINGS: activeInputHandler not found; set Active Input Handling to 'Input System Package' by hand.");
-                return;
-            }
-            prop.intValue = value;
-            so.ApplyModifiedPropertiesWithoutUndo();
+            var problems = new List<string>();
+            void Check(bool ok, string what) { if (!ok) problems.Add(what); }
+
+            Check(PlayerSettings.GetApplicationIdentifier(NamedBuildTarget.Android) == PackageId,
+                "Android application identifier is not " + PackageId);
+            Check(PlayerSettings.defaultInterfaceOrientation == UIOrientation.Portrait, "default orientation is not Portrait");
+            Check(PlayerSettings.GetScriptingBackend(NamedBuildTarget.Android) == ScriptingImplementation.IL2CPP,
+                "Android scripting backend is not IL2CPP");
+            Check(PlayerSettings.Android.targetArchitectures == AndroidArchitecture.ARM64, "Android architecture is not ARM64 only");
+            Check((int)PlayerSettings.Android.minSdkVersion == MinAndroidApi, "Android minimum API level is not " + MinAndroidApi);
+
+            // Input handling, checked two ways: the scripting defines this editor compiled with (the
+            // Input System documentation names ENABLE_INPUT_SYSTEM and ENABLE_LEGACY_INPUT_MANAGER), and
+            // the value saved in the committed settings file.
+#if !ENABLE_INPUT_SYSTEM
+            problems.Add("ENABLE_INPUT_SYSTEM is not defined: Active Input Handling must be 'Both'");
+#endif
+#if !ENABLE_LEGACY_INPUT_MANAGER
+            problems.Add("ENABLE_LEGACY_INPUT_MANAGER is not defined: Active Input Handling must be 'Both' (the IMGUI HUD needs it)");
+#endif
+            string saved = File.Exists(ProjectSettingsFile) ? File.ReadAllText(ProjectSettingsFile) : "";
+            Check(saved.Contains("\n  activeInputHandler: 2\n") || saved.Contains("\r\n  activeInputHandler: 2\r\n"),
+                ProjectSettingsFile + " does not contain 'activeInputHandler: 2' (Both)");
+            return problems;
         }
 
         // ------------------------------------------------------------------ prototype scene
@@ -127,39 +150,66 @@ namespace Sheytoonak.EditorTools
         // ------------------------------------------------------------------ build
 
         [MenuItem("Sheytoonak/Build Android APK")]
-        public static void BuildAndroidMenu() => BuildAndroid(DefaultApkPath, 0);
+        public static void BuildAndroidMenu()
+        {
+            var problems = VerifyProjectSettings();
+            foreach (var problem in problems) Debug.LogError("SHEYTOONAK SETTINGS " + problem);
+            if (problems.Count == 0) BuildAndroid(DefaultApkPath, 0);
+        }
 
         /// <summary>
-        /// Entry point for GameCI (unity-builder buildMethod). GameCI passes -customBuildPath (and
-        /// -androidVersionCode); exits Unity with 0 on success, 1 on failure.
+        /// Entry point for GameCI (unity-builder buildMethod). GameCI starts Unity with -batchmode -quit
+        /// and passes -customBuildPath and -androidVersionCode (checked in unity-builder v4.8.2). Unity's
+        /// exit code is what fails the CI step, and with -quit a method that simply returns may let Unity
+        /// exit with 0 even after a failed build, so every path here ends in an explicit
+        /// EditorApplication.Exit: 0 only when the player build succeeded and the APK exists.
         /// </summary>
         public static void BuildAndroidCI()
         {
+            int code = 1;
             try
             {
-                var args = ParseArgs();
-                string path = args.TryGetValue("customBuildPath", out var p) && !string.IsNullOrEmpty(p) ? p : DefaultApkPath;
-                if (!path.EndsWith(".apk", StringComparison.OrdinalIgnoreCase)) path = Path.Combine(path, "Sheytoonak.apk");
-                int versionCode = 0;
-                if (args.TryGetValue("androidVersionCode", out var vc)) int.TryParse(vc, out versionCode);
-                BuildAndroid(path, versionCode);
+                var problems = VerifyProjectSettings();
+                if (problems.Count > 0)
+                {
+                    foreach (var problem in problems) Debug.LogError("SHEYTOONAK SETTINGS " + problem);
+                    Debug.LogError("SHEYTOONAK BUILD Failed: project settings do not match (see lines above)");
+                }
+                else
+                {
+                    var args = ParseArgs();
+                    string path = args.TryGetValue("customBuildPath", out var p) && !string.IsNullOrEmpty(p) ? p : DefaultApkPath;
+                    if (!path.EndsWith(".apk", StringComparison.OrdinalIgnoreCase)) path = Path.Combine(path, "Sheytoonak.apk");
+                    int versionCode = 0;
+                    if (args.TryGetValue("androidVersionCode", out var vc)) int.TryParse(vc, out versionCode);
+                    code = BuildAndroid(path, versionCode) ? 0 : 1;
+                }
             }
             catch (Exception e)
             {
                 Debug.LogException(e);
                 Debug.LogError("SHEYTOONAK BUILD Failed with an exception");
-                EditorApplication.Exit(1);
+                code = 1;
             }
+            EditorApplication.Exit(code);
         }
 
-        static void BuildAndroid(string apkPath, int versionCode)
+        /// <summary>Builds the APK. Returns true only if Unity reports success and the file exists.</summary>
+        static bool BuildAndroid(string apkPath, int versionCode)
         {
-            ApplyPlayerSettings();
-            if (versionCode > 0) PlayerSettings.Android.bundleVersionCode = versionCode;
+            if (versionCode > 0)
+            {
+                PlayerSettings.Android.bundleVersionCode = versionCode;
+                AssetDatabase.SaveAssets(); // saved before the build starts, not only held in memory
+            }
             CreatePrototypeScene();
 
-            if (EditorUserBuildSettings.activeBuildTarget != BuildTarget.Android)
-                EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTargetGroup.Android, BuildTarget.Android);
+            if (EditorUserBuildSettings.activeBuildTarget != BuildTarget.Android &&
+                !EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTargetGroup.Android, BuildTarget.Android))
+            {
+                Debug.LogError("SHEYTOONAK BUILD Failed: could not switch to the Android build target (is Android Build Support installed?)");
+                return false;
+            }
             EditorUserBuildSettings.buildAppBundle = false; // an .apk you can install directly on the phone
 
             string dir = Path.GetDirectoryName(apkPath);
@@ -174,8 +224,12 @@ namespace Sheytoonak.EditorTools
                 options = BuildOptions.None
             });
             var s = report.summary;
-            Debug.Log($"SHEYTOONAK BUILD {s.result}: {apkPath}, {s.totalSize / (1024 * 1024)} MB, {s.totalErrors} error(s), {s.totalTime}");
-            if (Application.isBatchMode) EditorApplication.Exit(s.result == BuildResult.Succeeded ? 0 : 1);
+            bool exists = File.Exists(apkPath) && new FileInfo(apkPath).Length > 0;
+            bool ok = s.result == BuildResult.Succeeded && exists;
+            string line = $"SHEYTOONAK BUILD {(ok ? "Succeeded" : "Failed")}: result {s.result}, apk {(exists ? "present" : "missing")} at {apkPath}, " +
+                          $"{s.totalSize / (1024 * 1024)} MB, {s.totalErrors} error(s), {s.totalTime}";
+            if (ok) Debug.Log(line); else Debug.LogError(line);
+            return ok;
         }
 
         static Dictionary<string, string> ParseArgs()
