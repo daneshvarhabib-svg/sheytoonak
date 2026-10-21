@@ -26,6 +26,17 @@ namespace Sheytoonak
         public Vector2 facadeU = new Vector2(0.17f, 0.92f);
         public WindowSpot[] windows = Array.Empty<WindowSpot>();
 
+        [Header("Placeholder geometry (used when there is no backdrop)")]
+        [Tooltip("Window rectangles directly on the facade plane, in metres: x from the street centre, y from the ground. " +
+                 "Used by the placeholder prototype; leave empty when the house has a painted backdrop.")]
+        public Rect[] worldWindows = Array.Empty<Rect>();
+        [Tooltip("Roofline height in metres for placeholder geometry.")]
+        public float worldRoofHeight = 7.2f;
+        [Tooltip("Width of this building's facade in metres for placeholder geometry.")]
+        public float worldFacadeWidth = 9f;
+
+        public bool UsesWorldGeometry => backdrop == null && worldWindows != null && worldWindows.Length > 0;
+
         [Header("Difficulty")]
         [Tooltip("Sideways wind (m/s² on the ball). Random in this range each serve; negative = blowing left.")]
         public Vector2 windRange = Vector2.zero;

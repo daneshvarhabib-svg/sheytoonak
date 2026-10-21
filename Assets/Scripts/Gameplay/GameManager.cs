@@ -273,7 +273,8 @@ namespace Sheytoonak
             }
             if (mapper.facadeCollider == null)
             {
-                var f = MakeBox("Facade (gameplay)", root, Vector3.zero, Vector3.one, false);
+                // Parked far away until BackdropWindowMapper.Map() places it.
+                var f = MakeBox("Facade (gameplay)", root, Parked, Vector3.one, false);
                 f.AddComponent<FacadeSurface>();
                 mapper.facadeCollider = f.GetComponent<BoxCollider>();
             }
@@ -283,7 +284,7 @@ namespace Sheytoonak
             }
             if (mapper.roofKillZone == null)
             {
-                var r = MakeBox("Over roof (gameplay)", root, Vector3.zero, Vector3.one, true);
+                var r = MakeBox("Over roof (gameplay)", root, Parked, Vector3.one, true);
                 r.AddComponent<KillZone>().reason = LossReason.OverRoof;
                 mapper.roofKillZone = r.GetComponent<BoxCollider>();
             }
@@ -295,6 +296,8 @@ namespace Sheytoonak
             MakeBox("Right of street (gameplay)", root, new Vector3(30f, 5f, 10f), new Vector3(2f, 30f, 60f), true)
                 .AddComponent<KillZone>().reason = LossReason.OutOfBounds;
         }
+
+        static readonly Vector3 Parked = new Vector3(0f, -100f, 0f);
 
         static GameObject MakeBox(string name, Transform parent, Vector3 pos, Vector3 size, bool trigger)
         {

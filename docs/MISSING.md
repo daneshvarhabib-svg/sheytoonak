@@ -1,23 +1,24 @@
 # What is missing before Sheytoonak is playable
 
-Status on 2026-10-21: the repository contains **gameplay C# scripts, EditMode tests and design docs only**.
-There is no Unity scene, prefab, asset, project setting or build. The game has **never been compiled,
-run or built**: no C# compiler or Unity Editor was available when the scripts were written (they were
-syntax-checked only). No APK exists.
+Status on 2026-10-21: the repository contains gameplay C# scripts, EditMode tests, design docs, a
+**placeholder prototype built entirely from code**, an editor build script, a pinned Unity version and a
+GitHub Actions build workflow. The project has **never been compiled, run or built**: no C# compiler or
+Unity Editor was available when the code was written (all C# files were syntax-checked only), and the
+cloud build cannot run until the Unity licence secrets exist. No APK exists.
 
-## A. Needed for a first playable build (placeholder graphics are fine)
+## A. Needed for a first playable build (placeholder graphics)
 
-| # | Item | Path / form | How it gets made |
-|---|---|---|---|
-| 1 | Unity project settings | `ProjectSettings/*` incl. `ProjectVersion.txt` (Unity 6000.0 LTS) | Generated the first time the project is opened in Unity 6, or by the cloud build (see `docs/ANDROID_PHONE_WORKFLOW.md`). Commit them afterwards. |
-| 2 | `.meta` files for every file under `Assets/` | next to each asset | Generated on first import. Must be committed, or asset references break between machines. |
-| 3 | Player settings | inside `ProjectSettings/ProjectSettings.asset` | Product name `Sheytoonak`, package id (e.g. `ir.sheytoonak.game`), **portrait only**, Active Input Handling = **Input System Package**, Android: IL2CPP + ARM64, minimum API 24+. |
-| 4 | Game scene | `Assets/Scenes/Game.unity` | Either built by hand in the Editor (layout in `docs/CODEX_BRIEF.md` §4.1) **or** created from code by a runtime bootstrap (planned next change, so a phone-only cloud build is possible). |
-| 5 | `GameConfig` asset | `Assets/Config/GameConfig.asset` | Create > Sheytoonak > Game Config (or the bootstrap creates one at runtime with defaults). |
-| 6 | At least one `HouseDefinition` | `Assets/Config/Houses/House_01.asset` | Backdrop sprite + window rectangles (uv) + roofline. A placeholder backdrop (flat image with drawn windows) is enough to start. |
-| 7 | Ball prefab | `Assets/Prefabs/Ball.prefab` | Rigidbody + SphereCollider (r 0.11) + `BallController` + PhysicsMaterial (bounciness ≈ 0.6, bounce combine Maximum). A white sphere is fine at first. |
-| 8 | Minimal UI | HUD (score, 3 lives, house n/8), start, game over | uGUI + TextMeshPro. |
-| 9 | Persian text rendering | font asset + shaping | A Persian font with an open licence (e.g. Vazirmatn, OFL) as a TMP font asset, and **RTLTMPro** (or equal) because plain TextMeshPro does not join Persian letters. |
+| # | Item | Status |
+|---|---|---|
+| 1 | Unity version | **Done:** `ProjectSettings/ProjectVersion.txt` = `6000.0.84f1` (a GameCI Android image exists for it). |
+| 2 | Other `ProjectSettings/*` files | Unity generates them on first import; the editor build script (`Assets/Editor/SheytoonakBuild.cs`) sets everything the build relies on each time: product name, package id `ir.sheytoonak.prototype`, portrait, IL2CPP + ARM64, min API 26, Active Input Handling = Input System. Commit the generated files after the first import on any computer. |
+| 3 | `.meta` files | Unity generates them on import. Commit them after the first import on a computer; CI regenerates them on every run, so they are not needed for cloud builds. |
+| 4 | Scene | **Done (generated):** *Sheytoonak > Create Prototype Scene* or the CI build writes `Assets/_Generated/Prototype.unity` (git-ignored) with one `PrototypeBootstrap`. |
+| 5 | Config, houses, ball, input, game manager | **Done (generated at runtime)** by `PrototypeBootstrap`: default `GameConfig`, 3 grey-box houses (6, 9 and 12 windows), a football sphere with physics material, motion/touch input, `GameManager`, debug overlay. |
+| 6 | HUD | **Placeholder:** English IMGUI text (score, lives, house, windows, wind, messages, start/end screens). Unity's IMGUI cannot shape Persian, so the Persian UI is item 9. |
+| 7 | **Unity licence secrets in GitHub** | **Missing - blocker.** `UNITY_LICENSE`, `UNITY_EMAIL`, `UNITY_PASSWORD`. Creating the licence file needs Unity Hub on a computer once; see `docs/ANDROID_PHONE_WORKFLOW.md`. |
+| 8 | First successful build | Not done. Expect the first run to reveal compile errors that need fixing. |
+| 9 | Persian text rendering | Missing: a Persian font with an open licence (e.g. Vazirmatn, OFL) as a TextMeshPro font asset, plus **RTLTMPro** (or equal), because plain TextMeshPro does not join Persian letters. |
 
 ## B. Needed for the intended look (`docs/reference/street-reference.png`)
 

@@ -1,0 +1,19 @@
+{
+    "name": "Sheytoonak.Editor",
+    "rootNamespace": "Sheytoonak.EditorTools",
+    "references": [
+        "Sheytoonak.Core",
+        "Sheytoonak.Game"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

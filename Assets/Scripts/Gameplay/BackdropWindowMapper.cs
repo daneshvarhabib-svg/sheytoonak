@@ -43,6 +43,22 @@ namespace Sheytoonak
             FacadeZ = transform.position.z + house.facadeDistance;
             mappedScreen = new Vector2Int(cam.pixelWidth, cam.pixelHeight);
 
+            if (house.UsesWorldGeometry)
+            {
+                // Placeholder prototype: windows are real 3D quads, there is no image to cast from.
+                WindowRects = new Rect[house.worldWindows.Length];
+                for (int i = 0; i < WindowRects.Length; i++)
+                {
+                    Rect wr = house.worldWindows[i];
+                    Vector2 ws = wr.size * house.windowHitScale;
+                    WindowRects[i] = new Rect(wr.center - ws * 0.5f, ws);
+                }
+                RoofHeight = house.worldRoofHeight;
+                FacadeX = new Vector2(-house.worldFacadeWidth * 0.5f, house.worldFacadeWidth * 0.5f);
+                PlaceColliders();
+                return;
+            }
+
             WindowRects = new Rect[house.windows.Length];
             for (int i = 0; i < house.windows.Length; i++)
             {
@@ -58,7 +74,11 @@ namespace Sheytoonak
             float midU = (house.facadeU.x + house.facadeU.y) * 0.5f;
             RoofHeight = UvToFacade(new Vector2(midU, house.roofV)).y;
             FacadeX = new Vector2(UvToFacade(new Vector2(house.facadeU.x, house.roofV)).x, UvToFacade(new Vector2(house.facadeU.y, house.roofV)).x);
+            PlaceColliders();
+        }
 
+        void PlaceColliders()
+        {
             if (facadeCollider != null)
             {
                 // One wide wall: neighbours are walls too, only the window rects and roofline are special.
@@ -81,7 +101,7 @@ namespace Sheytoonak
 
         void LateUpdate()
         {
-            if (House != null && cam != null && (cam.pixelWidth != mappedScreen.x || cam.pixelHeight != mappedScreen.y))
+            if (House != null && !House.UsesWorldGeometry && cam != null && (cam.pixelWidth != mappedScreen.x || cam.pixelHeight != mappedScreen.y))
                 Map(House); // rotation / resize changes the crop of a Cover backdrop
         }
 

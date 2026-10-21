@@ -20,15 +20,17 @@ building earns a medal and walks the player to the next building; 8 buildings in
 
 ## 2. Tech
 
-- **Unity 6 LTS (6000.0.x)**, URP, 3D template. The code uses Unity 6 APIs
+- **Unity 6000.0.84f1** (pinned in `ProjectSettings/ProjectVersion.txt`), built-in render pipeline for the
+  placeholder prototype (moving to URP later means converting the generated materials). The code uses Unity 6 APIs
   (`Rigidbody.linearVelocity`, `FindAnyObjectByType`). Do not downgrade to 2022.
 - **Input System** package (sensors: `Gyroscope`, `Accelerometer`, `GravitySensor`,
   `LinearAccelerationSensor`). Active Input Handling: Input System (or Both).
 - **TextMeshPro** plus **RTLTMPro** (or another correct Persian shaping solution). All UI is Persian, right-to-left.
   Plain TMP does not join Persian letters.
 - Portrait only. Targets Android and iOS.
-- Copy `Assets/Scripts` and `Assets/Tests` into the project unchanged; the `.asmdef` files define
-  `Sheytoonak.Core` (pure C#, no Unity), `Sheytoonak.Game` and `Sheytoonak.Tests.EditMode`.
+- This repository is the Unity project. The `.asmdef` files define `Sheytoonak.Core` (pure C#, no Unity),
+  `Sheytoonak.Game`, `Sheytoonak.Editor` and `Sheytoonak.Tests.EditMode`. A grey-box prototype that builds
+  itself from code already exists (`PrototypeBootstrap`); replace its visuals, keep its wiring as a reference.
   Run Window > General > Test Runner > EditMode: all tests must pass before you build anything else.
 
 ## 3. What the code already does
