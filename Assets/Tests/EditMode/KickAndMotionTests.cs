@@ -1,0 +1,152 @@
+using NUnit.Framework;
+using Sheytoonak.Core;
+
+namespace Sheytoonak.Tests
+{
+    public class KickSolverTests
+    {
+        readonly KickTuning t = new KickTuning();
+
+        float WallHeight(float strength, float distance = 12f)
+        {
+            var r = KickSolver.Solve(new KickGesture(strength, 0f, 0f), 0f, 1f, t, 0f, 0f);
+            return KickSolver.HeightAtDistance(r.Velocity, 0.11f, distance, t.Gravity);
+        }
+
+        [Test]
+        public void Harder_swing_hits_the_wall_higher()
+        {
+            float prev = float.MinValue;
+            for (int i = 2; i <= 10; i++)
+            {
+                float h = WallHeight(i / 10f);
+                Assert.Greater(h, prev, "strength " + (i / 10f));
+                prev = h;
+            }
+        }
+
+        [Test]
+        public void Full_strength_reaches_the_upper_floors_and_can_overshoot()
+        {
+            Assert.Greater(WallHeight(1f), 10f);
+        }
+
+        [Test]
+        public void Aim_and_contact_turn_the_ball()
+        {
+            var right = KickSolver.Solve(new KickGesture(0.5f, 1f, 0f), 0f, 1f, t, 0f, 0f);
+            var left = KickSolver.Solve(new KickGesture(0.5f, -1f, 0f), 0f, 1f, t, 0f, 0f);
+            Assert.Greater(right.Velocity.X, 0f);
+            Assert.Less(left.Velocity.X, 0f);
+            var ballRightOfFoot = KickSolver.Solve(new KickGesture(0.5f, 0f, 0f), 0.8f, 1f, t, 0f, 0f);
+            Assert.Greater(ballRightOfFoot.Velocity.X, 0f);
+        }
+
+        [Test]
+        public void Clean_contact_ignores_noise_and_bad_contact_does_not()
+        {
+            var g = new KickGesture(0.6f, 0f, 0f);
+            var a = KickSolver.Solve(g, 0f, 1f, t, 1f, 1f);
+            var b = KickSolver.Solve(g, 0f, 1f, t, -1f, -1f);
+            Assert.AreEqual(a.Velocity.X, b.Velocity.X, 1e-4f);
+            var c = KickSolver.Solve(g, 0f, 0f, t, 1f, 1f);
+            Assert.AreNotEqual(0f, c.Velocity.X);
+        }
+
+        [Test]
+        public void Contact_quality_peaks_at_the_sweet_spot()
+        {
+            float best = KickSolver.ContactQuality(t.IdealContactHeight, 0f, t);
+            Assert.AreEqual(1f, best, 1e-4f);
+            Assert.Less(KickSolver.ContactQuality(t.IdealContactHeight + 0.3f, 0f, t), best);
+            Assert.Less(KickSolver.ContactQuality(t.IdealContactHeight, 0.9f, t), best);
+        }
+
+        [Test]
+        public void Ballistic_velocity_lands_on_the_target()
+        {
+            var from = new Vec3(1f, 3f, 12f);
+            var to = new Vec3(-0.5f, 0.11f, 1.8f);
+            const float T = 1.4f;
+            var v = KickSolver.BallisticVelocity(from, to, T, 9.81f);
+            float x = from.X + v.X * T, y = from.Y + v.Y * T - 0.5f * 9.81f * T * T, z = from.Z + v.Z * T;
+            Assert.AreEqual(to.X, x, 1e-3f);
+            Assert.AreEqual(to.Y, y, 1e-3f);
+            Assert.AreEqual(to.Z, z, 1e-3f);
+        }
+    }
+
+    public class MotionGestureDetectorTests
+    {
+        static readonly Vec3 Upright = new Vec3(0f, -9.81f, 0f);
+        static readonly Vec3 Zero = new Vec3(0f, 0f, 0f);
+
+        /// <summary>Feeds a swing about the kick axis (X) of the given amplitude over 0.15 s, then rest.</summary>
+        static bool Swing(MotionGestureDetector d, float amplitudeDeg, float aimRate, out KickGesture g)
+        {
+            const float dt = 1f / 120f;
+            float rate = amplitudeDeg * (float)System.Math.PI / 180f / 0.15f;
+            g = default;
+            for (int i = 0; i < 18; i++)
+                if (d.Feed(dt, new Vec3(rate, aimRate, 0f), Zero, Upright, out g)) return true;
+            for (int i = 0; i < 30; i++)
+                if (d.Feed(dt, Zero, Zero, Upright, out g)) return true;
+            return false;
+        }
+
+        [Test]
+        public void Bigger_swing_means_stronger_kick()
+        {
+            var tuning = new MotionTuning();
+            Assert.IsTrue(Swing(new MotionGestureDetector(tuning), 30f, 0f, out var soft));
+            Assert.IsTrue(Swing(new MotionGestureDetector(tuning), 70f, 0f, out var hard));
+            Assert.Greater(hard.Strength01, soft.Strength01);
+        }
+
+        [Test]
+        public void Slow_wobble_is_not_a_kick()
+        {
+            var d = new MotionGestureDetector(new MotionTuning());
+            for (int i = 0; i < 240; i++)
+                Assert.IsFalse(d.Feed(1f / 120f, new Vec3(1.0f, 0.3f, 0.2f), Zero, Upright, out _));
+        }
+
+        [Test]
+        public void Wrong_direction_swing_does_not_kick()
+        {
+            var d = new MotionGestureDetector(new MotionTuning());
+            Assert.IsFalse(Swing(d, -60f, 0f, out _));
+        }
+
+        [Test]
+        public void Sideways_component_aims()
+        {
+            Assert.IsTrue(Swing(new MotionGestureDetector(new MotionTuning()), 50f, 2.0f, out var g));
+            Assert.Greater(g.Aim, 0f);
+        }
+
+        [Test]
+        public void Cooldown_blocks_a_double_trigger()
+        {
+            var d = new MotionGestureDetector(new MotionTuning());
+            Assert.IsTrue(Swing(d, 50f, 0f, out _));
+            // Swing() returns on the sample that ends the kick, so the 0.45 s cooldown is still running.
+            const float dt = 1f / 120f;
+            bool kicked = false;
+            for (int i = 0; i < 18; i++) kicked |= d.Feed(dt, new Vec3(6f, 0f, 0f), Zero, Upright, out _);
+            Assert.IsFalse(kicked);
+        }
+
+        [Test]
+        public void Tilt_moves_the_player()
+        {
+            var t = new MotionTuning { Lateral = LateralMode.Tilt };
+            var d = new MotionGestureDetector(t);
+            d.Calibrate(Upright);
+            // Top of the phone leaning right by ~20 degrees.
+            var tilted = new Vec3(9.81f * 0.342f, -9.81f * 0.94f, 0f);
+            d.Feed(1f / 60f, Zero, Zero, tilted, out _);
+            Assert.Greater(d.Lateral, 0.5f);
+        }
+    }
+}

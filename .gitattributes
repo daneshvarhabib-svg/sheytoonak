@@ -1,0 +1,20 @@
+* text=auto
+*.cs text eol=lf diff=csharp
+*.asmdef text eol=lf
+*.md text eol=lf
+*.json text eol=lf
+# Unity YAML (scenes, prefabs, assets): never merge as text
+*.unity merge=unityyamlmerge eol=lf
+*.prefab merge=unityyamlmerge eol=lf
+*.asset merge=unityyamlmerge eol=lf
+*.meta merge=unityyamlmerge eol=lf
+# Binary art and audio
+*.png binary
+*.jpg binary
+*.psd binary
+*.fbx binary
+*.wav binary
+*.mp3 binary
+*.ogg binary
+*.ttf binary
+*.otf binary
