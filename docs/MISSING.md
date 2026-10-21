@@ -41,6 +41,26 @@ cloud build cannot run until the Unity licence secrets exist. No APK exists.
 | 19 | Android signing | Debug signing is enough for installing on your own phone. A release keystore is needed for Google Play. |
 | 20 | iOS | Needs macOS + Xcode and an Apple Developer account to install on an iPhone. Not possible from an Android phone; a macOS cloud runner can build but signing still needs the Apple account. |
 
+## E. Static review (2026-10-21), not verified by a compiler
+
+Checked by reading the code only; nothing here has been compiled.
+
+- Assemblies: `Sheytoonak.Core` has no Unity references and is the only thing the EditMode tests use, so
+  the tests need no graphics device, scene or asset. `Sheytoonak.Editor` (Editor only) references `Sheytoonak.Game`,
+  which contains `Sheytoonak.Prototype`. No namespace or reference gaps were found.
+- Workflow: inputs match the GameCI docs for `unity-test-runner@v4` and `unity-builder@v4`; secrets are only
+  passed as environment variables; the build method parses GameCI's `-customBuildPath` and `-androidVersionCode`.
+  The Docker image `unityci/editor:ubuntu-6000.0.84f1-android-3` exists.
+- Fixed in this review: the phone sensors are looked up again (once a second) if they were not present
+  when the motion input started; on some Android phones they appear a frame later.
+- Unverified until the first CI run:
+  - `com.unity.test-framework` 1.4.5 and `com.unity.ugui` 2.0.0 (the package registry was not reachable from
+    the review machine; Unity may replace these core packages with the editor's built-in versions).
+  - Only `ProjectVersion.txt` is committed in `ProjectSettings/`. Unity generates the rest. Active input
+    handling is switched to the Input System by script (`SheytoonakBuild.ApplyPlayerSettings`, through the
+    serialized `activeInputHandler` property, which has no public API) just before the build.
+  - Kick timing after the bounce (reach, maximum kick height, landing distance) is untuned.
+
 ## D. Deliberately not included
 
 - No backend, accounts, online leaderboard or analytics: the first version is offline. Best score is stored on the device (`PlayerPrefs`).

@@ -49,15 +49,25 @@ namespace Sheytoonak
                 tuning.KickAxisSign = PlayerPrefs.GetFloat(PrefSign, 1f);
             }
             detector = new MotionGestureDetector(tuning);
-            gyro = Enable(InputGyroscope.current);
-            linear = Enable(LinearAccelerationSensor.current);
-            gravity = Enable(GravitySensor.current);
-            accel = Enable(Accelerometer.current);
+            AcquireSensors();
+        }
+
+        float nextAcquire;
+
+        // On Android the sensor devices can be added after the first frame, so a null .current in
+        // OnEnable does not mean "no sensor". Look again (once a second) until the gyro shows up.
+        void AcquireSensors()
+        {
+            gyro = gyro ?? Enable(InputGyroscope.current);
+            linear = linear ?? Enable(LinearAccelerationSensor.current);
+            gravity = gravity ?? Enable(GravitySensor.current);
+            accel = accel ?? Enable(Accelerometer.current);
         }
 
         void OnDisable()
         {
             Disable(gyro); Disable(linear); Disable(gravity); Disable(accel);
+            gyro = null; linear = null; gravity = null; accel = null;
         }
 
         static T Enable<T>(T device) where T : InputDevice
@@ -73,7 +83,13 @@ namespace Sheytoonak
 
         void Update()
         {
-            if (gyro == null) return;
+            if (gyro == null)
+            {
+                if (Time.unscaledTime < nextAcquire) return;
+                nextAcquire = Time.unscaledTime + 1f;
+                AcquireSensors();
+                if (gyro == null) return;
+            }
             RawGyro = gyro.angularVelocity.ReadValue();
 
             Vector3 rawAccel = accel != null ? accel.acceleration.ReadValue() * linearAccelerationScale : Vector3.zero;
