@@ -109,9 +109,9 @@ Check usage under GitHub > Settings > Billing and plans.
 
 ## Testing the prototype on the phone
 
-- Hold the phone in landscape with both hands. Tilt or slide it left/right to move; push its bottom edge forward with both thumbs
-  to kick. Use **Calibrate kick** on the start screen first.
-- Three-finger tap opens the sensor debug overlay. Screenshots of it while tilting and swinging are what is
+- Hold the phone in landscape with both hands. Tilt or slide it left/right to move; tap anywhere on the
+  screen to kick, hold a moment before lifting for a harder (higher) kick. No calibration needed.
+- Three-finger tap opens the sensor debug overlay. Screenshots of it while tilting are what is
   needed to tune the controls.
 - Report problems with a screenshot or screen recording plus what you did.
 

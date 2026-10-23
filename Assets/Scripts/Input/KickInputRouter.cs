@@ -5,8 +5,11 @@ using UnityEngine;
 namespace Sheytoonak
 {
     /// <summary>
-    /// The single input the game listens to. Uses phone motion when the device has a gyroscope,
-    /// otherwise touch/keyboard; kicks from either source always count (handy while testing).
+    /// The single input the game listens to. Phone motion (tilt/slide) moves the player when the
+    /// device has a gyroscope, otherwise touch/keyboard does. Kicks come from the touchscreen.
+    /// Reason (user, 2026-10-23): "زدن ضربه به توپ از خلال کلیک روی صفحه بگذره، فقط راست و چپش
+    /// با حرکت موبایل بمونه" - swinging the phone to kick was unreliable on a real phone; a tap is not.
+    /// <see cref="kickFromMotion"/> keeps the old swing-to-kick available for experiments.
     /// </summary>
     public class KickInputRouter : MonoBehaviour, IKickInput
     {
@@ -14,6 +17,8 @@ namespace Sheytoonak
         public TouchKickInput touch;
         [Tooltip("Off = ignore the phone sensors even if present (settings toggle).")]
         public bool useMotion = true;
+        [Tooltip("Off (default) = a phone swing never kicks; only the touchscreen does. Motion still moves the player.")]
+        public bool kickFromMotion = false;
 
         public event Action<KickGesture> Kicked;
         public bool IsAvailable => (motion != null && motion.IsAvailable) || (touch != null && touch.IsAvailable);
@@ -22,17 +27,18 @@ namespace Sheytoonak
 
         void OnEnable()
         {
-            if (motion != null) motion.Kicked += Forward;
+            if (motion != null) motion.Kicked += ForwardMotion;
             if (touch != null) touch.Kicked += Forward;
         }
 
         void OnDisable()
         {
-            if (motion != null) motion.Kicked -= Forward;
+            if (motion != null) motion.Kicked -= ForwardMotion;
             if (touch != null) touch.Kicked -= Forward;
         }
 
         void Forward(KickGesture g) => Kicked?.Invoke(g);
+        void ForwardMotion(KickGesture g) { if (kickFromMotion) Kicked?.Invoke(g); }
 
         public void Recenter()
         {

@@ -8,8 +8,9 @@ using InputGyroscope = UnityEngine.InputSystem.Gyroscope;
 namespace Sheytoonak
 {
     /// <summary>
-    /// Phone-motion controls (portrait): tilt/slide the phone left-right to move to the ball,
-    /// swing the bottom edge of the phone forward to kick; a bigger swing = a harder kick.
+    /// Phone-motion controls: tilt/slide the phone left-right to move to the ball. It can also detect
+    /// a forward swing of the bottom edge as a kick, but since 2026-10-23 the router ignores those
+    /// (kicks come from the touchscreen); the swing path stays for experiments.
     /// Reads Unity Input System sensors and hands raw samples to the pure <see cref="MotionGestureDetector"/>.
     /// </summary>
     public class MotionKickInput : MonoBehaviour, IKickInput

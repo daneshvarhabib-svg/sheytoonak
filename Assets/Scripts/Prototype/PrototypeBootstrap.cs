@@ -47,6 +47,7 @@ namespace Sheytoonak.Prototype
         PlayerFoot foot;
         BallController ballCtl;
         MotionKickInput motion;
+        TouchKickInput touch;
         KickInputRouter router;
         Transform facadeRoot, oldFacadeRoot, rightLegPivot;
         Renderer[] windowRenderers = new Renderer[0];
@@ -201,7 +202,7 @@ namespace Sheytoonak.Prototype
             inputGo.SetActive(false);
             motion = inputGo.AddComponent<MotionKickInput>();
             motion.config = config;
-            var touch = inputGo.AddComponent<TouchKickInput>();
+            touch = inputGo.AddComponent<TouchKickInput>();
             router = inputGo.AddComponent<KickInputRouter>();
             router.motion = motion;
             router.touch = touch;
@@ -491,7 +492,7 @@ namespace Sheytoonak.Prototype
                     Shadowed(new Rect(0, Screen.height * 0.42f, Screen.width, 60 * u), toast, big, TextAnchor.MiddleCenter);
                 if (rules.Phase == RallyPhase.Serve)
                     Shadowed(new Rect(0, Screen.height * 0.55f, Screen.width, 40 * u),
-                        router != null && router.UsingMotion ? "Swing the bottom of the phone forward to kick" : "Flick up to kick, finger position moves you",
+                        router != null && router.UsingMotion ? "Tap the screen to kick (hold = harder); tilt the phone to move" : "Tap to kick (hold = harder), finger position moves you",
                         new GUIStyle(label) { alignment = TextAnchor.MiddleCenter }, TextAnchor.MiddleCenter);
             }
 
@@ -500,12 +501,12 @@ namespace Sheytoonak.Prototype
                 Panel();
                 GUILayout.BeginArea(new Rect(pad * 2, Screen.height * 0.2f, Screen.width - pad * 4, Screen.height * 0.7f));
                 GUILayout.Label("SHEYTOONAK - prototype", big);
-                GUILayout.Label("Placeholder graphics. Move the phone left/right (or tilt) to reach the ball. " +
-                                "Swing the bottom edge of the phone forward to kick; a bigger swing kicks harder. " +
+                GUILayout.Label("Placeholder graphics. Tilt or move the phone left/right to reach the ball. " +
+                                "Tap anywhere on the screen to kick; hold a moment before lifting for a harder, higher kick. " +
                                 "A returning ball must bounce exactly once before you kick it.", new GUIStyle(label) { wordWrap = true });
                 GUILayout.Space(20 * u);
-                if (GUILayout.Button("Play", button, GUILayout.Height(80 * u))) { showStart = false; endTitle = null; game.NewGame(); }
-                if (motion != null && motion.IsAvailable)
+                if (GUILayout.Button("Play", button, GUILayout.Height(80 * u))) { showStart = false; endTitle = null; touch?.IgnoreFor(0.5f); game.NewGame(); }
+                if (motion != null && motion.IsAvailable && router != null && router.kickFromMotion)
                 {
                     GUILayout.Space(10 * u);
                     if (GUILayout.Button("Calibrate kick (swing once in 3 s)", button, GUILayout.Height(70 * u)))
@@ -515,7 +516,7 @@ namespace Sheytoonak.Prototype
                     }
                     GUILayout.Label(calibrationText, label);
                 }
-                else GUILayout.Label("No gyroscope found: touch controls are used.", label);
+                else if (motion == null || !motion.IsAvailable) GUILayout.Label("No gyroscope found: finger position moves you.", label);
                 GUILayout.Label("Three-finger tap: sensor debug overlay.", label);
                 GUILayout.EndArea();
             }
@@ -526,7 +527,7 @@ namespace Sheytoonak.Prototype
                 GUILayout.Label(endTitle, big);
                 GUILayout.Label("Glass smashed: " + endScore + "   Best: " + endBest + "   Medals: " + endMedals, new GUIStyle(label) { alignment = TextAnchor.MiddleCenter });
                 GUILayout.Space(20 * u);
-                if (GUILayout.Button("Play again", button, GUILayout.Height(80 * u))) { endTitle = null; game.NewGame(); }
+                if (GUILayout.Button("Play again", button, GUILayout.Height(80 * u))) { endTitle = null; touch?.IgnoreFor(0.5f); game.NewGame(); }
                 GUILayout.EndArea();
             }
         }

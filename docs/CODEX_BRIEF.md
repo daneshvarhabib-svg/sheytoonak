@@ -11,8 +11,8 @@ rules) and look at `docs/reference/street-reference.png` (the required visual st
 
 Third-person (camera behind and above the player) on a sunny sidewalk, phone held in landscape with
 both hands. A football lies at the player's feet. The
-player kicks it at the brick building across the street by **swinging the bottom edge of the phone
-forward** (bigger swing = harder kick = hits higher). A ball that hits the wall bounces back; it must
+player kicks it at the brick building across the street by **tapping the screen** (a quick tap kicks
+low; holding the finger a moment before lifting kicks harder and hits higher). A ball that hits the wall bounces back; it must
 touch the ground **exactly once** before the player kicks it again (tennis rule), and the player moves
 left/right by **tilting or sliding the phone** to get to it. A second bounce costs one of 3 lives.
 Hitting an intact window breaks it (+1). Hitting an already broken window sends the ball into the flat:
@@ -140,14 +140,14 @@ Call `GameManager.NewGame()` from the Play/Again buttons (keep `autoStart` off).
 
 ### 4.5 Calibration screen
 1. "hold straight" -> `KickInputRouter.Recenter()`.
-2. "swing once" -> `MotionKickInput.CalibrateKick(3f, ok => ...)`.
+2. (only if `KickInputRouter.kickFromMotion` is on) "swing once" -> `MotionKickInput.CalibrateKick(3f, ok => ...)`.
 3. A practice area: a ball, no lives, until the player taps "ready".
 Show it on first launch and from settings.
 
 ## 5. Acceptance checklist
 - [ ] All EditMode tests pass.
 - [ ] On a real Android phone and an iPhone: the debug overlay shows gyro values in rad/s; tilting moves the
-      player; a short swing kicks low, a big swing kicks high; a huge swing goes over the roof.
+      player; a quick tap kicks low, a long hold kicks high; a full hold goes over the roof.
 - [ ] If the overlay shows linear acceleration around 0.1-1 while shaking, set
       `MotionKickInput.linearAccelerationScale` to 9.81.
 - [ ] A returning ball cannot be kicked before its bounce; the second bounce costs a life.
