@@ -52,12 +52,12 @@ namespace Sheytoonak
         /// <summary>The spot in front of the foot where the ball is served and ideally struck.</summary>
         public Vector3 StrikeSpot => new Vector3(X, 0f, Z + cfg.serveForwardOffset);
 
+        /// <summary>Can the player hit the ball right now? See <see cref="ReachRule"/> for the rule and why.</summary>
         public bool BallInReach(Vector3 ballCentre, float ballRadius)
         {
             Vector3 s = StrikeSpot;
-            return Mathf.Abs(ballCentre.x - s.x) <= cfg.reachX
-                && Mathf.Abs(ballCentre.z - s.z) <= cfg.reachZ
-                && ballCentre.y - ballRadius <= cfg.maxKickHeight;
+            return ReachRule.InReach(new Vec3(ballCentre.x, ballCentre.y, ballCentre.z), ballRadius,
+                new Vec3(s.x, s.y, s.z), cfg.reachX, cfg.reachBehind, cfg.reachAhead, cfg.maxKickHeight);
         }
 
         /// <summary>-1..1: ball left/right of the foot relative to the reach. Feeds the contact yaw and quality.</summary>

@@ -6,7 +6,7 @@ namespace Sheytoonak.Prototype
 {
     /// <summary>
     /// Builds a complete, playable placeholder version of the game from code: camera, light, street,
-    /// three grey-box buildings with window quads, first-person legs, a football, input, the game
+    /// three grey-box buildings with window quads, a placeholder player seen from behind, a football, input, the game
     /// manager and a simple English IMGUI HUD. It exists so the project can be built in the cloud
     /// without anyone opening the Unity Editor. The real art replaces this later (docs/CODEX_BRIEF.md).
     /// The editor build script puts one of these in an otherwise empty scene.
@@ -28,8 +28,14 @@ namespace Sheytoonak.Prototype
         public Material ball;
         public Material metal;
 
-        [Tooltip("The camera is the player's head: it follows the player sideways along the sidewalk.")]
+        [Tooltip("Third-person: the camera sits behind and above the player and follows them sideways along the sidewalk.")]
         public bool cameraFollowsPlayer = true;
+        // User, 2026-10-23, after the first phone test: "we should see the player from behind" and the
+        // game is landscape. Behind-and-above keeps the player, the ball's bounce and the whole facade
+        // in one wide frame; the lower FOV suits a landscape screen (75 was for portrait).
+        public Vector3 cameraOffset = new Vector3(0f, 2.6f, -4.2f);
+        public float cameraPitchDeg = 14f;
+        public float cameraFov = 60f;
 
         static readonly Color[] BrickTints =
         {
@@ -127,10 +133,10 @@ namespace Sheytoonak.Prototype
             cam = camGo.AddComponent<Camera>();
             cam.clearFlags = CameraClearFlags.SolidColor;
             cam.backgroundColor = new Color(0.55f, 0.76f, 0.95f);
-            cam.fieldOfView = 75f;
+            cam.fieldOfView = cameraFov;
             cam.nearClipPlane = 0.05f;
             cam.farClipPlane = 250f;
-            camGo.transform.SetPositionAndRotation(new Vector3(0f, 1.6f, -1.5f), Quaternion.Euler(12f, 0f, 0f));
+            camGo.transform.SetPositionAndRotation(cameraOffset, Quaternion.Euler(cameraPitchDeg, 0f, 0f));
             camGo.AddComponent<AudioListener>();
 
             var sun = new GameObject("Sun").AddComponent<Light>();
@@ -163,12 +169,13 @@ namespace Sheytoonak.Prototype
             var config = ScriptableObject.CreateInstance<GameConfig>();
             var houses = new[] { House1(), House2(), House3() };
 
-            // Player: foot position + window mapping, legs as children.
+            // Player: foot position + window mapping, the placeholder body as children.
             var player = new GameObject("Player");
             foot = player.AddComponent<PlayerFoot>();
             var mapper = player.AddComponent<BackdropWindowMapper>();
             mapper.cam = cam;
             BuildLegs(player.transform);
+            BuildBody(player.transform);
 
             // Football: a sphere with a procedural black-and-white texture.
             var ballGo = GameObject.CreatePrimitive(PrimitiveType.Sphere);
@@ -237,6 +244,36 @@ namespace Sheytoonak.Prototype
                 sneaker.GetComponent<Renderer>().sharedMaterial = shoe;
                 if (side > 0) rightLegPivot = pivot;
             }
+        }
+
+        /// <summary>Torso, arms and head above the legs, so the player reads as a person from behind.</summary>
+        void BuildBody(Transform player)
+        {
+            var torso = GameObject.CreatePrimitive(PrimitiveType.Capsule);
+            Strip(torso);
+            torso.name = "Torso";
+            torso.transform.SetParent(player, false);
+            torso.transform.localPosition = new Vector3(0f, 1.18f, 0.02f);
+            torso.transform.localScale = new Vector3(0.36f, 0.3f, 0.22f);
+            torso.GetComponent<Renderer>().sharedMaterial = awning; // a plain shirt colour
+            for (int side = -1; side <= 1; side += 2)
+            {
+                var arm = GameObject.CreatePrimitive(PrimitiveType.Capsule);
+                Strip(arm);
+                arm.name = side < 0 ? "Left arm" : "Right arm";
+                arm.transform.SetParent(player, false);
+                arm.transform.localPosition = new Vector3(side * 0.26f, 1.1f, 0.02f);
+                arm.transform.localRotation = Quaternion.Euler(0f, 0f, side * -8f);
+                arm.transform.localScale = new Vector3(0.09f, 0.28f, 0.09f);
+                arm.GetComponent<Renderer>().sharedMaterial = awning;
+            }
+            var head = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            Strip(head);
+            head.name = "Head";
+            head.transform.SetParent(player, false);
+            head.transform.localPosition = new Vector3(0f, 1.62f, 0.02f);
+            head.transform.localScale = Vector3.one * 0.22f;
+            head.GetComponent<Renderer>().sharedMaterial = sidewalk; // skin-ish placeholder
         }
 
         // ------------------------------------------------------------------ houses (placeholder data)
@@ -423,8 +460,10 @@ namespace Sheytoonak.Prototype
         {
             if (!cameraFollowsPlayer || cam == null || foot == null) return;
             var p = cam.transform.position;
-            float x = Mathf.Lerp(p.x, foot.X, 1f - Mathf.Exp(-10f * Time.deltaTime));
-            cam.transform.position = new Vector3(x, p.y, p.z);
+            // Follow the player sideways, but only partly: the camera staying a little behind the
+            // player's lateral position keeps the facade from sliding around and shows which way they ran.
+            float x = Mathf.Lerp(p.x, foot.X * 0.7f, 1f - Mathf.Exp(-8f * Time.unscaledDeltaTime));
+            cam.transform.position = new Vector3(x, cameraOffset.y, cameraOffset.z);
         }
 
         // ------------------------------------------------------------------ HUD (English placeholder; Persian UI is a later step)

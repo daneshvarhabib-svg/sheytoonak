@@ -18,6 +18,10 @@ namespace Sheytoonak.Core
     public class MotionTuning
     {
         public LateralMode Lateral = LateralMode.Hybrid;
+        // Landscape (the game's orientation since 2026-10-23): the phone's long edge is horizontal, so
+        // gravity's "down" sits along device X, a left/right tilt rotates about device X, and a
+        // sideways slide moves along device Y. Portrait swaps those back. Tests pin both.
+        public bool Landscape = true;
         public float TiltFullDeg = 25f;        // roll that maps to the edge of the lane
         public float TiltDeadzoneDeg = 3f;
         public float SlideGain = 0.9f;         // translation: metres-ish of lane per (m/s) of phone speed
@@ -25,7 +29,11 @@ namespace Sheytoonak.Core
         public float SlideRecenter = 0.6f;     // 1/s, slowly pulls a slide back to centre
 
         // The kick: the bottom edge of the phone swings forward = rotation about this device axis.
-        public DeviceAxis KickAxis = DeviceAxis.X;
+        // The kick: the phone is held in landscape with both hands and both thumbs push its lower long
+        // edge forward (user, 2026-10-23). That tips the phone about its long axis, which Unity's
+        // gyroscope reports as device Y. In portrait the same tip was device X. The calibration screen
+        // still overrides axis and sign per phone.
+        public DeviceAxis KickAxis = DeviceAxis.Y;
         public float KickAxisSign = 1f;        // flip on phones/platforms that report the other sign (calibration screen does it)
         public float KickStartRate = 3.0f;     // rad/s that starts a swing
         public float KickEndRate = 1.2f;       // rad/s that ends it
@@ -34,7 +42,7 @@ namespace Sheytoonak.Core
         public float MaxSwingSeconds = 0.4f;
         public float CooldownSeconds = 0.45f;
 
-        public DeviceAxis AimAxis = DeviceAxis.Y;  // sideways component of the swing
+        public DeviceAxis AimAxis = DeviceAxis.X;  // sideways component of the swing (device X in landscape)
         public float AimSign = 1f;
         public float AimFullDeg = 22f;
         public DeviceAxis CurlAxis = DeviceAxis.Z; // twist of the phone during the swing
@@ -66,7 +74,7 @@ namespace Sheytoonak.Core
         /// <summary>Remember the current tilt as "straight" (calibration screen, or the Recenter button).</summary>
         public void Calibrate(Vec3 gravity)
         {
-            neutralRollDeg = RollDeg(gravity);
+            neutralRollDeg = RollDeg(gravity, t.Landscape);
             slideVel = 0f;
             slidePos = 0f;
         }
@@ -119,7 +127,7 @@ namespace Sheytoonak.Core
 
         void UpdateLateral(float dt, Vec3 lin, Vec3 gravity)
         {
-            LastRollDeg = RollDeg(gravity) - neutralRollDeg;
+            LastRollDeg = RollDeg(gravity, t.Landscape) - neutralRollDeg;
             float r = LastRollDeg;
             if (Math.Abs(r) < t.TiltDeadzoneDeg) r = 0f;
             else r -= Math.Sign(r) * t.TiltDeadzoneDeg;
@@ -128,7 +136,7 @@ namespace Sheytoonak.Core
             // The swing itself shakes the accelerometer: freeze the slide while kicking.
             if (!inSwing)
             {
-                slideVel += lin.X * dt;
+                slideVel += (t.Landscape ? lin.Y : lin.X) * dt;
                 slideVel *= (float)Math.Exp(-t.SlideDamping * dt);
                 slidePos += slideVel * t.SlideGain * dt;
                 slidePos -= slidePos * t.SlideRecenter * dt;
@@ -144,10 +152,13 @@ namespace Sheytoonak.Core
         }
 
         /// <summary>Roll of a portrait phone: 0 when held upright, positive when the top leans right.</summary>
-        static float RollDeg(Vec3 g)
+        /// <summary>Left/right tilt in degrees. Portrait: down is -Y, tilt shows in X. Landscape-left: down is -X, tilt shows in Y.</summary>
+        static float RollDeg(Vec3 g, bool landscape)
         {
             if (Math.Abs(g.X) + Math.Abs(g.Y) < 1e-4f) return 0f;
-            return (float)(Math.Atan2(g.X, -g.Y) * 180.0 / Math.PI);
+            // Landscape-left: device +Y points to the player's right, so a dip of the right end (gravity gains +Y) is a positive roll.
+            double a = landscape ? Math.Atan2(g.Y, -g.X) : Math.Atan2(g.X, -g.Y);
+            return (float)(a * 180.0 / Math.PI);
         }
 
         static float Axis(Vec3 v, DeviceAxis a) => a == DeviceAxis.X ? v.X : (a == DeviceAxis.Y ? v.Y : v.Z);

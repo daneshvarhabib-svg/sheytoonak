@@ -49,14 +49,14 @@ namespace Sheytoonak.EditorTools
             PlayerSettings.companyName = "Sheytoonak";
             PlayerSettings.productName = "Sheytoonak";
             PlayerSettings.SetApplicationIdentifier(NamedBuildTarget.Android, PackageId);
-            PlayerSettings.defaultInterfaceOrientation = UIOrientation.Portrait;
+            PlayerSettings.defaultInterfaceOrientation = UIOrientation.LandscapeLeft;
             // IL2CPP + ARM64: required by Google Play, and some recent phones no longer run 32-bit apps.
             PlayerSettings.SetScriptingBackend(NamedBuildTarget.Android, ScriptingImplementation.IL2CPP);
             PlayerSettings.Android.targetArchitectures = AndroidArchitecture.ARM64;
             PlayerSettings.Android.minSdkVersion = (AndroidSdkVersions)MinAndroidApi;
             AssetDatabase.SaveAssets();
             foreach (var problem in VerifyProjectSettings()) Debug.LogWarning("SHEYTOONAK SETTINGS " + problem);
-            Debug.Log("SHEYTOONAK SETTINGS applied and saved: " + PackageId + ", portrait, IL2CPP ARM64");
+            Debug.Log("SHEYTOONAK SETTINGS applied and saved: " + PackageId + ", landscape, IL2CPP ARM64");
         }
 
         /// <summary>Returns every mismatch between the current settings and what the build needs (empty = all good).</summary>
@@ -67,7 +67,7 @@ namespace Sheytoonak.EditorTools
 
             Check(PlayerSettings.GetApplicationIdentifier(NamedBuildTarget.Android) == PackageId,
                 "Android application identifier is not " + PackageId);
-            Check(PlayerSettings.defaultInterfaceOrientation == UIOrientation.Portrait, "default orientation is not Portrait");
+            Check(PlayerSettings.defaultInterfaceOrientation == UIOrientation.LandscapeLeft, "default orientation is not LandscapeLeft");
             Check(PlayerSettings.GetScriptingBackend(NamedBuildTarget.Android) == ScriptingImplementation.IL2CPP,
                 "Android scripting backend is not IL2CPP");
             Check(PlayerSettings.Android.targetArchitectures == AndroidArchitecture.ARM64, "Android architecture is not ARM64 only");

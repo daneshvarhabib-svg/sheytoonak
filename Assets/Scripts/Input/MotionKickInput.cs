@@ -18,7 +18,8 @@ namespace Sheytoonak
         [Tooltip("Set to 9.81 if the debug overlay shows linear acceleration in g (values around 0.1-1 while shaking) instead of m/s².")]
         public float linearAccelerationScale = 1f;
 
-        const string PrefAxis = "sheytoonak.kickAxis", PrefSign = "sheytoonak.kickSign";
+        // "v2": the game went landscape on 2026-10-23; a calibration saved by the portrait build must not carry over.
+        const string PrefAxis = "sheytoonak.kickAxis.v2", PrefSign = "sheytoonak.kickSign.v2";
 
         public event Action<KickGesture> Kicked;
         public bool IsAvailable => gyro != null && gyro.enabled;

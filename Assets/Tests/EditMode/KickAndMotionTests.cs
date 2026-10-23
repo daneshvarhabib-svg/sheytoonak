@@ -76,19 +76,47 @@ namespace Sheytoonak.Tests
         }
     }
 
+    public class ReachRuleTests
+    {
+        // Defaults from GameConfig after the first phone test.
+        const float ReachX = 0.6f, Behind = 0.5f, Ahead = 2.0f, Head = 1.9f, R = 0.11f;
+        static readonly Vec3 Spot = new Vec3(0f, 0f, 0.45f);
+        static bool Reach(float x, float y, float z) => ReachRule.InReach(new Vec3(x, y, z), R, Spot, ReachX, Behind, Ahead, Head);
+
+        [Test]
+        public void Ball_in_front_of_the_player_is_reachable_all_the_way_in()
+        {
+            // The bug from the phone: a returning ball at knee or chest height, 0.5 to 2 m ahead,
+            // was rejected and sailed past. Every sample along that approach must now be reachable.
+            for (float z = 2.4f; z >= 0.0f; z -= 0.2f)
+                for (float y = 0.2f; y <= 1.5f; y += 0.4f)
+                    Assert.IsTrue(Reach(0.2f, y, z), $"z={z} y={y}");
+        }
+
+        [Test]
+        public void Ball_over_the_head_or_wide_or_behind_is_a_miss()
+        {
+            Assert.IsFalse(Reach(0f, 2.3f, 1.0f), "over the head");
+            Assert.IsFalse(Reach(1.0f, 0.5f, 1.0f), "too wide");
+            Assert.IsFalse(Reach(0f, 0.5f, -0.3f), "already behind the player");
+            Assert.IsFalse(Reach(0f, 0.5f, 3.0f), "still too far ahead");
+        }
+    }
+
     public class MotionGestureDetectorTests
     {
-        static readonly Vec3 Upright = new Vec3(0f, -9.81f, 0f);
+        // Landscape-left: the phone's long edge is horizontal and gravity points along device -X.
+        static readonly Vec3 Upright = new Vec3(-9.81f, 0f, 0f);
         static readonly Vec3 Zero = new Vec3(0f, 0f, 0f);
 
-        /// <summary>Feeds a swing about the kick axis (X) of the given amplitude over 0.15 s, then rest.</summary>
+        /// <summary>Feeds a swing about the landscape kick axis (device Y) of the given amplitude over 0.15 s, then rest.</summary>
         static bool Swing(MotionGestureDetector d, float amplitudeDeg, float aimRate, out KickGesture g)
         {
             const float dt = 1f / 120f;
             float rate = amplitudeDeg * (float)System.Math.PI / 180f / 0.15f;
             g = default;
             for (int i = 0; i < 18; i++)
-                if (d.Feed(dt, new Vec3(rate, aimRate, 0f), Zero, Upright, out g)) return true;
+                if (d.Feed(dt, new Vec3(aimRate, rate, 0f), Zero, Upright, out g)) return true;
             for (int i = 0; i < 30; i++)
                 if (d.Feed(dt, Zero, Zero, Upright, out g)) return true;
             return false;
@@ -133,7 +161,7 @@ namespace Sheytoonak.Tests
             // Swing() returns on the sample that ends the kick, so the 0.45 s cooldown is still running.
             const float dt = 1f / 120f;
             bool kicked = false;
-            for (int i = 0; i < 18; i++) kicked |= d.Feed(dt, new Vec3(6f, 0f, 0f), Zero, Upright, out _);
+            for (int i = 0; i < 18; i++) kicked |= d.Feed(dt, new Vec3(0f, 6f, 0f), Zero, Upright, out _);
             Assert.IsFalse(kicked);
         }
 
@@ -143,10 +171,39 @@ namespace Sheytoonak.Tests
             var t = new MotionTuning { Lateral = LateralMode.Tilt };
             var d = new MotionGestureDetector(t);
             d.Calibrate(Upright);
-            // Top of the phone leaning right by ~20 degrees.
-            var tilted = new Vec3(9.81f * 0.342f, -9.81f * 0.94f, 0f);
+            // Landscape: the right-hand end of the phone dips by ~20 degrees, so gravity gains a +Y part.
+            var tilted = new Vec3(-9.81f * 0.94f, 9.81f * 0.342f, 0f);
             d.Feed(1f / 60f, Zero, Zero, tilted, out _);
             Assert.Greater(d.Lateral, 0.5f);
+        }
+
+        [Test]
+        public void Portrait_mode_still_reads_tilt_and_kick_on_the_old_axes()
+        {
+            var t = new MotionTuning { Lateral = LateralMode.Tilt, Landscape = false, KickAxis = DeviceAxis.X };
+            var d = new MotionGestureDetector(t);
+            var portraitUp = new Vec3(0f, -9.81f, 0f);
+            d.Calibrate(portraitUp);
+            d.Feed(1f / 60f, Zero, Zero, new Vec3(9.81f * 0.342f, -9.81f * 0.94f, 0f), out _);
+            Assert.Greater(d.Lateral, 0.5f);
+            const float dt = 1f / 120f;
+            float rate = 50f * (float)System.Math.PI / 180f / 0.15f;
+            bool kicked = false;
+            for (int i = 0; i < 18 && !kicked; i++) kicked = d.Feed(dt, new Vec3(rate, 0f, 0f), Zero, portraitUp, out _);
+            for (int i = 0; i < 30 && !kicked; i++) kicked = d.Feed(dt, Zero, Zero, portraitUp, out _);
+            Assert.IsTrue(kicked);
+        }
+
+        [Test]
+        public void Landscape_ignores_a_portrait_style_swing()
+        {
+            var d = new MotionGestureDetector(new MotionTuning());
+            const float dt = 1f / 120f;
+            float rate = 50f * (float)System.Math.PI / 180f / 0.15f;
+            bool kicked = false;
+            for (int i = 0; i < 18; i++) kicked |= d.Feed(dt, new Vec3(rate, 0f, 0f), Zero, Upright, out _);
+            for (int i = 0; i < 30; i++) kicked |= d.Feed(dt, Zero, Zero, Upright, out _);
+            Assert.IsFalse(kicked);
         }
     }
 }

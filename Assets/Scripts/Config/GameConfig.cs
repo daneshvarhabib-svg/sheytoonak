@@ -26,10 +26,12 @@ namespace Sheytoonak
         public float footMaxSpeed = 6f;
         [Tooltip("Sideways reach of the kicking foot (m).")]
         public float reachX = 0.6f;
-        [Tooltip("Forward/back reach around the foot (m).")]
-        public float reachZ = 0.7f;
-        [Tooltip("The ball must be lower than this to be kicked (m).")]
-        public float maxKickHeight = 1.0f;
+        [Tooltip("How far in front of the player a ball can still be reached with a lunge (m). Behind the player counts up to reachBehind.")]
+        public float reachAhead = 2.0f;
+        [Tooltip("How far behind the strike spot a ball is still kickable (m).")]
+        public float reachBehind = 0.5f;
+        [Tooltip("The ball must be lower than this to be kicked (m). Head height: a ball sailing over the player is a real miss.")]
+        public float maxKickHeight = 1.9f;
         [Tooltip("Where the ball waits for the serve, in front of the foot (m).")]
         public float serveForwardOffset = 0.45f;
 

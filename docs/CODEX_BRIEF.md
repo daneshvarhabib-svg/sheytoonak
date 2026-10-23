@@ -9,7 +9,8 @@ rules) and look at `docs/reference/street-reference.png` (the required visual st
 
 ## 1. The game in one paragraph
 
-First-person on a sunny sidewalk, phone held in portrait. A football lies at the player's feet. The
+Third-person (camera behind and above the player) on a sunny sidewalk, phone held in landscape with
+both hands. A football lies at the player's feet. The
 player kicks it at the brick building across the street by **swinging the bottom edge of the phone
 forward** (bigger swing = harder kick = hits higher). A ball that hits the wall bounces back; it must
 touch the ground **exactly once** before the player kicks it again (tennis rule), and the player moves
@@ -28,7 +29,7 @@ building earns a medal and walks the player to the next building; 8 buildings in
   placeholder IMGUI HUD gets no input with "Input System Package" alone. A uGUI-only HUD could switch to Input System.
 - **TextMeshPro** plus **RTLTMPro** (or another correct Persian shaping solution). All UI is Persian, right-to-left.
   Plain TMP does not join Persian letters.
-- Portrait only. Targets Android and iOS.
+- Landscape only (changed 2026-10-23 after the first phone test; it was portrait). Targets Android and iOS.
 - This repository is the Unity project. The `.asmdef` files define `Sheytoonak.Core` (pure C#, no Unity),
   `Sheytoonak.Game`, `Sheytoonak.Editor` and `Sheytoonak.Tests.EditMode`. A grey-box prototype that builds
   itself from code already exists (`PrototypeBootstrap`); replace its visuals, keep its wiring as a reference.
@@ -64,7 +65,7 @@ World convention: metres, x = right, y = up, z = toward the facade. The player's
 - `Backdrop`: the current house's sprite drawn full-screen **behind** all 3D (Canvas in Screen Space -
   Camera at the far plane, or a camera background quad). Fit = Cover. Set `BackdropWindowMapper.fit` to match.
 - `Player` at (0,0,0) with `PlayerFoot` and `BackdropWindowMapper` (mapper's `cam` = Main Camera).
-- First-person **legs** (rigged model: jeans + sneakers) parented to `PlayerFoot`. Animations: idle, side-step
+- A **full player character seen from behind** (rigged model: jeans + sneakers + shirt) parented to `PlayerFoot`. Animations: idle, side-step
   (blend by `PlayerFoot.Velocity`), kick (play on `GameEvents.Kicked`, blend speed/height by strength), whiff
   (`GameEvents.KickRejected`), walk (during `GameEvents.WalkStarted`).
 - `Ball`: a real football model under a GameObject with `Rigidbody`, `SphereCollider` and `BallController`.
@@ -78,9 +79,9 @@ The look must match `docs/reference/street-reference.png`. Code cannot paint tha
 **pre-rendered backdrops** (2.5D):
 1. Produce **8 backdrop images** in exactly that style (same lighting, palette, line quality): a brick
    building across the street with rows of windows and shops with awnings on the ground floor, sidewalk in
-   the foreground, street in between, trees and a lamp post, **no people**. Portrait framing (9:19.5), or
-   wide images that crop well under Cover. Vary brick colour, floors (3-6), shop types and awnings.
-   The first can be derived from the reference image itself (remove the person, extend to portrait).
+   the foreground, street in between, trees and a lamp post, **no people**. Landscape framing (about 19.5:9),
+   wide enough for the camera behind the player. Vary brick colour, floors (3-6), shop types and awnings.
+   The first can be derived from the reference image itself (remove the person).
 2. For each, create a `HouseDefinition` asset: sprite, `facadeU`, `roofV`, and one `WindowSpot` per
    window with its **uv rectangle** (0..1, origin bottom-left). Build a small **EditorWindow** to drag
    rectangles over the sprite instead of typing numbers.
