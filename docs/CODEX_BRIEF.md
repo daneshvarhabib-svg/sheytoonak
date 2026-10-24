@@ -11,8 +11,8 @@ rules) and look at `docs/reference/street-reference.png` (the required visual st
 
 Third-person (camera behind and above the player) on a sunny sidewalk, phone held in landscape with
 both hands. A football lies at the player's feet. The
-player kicks it at the brick building across the street by **tapping the screen** (a quick tap kicks
-low; holding the finger a moment before lifting kicks harder and hits higher). A ball that hits the wall bounces back; it must
+player kicks it at the brick building across the street by **tapping the screen**: the tap's position is
+the shot (left/right of centre = direction, higher on the screen = harder and higher). A ball that hits the wall bounces back; it must
 touch the ground **exactly once** before the player kicks it again (tennis rule), and the player moves
 left/right by **tilting or sliding the phone** to get to it. A second bounce costs one of 3 lives.
 Hitting an intact window breaks it (+1). Hitting an already broken window sends the ball into the flat:
@@ -147,7 +147,7 @@ Show it on first launch and from settings.
 ## 5. Acceptance checklist
 - [ ] All EditMode tests pass.
 - [ ] On a real Android phone and an iPhone: the debug overlay shows gyro values in rad/s; tilting moves the
-      player; a quick tap kicks low, a long hold kicks high; a full hold goes over the roof.
+      player; a low tap kicks low, a high tap kicks high; a tap at the very top goes over the roof.
 - [ ] If the overlay shows linear acceleration around 0.1-1 while shaking, set
       `MotionKickInput.linearAccelerationScale` to 9.81.
 - [ ] A returning ball cannot be kicked before its bounce; the second bounce costs a life.

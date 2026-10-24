@@ -7,19 +7,20 @@ namespace Sheytoonak
 {
     /// <summary>
     /// Touch kick (the game's kick since 2026-10-23) plus editor controls.
-    /// Touch or mouse: a tap anywhere kicks (tapStrength); holding before lifting charges a harder kick;
-    /// an upward flick kicks with strength from its length and aim from its angle. The finger's x
-    /// position also moves the player, used only when the phone has no gyroscope (see KickInputRouter).
+    /// Touch or mouse: every tap kicks, and where you tap is the shot (user, 2026-10-24: "هر ضربه هم که
+    /// میزنی به توپ هم جهت داشته باشه هم سرعت"): left/right of the screen centre = aim, height on the
+    /// screen = power (low tap = soft/low shot, high tap = hard/high shot). The finger's x position also
+    /// moves the player, used only when the phone has no gyroscope (see KickInputRouter).
     /// Keyboard: A/D or arrows move, hold Space to charge, release to kick, Q/E aim.
     /// </summary>
     public class TouchKickInput : MonoBehaviour, IKickInput
     {
-        [Tooltip("Upward flick length (fraction of screen height) for a full-strength kick.")]
-        public float fullFlick = 0.45f;
-        [Tooltip("Seconds of holding Space (or the finger) for a full-strength kick.")]
+        [Tooltip("Seconds of holding Space for a full-strength kick (keyboard only).")]
         public float fullCharge = 1.0f;
-        [Tooltip("Strength of a plain quick tap (0..1); hits the lower windows, holding longer hits higher.")]
-        public float tapStrength = 0.55f;
+        [Tooltip("Power of a tap at the very bottom of the screen (0..1); the top of the screen is 1.")]
+        public float minTapStrength = 0.35f;
+        [Tooltip("Aim at a tap on the screen edge (1 = the full MaxAimYawDeg of the kick tuning).")]
+        public float edgeAim = 0.8f;
 
         public event Action<KickGesture> Kicked;
         public bool IsAvailable => Pointer.current != null || Keyboard.current != null;
@@ -45,20 +46,12 @@ namespace Sheytoonak
                 if (pressing && ptr.press.wasReleasedThisFrame)
                 {
                     pressing = false;
-                    Vector2 d = pos - pressPos;
-                    float held = Time.unscaledTime - pressTime;
-                    if (d.y > Screen.height * 0.06f && held < 0.6f)
+                    if (Time.unscaledTime - pressTime < 0.8f)
                     {
-                        // Upward flick: length = strength, angle = aim.
-                        float strength = Mathf.Clamp01(d.y / (Screen.height * fullFlick));
-                        float aim = Mathf.Clamp(d.x / Mathf.Max(1f, d.y) * 1.5f, -1f, 1f);
-                        Kicked?.Invoke(new KickGesture(strength, aim, 0f));
-                    }
-                    else if (d.magnitude < Screen.height * 0.06f)
-                    {
-                        // Tap: a quick tap kicks at tapStrength, holding longer charges towards 1.
-                        float strength = Mathf.Max(tapStrength, Mathf.Clamp01(held / Mathf.Max(0.05f, fullCharge)));
-                        Kicked?.Invoke(new KickGesture(strength, 0f, 0f));
+                        // The release point is the shot: x = direction, y = power.
+                        float nx = Mathf.Clamp(pos.x / Mathf.Max(1f, Screen.width) * 2f - 1f, -1f, 1f);
+                        float ny = Mathf.Clamp01(pos.y / Mathf.Max(1f, Screen.height));
+                        Kicked?.Invoke(new KickGesture(Mathf.Lerp(minTapStrength, 1f, ny), nx * edgeAim, 0f));
                     }
                 }
             }

@@ -22,7 +22,11 @@ namespace Sheytoonak.Core
         // gravity's "down" sits along device X, a left/right tilt rotates about device X, and a
         // sideways slide moves along device Y. Portrait swaps those back. Tests pin both.
         public bool Landscape = true;
-        public float TiltFullDeg = 25f;        // roll that maps to the edge of the lane
+        // ⚠️ -1: on the user's phone (2026-10-24, landscape build) tilting right moved the player left:
+        // "حرکت به راست و چپ هم جهتش برعکسه". The maths of RollDeg was derived, not measured; this sign is
+        // the measurement. Flip it back if another device reports the opposite.
+        public float LateralSign = -1f;
+        public float TiltFullDeg = 18f;        // roll that maps to the edge of the lane (was 25: less tilt needed = easier)
         public float TiltDeadzoneDeg = 3f;
         public float SlideGain = 0.9f;         // translation: metres-ish of lane per (m/s) of phone speed
         public float SlideDamping = 4f;        // 1/s, kills accelerometer drift
@@ -149,6 +153,7 @@ namespace Sheytoonak.Core
                 case LateralMode.Translation: Lateral = slidePos; break;
                 default: Lateral = KickSolver.Clamp(tiltPos + slidePos, -1f, 1f); break;
             }
+            Lateral *= Math.Sign(t.LateralSign) == 0 ? 1f : Math.Sign(t.LateralSign);
         }
 
         /// <summary>Roll of a portrait phone: 0 when held upright, positive when the top leans right.</summary>

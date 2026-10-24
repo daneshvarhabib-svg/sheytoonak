@@ -38,8 +38,8 @@ namespace Sheytoonak.Core
         public float StrengthCurve = 1.0f;    // >1 makes soft swings softer
         public float MaxAimYawDeg = 25f;      // yaw at Aim = ±1
         public float ContactYawDeg = 12f;     // yaw added when the foot meets the side of the ball
-        public float MaxErrorDeg = 7f;        // random yaw/loft error of a bad contact
-        public float SpeedErrorFraction = 0.08f;
+        public float MaxErrorDeg = 4f;        // random yaw/loft error of a bad contact (7 until 2026-10-24: easier)
+        public float SpeedErrorFraction = 0.05f;
         public float MaxSpinRadPerSec = 25f;  // side spin at Curl = ±1
         public float IdealContactHeight = 0.35f;   // m above ground: sweet spot after the bounce
         public float ContactHeightTolerance = 0.5f; // m: how far from the sweet spot quality reaches 0

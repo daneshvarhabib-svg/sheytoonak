@@ -155,10 +155,10 @@ namespace Sheytoonak.Prototype
             var root = new GameObject("Street (visual)").transform;
             Box(root, new Vector3(0f, -0.05f, 0f), new Vector3(80f, 0.1f, 6f), sidewalk);           // near sidewalk, z -3..3
             Box(root, new Vector3(0f, 0.04f, 3.0f), new Vector3(80f, 0.16f, 0.25f), frame);          // curb
-            Box(root, new Vector3(0f, -0.06f, 16.5f), new Vector3(80f, 0.1f, 27f), asphalt);         // street and beyond
+            Box(root, new Vector3(0f, -0.06f, 18f), new Vector3(80f, 0.1f, 30f), asphalt);           // street and beyond
             for (int i = -6; i <= 6; i++)
-                Box(root, new Vector3(i * 4f, -0.005f, 6.2f), new Vector3(2f, 0.01f, 0.15f), shoe);   // centre line
-            Box(root, new Vector3(0f, -0.04f, 9f), new Vector3(80f, 0.1f, 2f), sidewalk);            // far sidewalk
+                Box(root, new Vector3(i * 4f, -0.005f, 8.0f), new Vector3(2f, 0.01f, 0.15f), shoe);   // centre line
+            Box(root, new Vector3(0f, -0.04f, 12f), new Vector3(80f, 0.1f, 2f), sidewalk);           // far sidewalk
             Box(root, new Vector3(-3.4f, 3f, 2.4f), new Vector3(0.12f, 6f, 0.12f), metal);           // lamp post
             Box(root, new Vector3(-2.9f, 5.95f, 2.4f), new Vector3(1.0f, 0.1f, 0.12f), metal);
             for (int i = 0; i < 2; i++)
@@ -279,9 +279,11 @@ namespace Sheytoonak.Prototype
 
         // ------------------------------------------------------------------ houses (placeholder data)
 
-        HouseDefinition House1() => MakeHouse("House 1", new[] { 2.6f, 4.3f }, new[] { -2.4f, 0f, 2.4f }, 1.1f, 1.3f, 6.0f, 0f, 1.6f, 0.6f, 1f);
-        HouseDefinition House2() => MakeHouse("House 2", new[] { 2.6f, 4.3f, 6.0f }, new[] { -2.4f, 0f, 2.4f }, 1.1f, 1.3f, 7.2f, 0.4f, 1.45f, 1.0f, 0.95f);
-        HouseDefinition House3() => MakeHouse("House 3", new[] { 2.6f, 4.3f, 6.0f }, new[] { -3f, -1f, 1f, 3f }, 1.0f, 1.2f, 7.2f, 0.8f, 1.3f, 1.4f, 0.9f);
+        // Easier since 2026-10-24 (user: "بازی سختیه و باید ساده‌تر شه"): slower returns, the ball lands
+        // closer to the player's line (spread), bigger window hit zones, less wind.
+        HouseDefinition House1() => MakeHouse("House 1", new[] { 2.6f, 4.3f }, new[] { -2.4f, 0f, 2.4f }, 1.1f, 1.3f, 6.0f, 0f, 2.1f, 0.4f, 1.2f);
+        HouseDefinition House2() => MakeHouse("House 2", new[] { 2.6f, 4.3f, 6.0f }, new[] { -2.4f, 0f, 2.4f }, 1.1f, 1.3f, 7.2f, 0.25f, 1.95f, 0.7f, 1.1f);
+        HouseDefinition House3() => MakeHouse("House 3", new[] { 2.6f, 4.3f, 6.0f }, new[] { -3f, -1f, 1f, 3f }, 1.0f, 1.2f, 7.2f, 0.5f, 1.8f, 1.0f, 1.0f);
 
         static HouseDefinition MakeHouse(string name, float[] rows, float[] cols, float w, float h, float roof,
                                          float wind, float returnTime, float spread, float hitScale)
@@ -289,7 +291,7 @@ namespace Sheytoonak.Prototype
             var house = ScriptableObject.CreateInstance<HouseDefinition>();
             house.name = name;
             house.displayName = name;
-            house.facadeDistance = 10f;
+            house.facadeDistance = 13f; // was 10; user 2026-10-24: "فاصله فرد رو از دیوار بیشتر کن"
             house.worldRoofHeight = roof;
             house.worldFacadeWidth = 9f;
             house.windRange = new Vector2(-wind, wind);
@@ -492,7 +494,7 @@ namespace Sheytoonak.Prototype
                     Shadowed(new Rect(0, Screen.height * 0.42f, Screen.width, 60 * u), toast, big, TextAnchor.MiddleCenter);
                 if (rules.Phase == RallyPhase.Serve)
                     Shadowed(new Rect(0, Screen.height * 0.55f, Screen.width, 40 * u),
-                        router != null && router.UsingMotion ? "Tap the screen to kick (hold = harder); tilt the phone to move" : "Tap to kick (hold = harder), finger position moves you",
+                        router != null && router.UsingMotion ? "Tap to kick: left/right = direction, higher = harder; tilt the phone to move" : "Tap to kick: left/right = direction, higher = harder",
                         new GUIStyle(label) { alignment = TextAnchor.MiddleCenter }, TextAnchor.MiddleCenter);
             }
 
@@ -502,7 +504,7 @@ namespace Sheytoonak.Prototype
                 GUILayout.BeginArea(new Rect(pad * 2, Screen.height * 0.2f, Screen.width - pad * 4, Screen.height * 0.7f));
                 GUILayout.Label("SHEYTOONAK - prototype", big);
                 GUILayout.Label("Placeholder graphics. Tilt or move the phone left/right to reach the ball. " +
-                                "Tap anywhere on the screen to kick; hold a moment before lifting for a harder, higher kick. " +
+                                "Tap the screen to kick: tap left or right of the centre to aim, higher up the screen for a harder, higher kick. " +
                                 "A returning ball must bounce exactly once before you kick it.", new GUIStyle(label) { wordWrap = true });
                 GUILayout.Space(20 * u);
                 if (GUILayout.Button("Play", button, GUILayout.Height(80 * u))) { showStart = false; endTitle = null; touch?.IgnoreFor(0.5f); game.NewGame(); }

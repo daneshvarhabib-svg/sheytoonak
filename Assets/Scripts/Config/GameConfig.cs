@@ -49,13 +49,13 @@ namespace Sheytoonak
 
         [Header("Facade return")]
         [Tooltip("0 = pure physics reflection, 1 = always lands where it is designed to land. 0.85 keeps it fair but alive.")]
-        [Range(0f, 1f)] public float returnAssist = 0.85f;
+        [Range(0f, 1f)] public float returnAssist = 0.95f; // 0.85 until 2026-10-24; raised to make the return easier to read
         [Tooltip("Where the first bounce of a returning ball lands, measured forward from the player (m).")]
-        public Vector2 returnLandingDepth = new Vector2(1.3f, 2.4f);
+        public Vector2 returnLandingDepth = new Vector2(1.2f, 1.9f); // inside reachAhead so a well-placed player always reaches it
 
         [Header("Broken windows")]
         [Tooltip("Chance that the owner throws the ball back out of an already broken window (otherwise the ball is lost = -1 life).")]
-        [Range(0f, 1f)] public float ownerThrowBackChance = 0.35f;
+        [Range(0f, 1f)] public float ownerThrowBackChance = 0.5f;
         public float ownerThrowDelay = 0.9f;
         public float ownerThrowFlightTime = 1.6f;
     }

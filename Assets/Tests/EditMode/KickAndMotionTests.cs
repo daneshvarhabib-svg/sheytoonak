@@ -171,8 +171,13 @@ namespace Sheytoonak.Tests
             var t = new MotionTuning { Lateral = LateralMode.Tilt };
             var d = new MotionGestureDetector(t);
             d.Calibrate(Upright);
-            // Landscape: the right-hand end of the phone dips by ~20 degrees, so gravity gains a +Y part.
+            // Landscape: one end of the phone dips by ~20 degrees, so gravity gains a +Y part.
+            // The default LateralSign (-1, measured on the user's phone) sends the player left for this.
             var tilted = new Vec3(-9.81f * 0.94f, 9.81f * 0.342f, 0f);
+            d.Feed(1f / 60f, Zero, Zero, tilted, out _);
+            Assert.Less(d.Lateral, -0.5f);
+            d = new MotionGestureDetector(new MotionTuning { Lateral = LateralMode.Tilt, LateralSign = 1f });
+            d.Calibrate(Upright);
             d.Feed(1f / 60f, Zero, Zero, tilted, out _);
             Assert.Greater(d.Lateral, 0.5f);
         }
@@ -180,7 +185,7 @@ namespace Sheytoonak.Tests
         [Test]
         public void Portrait_mode_still_reads_tilt_and_kick_on_the_old_axes()
         {
-            var t = new MotionTuning { Lateral = LateralMode.Tilt, Landscape = false, KickAxis = DeviceAxis.X };
+            var t = new MotionTuning { Lateral = LateralMode.Tilt, Landscape = false, KickAxis = DeviceAxis.X, LateralSign = 1f };
             var d = new MotionGestureDetector(t);
             var portraitUp = new Vec3(0f, -9.81f, 0f);
             d.Calibrate(portraitUp);

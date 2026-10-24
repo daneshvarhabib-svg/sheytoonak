@@ -2,7 +2,7 @@
 
 A landscape mobile game for Android and iOS, built with **Unity**. Seen from behind the player on a sunny street, you
 kick a football at the windows of the brick building across the road: tilt the phone to move, tap the
-screen to kick (hold for a harder kick). The ball
+screen to kick (where you tap sets direction and power). The ball
 bounces back off the wall and must touch the ground exactly once before your next kick. Breaking every
 window of a building earns a medal; 8 buildings, 3 lives. Persian, right-to-left UI. Offline.
 
