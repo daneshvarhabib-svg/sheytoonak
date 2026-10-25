@@ -281,9 +281,43 @@ namespace Sheytoonak.Prototype
 
         // Easier since 2026-10-24 (user: "بازی سختیه و باید ساده‌تر شه"): slower returns, the ball lands
         // closer to the player's line (spread), bigger window hit zones, less wind.
-        HouseDefinition House1() => MakeHouse("House 1", new[] { 2.6f, 4.3f }, new[] { -2.4f, 0f, 2.4f }, 1.1f, 1.3f, 6.0f, 0f, 2.1f, 0.4f, 1.2f);
+        // House 1 is the first painted facade (ChatGPT, 2026-10-25, docs/ART_SPEC.fa.md). Window rectangles are
+        // pixel bounds measured on the 1536x1024 image (frame included), converted to uv with origin bottom-left.
+        HouseDefinition House1() => MakePaintedHouse("House 1", "Art/house_01", 1536f, 1024f, 10f,
+            new[] { new Rect(268f, 40f, 224f, 205f), new Rect(662f, 40f, 218f, 205f), new Rect(1055f, 40f, 220f, 205f),
+                    new Rect(268f, 350f, 224f, 205f), new Rect(662f, 350f, 218f, 205f), new Rect(1055f, 350f, 220f, 205f) },
+            0f, 2.1f, 0.4f, 1.15f);
         HouseDefinition House2() => MakeHouse("House 2", new[] { 2.6f, 4.3f, 6.0f }, new[] { -2.4f, 0f, 2.4f }, 1.1f, 1.3f, 7.2f, 0.25f, 1.95f, 0.7f, 1.1f);
         HouseDefinition House3() => MakeHouse("House 3", new[] { 2.6f, 4.3f, 6.0f }, new[] { -3f, -1f, 1f, 3f }, 1.0f, 1.2f, 7.2f, 0.5f, 1.8f, 1.0f, 1.0f);
+
+        /// <summary>Facade from a painting: pixel rects (origin top-left, as measured on the image) become world rects on a quad w metres wide.</summary>
+        static HouseDefinition MakePaintedHouse(string name, string texture, float imgW, float imgH, float w, Rect[] pixelWindows,
+                                                float wind, float returnTime, float spread, float hitScale)
+        {
+            float h = w * imgH / imgW;
+            var house = ScriptableObject.CreateInstance<HouseDefinition>();
+            house.name = name;
+            house.displayName = name;
+            house.paintedTexture = texture;
+            house.facadeDistance = 13f;
+            house.worldRoofHeight = h;          // where the painting (and the windows) stop; the wall itself continues
+            house.worldFacadeWidth = w;
+            house.windRange = new Vector2(-wind, wind);
+            house.returnFlightTime = returnTime;
+            house.returnSpreadX = spread;
+            house.windowHitScale = hitScale;
+            var rects = new Rect[pixelWindows.Length];
+            for (int i = 0; i < rects.Length; i++)
+            {
+                Rect p = pixelWindows[i];
+                float x0 = (p.xMin / imgW - 0.5f) * w, x1 = (p.xMax / imgW - 0.5f) * w;
+                float y0 = (1f - p.yMax / imgH) * h, y1 = (1f - p.yMin / imgH) * h;
+                rects[i] = Rect.MinMaxRect(x0, y0, x1, y1);
+            }
+            house.worldWindows = rects;
+            house.windows = new WindowSpot[rects.Length];
+            return house;
+        }
 
         static HouseDefinition MakeHouse(string name, float[] rows, float[] cols, float w, float h, float roof,
                                          float wind, float returnTime, float spread, float hitScale)
@@ -323,6 +357,7 @@ namespace Sheytoonak.Prototype
             var root = new GameObject("Facade " + h.displayName).transform;
             root.position = new Vector3(0f, 0f, z);
             float w = h.worldFacadeWidth, roof = h.worldRoofHeight;
+            if (!string.IsNullOrEmpty(h.paintedTexture)) return BuildPaintedFacade(h, root, w, roof);
 
             // Roofless (user, 2026-10-25): the brick runs up past the top of the screen, so no ball is ever "over the roof".
             float wallH = h.hasRoof ? roof : 60f;
@@ -350,9 +385,67 @@ namespace Sheytoonak.Prototype
             return root;
         }
 
+        /// <summary>The painting on a quad, plain brick above it to the sky, and an invisible dark pane per window that shows once broken.</summary>
+        Transform BuildPaintedFacade(HouseDefinition h, Transform root, float w, float paintedHeight)
+        {
+            var tex = Resources.Load<Texture2D>(h.paintedTexture);
+            if (tex == null)
+            {
+                Debug.LogError("Painted facade texture not found in Resources: " + h.paintedTexture);
+                return root;
+            }
+            var mat = new Material(Shader.Find("Standard")) { mainTexture = tex, color = Color.white };
+            mat.SetFloat("_Glossiness", 0.05f);
+            var quad = GameObject.CreatePrimitive(PrimitiveType.Quad);
+            Strip(quad);
+            quad.name = "Painting";
+            quad.transform.SetParent(root, false);
+            quad.transform.localPosition = new Vector3(0f, paintedHeight * 0.5f, 0f);
+            quad.transform.localScale = new Vector3(w, paintedHeight, 1f);
+            quad.GetComponent<Renderer>().sharedMaterial = mat;
+
+            // The wall keeps going above the painting (no roof): a box in the painting's own brick colour.
+            Color top = AverageColour(tex, 0.02f, 0.06f);
+            var wallMat = Mat(top);
+            float above = 60f - paintedHeight;
+            Box(root, new Vector3(0f, paintedHeight + above * 0.5f, 0.3f), new Vector3(w, above, 0.5f), wallMat);
+            Box(root, new Vector3(-(w * 0.5f + 5f), 30f, 0.6f), new Vector3(10f, 60f, 0.5f), neighbour);
+            Box(root, new Vector3(w * 0.5f + 5f, 30f, 0.6f), new Vector3(10f, 60f, 0.5f), neighbour);
+
+            var rects = h.worldWindows;
+            windowRenderers = new Renderer[rects.Length];
+            for (int i = 0; i < rects.Length; i++)
+            {
+                Rect r = rects[i];
+                var pane = Box(root, new Vector3(r.center.x, r.center.y, -0.02f), new Vector3(r.width * 0.9f, r.height * 0.9f, 0.02f), broken);
+                pane.name = "Broken pane " + i;
+                windowRenderers[i] = pane.GetComponent<Renderer>();
+                windowRenderers[i].enabled = false; // the painting shows the intact glass
+            }
+            return root;
+        }
+
+        static Color AverageColour(Texture2D tex, float fromV, float toV)
+        {
+            // Texture must be readable; if it is not, fall back to the placeholder brick tint.
+            try
+            {
+                int y0 = Mathf.Clamp((int)((1f - toV) * tex.height), 0, tex.height - 1), y1 = Mathf.Clamp((int)((1f - fromV) * tex.height), y0 + 1, tex.height);
+                var px = tex.GetPixels(0, y0, tex.width, y1 - y0);
+                Color sum = Color.black;
+                foreach (var c in px) sum += c;
+                return sum / Mathf.Max(1, px.Length);
+            }
+            catch (UnityException)
+            {
+                return new Color(0.64f, 0.33f, 0.23f);
+            }
+        }
+
         void OnWindowBroken(int i, Vector3 point)
         {
             if (i < 0 || i >= windowRenderers.Length) return;
+            windowRenderers[i].enabled = true;
             windowRenderers[i].sharedMaterial = broken;
             for (int k = 0; k < 10; k++)
             {

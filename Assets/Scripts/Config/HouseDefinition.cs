@@ -29,6 +29,12 @@ namespace Sheytoonak
         public Vector2 facadeU = new Vector2(0.17f, 0.92f);
         public WindowSpot[] windows = Array.Empty<WindowSpot>();
 
+        [Header("Painted facade (prototype, 3D quad)")]
+        [Tooltip("Resources path of the facade painting (e.g. 'Art/house_01'). The prototype shows it on a quad " +
+                 "worldFacadeWidth metres wide at facadeDistance; windows come from worldWindows, which the " +
+                 "prototype derives from the image's uv rectangles. Empty = coloured boxes.")]
+        public string paintedTexture = "";
+
         [Header("Placeholder geometry (used when there is no backdrop)")]
         [Tooltip("Window rectangles directly on the facade plane, in metres: x from the street centre, y from the ground. " +
                  "Used by the placeholder prototype; leave empty when the house has a painted backdrop.")]
