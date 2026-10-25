@@ -287,8 +287,23 @@ namespace Sheytoonak.Prototype
             new[] { new Rect(268f, 40f, 224f, 205f), new Rect(662f, 40f, 218f, 205f), new Rect(1055f, 40f, 220f, 205f),
                     new Rect(268f, 350f, 224f, 205f), new Rect(662f, 350f, 218f, 205f), new Rect(1055f, 350f, 220f, 205f) },
             0f, 2.1f, 0.4f, 1.15f);
-        HouseDefinition House2() => MakeHouse("House 2", new[] { 2.6f, 4.3f, 6.0f }, new[] { -2.4f, 0f, 2.4f }, 1.1f, 1.3f, 7.2f, 0.25f, 1.95f, 0.7f, 1.1f);
-        HouseDefinition House3() => MakeHouse("House 3", new[] { 2.6f, 4.3f, 6.0f }, new[] { -3f, -1f, 1f, 3f }, 1.0f, 1.2f, 7.2f, 0.5f, 1.8f, 1.0f, 1.0f);
+        HouseDefinition House2() => MakePaintedHouse("House 2", "Art/house_02", 1536f, 1024f, 10f,
+            Grid(new[] { (268f, 490f), (660f, 880f), (1055f, 1275f) }, new[] { (25f, 195f), (265f, 440f), (510f, 675f) }),
+            0.25f, 1.95f, 0.7f, 1.1f);
+        HouseDefinition House3() => MakePaintedHouse("House 3", "Art/house_03", 1536f, 1024f, 10f,
+            Grid(new[] { (215f, 400f), (540f, 720f), (860f, 1045f), (1185f, 1365f) }, new[] { (30f, 190f), (265f, 430f), (500f, 640f) }),
+            0.5f, 1.8f, 1.0f, 1.0f);
+
+        /// <summary>Pixel rects for a regular grid of windows: column x-ranges by row y-ranges (image pixels, origin top-left).</summary>
+        static Rect[] Grid((float, float)[] cols, (float, float)[] rows)
+        {
+            var rects = new Rect[cols.Length * rows.Length];
+            int i = 0;
+            foreach (var (y0, y1) in rows)
+                foreach (var (x0, x1) in cols)
+                    rects[i++] = Rect.MinMaxRect(x0, y0, x1, y1);
+            return rects;
+        }
 
         /// <summary>Facade from a painting: pixel rects (origin top-left, as measured on the image) become world rects on a quad w metres wide.</summary>
         static HouseDefinition MakePaintedHouse(string name, string texture, float imgW, float imgH, float w, Rect[] pixelWindows,
