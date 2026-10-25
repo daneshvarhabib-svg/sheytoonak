@@ -33,12 +33,17 @@ namespace Sheytoonak.Prototype
         // Point of view (user, 2026-10-25, after seeing the placeholder body: "بهتره بازی از دید POV باشه که این
         // کاراکتر رو نداشته باشیم"). Eye height, a little behind the strike spot, slightly looking down so the
         // ball at the feet and the whole facade are both in frame. 2026-10-23..25 it was third-person from behind.
-        // Geometry check (not a guess): ball at z 0.45 must be inside the bottom of the frame and the top
-        // window row (~7.9 m on a 13 m painting at 13 m) inside the top. From (1.7, -2.0) the ball is 35 deg
-        // below the horizon and the top row 22 deg above; pitch 12 with a vertical FOV of 70 covers -47..+23.
-        public Vector3 cameraOffset = new Vector3(0f, 1.7f, -2.0f);
-        public float cameraPitchDeg = 12f;
-        public float cameraFov = 70f;
+        // User, 2026-10-25: "خونه‌ها رو درشت نشون نمی‌ده، دورش حاشیه دیده". A vertical FOV on a 20:9 phone becomes
+        // a ~110 deg horizontal FOV and shrinks the facade to a quarter of the width, so the FOV is now given
+        // horizontally (80 deg) and converted per screen. Geometry for a 13 m painting at 13 m from the strike
+        // spot, camera 4 m behind it at eye height: ball at the feet 20 deg below the horizon, top window row
+        // ~19 deg above, facade +-21 deg sideways -> with pitch 1 the vertical span is -22..+20.
+        public Vector3 cameraOffset = new Vector3(0f, 1.6f, -4.0f);
+        public float cameraPitchDeg = 1f;
+        [Tooltip("Horizontal field of view in degrees; the vertical one is derived from the screen aspect each frame.")]
+        public float cameraHorizontalFov = 80f;
+        [Tooltip("Never narrower than this vertically, so a very wide phone still shows the ball at the feet.")]
+        public float cameraMinVerticalFov = 42f;
 
         static readonly Color[] BrickTints =
         {
@@ -136,7 +141,7 @@ namespace Sheytoonak.Prototype
             cam = camGo.AddComponent<Camera>();
             cam.clearFlags = CameraClearFlags.SolidColor;
             cam.backgroundColor = new Color(0.55f, 0.76f, 0.95f);
-            cam.fieldOfView = cameraFov;
+            ApplyFov();
             cam.nearClipPlane = 0.05f;
             cam.farClipPlane = 250f;
             camGo.transform.SetPositionAndRotation(cameraOffset, Quaternion.Euler(cameraPitchDeg, 0f, 0f));
@@ -372,8 +377,10 @@ namespace Sheytoonak.Prototype
             var wallMat = Mat(top);
             float above = 60f - paintedHeight;
             Box(root, new Vector3(0f, paintedHeight + above * 0.5f, 0.3f), new Vector3(w, above, 0.5f), wallMat);
-            Box(root, new Vector3(-(w * 0.5f + 5f), 30f, 0.6f), new Vector3(10f, 60f, 0.5f), neighbour);
-            Box(root, new Vector3(w * 0.5f + 5f, 30f, 0.6f), new Vector3(10f, 60f, 0.5f), neighbour);
+            // Neighbours in a slightly darker shade of the same brick: no pale border around the painting.
+            var sideMat = Mat(top * 0.88f);
+            Box(root, new Vector3(-(w * 0.5f + 10f), 30f, 0.6f), new Vector3(20f, 60f, 0.5f), sideMat);
+            Box(root, new Vector3(w * 0.5f + 10f, 30f, 0.6f), new Vector3(20f, 60f, 0.5f), sideMat);
 
             var rects = h.worldWindows;
             windowRenderers = new Renderer[rects.Length];
@@ -499,8 +506,16 @@ namespace Sheytoonak.Prototype
 
         // ------------------------------------------------------------------ camera
 
+        void ApplyFov()
+        {
+            if (cam == null) return;
+            float v = Camera.HorizontalToVerticalFieldOfView(cameraHorizontalFov, Mathf.Max(0.5f, cam.aspect));
+            cam.fieldOfView = Mathf.Max(cameraMinVerticalFov, v);
+        }
+
         void LateUpdate()
         {
+            ApplyFov(); // the aspect is only known once the screen exists, and changes with rotation
             if (!cameraFollowsPlayer || cam == null || foot == null) return;
             var p = cam.transform.position;
             // POV: the eyes are over the feet, so follow the strike spot fully (smoothed).
