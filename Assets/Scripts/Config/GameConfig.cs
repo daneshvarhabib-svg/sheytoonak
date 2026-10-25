@@ -54,8 +54,9 @@ namespace Sheytoonak
         public Vector2 returnLandingDepth = new Vector2(1.2f, 1.9f); // inside reachAhead so a well-placed player always reaches it
 
         [Header("Broken windows")]
-        [Tooltip("Chance that the owner throws the ball back out of an already broken window (otherwise the ball is lost = -1 life).")]
-        [Range(0f, 1f)] public float ownerThrowBackChance = 0.5f;
+        [Tooltip("Chance that the owner throws the ball back out of an already broken window (otherwise the ball is lost = -1 life). " +
+                 "1 since 2026-10-25 (user: a ball into a broken window must cost nothing and come back to be kicked again).")]
+        [Range(0f, 1f)] public float ownerThrowBackChance = 1f;
         public float ownerThrowDelay = 0.9f;
         public float ownerThrowFlightTime = 1.6f;
     }

@@ -28,14 +28,17 @@ namespace Sheytoonak.Prototype
         public Material ball;
         public Material metal;
 
-        [Tooltip("Third-person: the camera sits behind and above the player and follows them sideways along the sidewalk.")]
+        [Tooltip("The camera follows the player sideways along the sidewalk.")]
         public bool cameraFollowsPlayer = true;
-        // User, 2026-10-23, after the first phone test: "we should see the player from behind" and the
-        // game is landscape. Behind-and-above keeps the player, the ball's bounce and the whole facade
-        // in one wide frame; the lower FOV suits a landscape screen (75 was for portrait).
-        public Vector3 cameraOffset = new Vector3(0f, 2.6f, -4.2f);
-        public float cameraPitchDeg = 14f;
-        public float cameraFov = 60f;
+        // Point of view (user, 2026-10-25, after seeing the placeholder body: "بهتره بازی از دید POV باشه که این
+        // کاراکتر رو نداشته باشیم"). Eye height, a little behind the strike spot, slightly looking down so the
+        // ball at the feet and the whole facade are both in frame. 2026-10-23..25 it was third-person from behind.
+        // Geometry check (not a guess): ball at z 0.45 must be inside the bottom of the frame and the top
+        // window row (~7.9 m on a 13 m painting at 13 m) inside the top. From (1.7, -2.0) the ball is 35 deg
+        // below the horizon and the top row 22 deg above; pitch 12 with a vertical FOV of 70 covers -47..+23.
+        public Vector3 cameraOffset = new Vector3(0f, 1.7f, -2.0f);
+        public float cameraPitchDeg = 12f;
+        public float cameraFov = 70f;
 
         static readonly Color[] BrickTints =
         {
@@ -49,9 +52,8 @@ namespace Sheytoonak.Prototype
         MotionKickInput motion;
         TouchKickInput touch;
         KickInputRouter router;
-        Transform facadeRoot, oldFacadeRoot, rightLegPivot;
+        Transform facadeRoot, oldFacadeRoot;
         Renderer[] windowRenderers = new Renderer[0];
-        Coroutine kickAnim;
         float wind;
         string toast = "";
         float toastUntil;
@@ -170,13 +172,11 @@ namespace Sheytoonak.Prototype
             var config = ScriptableObject.CreateInstance<GameConfig>();
             var houses = new[] { House1(), House2(), House3() };
 
-            // Player: foot position + window mapping, the placeholder body as children.
+            // Player: foot position + window mapping. No body: the game is first-person (POV).
             var player = new GameObject("Player");
             foot = player.AddComponent<PlayerFoot>();
             var mapper = player.AddComponent<BackdropWindowMapper>();
             mapper.cam = cam;
-            BuildLegs(player.transform);
-            BuildBody(player.transform);
 
             // Football: a sphere with a procedural black-and-white texture.
             var ballGo = GameObject.CreatePrimitive(PrimitiveType.Sphere);
@@ -218,63 +218,11 @@ namespace Sheytoonak.Prototype
             game.mapper = mapper;
             game.inputSource = router;
             game.autoStart = false;
+            gameGo.AddComponent<ProceduralSfx>();
             var overlay = gameGo.AddComponent<SensorDebugOverlay>();
             overlay.motion = motion;
             overlay.game = game;
             gameGo.SetActive(true);
-        }
-
-        void BuildLegs(Transform player)
-        {
-            for (int side = -1; side <= 1; side += 2)
-            {
-                var pivot = new GameObject(side < 0 ? "Left leg" : "Right leg").transform;
-                pivot.SetParent(player, false);
-                pivot.localPosition = new Vector3(side * 0.13f, 0.86f, 0.05f);
-                var thigh = GameObject.CreatePrimitive(PrimitiveType.Capsule);
-                Strip(thigh);
-                thigh.transform.SetParent(pivot, false);
-                thigh.transform.localPosition = new Vector3(0f, -0.42f, 0f);
-                thigh.transform.localScale = new Vector3(0.15f, 0.42f, 0.15f);
-                thigh.GetComponent<Renderer>().sharedMaterial = jeans;
-                var sneaker = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                Strip(sneaker);
-                sneaker.transform.SetParent(pivot, false);
-                sneaker.transform.localPosition = new Vector3(0f, -0.82f, 0.07f);
-                sneaker.transform.localScale = new Vector3(0.12f, 0.09f, 0.28f);
-                sneaker.GetComponent<Renderer>().sharedMaterial = shoe;
-                if (side > 0) rightLegPivot = pivot;
-            }
-        }
-
-        /// <summary>Torso, arms and head above the legs, so the player reads as a person from behind.</summary>
-        void BuildBody(Transform player)
-        {
-            var torso = GameObject.CreatePrimitive(PrimitiveType.Capsule);
-            Strip(torso);
-            torso.name = "Torso";
-            torso.transform.SetParent(player, false);
-            torso.transform.localPosition = new Vector3(0f, 1.18f, 0.02f);
-            torso.transform.localScale = new Vector3(0.36f, 0.3f, 0.22f);
-            torso.GetComponent<Renderer>().sharedMaterial = awning; // a plain shirt colour
-            for (int side = -1; side <= 1; side += 2)
-            {
-                var arm = GameObject.CreatePrimitive(PrimitiveType.Capsule);
-                Strip(arm);
-                arm.name = side < 0 ? "Left arm" : "Right arm";
-                arm.transform.SetParent(player, false);
-                arm.transform.localPosition = new Vector3(side * 0.26f, 1.1f, 0.02f);
-                arm.transform.localRotation = Quaternion.Euler(0f, 0f, side * -8f);
-                arm.transform.localScale = new Vector3(0.09f, 0.28f, 0.09f);
-                arm.GetComponent<Renderer>().sharedMaterial = awning;
-            }
-            var head = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            Strip(head);
-            head.name = "Head";
-            head.transform.SetParent(player, false);
-            head.transform.localPosition = new Vector3(0f, 1.62f, 0.02f);
-            head.transform.localScale = Vector3.one * 0.22f;
-            head.GetComponent<Renderer>().sharedMaterial = sidewalk; // skin-ish placeholder
         }
 
         // ------------------------------------------------------------------ houses (placeholder data)
@@ -283,14 +231,14 @@ namespace Sheytoonak.Prototype
         // closer to the player's line (spread), bigger window hit zones, less wind.
         // House 1 is the first painted facade (ChatGPT, 2026-10-25, docs/ART_SPEC.fa.md). Window rectangles are
         // pixel bounds measured on the 1536x1024 image (frame included), converted to uv with origin bottom-left.
-        HouseDefinition House1() => MakePaintedHouse("House 1", "Art/house_01", 1536f, 1024f, 10f,
+        HouseDefinition House1() => MakePaintedHouse("House 1", "Art/house_01", 1536f, 1024f, 13f,
             new[] { new Rect(268f, 40f, 224f, 205f), new Rect(662f, 40f, 218f, 205f), new Rect(1055f, 40f, 220f, 205f),
                     new Rect(268f, 350f, 224f, 205f), new Rect(662f, 350f, 218f, 205f), new Rect(1055f, 350f, 220f, 205f) },
             0f, 2.1f, 0.4f, 1.15f);
-        HouseDefinition House2() => MakePaintedHouse("House 2", "Art/house_02", 1536f, 1024f, 10f,
+        HouseDefinition House2() => MakePaintedHouse("House 2", "Art/house_02", 1536f, 1024f, 13f,
             Grid(new[] { (268f, 490f), (660f, 880f), (1055f, 1275f) }, new[] { (25f, 195f), (265f, 440f), (510f, 675f) }),
             0.25f, 1.95f, 0.7f, 1.1f);
-        HouseDefinition House3() => MakePaintedHouse("House 3", "Art/house_03", 1536f, 1024f, 10f,
+        HouseDefinition House3() => MakePaintedHouse("House 3", "Art/house_03", 1536f, 1024f, 13f,
             Grid(new[] { (215f, 400f), (540f, 720f), (860f, 1045f), (1185f, 1365f) }, new[] { (30f, 190f), (265f, 430f), (500f, 640f) }),
             0.5f, 1.8f, 1.0f, 1.0f);
 
@@ -499,26 +447,7 @@ namespace Sheytoonak.Prototype
 
         void OnKicked(KickGesture g, float quality, Vector3 velocity)
         {
-            if (kickAnim != null) StopCoroutine(kickAnim);
-            kickAnim = StartCoroutine(KickSwing(Mathf.Lerp(45f, 85f, g.Strength01)));
             if (quality > 0.85f) Toast("Clean strike!", 0.7f);
-        }
-
-        IEnumerator KickSwing(float angle)
-        {
-            if (rightLegPivot == null) yield break;
-            const float up = 0.09f, down = 0.25f;
-            for (float t = 0f; t < up; t += Time.deltaTime)
-            {
-                rightLegPivot.localRotation = Quaternion.Euler(-angle * (t / up), 0f, 0f);
-                yield return null;
-            }
-            for (float t = 0f; t < down; t += Time.deltaTime)
-            {
-                rightLegPivot.localRotation = Quaternion.Euler(-angle * (1f - t / down), 0f, 0f);
-                yield return null;
-            }
-            rightLegPivot.localRotation = Quaternion.identity;
         }
 
         void OnKickRejected(KickRejectReason why)
@@ -574,9 +503,8 @@ namespace Sheytoonak.Prototype
         {
             if (!cameraFollowsPlayer || cam == null || foot == null) return;
             var p = cam.transform.position;
-            // Follow the player sideways, but only partly: the camera staying a little behind the
-            // player's lateral position keeps the facade from sliding around and shows which way they ran.
-            float x = Mathf.Lerp(p.x, foot.X * 0.7f, 1f - Mathf.Exp(-8f * Time.unscaledDeltaTime));
+            // POV: the eyes are over the feet, so follow the strike spot fully (smoothed).
+            float x = Mathf.Lerp(p.x, foot.X, 1f - Mathf.Exp(-10f * Time.unscaledDeltaTime));
             cam.transform.position = new Vector3(x, cameraOffset.y, cameraOffset.z);
         }
 
