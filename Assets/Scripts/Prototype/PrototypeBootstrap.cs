@@ -324,11 +324,14 @@ namespace Sheytoonak.Prototype
             root.position = new Vector3(0f, 0f, z);
             float w = h.worldFacadeWidth, roof = h.worldRoofHeight;
 
-            var body = Box(root, new Vector3(0f, roof * 0.5f, 0.25f), new Vector3(w, roof, 0.5f), brick);
+            // Roofless (user, 2026-10-25): the brick runs up past the top of the screen, so no ball is ever "over the roof".
+            float wallH = h.hasRoof ? roof : 60f;
+            var body = Box(root, new Vector3(0f, wallH * 0.5f, 0.25f), new Vector3(w, wallH, 0.5f), brick);
             body.GetComponent<Renderer>().material.color = BrickTints[index % BrickTints.Length];
-            Box(root, new Vector3(0f, roof + 0.1f, 0.2f), new Vector3(w + 0.3f, 0.2f, 0.7f), frame);           // cornice
-            Box(root, new Vector3(-(w * 0.5f + 5f), (roof + 1.5f) * 0.5f, 0.6f), new Vector3(10f, roof + 1.5f, 0.5f), neighbour);
-            Box(root, new Vector3(w * 0.5f + 5f, (roof - 1f) * 0.5f, 0.6f), new Vector3(10f, roof - 1f, 0.5f), neighbour);
+            if (h.hasRoof) Box(root, new Vector3(0f, roof + 0.1f, 0.2f), new Vector3(w + 0.3f, 0.2f, 0.7f), frame); // cornice
+            float nl = h.hasRoof ? roof + 1.5f : wallH, nr = h.hasRoof ? roof - 1f : wallH;
+            Box(root, new Vector3(-(w * 0.5f + 5f), nl * 0.5f, 0.6f), new Vector3(10f, nl, 0.5f), neighbour);
+            Box(root, new Vector3(w * 0.5f + 5f, nr * 0.5f, 0.6f), new Vector3(10f, nr, 0.5f), neighbour);
             Box(root, new Vector3(0f, 1.15f, -0.02f), new Vector3(w - 0.4f, 2.3f, 0.04f), shop);               // shop windows
             Box(root, new Vector3(0f, 1.1f, -0.05f), new Vector3(1.2f, 2.2f, 0.04f), metal);                   // door
             Box(root, new Vector3(-w * 0.27f, 2.55f, -0.4f), new Vector3(w * 0.4f, 0.08f, 0.8f), awning);
@@ -494,7 +497,7 @@ namespace Sheytoonak.Prototype
                     Shadowed(new Rect(0, Screen.height * 0.42f, Screen.width, 60 * u), toast, big, TextAnchor.MiddleCenter);
                 if (rules.Phase == RallyPhase.Serve)
                     Shadowed(new Rect(0, Screen.height * 0.55f, Screen.width, 40 * u),
-                        router != null && router.UsingMotion ? "Tap to kick: left/right = direction, higher = harder; tilt the phone to move" : "Tap to kick: left/right = direction, higher = harder",
+                        router != null && router.UsingMotion ? "Tap where you want the ball to hit; tilt the phone to move" : "Tap where you want the ball to hit",
                         new GUIStyle(label) { alignment = TextAnchor.MiddleCenter }, TextAnchor.MiddleCenter);
             }
 
@@ -504,7 +507,7 @@ namespace Sheytoonak.Prototype
                 GUILayout.BeginArea(new Rect(pad * 2, Screen.height * 0.2f, Screen.width - pad * 4, Screen.height * 0.7f));
                 GUILayout.Label("SHEYTOONAK - prototype", big);
                 GUILayout.Label("Placeholder graphics. Tilt or move the phone left/right to reach the ball. " +
-                                "Tap the screen to kick: tap left or right of the centre to aim, higher up the screen for a harder, higher kick. " +
+                                "Tap the screen to kick: the ball goes where you tap - left/right aims, low on the screen hits the low windows, high hits the top row. " +
                                 "A returning ball must bounce exactly once before you kick it.", new GUIStyle(label) { wordWrap = true });
                 GUILayout.Space(20 * u);
                 if (GUILayout.Button("Play", button, GUILayout.Height(80 * u))) { showStart = false; endTitle = null; touch?.IgnoreFor(0.5f); game.NewGame(); }

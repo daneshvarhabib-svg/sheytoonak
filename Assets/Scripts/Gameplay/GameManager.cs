@@ -164,7 +164,8 @@ namespace Sheytoonak
             }
             float offset = foot.ContactOffset(b);
             float quality = KickSolver.ContactQuality(b.y, offset, config.kick);
-            var res = KickSolver.Solve(g, offset, quality, config.kick, Noise(), Noise());
+            var res = KickSolver.SolveAtWall(g, offset, quality, config.kick, Noise(), Noise(),
+                                             mapper.FacadeZ - b.z, b.y, mapper.MaxTargetHeight);
             var v = new Vector3(res.Velocity.X, res.Velocity.Y, res.Velocity.Z);
             ball.Launch(v, res.SpinY, Wind);
             Rules.OnKick();

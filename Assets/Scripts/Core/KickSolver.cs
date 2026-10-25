@@ -41,6 +41,9 @@ namespace Sheytoonak.Core
         public float MaxErrorDeg = 4f;        // random yaw/loft error of a bad contact (7 until 2026-10-24: easier)
         public float SpeedErrorFraction = 0.05f;
         public float MaxSpinRadPerSec = 25f;  // side spin at Curl = ±1
+        // Wall-aimed kick (since 2026-10-25, see SolveAtWall): the gesture picks a spot on the facade.
+        public float WallFlightTime = 0.8f;       // s from foot to facade; shorter = flatter, faster ball
+        public float MinTargetHeight = 1.4f;       // m on the facade at Strength01 = 0 (just below the lowest windows)
         public float IdealContactHeight = 0.35f;   // m above ground: sweet spot after the bounce
         public float ContactHeightTolerance = 0.5f; // m: how far from the sweet spot quality reaches 0
         public float Gravity = 9.81f;
@@ -88,6 +91,40 @@ namespace Sheytoonak.Core
             return new KickResult
             {
                 Velocity = new Vec3(horizontal * (float)Math.Sin(yaw), speed * (float)Math.Sin(loft), horizontal * (float)Math.Cos(yaw)),
+                SpinY = Clamp(g.Curl, -1f, 1f) * t.MaxSpinRadPerSec
+            };
+        }
+
+        /// <summary>
+        /// Kick that aims at the facade itself: Strength01 picks a height between
+        /// <see cref="KickTuning.MinTargetHeight"/> and <paramref name="maxTargetHeight"/>, Aim picks the
+        /// sideways spot, and the ball is launched to arrive there in <see cref="KickTuning.WallFlightTime"/>.
+        /// User, 2026-10-25: with speed/loft from the gesture the lowest windows could never be hit
+        /// ("پایین‌ترین جای صفحه هم که می‌زنی باز نمی‌خوره به شیشه") and most balls flew over the roof;
+        /// mapping the tap straight to a spot on the wall makes the control honest: tap low = hit low.
+        /// Contact quality still adds error (bad contact = the spot drifts), the foot still deflects.
+        /// </summary>
+        /// <param name="wallDistance">Horizontal distance from the ball to the facade plane, m.</param>
+        /// <param name="startHeight">Ball centre height at contact, m.</param>
+        /// <param name="maxTargetHeight">Facade height at Strength01 = 1 (a little above the top windows).</param>
+        public static KickResult SolveAtWall(KickGesture g, float contactOffset, float quality, KickTuning t, float noiseA, float noiseB,
+                                             float wallDistance, float startHeight, float maxTargetHeight)
+        {
+            float s = (float)Math.Pow(Clamp01(g.Strength01), Math.Max(0.1f, t.StrengthCurve));
+            float bad = 1f - Clamp01(quality);
+            float d = Math.Max(1f, wallDistance);
+
+            float yaw = (Clamp(g.Aim, -1f, 1f) * t.MaxAimYawDeg
+                         + Clamp(contactOffset, -1f, 1f) * t.ContactYawDeg
+                         + bad * t.MaxErrorDeg * Clamp(noiseA, -1f, 1f)) * Deg;
+            float x = d * (float)Math.Tan(yaw);
+            float y = Lerp(t.MinTargetHeight, Math.Max(t.MinTargetHeight + 0.1f, maxTargetHeight), s)
+                      + d * (float)Math.Tan(bad * t.MaxErrorDeg * 0.5f * Clamp(noiseB, -1f, 1f) * Deg);
+            float flight = Math.Max(0.2f, t.WallFlightTime) * (1f - bad * t.SpeedErrorFraction * Clamp(noiseB, -1f, 1f));
+
+            return new KickResult
+            {
+                Velocity = BallisticVelocity(new Vec3(0f, startHeight, 0f), new Vec3(x, y, d), flight, t.Gravity),
                 SpinY = Clamp(g.Curl, -1f, 1f) * t.MaxSpinRadPerSec
             };
         }

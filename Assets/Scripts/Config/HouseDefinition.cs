@@ -18,6 +18,9 @@ namespace Sheytoonak
         public string displayName = "پلاک ۱۲";
 
         [Header("Geometry (gameplay)")]
+        [Tooltip("Off (default since 2026-10-25): the wall continues upward without end, so a ball can never be lost over the roof. " +
+                 "User: 'بهتره پشت بوم نباشه و تصویر تا بالای بالا خود ساختمون باشه'. roofV / worldRoofHeight then only mark where the windows stop.")]
+        public bool hasRoof = false;
         [Tooltip("Distance from the player to the facade in metres. Bigger = harder kicks needed.")]
         public float facadeDistance = 12f;
         [Tooltip("Roofline height on the image, normalized 0..1 from the bottom. A ball above it is lost.")]

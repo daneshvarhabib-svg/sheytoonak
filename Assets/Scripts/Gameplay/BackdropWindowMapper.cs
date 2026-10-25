@@ -27,6 +27,8 @@ namespace Sheytoonak
         [Tooltip("Trigger behind the facade; a ball reaching it went over the roof (OverRoof). Positioned by Map().")]
         public BoxCollider roofKillZone;
         public float facadeThickness = 0.4f;
+        [Tooltip("Collider height of a roofless wall (m). Nothing in the game can fly higher.")]
+        public float endlessWallHeight = 80f;
 
         public HouseDefinition House { get; private set; }
         public Rect[] WindowRects { get; private set; } = new Rect[0]; // in facade plane coords: x = world x, y = world y
@@ -79,16 +81,23 @@ namespace Sheytoonak
 
         void PlaceColliders()
         {
+            bool roof = House != null && House.hasRoof;
+            float wallHeight = roof ? Mathf.Max(0.5f, RoofHeight) : endlessWallHeight;
             if (facadeCollider != null)
             {
-                // One wide wall: neighbours are walls too, only the window rects and roofline are special.
+                // One wide wall: neighbours are walls too, only the window rects (and the roofline, if any) are special.
                 float width = 80f;
-                facadeCollider.transform.position = new Vector3(0f, RoofHeight * 0.5f, FacadeZ + facadeThickness * 0.5f);
+                facadeCollider.transform.position = new Vector3(0f, wallHeight * 0.5f, FacadeZ + facadeThickness * 0.5f);
                 facadeCollider.transform.rotation = Quaternion.identity;
-                facadeCollider.size = new Vector3(width, Mathf.Max(0.5f, RoofHeight), facadeThickness);
+                facadeCollider.size = new Vector3(width, wallHeight, facadeThickness);
                 facadeCollider.center = Vector3.zero;
             }
             if (roofKillZone != null)
+            {
+                // Roofless house: nothing can get behind the wall, the trigger just stays parked and off.
+                roofKillZone.gameObject.SetActive(roof);
+            }
+            if (roofKillZone != null && roof)
             {
                 roofKillZone.isTrigger = true;
                 // Everything behind the facade: the only way there is over the roof.
@@ -148,13 +157,24 @@ namespace Sheytoonak
         /// Logs which windows a straight kick can reach at all with the current kick tuning.
         /// Run it (context menu) after authoring a house: an unreachable window makes the medal impossible.
         /// </summary>
+        /// <summary>Facade height a full-strength kick aims at: a little above the highest window.</summary>
+        public float MaxTargetHeight
+        {
+            get
+            {
+                float top = 0f;
+                foreach (var r in WindowRects) top = Mathf.Max(top, r.yMax);
+                return top > 0f ? top + 0.6f : (RoofHeight > 0f ? RoofHeight : 6f);
+            }
+        }
+
         public void ReachabilityReport(KickTuning kick, float startHeight)
         {
             if (House == null) { Debug.LogWarning("Map a house first."); return; }
             float minH = float.MaxValue, maxH = float.MinValue;
             for (int i = 0; i <= 40; i++)
             {
-                var res = KickSolver.Solve(new KickGesture(i / 40f, 0f, 0f), 0f, 1f, kick, 0f, 0f);
+                var res = KickSolver.SolveAtWall(new KickGesture(i / 40f, 0f, 0f), 0f, 1f, kick, 0f, 0f, House.facadeDistance, startHeight, MaxTargetHeight);
                 float h = KickSolver.HeightAtDistance(res.Velocity, startHeight, House.facadeDistance, kick.Gravity);
                 if (float.IsNaN(h)) continue;
                 minH = Mathf.Min(minH, h);
@@ -167,7 +187,7 @@ namespace Sheytoonak
                 string msg = $"{House.name} window {i}: y {r.yMin:0.0}-{r.yMax:0.0} m, kick reaches {minH:0.0}-{maxH:0.0} m (drag-free)";
                 if (ok) Debug.Log(msg + " OK"); else Debug.LogWarning(msg + " UNREACHABLE");
             }
-            if (maxH > RoofHeight) Debug.Log($"{House.name}: full-strength kicks clear the roof ({RoofHeight:0.0} m) - good, overhitting is possible.");
+            if (House.hasRoof && maxH > RoofHeight) Debug.Log($"{House.name}: full-strength kicks clear the roof ({RoofHeight:0.0} m) - overhitting is possible.");
         }
 
         void OnDrawGizmos()

@@ -76,6 +76,51 @@ namespace Sheytoonak.Tests
         }
     }
 
+    public class WallAimTests
+    {
+        static float HeightAtWall(float strength, float aim, float dist, out float x)
+        {
+            var t = new KickTuning();
+            var r = KickSolver.SolveAtWall(new KickGesture(strength, aim, 0f), 0f, 1f, t, 0f, 0f, dist, 0.11f, 6.6f);
+            float time = dist / r.Velocity.Z;
+            x = r.Velocity.X * time;
+            return KickSolver.HeightAtDistance(r.Velocity, 0.11f, dist, t.Gravity);
+        }
+
+        [Test]
+        public void Bottom_tap_hits_low_and_top_tap_hits_high()
+        {
+            float low = HeightAtWall(0f, 0f, 13f, out _);
+            float mid = HeightAtWall(0.5f, 0f, 13f, out _);
+            float high = HeightAtWall(1f, 0f, 13f, out _);
+            Assert.AreEqual(1.4f, low, 0.05f);   // MinTargetHeight: below the lowest window row (2.6 m centre)
+            Assert.AreEqual(6.6f, high, 0.05f);  // the maxTargetHeight passed in
+            Assert.Greater(mid, low); Assert.Less(mid, high);
+        }
+
+        [Test]
+        public void Aim_moves_the_hit_sideways_and_a_clean_kick_is_exact()
+        {
+            float h = HeightAtWall(0.5f, 1f, 13f, out float xr);
+            HeightAtWall(0.5f, -1f, 13f, out float xl);
+            Assert.Greater(xr, 1f); Assert.Less(xl, -1f);
+            Assert.AreEqual(xr, -xl, 0.001f);
+            // The same tap on a nearer wall still lands at the same height: the control is in facade metres, not launch speed.
+            Assert.AreEqual(HeightAtWall(0.5f, 0f, 10f, out _), h, 0.05f);
+        }
+
+        [Test]
+        public void Bad_contact_scatters_the_hit()
+        {
+            var t = new KickTuning();
+            var g = new KickGesture(0.5f, 0f, 0f);
+            var clean = KickSolver.SolveAtWall(g, 0f, 1f, t, 1f, 1f, 13f, 0.11f, 6.6f);
+            var bad = KickSolver.SolveAtWall(g, 0f, 0f, t, 1f, 1f, 13f, 0.11f, 6.6f);
+            Assert.AreNotEqual(clean.Velocity.X, bad.Velocity.X);
+            Assert.AreNotEqual(clean.Velocity.Y, bad.Velocity.Y);
+        }
+    }
+
     public class ReachRuleTests
     {
         // Defaults from GameConfig after the first phone test.
