@@ -128,6 +128,25 @@ namespace Sheytoonak.Prototype
             metal = metal ? metal : Mat(new Color(0.17f, 0.18f, 0.2f));
         }
 
+        /// <summary>Material from a Resources texture, or the given flat fallback when the texture is missing.</summary>
+        static Material GroundMat(string resource, Material fallback, float tileMetres)
+        {
+            var tex = Resources.Load<Texture2D>(resource);
+            if (tex == null) return fallback;
+            tex.wrapMode = TextureWrapMode.Repeat;
+            var m = new Material(Shader.Find("Standard")) { mainTexture = tex, color = Color.white };
+            m.SetFloat("_Glossiness", 0.05f);
+            return m;
+        }
+
+        /// <summary>A cube face maps the whole texture once, so a box sized x by z metres needs x/tile by z/tile repeats.</summary>
+        static Material Tiled(Material m, float sizeX, float sizeZ, float tileMetres)
+        {
+            if (m.mainTexture == null) return m;
+            var copy = new Material(m) { mainTextureScale = new Vector2(sizeX / tileMetres, sizeZ / tileMetres) };
+            return copy;
+        }
+
         static Material Mat(Color c, float smooth = 0.1f)
         {
             var m = new Material(Shader.Find("Standard")) { color = c };
@@ -160,12 +179,15 @@ namespace Sheytoonak.Prototype
         void BuildStreet()
         {
             var root = new GameObject("Street (visual)").transform;
-            Box(root, new Vector3(0f, -0.05f, 0f), new Vector3(80f, 0.1f, 6f), sidewalk);           // near sidewalk, z -3..3
+            // Painted ground (ChatGPT, 2026-10-27): tiled every 2 m; falls back to the flat colours without the textures.
+            var paveMat = GroundMat("Art/ground_sidewalk", sidewalk, 2f);
+            var roadMat = GroundMat("Art/ground_asphalt", asphalt, 2.5f);
+            Box(root, new Vector3(0f, -0.05f, 0f), new Vector3(80f, 0.1f, 6f), Tiled(paveMat, 80f, 6f, 2f));   // near sidewalk, z -3..3
             Box(root, new Vector3(0f, 0.04f, 3.0f), new Vector3(80f, 0.16f, 0.25f), frame);          // curb
-            Box(root, new Vector3(0f, -0.06f, 18f), new Vector3(80f, 0.1f, 30f), asphalt);           // street and beyond
+            Box(root, new Vector3(0f, -0.06f, 18f), new Vector3(80f, 0.1f, 30f), Tiled(roadMat, 80f, 30f, 2.5f)); // street and beyond
             for (int i = -6; i <= 6; i++)
                 Box(root, new Vector3(i * 4f, -0.005f, 8.0f), new Vector3(2f, 0.01f, 0.15f), shoe);   // centre line
-            Box(root, new Vector3(0f, -0.04f, 12f), new Vector3(80f, 0.1f, 2f), sidewalk);           // far sidewalk
+            Box(root, new Vector3(0f, -0.04f, 12f), new Vector3(80f, 0.1f, 2f), Tiled(paveMat, 80f, 2f, 2f));  // far sidewalk
             Box(root, new Vector3(-3.4f, 3f, 2.4f), new Vector3(0.12f, 6f, 0.12f), metal);           // lamp post
             Box(root, new Vector3(-2.9f, 5.95f, 2.4f), new Vector3(1.0f, 0.1f, 0.12f), metal);
             for (int i = 0; i < 2; i++)
@@ -175,7 +197,7 @@ namespace Sheytoonak.Prototype
         void BuildGameObjects()
         {
             var config = ScriptableObject.CreateInstance<GameConfig>();
-            var houses = new[] { House1(), House2(), House3() };
+            var houses = new[] { House1(), House2(), House3(), House4() };
 
             // Player: foot position + window mapping. No body: the game is first-person (POV).
             var player = new GameObject("Player");
@@ -246,6 +268,10 @@ namespace Sheytoonak.Prototype
         HouseDefinition House3() => MakePaintedHouse("House 3", "Art/house_03", 1536f, 1024f, 13f,
             Grid(new[] { (215f, 400f), (540f, 720f), (860f, 1045f), (1185f, 1365f) }, new[] { (30f, 190f), (265f, 430f), (500f, 640f) }),
             0.5f, 1.8f, 1.0f, 1.0f);
+
+        HouseDefinition House4() => MakePaintedHouse("House 4", "Art/house_04", 1536f, 1024f, 13f,
+            Grid(new[] { (318f, 495f), (685f, 860f), (1045f, 1225f) }, new[] { (25f, 185f), (235f, 395f), (435f, 595f), (630f, 760f) }),
+            0.6f, 1.7f, 1.2f, 0.95f);
 
         /// <summary>Pixel rects for a regular grid of windows: column x-ranges by row y-ranges (image pixels, origin top-left).</summary>
         static Rect[] Grid((float, float)[] cols, (float, float)[] rows)
