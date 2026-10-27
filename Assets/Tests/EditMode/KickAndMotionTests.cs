@@ -257,3 +257,40 @@ namespace Sheytoonak.Tests
         }
     }
 }
+
+namespace Sheytoonak.Tests
+{
+    public class ArabicShaperTests
+    {
+        [Test]
+        public void Letters_take_initial_medial_and_final_forms()
+        {
+            // "بيت": beh initial, yeh medial, teh final.
+            Assert.AreEqual("ﺑﻴﺖ", ArabicShaper.Shape("بيت"));
+            // Dal never joins forward, so in "دار" every letter is isolated.
+            Assert.AreEqual("\uFEA9\uFE8D\uFEAD", ArabicShaper.Shape("دار"));
+        }
+
+        [Test]
+        public void Lam_alef_becomes_a_ligature()
+        {
+            Assert.AreEqual("ﻻ", ArabicShaper.Shape("لا"));
+            // "بلا": beh initial joined to the final lam-alef ligature.
+            Assert.AreEqual("ﺑﻼ", ArabicShaper.Shape("بلا"));
+        }
+
+        [Test]
+        public void Visual_order_is_reversed_but_numbers_stay_left_to_right()
+        {
+            string v = ArabicShaper.ForLtrRenderer("زجاج 12");
+            Assert.IsTrue(v.StartsWith("12 "));
+            Assert.AreEqual(ArabicShaper.Shape("زجاج"), new string(v.Substring(3).ToCharArray().Reverse()));
+            Assert.AreEqual("١٢", ArabicShaper.EasternDigits("12"));
+        }
+    }
+
+    static class Ext
+    {
+        public static char[] Reverse(this char[] a) { System.Array.Reverse(a); return a; }
+    }
+}

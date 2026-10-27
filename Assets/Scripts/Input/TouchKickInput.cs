@@ -21,6 +21,8 @@ namespace Sheytoonak
         public float minTapStrength = 0.35f;
         [Tooltip("Aim at a tap on the screen edge (1 = the full MaxAimYawDeg of the kick tuning).")]
         public float edgeAim = 0.8f;
+        [Tooltip("Off (default since 2026-10-27): the player never moves sideways; user: 'حرکت به راست و چپ رو دیگه نداشته باشیم اصلاً'.")]
+        public bool moveWithFinger = false;
 
         public event Action<KickGesture> Kicked;
         public bool IsAvailable => Pointer.current != null || Keyboard.current != null;
@@ -42,7 +44,7 @@ namespace Sheytoonak
             {
                 Vector2 pos = ptr.position.ReadValue();
                 if (ptr.press.wasPressedThisFrame && Time.unscaledTime >= ignoreUntil) { pressing = true; pressPos = pos; pressTime = Time.unscaledTime; }
-                if (pressing) Lateral = Mathf.Clamp((pressPos.x / Mathf.Max(1, Screen.width)) * 2f - 1f, -1f, 1f);
+                if (pressing && moveWithFinger) Lateral = Mathf.Clamp((pressPos.x / Mathf.Max(1, Screen.width)) * 2f - 1f, -1f, 1f);
                 if (pressing && ptr.press.wasReleasedThisFrame)
                 {
                     pressing = false;
@@ -59,7 +61,7 @@ namespace Sheytoonak
             var kb = Keyboard.current;
             if (kb == null) return;
             float move = (kb.dKey.isPressed || kb.rightArrowKey.isPressed ? 1f : 0f) - (kb.aKey.isPressed || kb.leftArrowKey.isPressed ? 1f : 0f);
-            if (move != 0f) Lateral = Mathf.Clamp(Lateral + move * 1.5f * Time.deltaTime, -1f, 1f);
+            if (move != 0f && moveWithFinger) Lateral = Mathf.Clamp(Lateral + move * 1.5f * Time.deltaTime, -1f, 1f);
             keyAim = (kb.eKey.isPressed ? 1f : 0f) - (kb.qKey.isPressed ? 1f : 0f);
             if (kb.spaceKey.isPressed) charge += Time.deltaTime / Mathf.Max(0.05f, fullCharge);
             if (kb.spaceKey.wasReleasedThisFrame)

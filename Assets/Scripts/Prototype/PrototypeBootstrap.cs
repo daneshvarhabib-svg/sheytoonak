@@ -51,6 +51,7 @@ namespace Sheytoonak.Prototype
         };
 
         Camera cam;
+        CameraShake shake;
         GameManager game;
         PlayerFoot foot;
         BallController ballCtl;
@@ -165,6 +166,7 @@ namespace Sheytoonak.Prototype
             cam.farClipPlane = 250f;
             camGo.transform.SetPositionAndRotation(cameraOffset, Quaternion.Euler(cameraPitchDeg, 0f, 0f));
             camGo.AddComponent<AudioListener>();
+            shake = camGo.AddComponent<CameraShake>();
 
             var sun = new GameObject("Sun").AddComponent<Light>();
             sun.type = LightType.Directional;
@@ -227,11 +229,13 @@ namespace Sheytoonak.Prototype
             // Input: fields must be set before the components are enabled, so build inactive.
             var inputGo = new GameObject("Input");
             inputGo.SetActive(false);
-            motion = inputGo.AddComponent<MotionKickInput>();
-            motion.config = config;
+            // No sideways movement any more (user, 2026-10-27), so no motion sensors: the ball always
+            // comes back to the player's line and every control is a tap.
+            motion = null;
             touch = inputGo.AddComponent<TouchKickInput>();
             router = inputGo.AddComponent<KickInputRouter>();
-            router.motion = motion;
+            router.motion = null;
+            router.useMotion = false;
             router.touch = touch;
             inputGo.SetActive(true);
 
@@ -246,6 +250,8 @@ namespace Sheytoonak.Prototype
             game.inputSource = router;
             game.autoStart = false;
             gameGo.AddComponent<ProceduralSfx>();
+            gameGo.AddComponent<CurseVoice>();
+            gameGo.AddComponent<StreetLife>();
             var overlay = gameGo.AddComponent<SensorDebugOverlay>();
             overlay.motion = motion;
             overlay.game = game;
@@ -258,20 +264,34 @@ namespace Sheytoonak.Prototype
         // closer to the player's line (spread), bigger window hit zones, less wind.
         // House 1 is the first painted facade (ChatGPT, 2026-10-25, docs/ART_SPEC.fa.md). Window rectangles are
         // pixel bounds measured on the 1536x1024 image (frame included), converted to uv with origin bottom-left.
-        HouseDefinition House1() => MakePaintedHouse("House 1", "Art/house_01", 1536f, 1024f, 13f,
+        HouseDefinition House1() => MakePaintedHouse("البيت ١", "Art/house_01", 1536f, 1024f, 13f,
             new[] { new Rect(268f, 40f, 224f, 205f), new Rect(662f, 40f, 218f, 205f), new Rect(1055f, 40f, 220f, 205f),
                     new Rect(268f, 350f, 224f, 205f), new Rect(662f, 350f, 218f, 205f), new Rect(1055f, 350f, 220f, 205f) },
-            0f, 2.1f, 0.4f, 1.15f);
-        HouseDefinition House2() => MakePaintedHouse("House 2", "Art/house_02", 1536f, 1024f, 13f,
+            0f, 2.1f, 0f, 1.15f,
+            Details(curtains: 6, pots: new[] { 0, 2, 3, 4, 5 }));
+        HouseDefinition House2() => MakePaintedHouse("البيت ٢", "Art/house_02", 1536f, 1024f, 13f,
             Grid(new[] { (268f, 490f), (660f, 880f), (1055f, 1275f) }, new[] { (25f, 195f), (265f, 440f), (510f, 675f) }),
-            0.25f, 1.95f, 0.7f, 1.1f);
-        HouseDefinition House3() => MakePaintedHouse("House 3", "Art/house_03", 1536f, 1024f, 13f,
+            0.25f, 1.95f, 0f, 1.1f,
+            Details(curtains: 9, pots: new[] { 0, 1, 2, 4, 5, 6 }, laundry: new[] { 3 }, cats: new[] { 8 }));
+        HouseDefinition House3() => MakePaintedHouse("البيت ٣", "Art/house_03", 1536f, 1024f, 13f,
             Grid(new[] { (215f, 400f), (540f, 720f), (860f, 1045f), (1185f, 1365f) }, new[] { (30f, 190f), (265f, 430f), (500f, 640f) }),
-            0.5f, 1.8f, 1.0f, 1.0f);
+            0.5f, 1.8f, 0f, 1.0f,
+            Details(curtains: 12, pots: new[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 }));
 
-        HouseDefinition House4() => MakePaintedHouse("House 4", "Art/house_04", 1536f, 1024f, 13f,
+        HouseDefinition House4() => MakePaintedHouse("البيت ٤", "Art/house_04", 1536f, 1024f, 13f,
             Grid(new[] { (318f, 495f), (685f, 860f), (1045f, 1225f) }, new[] { (25f, 185f), (235f, 395f), (435f, 595f), (630f, 760f) }),
-            0.6f, 1.7f, 1.2f, 0.95f);
+            0.6f, 1.7f, 0f, 0.95f,
+            Details(curtains: 12, pots: new[] { 0, 1, 2, 3, 4, 5, 7, 9, 11 }));
+
+        static WindowDetail[] Details(int curtains, int[] pots = null, int[] laundry = null, int[] cats = null)
+        {
+            var list = new System.Collections.Generic.List<WindowDetail>();
+            for (int i = 0; i < curtains; i++) list.Add(new WindowDetail(i, DetailKind.Curtain));
+            foreach (int i in pots ?? new int[0]) list.Add(new WindowDetail(i, DetailKind.Pot));
+            foreach (int i in laundry ?? new int[0]) list.Add(new WindowDetail(i, DetailKind.Laundry));
+            foreach (int i in cats ?? new int[0]) list.Add(new WindowDetail(i, DetailKind.Cat));
+            return list.ToArray();
+        }
 
         /// <summary>Pixel rects for a regular grid of windows: column x-ranges by row y-ranges (image pixels, origin top-left).</summary>
         static Rect[] Grid((float, float)[] cols, (float, float)[] rows)
@@ -286,7 +306,7 @@ namespace Sheytoonak.Prototype
 
         /// <summary>Facade from a painting: pixel rects (origin top-left, as measured on the image) become world rects on a quad w metres wide.</summary>
         static HouseDefinition MakePaintedHouse(string name, string texture, float imgW, float imgH, float w, Rect[] pixelWindows,
-                                                float wind, float returnTime, float spread, float hitScale)
+                                                float wind, float returnTime, float spread, float hitScale, WindowDetail[] details = null)
         {
             float h = w * imgH / imgW;
             var house = ScriptableObject.CreateInstance<HouseDefinition>();
@@ -300,6 +320,7 @@ namespace Sheytoonak.Prototype
             house.returnFlightTime = returnTime;
             house.returnSpreadX = spread;
             house.windowHitScale = hitScale;
+            house.details = details ?? System.Array.Empty<WindowDetail>();
             var rects = new Rect[pixelWindows.Length];
             for (int i = 0; i < rects.Length; i++)
             {
@@ -403,10 +424,11 @@ namespace Sheytoonak.Prototype
             var wallMat = Mat(top);
             float above = 60f - paintedHeight;
             Box(root, new Vector3(0f, paintedHeight + above * 0.5f, 0.3f), new Vector3(w, above, 0.5f), wallMat);
-            // Neighbours in a slightly darker shade of the same brick: no pale border around the painting.
+            // Neighbours: painted blank walls (Art/wall_left, Art/wall_right: houses without visible windows,
+            // user 2026-10-27) when they exist, otherwise a darker shade of this painting's brick.
             var sideMat = Mat(top * 0.88f);
-            Box(root, new Vector3(-(w * 0.5f + 10f), 30f, 0.6f), new Vector3(20f, 60f, 0.5f), sideMat);
-            Box(root, new Vector3(w * 0.5f + 10f, 30f, 0.6f), new Vector3(20f, 60f, 0.5f), sideMat);
+            SideWall(root, "Art/wall_left", -1f, w, paintedHeight, sideMat);
+            SideWall(root, "Art/wall_right", 1f, w, paintedHeight, sideMat);
 
             var rects = h.worldWindows;
             windowRenderers = new Renderer[rects.Length];
@@ -418,7 +440,139 @@ namespace Sheytoonak.Prototype
                 windowRenderers[i] = pane.GetComponent<Renderer>();
                 windowRenderers[i].enabled = false; // the painting shows the intact glass
             }
+
+            // Moving details cut out of the painting itself (user, 2026-10-27: curtains flutter, pots and cats
+            // fall, laundry sways). Laundry is alive from the start; the rest wake up when the window breaks.
+            paintedTex = tex; paintedW = w; paintedH = paintedHeight; detailRoot = root;
+            foreach (var d in h.details)
+                if (d.kind == DetailKind.Laundry) Laundry(d);
             return root;
+        }
+
+        Texture2D paintedTex; float paintedW, paintedH; Transform detailRoot;
+
+        Rect DetailPixels(WindowDetail d)
+        {
+            if (d.pixel.width > 0f && d.pixel.height > 0f) return d.pixel;
+            // Default regions, in image pixels from the window's world rect.
+            Rect w = game.houses[Mathf.Clamp(game.Rules != null ? game.Rules.HouseIndex : 0, 0, game.houses.Length - 1)].worldWindows[d.window];
+            float px0 = (w.xMin / paintedW + 0.5f) * paintedTex.width, px1 = (w.xMax / paintedW + 0.5f) * paintedTex.width;
+            float py0 = (1f - w.yMax / paintedH) * paintedTex.height, py1 = (1f - w.yMin / paintedH) * paintedTex.height;
+            float pw = px1 - px0, ph = py1 - py0;
+            switch (d.kind)
+            {
+                case DetailKind.Pot: return new Rect(px0 + pw * 0.15f, py1 - ph * 0.38f, pw * 0.7f, ph * 0.38f);
+                case DetailKind.Cat: return new Rect(px0 + pw * 0.5f, py1 - ph * 0.5f, pw * 0.5f, ph * 0.5f);
+                default: return new Rect(px0, py0, pw, ph);
+            }
+        }
+
+        /// <summary>A sprite cut from the painting at the given pixel rect, placed exactly over the same spot.</summary>
+        SpriteRenderer Cutout(WindowDetail d, float zOffset, out Rect pix)
+        {
+            pix = DetailPixels(d);
+            int x = Mathf.Clamp(Mathf.RoundToInt(pix.xMin), 0, paintedTex.width - 2), y = Mathf.Clamp(Mathf.RoundToInt(paintedTex.height - pix.yMax), 0, paintedTex.height - 2);
+            int cw = Mathf.Clamp(Mathf.RoundToInt(pix.width), 1, paintedTex.width - x), ch = Mathf.Clamp(Mathf.RoundToInt(pix.height), 1, paintedTex.height - y);
+            var tex = new Texture2D(cw, ch, TextureFormat.RGBA32, false) { filterMode = FilterMode.Bilinear, wrapMode = TextureWrapMode.Clamp };
+            tex.SetPixels(paintedTex.GetPixels(x, y, cw, ch));
+            tex.Apply();
+            float ppu = paintedTex.width / paintedW;
+            var go = new GameObject(d.kind + " " + d.window);
+            go.transform.SetParent(detailRoot, false);
+            float wx = (pix.center.x / paintedTex.width - 0.5f) * paintedW, wy = (1f - pix.center.y / paintedTex.height) * paintedH;
+            go.transform.localPosition = new Vector3(wx, wy, zOffset);
+            var sr = go.AddComponent<SpriteRenderer>();
+            sr.sprite = Sprite.Create(tex, new Rect(0, 0, cw, ch), new Vector2(0.5f, 0.5f), ppu);
+            return sr;
+        }
+
+        void Laundry(WindowDetail d)
+        {
+            var sr = Cutout(d, -0.03f, out _);
+            StartCoroutine(Sway(sr.transform));
+        }
+
+        IEnumerator Sway(Transform t)
+        {
+            float phase = Random.value * 10f;
+            while (t != null)
+            {
+                float a = (0.6f + Mathf.Abs(wind) * 4f) * Mathf.Sin(Time.time * 1.6f + phase) + 0.25f * Mathf.Sin(Time.time * 4.1f + phase);
+                t.localRotation = Quaternion.Euler(0f, 0f, a);
+                t.localScale = new Vector3(1f + 0.03f * Mathf.Sin(Time.time * 2.3f + phase), 1f, 1f);
+                yield return null;
+            }
+        }
+
+        void WakeDetails(int window)
+        {
+            if (paintedTex == null || detailRoot == null || game == null) return;
+            var house = game.houses[Mathf.Clamp(game.Rules.HouseIndex, 0, game.houses.Length - 1)];
+            foreach (var d in house.details)
+            {
+                if (d.window != window) continue;
+                switch (d.kind)
+                {
+                    case DetailKind.Curtain:
+                    {
+                        var sr = Cutout(d, -0.04f, out _);
+                        StartCoroutine(Flutter(sr.transform));
+                        break;
+                    }
+                    case DetailKind.Pot:
+                    case DetailKind.Cat:
+                    {
+                        var sr = Cutout(d, -0.06f, out Rect pix);
+                        var rb = sr.gameObject.AddComponent<Rigidbody>();
+                        rb.mass = 0.5f;
+                        rb.linearVelocity = new Vector3(Random.Range(-0.4f, 0.4f), d.kind == DetailKind.Cat ? 1.5f : 0.3f, Random.Range(-2.5f, -1.2f));
+                        rb.angularVelocity = new Vector3(0f, 0f, Random.Range(-3f, 3f));
+                        var col = sr.gameObject.AddComponent<SphereCollider>();
+                        col.radius = 0.12f;
+                        Destroy(sr.gameObject, 3.5f);
+                        break;
+                    }
+                }
+            }
+        }
+
+        /// <summary>The curtain behind a smashed pane billows for a couple of seconds, then hangs still (never torn off).</summary>
+        IEnumerator Flutter(Transform t)
+        {
+            float start = Time.time;
+            while (t != null && Time.time - start < 2.5f)
+            {
+                float k = 1f - (Time.time - start) / 2.5f;
+                float a = Mathf.Sin((Time.time - start) * 11f) * 6f * k;
+                t.localRotation = Quaternion.Euler(0f, 0f, a);
+                t.localScale = new Vector3(1f + 0.12f * k * Mathf.Sin((Time.time - start) * 7f), 1f, 1f);
+                yield return null;
+            }
+            if (t != null) { t.localRotation = Quaternion.identity; t.localScale = Vector3.one; }
+        }
+
+        void SideWall(Transform root, string resource, float side, float w, float paintedHeight, Material fallback)
+        {
+            var tex = Resources.Load<Texture2D>(resource);
+            if (tex == null)
+            {
+                Box(root, new Vector3(side * (w * 0.5f + 10f), 30f, 0.6f), new Vector3(20f, 60f, 0.5f), fallback);
+                return;
+            }
+            float ww = paintedHeight * tex.width / tex.height; // same vertical scale as the facade painting
+            var mat = new Material(Shader.Find("Standard")) { mainTexture = tex, color = Color.white };
+            mat.SetFloat("_Glossiness", 0.05f);
+            for (int k = 0; k < 2; k++) // two copies outward, enough to fill the widest phone
+            {
+                var quad = GameObject.CreatePrimitive(PrimitiveType.Quad);
+                Strip(quad);
+                quad.transform.SetParent(root, false);
+                quad.transform.localPosition = new Vector3(side * (w * 0.5f + ww * (0.5f + k)), paintedHeight * 0.5f, 0.05f);
+                quad.transform.localScale = new Vector3(ww, paintedHeight, 1f);
+                quad.GetComponent<Renderer>().sharedMaterial = mat;
+            }
+            var above = Mat(AverageColour(tex, 0.02f, 0.06f));
+            Box(root, new Vector3(side * (w * 0.5f + ww), paintedHeight + (60f - paintedHeight) * 0.5f, 0.3f), new Vector3(ww * 2f, 60f - paintedHeight, 0.5f), above);
         }
 
         static Color AverageColour(Texture2D tex, float fromV, float toV)
@@ -443,6 +597,7 @@ namespace Sheytoonak.Prototype
             if (i < 0 || i >= windowRenderers.Length) return;
             windowRenderers[i].enabled = true;
             windowRenderers[i].sharedMaterial = broken;
+            WakeDetails(i);
             for (int k = 0; k < 10; k++)
             {
                 var shard = GameObject.CreatePrimitive(PrimitiveType.Cube);
@@ -456,7 +611,7 @@ namespace Sheytoonak.Prototype
                 rb.angularVelocity = Random.insideUnitSphere * 10f;
                 Destroy(shard, 2.5f);
             }
-            Toast("+1  Window smashed!", 1.2f);
+            Toast(Ar.Smashed, 1.2f);
         }
 
         void OnWalkStarted(HouseDefinition from, HouseDefinition to, float duration)
@@ -464,7 +619,7 @@ namespace Sheytoonak.Prototype
             oldFacadeRoot = facadeRoot;
             facadeRoot = null;
             StartCoroutine(SlideAway(oldFacadeRoot, duration));
-            Toast("Walking to " + to.displayName + "...", duration);
+            Toast(Ar.Walking(to.displayName), duration);
         }
 
         IEnumerator SlideAway(Transform t, float duration)
@@ -480,15 +635,15 @@ namespace Sheytoonak.Prototype
 
         void OnKicked(KickGesture g, float quality, Vector3 velocity)
         {
-            if (quality > 0.85f) Toast("Clean strike!", 0.7f);
+            if (quality > 0.85f) Toast("ضربة نضيفة!", 0.7f);
         }
 
         void OnKickRejected(KickRejectReason why)
         {
             switch (why)
             {
-                case KickRejectReason.NeedsBounce: Toast("Let it bounce once first", 0.9f); break;
-                case KickRejectReason.OutOfReach: Toast("Too far - move to the ball", 0.9f); break;
+                case KickRejectReason.NeedsBounce: Toast(Ar.BounceFirst, 0.9f); break;
+                case KickRejectReason.OutOfReach: Toast(Ar.TooFar, 0.9f); break;
             }
         }
 
@@ -497,32 +652,31 @@ namespace Sheytoonak.Prototype
             string why;
             switch (reason)
             {
-                case LossReason.SecondBounce: why = "It bounced twice"; break;
-                case LossReason.ShortShot: why = "Too short"; break;
-                case LossReason.OverRoof: why = "Over the roof!"; break;
-                case LossReason.OutOfBounds: why = "Out into the street"; break;
-                case LossReason.BallLostInHouse: why = "The owner kept the ball"; break;
-                default: why = "It got past you"; break;
+                case LossReason.SecondBounce: why = Ar.LostTwice; break;
+                case LossReason.ShortShot: why = Ar.LostShort; break;
+                case LossReason.OutOfBounds: why = Ar.LostStreet; break;
+                case LossReason.BallLostInHouse: why = Ar.LostKept; break;
+                default: why = Ar.LostPast; break;
             }
-            Toast(why + "  (-1 life)", 1.4f);
+            Toast(why + "  " + Ar.LifeLost, 1.4f);
         }
 
         void OnBallInHouse(int window, bool thrownBack)
         {
-            Toast(thrownBack ? "Into the flat... the owner throws it back!" : "Into the flat!", 1.3f);
+            Toast(thrownBack ? Ar.IntoFlatBack : Ar.IntoFlat, 1.3f);
         }
 
-        void OnMedal(int medals, HouseDefinition h) => Toast("MEDAL! " + h.displayName + " has no glass left", 2f);
+        void OnMedal(int medals, HouseDefinition h) => Toast(Ar.Medal(h.displayName), 2f);
 
         void OnBounced(Vector3 p, int bounce, bool returning)
         {
-            if (returning && bounce == 1) Toast("NOW!", 0.4f);
+            if (returning && bounce == 1) Toast(Ar.Now, 0.4f);
         }
 
         void OnWind(float w) => wind = w;
 
-        void OnGameOver(int score, int best, int medals) { endTitle = "Game over"; endScore = score; endBest = best; endMedals = medals; }
-        void OnVictory(int score, int best, int medals) { endTitle = "You smashed the whole street!"; endScore = score; endBest = best; endMedals = medals; }
+        void OnGameOver(int score, int best, int medals) { endTitle = Ar.GameOver; endScore = score; endBest = best; endMedals = medals; }
+        void OnVictory(int score, int best, int medals) { endTitle = Ar.Victory; endScore = score; endBest = best; endMedals = medals; }
 
         void Toast(string text, float seconds)
         {
@@ -546,70 +700,55 @@ namespace Sheytoonak.Prototype
             var p = cam.transform.position;
             // POV: the eyes are over the feet, so follow the strike spot fully (smoothed).
             float x = Mathf.Lerp(p.x, foot.X, 1f - Mathf.Exp(-10f * Time.unscaledDeltaTime));
-            cam.transform.position = new Vector3(x, cameraOffset.y, cameraOffset.z);
+            cam.transform.position = new Vector3(x, cameraOffset.y, cameraOffset.z) + (shake != null ? shake.Offset : Vector3.zero);
         }
 
-        // ------------------------------------------------------------------ HUD (English placeholder; Persian UI is a later step)
+        // ------------------------------------------------------------------ HUD (spoken Levantine Arabic, see Ar.cs)
 
         void OnGUI()
         {
             float u = Mathf.Max(1f, Screen.height / 900f);
-            var label = new GUIStyle(GUI.skin.label) { fontSize = Mathf.RoundToInt(22 * u), normal = { textColor = Color.white } };
-            var big = new GUIStyle(label) { fontSize = Mathf.RoundToInt(40 * u), alignment = TextAnchor.MiddleCenter, fontStyle = FontStyle.Bold };
-            var button = new GUIStyle(GUI.skin.button) { fontSize = Mathf.RoundToInt(28 * u) };
+            var font = Ar.Font;
+            var label = new GUIStyle(GUI.skin.label) { fontSize = Mathf.RoundToInt(24 * u), normal = { textColor = Color.white }, font = font };
+            var big = new GUIStyle(label) { fontSize = Mathf.RoundToInt(42 * u), alignment = TextAnchor.MiddleCenter, fontStyle = FontStyle.Bold };
+            var button = new GUIStyle(GUI.skin.button) { fontSize = Mathf.RoundToInt(30 * u), font = font };
             float pad = 16f * u;
             var rules = game != null ? game.Rules : null;
+            var right = new Rect(pad, 0f, Screen.width - pad * 2f, 0f);
 
             if (rules != null && !showStart && endTitle == null)
             {
-                Shadowed(new Rect(pad, pad + SafeTop(), Screen.width, 50 * u), "Glass " + rules.Score, big, TextAnchor.UpperLeft);
-                string lives = new string('O', Mathf.Max(0, rules.Lives)) + new string('-', Mathf.Max(0, game.config.lives - rules.Lives));
-                Shadowed(new Rect(pad, pad + SafeTop() + 55 * u, Screen.width, 40 * u),
-                    "Lives " + lives + "   House " + (rules.HouseIndex + 1) + "/" + rules.HouseCount +
-                    "   Windows " + (rules.WindowCount - rules.WindowsLeft) + "/" + rules.WindowCount, label, TextAnchor.UpperLeft);
-                Shadowed(new Rect(pad, pad + SafeTop() + 90 * u, Screen.width, 40 * u),
-                    "Wind " + (Mathf.Abs(wind) < 0.05f ? "calm" : (wind > 0f ? "-> " : "<- ") + Mathf.Abs(wind).ToString("0.0")) +
-                    "   Medals " + rules.Medals + "   " + (router != null && router.UsingMotion ? "[motion]" : "[touch]"), label, TextAnchor.UpperLeft);
+                Shadowed(new Rect(right.x, pad + SafeTop(), right.width, 52 * u), Ar.T(Ar.Hud1(rules.Score)), big, TextAnchor.UpperRight);
+                Shadowed(new Rect(right.x, pad + SafeTop() + 58 * u, right.width, 40 * u),
+                    Ar.T(Ar.Hud2(rules.Lives, game.config.lives, rules.HouseIndex + 1, rules.HouseCount, rules.WindowCount - rules.WindowsLeft, rules.WindowCount)), label, TextAnchor.UpperRight);
+                Shadowed(new Rect(right.x, pad + SafeTop() + 94 * u, right.width, 40 * u), Ar.T(Ar.Hud3(wind, rules.Medals)), label, TextAnchor.UpperRight);
                 if (Time.time < toastUntil)
-                    Shadowed(new Rect(0, Screen.height * 0.42f, Screen.width, 60 * u), toast, big, TextAnchor.MiddleCenter);
+                    Shadowed(new Rect(0, Screen.height * 0.42f, Screen.width, 60 * u), Ar.T(toast), big, TextAnchor.MiddleCenter);
                 if (rules.Phase == RallyPhase.Serve)
-                    Shadowed(new Rect(0, Screen.height * 0.55f, Screen.width, 40 * u),
-                        router != null && router.UsingMotion ? "Tap where you want the ball to hit; tilt the phone to move" : "Tap where you want the ball to hit",
+                    Shadowed(new Rect(0, Screen.height * 0.55f, Screen.width, 40 * u), Ar.T(Ar.ServeHint),
                         new GUIStyle(label) { alignment = TextAnchor.MiddleCenter }, TextAnchor.MiddleCenter);
             }
 
             if (showStart)
             {
                 Panel();
-                GUILayout.BeginArea(new Rect(pad * 2, Screen.height * 0.2f, Screen.width - pad * 4, Screen.height * 0.7f));
-                GUILayout.Label("SHEYTOONAK - prototype", big);
-                GUILayout.Label("Placeholder graphics. Tilt or move the phone left/right to reach the ball. " +
-                                "Tap the screen to kick: the ball goes where you tap - left/right aims, low on the screen hits the low windows, high hits the top row. " +
-                                "A returning ball must bounce exactly once before you kick it.", new GUIStyle(label) { wordWrap = true });
+                GUILayout.BeginArea(new Rect(pad * 2, Screen.height * 0.12f, Screen.width - pad * 4, Screen.height * 0.8f));
+                GUILayout.Label(Ar.T(Ar.Title), big);
+                // IMGUI wraps left-to-right; a wrapped Arabic paragraph would break in the wrong places, so it is split by sentence.
+                foreach (var line in Ar.Intro.Split('.'))
+                    if (line.Trim().Length > 0) GUILayout.Label(Ar.T(line.Trim() + "."), new GUIStyle(label) { alignment = TextAnchor.MiddleRight });
                 GUILayout.Space(20 * u);
-                if (GUILayout.Button("Play", button, GUILayout.Height(80 * u))) { showStart = false; endTitle = null; touch?.IgnoreFor(0.5f); game.NewGame(); }
-                if (motion != null && motion.IsAvailable && router != null && router.kickFromMotion)
-                {
-                    GUILayout.Space(10 * u);
-                    if (GUILayout.Button("Calibrate kick (swing once in 3 s)", button, GUILayout.Height(70 * u)))
-                    {
-                        calibrationText = "Swing now...";
-                        motion.CalibrateKick(3f, ok => calibrationText = ok ? "Calibrated." : "No swing detected - try a bigger swing.");
-                    }
-                    GUILayout.Label(calibrationText, label);
-                }
-                else if (motion == null || !motion.IsAvailable) GUILayout.Label("No gyroscope found: finger position moves you.", label);
-                GUILayout.Label("Three-finger tap: sensor debug overlay.", label);
+                if (GUILayout.Button(Ar.T(Ar.Play), button, GUILayout.Height(80 * u))) { showStart = false; endTitle = null; touch?.IgnoreFor(0.5f); game.NewGame(); }
                 GUILayout.EndArea();
             }
             else if (endTitle != null)
             {
                 Panel();
                 GUILayout.BeginArea(new Rect(pad * 2, Screen.height * 0.3f, Screen.width - pad * 4, Screen.height * 0.5f));
-                GUILayout.Label(endTitle, big);
-                GUILayout.Label("Glass smashed: " + endScore + "   Best: " + endBest + "   Medals: " + endMedals, new GUIStyle(label) { alignment = TextAnchor.MiddleCenter });
+                GUILayout.Label(Ar.T(endTitle), big);
+                GUILayout.Label(Ar.T(Ar.End(endScore, endBest, endMedals)), new GUIStyle(label) { alignment = TextAnchor.MiddleCenter });
                 GUILayout.Space(20 * u);
-                if (GUILayout.Button("Play again", button, GUILayout.Height(80 * u))) { endTitle = null; touch?.IgnoreFor(0.5f); game.NewGame(); }
+                if (GUILayout.Button(Ar.T(Ar.PlayAgain), button, GUILayout.Height(80 * u))) { endTitle = null; touch?.IgnoreFor(0.5f); game.NewGame(); }
                 GUILayout.EndArea();
             }
         }
@@ -656,18 +795,24 @@ namespace Sheytoonak.Prototype
             }
         }
 
+        /// <summary>The cheap striped plastic ball of every back street (user, 2026-10-27), not a leather football:
+        /// coloured bands around the sphere on a slightly yellowed white, with a few scuffs.</summary>
         static Texture2D FootballTexture()
         {
-            const int n = 64;
-            var tex = new Texture2D(n, n, TextureFormat.RGBA32, false) { filterMode = FilterMode.Bilinear, wrapMode = TextureWrapMode.Repeat };
-            var px = new Color32[n * n];
-            for (int y = 0; y < n; y++)
+            const int n = 128, m = 64;
+            var tex = new Texture2D(n, m, TextureFormat.RGBA32, false) { filterMode = FilterMode.Bilinear, wrapMode = TextureWrapMode.Repeat };
+            var px = new Color32[n * m];
+            var white = new Color32(242, 236, 222, 255);
+            var bands = new[] { new Color32(205, 48, 52, 255), new Color32(40, 90, 170, 255), new Color32(225, 170, 40, 255), new Color32(40, 140, 80, 255) };
+            var rng = new System.Random(5);
+            for (int y = 0; y < m; y++)
                 for (int x = 0; x < n; x++)
                 {
-                    // Staggered dark patches: reads as a football while it spins.
-                    int cx = (x + ((y / 16) % 2) * 8) % 16, cy = y % 16;
-                    bool dark = (cx - 8) * (cx - 8) + (cy - 8) * (cy - 8) < 20;
-                    px[y * n + x] = dark ? new Color32(25, 25, 25, 255) : new Color32(245, 245, 245, 255);
+                    // Bands by latitude (the sphere maps v to latitude): 7 stripes between the poles.
+                    int stripe = (y * 7) / m;
+                    Color32 c = stripe % 2 == 1 ? bands[(stripe / 2) % bands.Length] : white;
+                    if (rng.NextDouble() < 0.03) c = new Color32((byte)(c.r * 0.8f), (byte)(c.g * 0.8f), (byte)(c.b * 0.8f), 255); // scuffs
+                    px[y * n + x] = c;
                 }
             tex.SetPixels32(px);
             tex.Apply();

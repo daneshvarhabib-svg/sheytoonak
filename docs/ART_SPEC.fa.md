@@ -1,4 +1,8 @@
-# مشخصاتِ تصویرها (آرت) — شیطونک
+# مشخصاتِ تصویرها (آرت) — مدينة فاجعة
+
+⚠️ **به‌روزرسانیِ ۵ آبان ۱۴۰۵:** شهرِ این مرحله **بیروت** است. ساختمان‌های ۱ تا ۴ قبل از این تصمیم ساخته شده‌اند
+(اروپایی‌اند) و فعلاً می‌مانند؛ خانه‌های ۵ تا ۸ و همه‌ی چیزهای تازه با حال‌وهوایِ بیروت ساخته می‌شوند و بعداً می‌شود
+۱ تا ۴ را هم با همین پرامپت‌ها از نو ساخت. بازیکن دیده نمی‌شود (دیدِ اول‌شخص)؛ تصویرِ بازیکن لازم نیست.
 
 این سند می‌گوید چه تصویرهایی لازم است، با چه اندازه و چه نامی، و پرامپتِ آماده‌ی هر یک برای
 ChatGPT. سبکِ مرجع: `docs/reference/street-reference.png` (انیمه‌ی نیمه‌واقعی، عصرِ آفتابی، خطِ تمیز).
@@ -54,6 +58,47 @@ ChatGPT. سبکِ مرجع: `docs/reference/street-reference.png` (انیمه‌
 
 ترتیبِ کار: **۱، ۱۱، ۱۲، ۱۰، ۱۳** اول (یک خانه‌ی کامل تا سبک تثبیت شود)، بعد ۱۴ و ۱۵، بعد ۲ تا ۸، بعد ۹ و ۱۷.
 
+## تصویرهای تازه‌ی ۵ آبان (بیروت، زنده‌بودنِ صحنه)
+
+| نام فایل | نسبت | چیست |
+|---|---|---|
+| `wall_left.png`، `wall_right.png` | 3:2 | دیوارِ خانه‌های کناری **بدونِ پنجره** (کاربر: «دیوارهای بغل خالی نباشه، خونه باشه ولی فقط دیوارش») — آجر/سنگِ بیروتی، کولرِ گازی، لوله، کمی بوگنویلا، بدونِ پنجره‌ی واضح |
+| `Props/tree_01.png`، `tree_02.png` | 2:3 شفاف | درختِ پیاده‌رو (فیکوس یا چنارِ بیروت)، کلِ درخت با تنه، پس‌زمینه‌ی شفاف |
+| `Props/ped_01..04.png` | 2:3 شفاف | رهگذرِ بیروتی **از پهلو، رو به راست، در حالِ راه‌رفتن**: پیرمرد با طربوش و عبا، زنِ جوان با روسری و کیفِ خرید، مردِ جوان با پیراهنِ باز و سیگار، بچه‌مدرسه‌ای با کیف |
+| `Props/car_01..03.png` | 3:1 (افقی) شفاف | ماشینِ قدیمیِ بیروتی **از پهلو، رو به راست**: مرسدسِ تاکسیِ کرم با نوارِ قرمز، فولکس‌واگنِ قدیمی، وانتِ کوچک |
+
+### پرامپتِ دیوارهای کناری (دو بار، left و right)
+```
+Same style, flat straight-on elevation, landscape 3:2, wall continuing to the very top edge of the frame, sidewalk line at the very bottom. Subject: the blank side wall of an old Beirut apartment building: weathered sandstone and plaster, a few air-conditioning units, a drainpipe, faded paint, a little bougainvillea climbing one corner. No visible windows, no doors, no people, no text, no letters, no signs.
+```
+### پرامپتِ درخت
+```
+Same style. A single Beirut sidewalk tree (ficus), full tree with trunk and dense green leaves, seen from the side, isolated on a transparent background, no ground, no shadow. Portrait 2:3.
+```
+### پرامپتِ رهگذر (چهار بار، هر بار یک نفر)
+```
+Same style. Full-body Lebanese pedestrian seen exactly from the side, walking to the right, mid-stride: [an old man in a tarboush fez, grey moustache, loose white shirt and dark trousers, prayer beads in hand] / [a young woman in a headscarf and long coat carrying shopping bags] / [a young man in an open shirt and jeans, sunglasses] / [a schoolboy with a backpack]. Transparent background, no ground, no shadow, no text. Portrait 2:3.
+```
+### پرامپتِ ماشین (سه بار)
+```
+Same style. An old Beirut car seen exactly from the side, facing right: [a cream 1980s Mercedes taxi with a red stripe] / [a dusty old Volkswagen Beetle] / [a small white pickup truck with a few crates in the back]. Transparent background, no ground, no shadow, no text, no number plate characters. Landscape 3:1.
+```
+
+## جمله‌های فحشِ صاحب‌خانه (برای ضبط)
+
+کاربر: «هر بار شیشه می‌شکنه یه صدای فحشی از توی خونه به زبون عربی بیاد، ترجیحاً غیررکیک». هشت جمله‌ی شامی، تند ولی تمیز؛ هر کدام را یک نفر (ترجیحاً دو صدا: مرد و زن) با عصبانیت و کمی دور (از پشتِ پنجره) ضبط کند، ۱ تا ۲ ثانیه، فایلِ `.wav` یا `.mp3` یا `.ogg` (نه `.m4a`) با هر نامی در `Assets/Resources/Audio/Curses/`:
+
+1. ولك شو عم تعمل؟!
+2. يا حيوان! كسرتلي الشباك!
+3. الله يقطعك يا ولد!
+4. ولاك روح من هون!
+5. يا مجنون! شو هالمصيبة؟!
+6. الله ياخدك يا زلمة!
+7. يلعن أبو هالشغلة!
+8. بدّي خبّر أبوك، فهمت؟!
+
+تا این‌ها نرسد، بازی یک غرغرِ ساخته‌شده پخش می‌کند تا زمان و بلندی‌اش روی گوشی سنجیده شود.
+
 ## پرامپت‌ها (انگلیسی؛ عیناً کپی کن)
 
 پیشوندِ مشترک که اولِ همه‌ی پرامپت‌ها می‌آید:
@@ -72,17 +117,17 @@ ChatGPT. سبکِ مرجع: `docs/reference/street-reference.png` (انیمه‌
 ### 4 — `house_04.png`
 > [پیشوند] Straight-on flat front elevation of a five-storey yellow brick building, whole facade inside the frame, sidewalk at the bottom, brick continuing to the top edge of the frame, no roof or sky. Ground floor bookshop with a dark green wooden front and a bay display window. Above it exactly four rows of three tall windows with white frames and reflective glass, wide spacing, window boxes with red geraniums on the second row.
 
-### 5 — `house_05.png`
-> [پیشوند] Straight-on flat front elevation of a five-storey grey stone and brick building, whole facade inside the frame, sidewalk at the bottom, brick continuing to the top edge of the frame, no roof or sky. Ground floor pharmacy with a glowing green cross symbol (no letters) and a white awning. Above it exactly four rows of four large windows with stone frames and reflective glass, generous spacing, iron balcony rail on the top row.
+### 5 — `house_05.png` (بیروت)
+> [پیشوند] Straight-on flat front elevation of a five-storey old Beirut apartment building in warm sandstone with faded ochre plaster and wooden shutters, whole facade inside the frame, sidewalk at the bottom, brick continuing to the top edge of the frame, no roof or sky. Ground floor pharmacy with a glowing green cross symbol (no letters) and a white awning. Above it exactly four rows of four large windows with stone frames and reflective glass, generous spacing, iron balcony rail on the top row.
 
-### 6 — `house_06.png`
-> [پیشوند] Straight-on flat front elevation of a five-storey chocolate-brown brick building, whole facade inside the frame, sidewalk at the bottom, brick continuing to the top edge of the frame, no roof or sky. Ground floor ice-cream parlour with a pink-and-white striped awning. Above it exactly four rows of four large windows with cream frames and reflective glass; every window on the third row has a small wrought-iron balcony with potted plants; generous brick spacing.
+### 6 — `house_06.png` (بیروت)
+> [پیشوند] Straight-on flat front elevation of a six-storey Beirut building in pale limestone with green wooden shutters, bougainvillea on one balcony, whole facade inside the frame, sidewalk at the bottom, brick continuing to the top edge of the frame, no roof or sky. Ground floor ice-cream parlour with a pink-and-white striped awning. Above it exactly four rows of four large windows with cream frames and reflective glass; every window on the third row has a small wrought-iron balcony with potted plants; generous brick spacing.
 
-### 7 — `house_07.png`
-> [پیشوند] Straight-on flat front elevation of a six-storey red brick building with white plaster trim, whole facade inside the frame, sidewalk at the bottom, brick continuing to the top edge of the frame, no roof or sky. Ground floor restaurant with a dark red awning and warm lit windows. Above it exactly five rows of four large arched-top windows with white frames and reflective glass, generous spacing, string lights along the first-floor ledge.
+### 7 — `house_07.png` (بیروت)
+> [پیشوند] Straight-on flat front elevation of a six-storey Ottoman-era Beirut mansion front in honey sandstone with white stone arches, whole facade inside the frame, sidewalk at the bottom, brick continuing to the top edge of the frame, no roof or sky. Ground floor restaurant with a dark red awning and warm lit windows. Above it exactly five rows of four large arched-top windows with white frames and reflective glass, generous spacing, string lights along the first-floor ledge.
 
-### 8 — `house_08.png`
-> [پیشوند] Straight-on flat front elevation of a grand six-storey corner building in dark brick with white window frames and white stone bands, whole facade inside the frame, sidewalk at the bottom, brick continuing to the top edge of the frame, no roof or sky. Ground floor is a small boutique hotel entrance with a golden awning, brass lamps and a doorman's red carpet (no person). Above it exactly five rows of four tall windows with white frames and reflective glass, wide spacing, flags without emblems on the second floor.
+### 8 — `house_08.png` (بیروت)
+> [پیشوند] Straight-on flat front elevation of a grand seven-storey French-mandate Beirut building in cream stone with wrought-iron balconies and tall shuttered windows, whole facade inside the frame, sidewalk at the bottom, brick continuing to the top edge of the frame, no roof or sky. Ground floor is a small boutique hotel entrance with a golden awning, brass lamps and a doorman's red carpet (no person). Above it exactly five rows of four tall windows with white frames and reflective glass, wide spacing, flags without emblems on the second floor.
 
 ### 9 — همسایه‌ها (3:2، دو بار: left / right)
 > [پیشوند] Straight-on flat front elevation of a plain, slightly lower neighbouring brick building seen on a city street, muted colours, small dark windows, a closed roller shutter on the ground floor, no awning, whole facade inside the frame, sidewalk at the bottom, brick continuing to the top edge of the frame, no roof or sky.

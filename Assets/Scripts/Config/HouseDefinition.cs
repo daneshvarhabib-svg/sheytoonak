@@ -34,6 +34,9 @@ namespace Sheytoonak
                  "worldFacadeWidth metres wide at facadeDistance; windows come from worldWindows, which the " +
                  "prototype derives from the image's uv rectangles. Empty = coloured boxes.")]
         public string paintedTexture = "";
+        [Tooltip("Things painted in or on the windows that should move: a pot or cat falls when the window breaks, " +
+                 "a curtain flutters, laundry sways in the wind all the time. Pixel rect empty = a default part of the window.")]
+        public WindowDetail[] details = Array.Empty<WindowDetail>();
 
         [Header("Placeholder geometry (used when there is no backdrop)")]
         [Tooltip("Window rectangles directly on the facade plane, in metres: x from the street centre, y from the ground. " +
@@ -55,6 +58,18 @@ namespace Sheytoonak
         public float returnSpreadX = 0.8f;
         [Tooltip("Scales every window's hit box. Below 1 makes this house harder without redrawing the art.")]
         [Range(0.3f, 1.2f)] public float windowHitScale = 1f;
+    }
+
+    public enum DetailKind { Pot, Cat, Curtain, Laundry }
+
+    [Serializable]
+    public struct WindowDetail
+    {
+        public int window;
+        public DetailKind kind;
+        [Tooltip("Region on the painting, image pixels, origin top-left. Zero size = default region for the kind.")]
+        public Rect pixel;
+        public WindowDetail(int window, DetailKind kind) { this.window = window; this.kind = kind; pixel = Rect.zero; }
     }
 
     [Serializable]
