@@ -199,7 +199,7 @@ namespace Sheytoonak.Prototype
         void BuildGameObjects()
         {
             var config = ScriptableObject.CreateInstance<GameConfig>();
-            var houses = new[] { House1(), House2(), House3(), House4() };
+            var houses = new[] { House1(), House2(), House3(), House4(), House5() };
 
             // Player: foot position + window mapping. No body: the game is first-person (POV).
             var player = new GameObject("Player");
@@ -282,6 +282,12 @@ namespace Sheytoonak.Prototype
             Grid(new[] { (318f, 495f), (685f, 860f), (1045f, 1225f) }, new[] { (25f, 185f), (235f, 395f), (435f, 595f), (630f, 760f) }),
             0.6f, 1.7f, 0f, 0.95f,
             Details(curtains: 12, pots: new[] { 0, 1, 2, 3, 4, 5, 7, 9, 11 }));
+
+        // Beirut pharmacy (ChatGPT, 2026-10-28): shutters beside each window; only the glass between them is hittable.
+        HouseDefinition House5() => MakePaintedHouse("البيت ٥", "Art/house_05", 1536f, 1024f, 13f,
+            Grid(new[] { (300f, 395f), (555f, 650f), (810f, 905f), (1065f, 1160f) }, new[] { (45f, 195f), (255f, 405f), (455f, 610f), (650f, 805f) }),
+            0.7f, 1.6f, 0f, 1.0f,
+            Details(curtains: 16));
 
         static WindowDetail[] Details(int curtains, int[] pots = null, int[] laundry = null, int[] cats = null)
         {
