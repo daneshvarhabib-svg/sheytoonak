@@ -8,8 +8,9 @@ namespace Sheytoonak
     /// </summary>
     public class CameraShake : MonoBehaviour
     {
-        public float wallAmplitude = 0.07f, wallSeconds = 0.3f;
-        public float groundAmplitude = 0.025f, groundSeconds = 0.18f;
+        // User, 2026-10-28: the first values (0.07 / 0.025) were "like an earthquake"; a small flinch is enough.
+        public float wallAmplitude = 0.012f, wallSeconds = 0.18f;
+        public float groundAmplitude = 0.004f, groundSeconds = 0.1f;
 
         float amp, until, total;
         public Vector3 Offset { get; private set; }

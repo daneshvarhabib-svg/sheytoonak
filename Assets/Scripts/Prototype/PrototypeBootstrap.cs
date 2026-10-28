@@ -326,7 +326,10 @@ namespace Sheytoonak.Prototype
             house.returnFlightTime = returnTime;
             house.returnSpreadX = spread;
             house.windowHitScale = hitScale;
-            house.details = details ?? System.Array.Empty<WindowDetail>();
+            // ⚠️ 2026-10-28: the automatic cut-outs (a copy of the window region as "curtain", its lower part as
+            // "pot") looked like the whole window popping out with another window behind it. Details now only
+            // exist when a real pixel rect of a real object is given; the defaults are gone.
+            house.details = System.Array.FindAll(details ?? System.Array.Empty<WindowDetail>(), d => d.pixel.width > 0f && d.pixel.height > 0f);
             var rects = new Rect[pixelWindows.Length];
             for (int i = 0; i < rects.Length; i++)
             {
@@ -441,7 +444,7 @@ namespace Sheytoonak.Prototype
             for (int i = 0; i < rects.Length; i++)
             {
                 Rect r = rects[i];
-                var pane = Box(root, new Vector3(r.center.x, r.center.y, -0.02f), new Vector3(r.width * 0.9f, r.height * 0.9f, 0.02f), broken);
+                var pane = Box(root, new Vector3(r.center.x, r.center.y, -0.02f), new Vector3(r.width * 0.9f, r.height * 0.9f, 0.02f), BrokenGlassMat());
                 pane.name = "Broken pane " + i;
                 windowRenderers[i] = pane.GetComponent<Renderer>();
                 windowRenderers[i].enabled = false; // the painting shows the intact glass
@@ -581,6 +584,49 @@ namespace Sheytoonak.Prototype
             Box(root, new Vector3(side * (w * 0.5f + ww), paintedHeight + (60f - paintedHeight) * 0.5f, 0.3f), new Vector3(ww * 2f, 60f - paintedHeight, 0.5f), above);
         }
 
+        Material brokenGlassMat;
+
+        /// <summary>Dark interior with a web of pale cracks and a jagged hole: what a smashed pane looks like from the street.</summary>
+        Material BrokenGlassMat()
+        {
+            if (brokenGlassMat != null) return brokenGlassMat;
+            const int n = 256;
+            var tex = new Texture2D(n, n, TextureFormat.RGBA32, false) { filterMode = FilterMode.Bilinear, wrapMode = TextureWrapMode.Clamp };
+            var px = new Color32[n * n];
+            var dark = new Color32(18, 16, 20, 255);
+            var crack = new Color32(215, 225, 235, 255);
+            var rng = new System.Random(9);
+            for (int i = 0; i < px.Length; i++) px[i] = dark;
+            float cx = n * 0.5f + (float)(rng.NextDouble() - 0.5) * 60f, cy = n * 0.5f + (float)(rng.NextDouble() - 0.5) * 60f;
+            // Radial cracks with a wobble, plus a few concentric rings.
+            for (int k = 0; k < 11; k++)
+            {
+                float ang = k * Mathf.PI * 2f / 11f + (float)rng.NextDouble() * 0.4f;
+                float len = n * (0.45f + (float)rng.NextDouble() * 0.4f);
+                for (float d = 0; d < len; d += 0.7f)
+                {
+                    float wob = Mathf.Sin(d * 0.08f + k) * 3f;
+                    int x = Mathf.RoundToInt(cx + Mathf.Cos(ang) * d - Mathf.Sin(ang) * wob), y = Mathf.RoundToInt(cy + Mathf.Sin(ang) * d + Mathf.Cos(ang) * wob);
+                    if (x >= 0 && x < n && y >= 0 && y < n) px[y * n + x] = crack;
+                }
+            }
+            for (int ring = 1; ring <= 3; ring++)
+            {
+                float rr = 22f * ring + (float)rng.NextDouble() * 10f;
+                for (float a = 0; a < Mathf.PI * 2f; a += 0.01f)
+                {
+                    if (rng.NextDouble() < 0.25) continue; // broken rings
+                    int x = Mathf.RoundToInt(cx + Mathf.Cos(a) * rr), y = Mathf.RoundToInt(cy + Mathf.Sin(a) * rr);
+                    if (x >= 0 && x < n && y >= 0 && y < n) px[y * n + x] = crack;
+                }
+            }
+            tex.SetPixels32(px);
+            tex.Apply();
+            brokenGlassMat = new Material(Shader.Find("Standard")) { mainTexture = tex, color = Color.white };
+            brokenGlassMat.SetFloat("_Glossiness", 0.6f);
+            return brokenGlassMat;
+        }
+
         static Color AverageColour(Texture2D tex, float fromV, float toV)
         {
             // Texture must be readable; if it is not, fall back to the placeholder brick tint.
@@ -601,8 +647,7 @@ namespace Sheytoonak.Prototype
         void OnWindowBroken(int i, Vector3 point)
         {
             if (i < 0 || i >= windowRenderers.Length) return;
-            windowRenderers[i].enabled = true;
-            windowRenderers[i].sharedMaterial = broken;
+            windowRenderers[i].enabled = true; // the pane shows the dark room with a web of cracks (its material is set at build time)
             WakeDetails(i);
             for (int k = 0; k < 10; k++)
             {
@@ -801,23 +846,36 @@ namespace Sheytoonak.Prototype
             }
         }
 
-        /// <summary>The cheap striped plastic ball of every back street (user, 2026-10-27), not a leather football:
-        /// coloured bands around the sphere on a slightly yellowed white, with a few scuffs.</summary>
+        /// <summary>The classic black-and-white panel ball ("توپ چهل‌تیکه"; user 2026-10-28: the striped plastic
+        /// one read as too weak to break glass). Dark pentagon-ish patches on an off-white sphere map, slightly scuffed.</summary>
         static Texture2D FootballTexture()
         {
-            const int n = 128, m = 64;
+            const int n = 256, m = 128;
             var tex = new Texture2D(n, m, TextureFormat.RGBA32, false) { filterMode = FilterMode.Bilinear, wrapMode = TextureWrapMode.Repeat };
             var px = new Color32[n * m];
-            var white = new Color32(242, 236, 222, 255);
-            var bands = new[] { new Color32(205, 48, 52, 255), new Color32(40, 90, 170, 255), new Color32(225, 170, 40, 255), new Color32(40, 140, 80, 255) };
+            var white = new Color32(236, 232, 224, 255);
+            var black = new Color32(28, 28, 30, 255);
+            var seam = new Color32(170, 165, 155, 255);
             var rng = new System.Random(5);
+            var centres = new System.Collections.Generic.List<Vector2>();
+            for (int row = 0; row < 4; row++)
+                for (int col = 0; col < 6; col++)
+                    centres.Add(new Vector2((col + (row % 2) * 0.5f) / 6f * n, (row + 0.5f) / 4f * m));
             for (int y = 0; y < m; y++)
                 for (int x = 0; x < n; x++)
                 {
-                    // Bands by latitude (the sphere maps v to latitude): 7 stripes between the poles.
-                    int stripe = (y * 7) / m;
-                    Color32 c = stripe % 2 == 1 ? bands[(stripe / 2) % bands.Length] : white;
-                    if (rng.NextDouble() < 0.03) c = new Color32((byte)(c.r * 0.8f), (byte)(c.g * 0.8f), (byte)(c.b * 0.8f), 255); // scuffs
+                    Color32 c = white;
+                    float best = float.MaxValue;
+                    foreach (var cc in centres)
+                    {
+                        float dx = Mathf.Abs(x - cc.x); dx = Mathf.Min(dx, n - dx);
+                        float dy = Mathf.Abs(y - cc.y);
+                        float d = Mathf.Max(Mathf.Sqrt(dx * dx + dy * dy), (dx + dy * 1.1f) * 0.78f);
+                        best = Mathf.Min(best, d);
+                    }
+                    if (best < 11f) c = black;
+                    else if (best < 12.5f) c = seam;
+                    if (rng.NextDouble() < 0.02) c = new Color32((byte)(c.r * 0.85f), (byte)(c.g * 0.85f), (byte)(c.b * 0.85f), 255);
                     px[y * n + x] = c;
                 }
             tex.SetPixels32(px);
