@@ -12,8 +12,6 @@ for src in "$@"; do
     case "$f" in *.png|*.xml) cp "$f" "$dest/$(basename "$f")";; *) tail -n 400 "$f" > "$dest/$(basename "$f").tail.txt";; esac
   done
 done
-# the unity-builder/test-runner images write the editor log under the workspace too
-for f in $(find . -maxdepth 3 -name 'unity.log' -o -maxdepth 3 -name 'Editor.log' 2>/dev/null | head -3); do tail -n 400 "$f" > "$dest/$(basename "$f").tail.txt"; done
 ls -la "$dest"
 cd "$out"
 git init -q && git checkout -q -b ci-shots

@@ -91,7 +91,7 @@ jobs:
       - name: Publish the Unity log tail to the ci-shots branch
         if: always()
         env: { GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}" }
-        run: bash .github/publish-ci.sh tests "${{ steps.tests.outputs.artifactsPath }}" "$HOME/.local/share/unity3d" .
+        run: bash .github/publish-ci.sh tests "${{ steps.tests.outputs.artifactsPath }}"
 
   screenshots:
     # A Linux player run under xvfb with SHEYTOONAK_SHOTS set: AutoScreenshot takes PNGs so the game can
@@ -138,7 +138,7 @@ jobs:
       - name: Publish screenshots and logs to the ci-shots branch
         if: always()
         env: { GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}" }
-        run: sudo chown -R "$USER" build shots 2>/dev/null; bash .github/publish-ci.sh screenshots shots build .
+        run: sudo chown -R "$USER" build shots 2>/dev/null || true; bash .github/publish-ci.sh screenshots shots
 
   android:
     name: Build Android APK
