@@ -16,7 +16,7 @@ on:
       - '.github/workflows/android-build.yml'
 
 permissions:
-  contents: read
+  contents: write # the ci-shots branch receives screenshots and log tails (the assistant reads it with git)
   checks: write
 
 concurrency:
@@ -87,6 +87,9 @@ jobs:
         with:
           name: Test results
           path: ${{ steps.tests.outputs.artifactsPath }}
+      - name: Publish the Unity log tail to the ci-shots branch
+        if: always()
+        run: bash .github/publish-ci.sh tests "${{ steps.tests.outputs.artifactsPath }}" "$HOME/.local/share/unity3d" .
 
   screenshots:
     # A Linux player run under xvfb with SHEYTOONAK_SHOTS set: AutoScreenshot takes PNGs so the game can
@@ -129,6 +132,9 @@ jobs:
           name: Screenshots
           path: shots
           retention-days: 14
+      - name: Publish screenshots and logs to the ci-shots branch
+        if: always()
+        run: bash .github/publish-ci.sh screenshots shots build .
 
   android:
     name: Build Android APK

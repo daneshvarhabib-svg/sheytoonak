@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+# Pushes small CI outputs (PNG screenshots, log tails) to the orphan branch ci-shots so they can be
+# read with plain git from a phone-only workflow where the Actions log/artifact download is blocked.
+# Usage: publish-ci.sh <label> <dir-or-file>...   Needs GITHUB_TOKEN with contents: write.
+set -u
+label=$1; shift
+run=${GITHUB_RUN_NUMBER:-0}; sha=${GITHUB_SHA:-unknown}
+out=$(mktemp -d); dest="$out/$run-$label"; mkdir -p "$dest"
+for src in "$@"; do
+  [ -e "$src" ] || continue
+  find "$src" -maxdepth 4 -type f \( -name '*.png' -o -name '*.log' -o -name '*.txt' -o -name '*.xml' \) -size -6M 2>/dev/null | head -40 | while read -r f; do
+    case "$f" in *.png|*.xml) cp "$f" "$dest/$(basename "$f")";; *) tail -n 400 "$f" > "$dest/$(basename "$f").tail.txt";; esac
+  done
+done
+# the unity-builder/test-runner images write the editor log under the workspace too
+for f in $(find . -maxdepth 3 -name 'unity.log' -o -maxdepth 3 -name 'Editor.log' 2>/dev/null | head -3); do tail -n 400 "$f" > "$dest/$(basename "$f").tail.txt"; done
+ls -la "$dest"
+cd "$out"
+git init -q && git checkout -q -b ci-shots
+git config user.email ci@sheytoonak && git config user.name "sheytoonak-ci"
+remote="https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+git fetch -q "$remote" ci-shots 2>/dev/null && git reset -q --soft FETCH_HEAD || true
+git add -A && git commit -qm "run $run $label ($sha)" && git push -q "$remote" HEAD:ci-shots || echo "::warning::could not publish to ci-shots"
