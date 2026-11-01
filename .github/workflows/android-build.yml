@@ -89,6 +89,7 @@ jobs:
           path: ${{ steps.tests.outputs.artifactsPath }}
       - name: Publish the Unity log tail to the ci-shots branch
         if: always()
+        env: { GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}" }
         run: bash .github/publish-ci.sh tests "${{ steps.tests.outputs.artifactsPath }}" "$HOME/.local/share/unity3d" .
 
   screenshots:
@@ -134,7 +135,8 @@ jobs:
           retention-days: 14
       - name: Publish screenshots and logs to the ci-shots branch
         if: always()
-        run: bash .github/publish-ci.sh screenshots shots build .
+        env: { GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}" }
+        run: sudo chown -R "$USER" build shots 2>/dev/null; bash .github/publish-ci.sh screenshots shots build .
 
   android:
     name: Build Android APK
