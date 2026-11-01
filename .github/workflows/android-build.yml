@@ -52,6 +52,7 @@ jobs:
           path: Library
           key: Library-tests-${{ hashFiles('Packages/manifest.json', 'ProjectSettings/ProjectVersion.txt') }}
           restore-keys: Library-tests-
+      - uses: jlumbroso/free-disk-space@v1.3.1 # runs died silently while pulling the Unity image (#17, #19)
       # Pinned by commit. The floating v4 tag moved to v4.4.0 (2026-08-29), a rewrite that downloads
       # the game-ci CLI ("latest" unless pinned) at run time. v4.3.2 is the last classic release: it
       # runs Unity in the unityci image and writes artifacts/<testmode>-results.xml.
@@ -106,6 +107,7 @@ jobs:
           path: Library
           key: Library-Linux-${{ hashFiles('Packages/manifest.json', 'ProjectSettings/ProjectVersion.txt') }}
           restore-keys: Library-Linux-
+      - uses: jlumbroso/free-disk-space@v1.3.1
       - uses: game-ci/unity-builder@4423ee75828dff56037d1d1cfdac6b68e3a6ba00 # v4.8.2
         env:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
