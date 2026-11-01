@@ -68,6 +68,10 @@ namespace Sheytoonak.Prototype
         bool showStart = true;
         string calibrationText = "";
 
+        /// <summary>Same as pressing the start button; used by AutoScreenshot in CI.</summary>
+        public void StartGameFromScript() { showStart = false; endTitle = null; touch?.IgnoreFor(0.5f); game.NewGame(); }
+        public KickInputRouter Router => router;
+
         // ------------------------------------------------------------------ setup
 
         void Awake()

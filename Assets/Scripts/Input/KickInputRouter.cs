@@ -38,6 +38,8 @@ namespace Sheytoonak
         }
 
         void Forward(KickGesture g) => Kicked?.Invoke(g);
+        /// <summary>Scripted kick (automatic screenshots in CI, tests). Same path as a touch kick.</summary>
+        public void Inject(KickGesture g) => Kicked?.Invoke(g);
         void ForwardMotion(KickGesture g) { if (kickFromMotion) Kicked?.Invoke(g); }
 
         public void Recenter()

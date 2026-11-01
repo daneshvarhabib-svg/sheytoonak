@@ -232,6 +232,46 @@ namespace Sheytoonak.EditorTools
             return ok;
         }
 
+        /// <summary>
+        /// GameCI entry point for the Linux player used only for automatic screenshots (see
+        /// AutoScreenshot). Mono, not IL2CPP: the base editor image has no Linux IL2CPP toolchain.
+        /// </summary>
+        public static void BuildLinuxCI()
+        {
+            int code = 1;
+            try
+            {
+                var args = ParseArgs();
+                string path = args.TryGetValue("customBuildPath", out var p) && !string.IsNullOrEmpty(p) ? p : "Builds/Linux/Sheytoonak";
+                if (Directory.Exists(path) || !Path.HasExtension(path)) path = Path.Combine(path, "Sheytoonak.x86_64");
+                CreatePrototypeScene();
+                if (EditorUserBuildSettings.activeBuildTarget != BuildTarget.StandaloneLinux64 &&
+                    !EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTargetGroup.Standalone, BuildTarget.StandaloneLinux64))
+                    throw new Exception("could not switch to StandaloneLinux64");
+                PlayerSettings.SetScriptingBackend(NamedBuildTarget.Standalone, ScriptingImplementation.Mono2x);
+                string dir = Path.GetDirectoryName(path);
+                if (!string.IsNullOrEmpty(dir)) Directory.CreateDirectory(dir);
+                var report = BuildPipeline.BuildPlayer(new BuildPlayerOptions
+                {
+                    scenes = new[] { ScenePath },
+                    locationPathName = path,
+                    target = BuildTarget.StandaloneLinux64,
+                    targetGroup = BuildTargetGroup.Standalone,
+                    options = BuildOptions.None
+                });
+                bool ok = report.summary.result == BuildResult.Succeeded && File.Exists(path);
+                string line = $"SHEYTOONAK LINUX BUILD {(ok ? "Succeeded" : "Failed")}: {report.summary.result}, {path}, {report.summary.totalErrors} error(s)";
+                if (ok) Debug.Log(line); else Debug.LogError(line);
+                code = ok ? 0 : 1;
+            }
+            catch (Exception e)
+            {
+                Debug.LogException(e);
+                Debug.LogError("SHEYTOONAK LINUX BUILD Failed with an exception");
+            }
+            EditorApplication.Exit(code);
+        }
+
         static Dictionary<string, string> ParseArgs()
         {
             var result = new Dictionary<string, string>();

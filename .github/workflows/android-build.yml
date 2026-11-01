@@ -1,8 +1,7 @@
 # Cloud build for a phone-only workflow: EditMode tests, then an installable Android APK.
 # Needs three repository secrets (Settings > Secrets and variables > Actions):
-#   UNITY_LICENSE  - contents of your Unity Personal .ulf licence file
-#   UNITY_EMAIL    - your Unity account email
-#   UNITY_PASSWORD - your Unity account password
+#   UNITY_LICENSE  - contents of your Unity Personal .ulf licence file (required)
+#   UNITY_EMAIL / UNITY_PASSWORD - optional; only if activation with the file alone fails
 # See docs/ANDROID_PHONE_WORKFLOW.md. Unity version comes from ProjectSettings/ProjectVersion.txt.
 name: Android build
 
@@ -35,15 +34,11 @@ jobs:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         run: |
-          missing=""
-          [ -n "$UNITY_LICENSE" ] || missing="$missing UNITY_LICENSE"
-          [ -n "$UNITY_EMAIL" ] || missing="$missing UNITY_EMAIL"
-          [ -n "$UNITY_PASSWORD" ] || missing="$missing UNITY_PASSWORD"
-          if [ -n "$missing" ]; then
-            echo "::error title=Unity licence missing::Add repository secrets:$missing (Settings > Secrets and variables > Actions). See docs/ANDROID_PHONE_WORKFLOW.md"
+          if [ -z "$UNITY_LICENSE" ]; then
+            echo "::error title=Unity licence missing::Add the repository secret UNITY_LICENSE (Settings > Secrets and variables > Actions). See docs/ANDROID_PHONE_WORKFLOW.md"
             exit 1
           fi
-          echo "All three Unity secrets are present."
+          echo "UNITY_LICENSE present; email/password $([ -n "$UNITY_EMAIL" ] && echo present || echo absent)."
 
   tests:
     name: EditMode tests
@@ -92,6 +87,48 @@ jobs:
         with:
           name: Test results
           path: ${{ steps.tests.outputs.artifactsPath }}
+
+  screenshots:
+    # A Linux player run under xvfb with SHEYTOONAK_SHOTS set: AutoScreenshot takes PNGs so the game can
+    # be looked at without a phone. Independent of the APK so it finishes first.
+    name: Screenshots (Linux player)
+    needs: licence
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/cache@v4
+        with:
+          path: Library
+          key: Library-Linux-${{ hashFiles('Packages/manifest.json', 'ProjectSettings/ProjectVersion.txt') }}
+          restore-keys: Library-Linux-
+      - uses: game-ci/unity-builder@4423ee75828dff56037d1d1cfdac6b68e3a6ba00 # v4.8.2
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          targetPlatform: StandaloneLinux64
+          buildName: Sheytoonak
+          buildMethod: Sheytoonak.EditorTools.SheytoonakBuild.BuildLinuxCI
+      - name: Run the player under xvfb and collect screenshots
+        run: |
+          sudo apt-get update -q && sudo apt-get install -y -q xvfb libgl1 libglu1-mesa > /dev/null
+          sudo chown -R "$USER" build
+          BIN=$(find build/StandaloneLinux64 -name 'Sheytoonak.x86_64' | head -1)
+          chmod +x "$BIN"
+          mkdir -p shots
+          SHEYTOONAK_SHOTS="$PWD/shots" timeout 180 xvfb-run -a -s "-screen 0 1600x720x24" \
+            "$BIN" -screen-width 1600 -screen-height 720 -screen-fullscreen 0 -logFile shots/player.log || true
+          ls -la shots
+          grep -a 'SHEYTOONAK\|Exception\|error' shots/player.log | head -40 || true
+          [ -n "$(ls shots/*.png 2>/dev/null)" ] || { echo '::error title=No screenshots::the player wrote no PNG; see player.log'; exit 1; }
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: Screenshots
+          path: shots
+          retention-days: 14
 
   android:
     name: Build Android APK
