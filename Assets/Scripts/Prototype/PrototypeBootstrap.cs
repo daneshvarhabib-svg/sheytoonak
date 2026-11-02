@@ -732,7 +732,7 @@ namespace Sheytoonak.Prototype
                 rb.angularVelocity = Random.insideUnitSphere * 10f;
                 Destroy(shard, 2.5f);
             }
-            Toast(Ar.Smashed, 1.2f);
+            if (!duel) Toast(Ar.Smashed, 1.2f); // the duel shows the value on the window, no sentence
         }
 
         /// <summary>

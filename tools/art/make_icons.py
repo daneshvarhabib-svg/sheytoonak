@@ -36,6 +36,13 @@ icons = {
    <path d="M128 230 A40 40 0 0 1 96 170 C110 150 124 150 128 130 C134 154 160 160 160 190 A40 40 0 0 1 128 230Z" fill="#000" fill-opacity="0.35"/>''',
  "pass": f'''<path d="M40 60 L130 128 L40 196 Z" {W}/><path d="M120 60 L210 128 L120 196 Z" {W}/><rect x="212" y="60" width="18" height="136" rx="4" {W}/>''',
  "surrender": f'''<line x1="60" y1="30" x2="60" y2="236" {S}/><path d="M66 40 Q120 20 150 44 T226 48 V140 Q190 116 150 138 T66 136 Z" {W}/>''',
+ "window": f'''<rect x="40" y="30" width="176" height="196" rx="10" {S}/><line x1="128" y1="30" x2="128" y2="226" {S}/><line x1="40" y1="128" x2="216" y2="128" {S}/>
+   <path d="M150 50 L196 50 L196 106 Z" fill="#fff" fill-opacity="0.5"/>''',
+ "shards": f'''<g {W}><path d="M40 190 L90 60 L120 170 Z"/><path d="M120 200 L160 40 L210 150 Z"/><path d="M60 226 L110 196 L150 230 Z" fill-opacity="0.7"/></g>''',
+ "curse": f'''<path d="M30 50 H226 V170 H120 L70 220 V170 H30 Z" {W}/>
+   <text x="128" y="138" font-family="DejaVu Sans" font-weight="bold" font-size="78" text-anchor="middle" fill="#000" fill-opacity="0.55">#@!</text>''',
+ "clock": f'''<circle cx="128" cy="138" r="96" {S}/><line x1="128" y1="138" x2="128" y2="76" {S}/><line x1="128" y1="138" x2="170" y2="160" {S}/><rect x="104" y="14" width="48" height="22" rx="6" {W}/>''',
+ "replay": f'''<path d="M200 128 A72 72 0 1 1 170 70" {S}/><path d="M150 40 L206 60 L176 108 Z" {W}/>''',
 }
 os.makedirs(OUT, exist_ok=True)
 for name, body in icons.items():

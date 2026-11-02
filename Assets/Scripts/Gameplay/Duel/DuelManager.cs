@@ -42,6 +42,9 @@ namespace Sheytoonak
         public event Action<Side> TurnChanged;
         public event Action<Side, bool> Finished;            // winner, I won
         public event Action DuelStarted;
+        /// <summary>A picture instead of a sentence (user 2026-11-02: «کلا تو بازی نوشته زیاده»): icon id, side, tint kind.</summary>
+        public event Action<string, Side, PopKind> Pop;
+        public enum PopKind { Poison, Antidote, Info }
 
         IKickInput input;
         Coroutine botRoutine, resolveRoutine;
@@ -144,9 +147,9 @@ namespace Sheytoonak
             Rules = new DuelRules(rows, shards, left, right, randomSeed, rowMap);
             Bot = new DuelBot(randomSeed);
             Rules.TurnStarted += OnTurnStarted;
-            Rules.WindowTaken += (s, w, v) => { if (w == Rules.HiddenWindow) Toast?.Invoke(Ar.HiddenThree, 1.6f); };
+            Rules.WindowTaken += (s, w, v) => { if (w == Rules.HiddenWindow) Toast?.Invoke("٣ ★", 1.6f); };
             Rules.Ended += OnEnded;
-            Rules.RageGained += s => { if (s == Me) Toast?.Invoke(Ar.RageReady, 1.2f); };
+            Rules.RageGained += s => Pop?.Invoke("rage", s, PopKind.Info);
             PlaceBallAtCentre();
             Curses[1] = Mathf.Max(0, Curses[0] + Random.Range(-3, 4)); // a "matched" opponent
             DuelStarted?.Invoke();
@@ -196,7 +199,7 @@ namespace Sheytoonak
                 TurnTimeLeft -= Time.deltaTime;
                 if (TurnTimeLeft <= 0f)
                 {
-                    Toast?.Invoke(Ar.TimeUp, 1.2f);
+                    Pop?.Invoke("clock", Rules.Current, PopKind.Info);
                     var who = Rules.Current;
                     Rules.Timeout(who);
                     if (!Rules.Finished) TurnTimeLeft = DuelRules.TurnSeconds;
@@ -220,7 +223,7 @@ namespace Sheytoonak
 
         public ActionReject Poison(int hero) => Act(Me, hero, true);
         public ActionReject Antidote(int hero) => Act(Me, hero, false);
-        public ActionReject Rage() { var r = Rules.UseRage(Me); if (r == ActionReject.None) Toast?.Invoke(Ar.RageUsed, 1f); return r; }
+        public ActionReject Rage() { var r = Rules.UseRage(Me); if (r == ActionReject.None) Pop?.Invoke("rage", Me, PopKind.Info); return r; }
         public ActionReject Pass() { var r = Rules.Pass(Me); return r; }
         public void Surrender() { Rules.Surrender(Me); }
 
@@ -231,13 +234,13 @@ namespace Sheytoonak
             {
                 int[] targets = TargetsFor(h.Poison);
                 var r = Rules.Poison(s, h.Poison, targets);
-                if (r == ActionReject.None) { Rules.NoteActivity(s); Toast?.Invoke((s == Me ? Ar.YouPoison : Ar.TheyPoison) + " " + h.Poison.NameAr, 1.4f); }
+                if (r == ActionReject.None) { Rules.NoteActivity(s); Pop?.Invoke(h.Poison.Id, s, PopKind.Poison); }
                 return r;
             }
             else
             {
                 var r = Rules.Antidote(s, h.Antidote);
-                if (r == ActionReject.None) { Rules.NoteActivity(s); Toast?.Invoke((s == Me ? Ar.YouAntidote : Ar.TheyAntidote) + " " + h.Antidote.NameAr, 1.4f); }
+                if (r == ActionReject.None) { Rules.NoteActivity(s); Pop?.Invoke(h.Antidote.Id, s, PopKind.Antidote); }
                 return r;
             }
         }
@@ -273,7 +276,7 @@ namespace Sheytoonak
                 return;
             }
             var why = Rules.CanAct(Me);
-            if (why != ActionReject.None) { if (why == ActionReject.NoActionsLeft) Toast?.Invoke(Ar.NoActions, 0.8f); return; }
+            if (why != ActionReject.None) { return; }
             Kick(Me, g, -1);
         }
 
@@ -338,7 +341,7 @@ namespace Sheytoonak
         {
             yield return new WaitForSeconds(after);
             if (!kickActive || !ball.InPlay) yield break;
-            Toast?.Invoke(Ar.Intercepted, 1.2f);
+            Pop?.Invoke("pigeon", kicker, PopKind.Poison);
             GameEvents.RaiseWallHit(ball.transform.position); // a thud and a shake
             ball.SetVelocity(new Vector3(Random.Range(-1f, 1f), 1.5f, -2.5f));
         }
@@ -392,7 +395,6 @@ namespace Sheytoonak
             kickActive = false;
             var outcome = Rules.EndKick(kicker, hitWindow);
             LastHitWindow = hitWindow;
-            if (outcome == KickOutcome.Missed && kicker == Me) Toast?.Invoke(Ar.Missed, 0.8f);
             if (!Rules.Finished) PlaceBallAtCentre();
         }
 
@@ -450,7 +452,7 @@ namespace Sheytoonak
                     if (resolveRoutine == null) resolveRoutine = StartCoroutine(ResolveAfter(1.0f));
                     return;
                 }
-                Toast?.Invoke(Rules.IsCovered(w) ? Ar.Covered : Rules.IsClosed(w) ? Ar.Shut : Ar.AlreadyBroken, 1f);
+                if (!Rules.IsBroken(w)) Pop?.Invoke(Rules.IsCovered(w) ? "bus" : "open_window", kicker, PopKind.Poison); // the poison that stopped it
             }
             GameEvents.RaiseWallHit(point);
             // ⚠️ until 2026-11-02 the ball was just dropped here and the action ended: one shot, no rebound.
