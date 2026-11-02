@@ -490,7 +490,7 @@ namespace Sheytoonak.Prototype
             for (int i = 0; i < rects.Length; i++)
             {
                 Rect r = rects[i];
-                var pane = Box(root, new Vector3(r.center.x, r.center.y, -0.02f), new Vector3(r.width * 0.9f, r.height * 0.9f, 0.02f), BrokenGlassMat());
+                var pane = Box(root, new Vector3(r.center.x, r.center.y, -0.02f), new Vector3(r.width * 0.9f, r.height * 0.9f, 0.02f), BrokenGlassMat(i));
                 pane.name = "Broken pane " + i;
                 windowRenderers[i] = pane.GetComponent<Renderer>();
                 windowRenderers[i].enabled = false; // the painting shows the intact glass
@@ -630,47 +630,70 @@ namespace Sheytoonak.Prototype
             Box(root, new Vector3(side * (w * 0.5f + ww), paintedHeight + (60f - paintedHeight) * 0.5f, 0.3f), new Vector3(ww * 2f, 60f - paintedHeight, 0.5f), above);
         }
 
-        Material brokenGlassMat;
+        readonly System.Collections.Generic.Dictionary<int, Material> brokenMats = new System.Collections.Generic.Dictionary<int, Material>();
+        const int BrokenVariants = 4;
 
-        /// <summary>Dark interior with a web of pale cracks and a jagged hole: what a smashed pane looks like from the street.</summary>
-        Material BrokenGlassMat()
+        /// <summary>
+        /// What a smashed pane looks like from the street. User (2026-11-02): «شیشه‌ها بد می‌شکنن … باید چند مدل
+        /// پنجره شکسته هم داشته باشیم». Painted panes (Art/Broken/pane_0..3) win when they exist; otherwise four
+        /// procedural ones: the hole sits in a different place each time, glass is left hanging round the frame.
+        /// </summary>
+        Material BrokenGlassMat(int window)
         {
-            if (brokenGlassMat != null) return brokenGlassMat;
+            int v = (window * 7 + 3) % BrokenVariants;
+            if (brokenMats.TryGetValue(v, out var m) && m != null) return m;
+            var painted = Resources.Load<Texture2D>("Art/Broken/pane_" + v);
+            var tex = painted != null ? painted : ProceduralPane(v);
+            m = new Material(Shader.Find("Standard")) { mainTexture = tex, color = Color.white };
+            m.SetFloat("_Glossiness", 0.55f);
+            brokenMats[v] = m;
+            return m;
+        }
+
+        static Texture2D ProceduralPane(int variant)
+        {
             const int n = 256;
             var tex = new Texture2D(n, n, TextureFormat.RGBA32, false) { filterMode = FilterMode.Bilinear, wrapMode = TextureWrapMode.Clamp };
             var px = new Color32[n * n];
-            var dark = new Color32(18, 16, 20, 255);
-            var crack = new Color32(215, 225, 235, 255);
-            var rng = new System.Random(9);
-            for (int i = 0; i < px.Length; i++) px[i] = dark;
-            float cx = n * 0.5f + (float)(rng.NextDouble() - 0.5) * 60f, cy = n * 0.5f + (float)(rng.NextDouble() - 0.5) * 60f;
-            // Radial cracks with a wobble, plus a few concentric rings.
-            for (int k = 0; k < 11; k++)
-            {
-                float ang = k * Mathf.PI * 2f / 11f + (float)rng.NextDouble() * 0.4f;
-                float len = n * (0.45f + (float)rng.NextDouble() * 0.4f);
-                for (float d = 0; d < len; d += 0.7f)
+            var rng = new System.Random(17 + variant * 31);
+            // hole centre: middle / lower-left / upper-right / almost everything gone
+            Vector2[] centres = { new Vector2(0.5f, 0.5f), new Vector2(0.32f, 0.3f), new Vector2(0.7f, 0.68f), new Vector2(0.5f, 0.45f) };
+            float[] radii = { 0.28f, 0.3f, 0.26f, 0.46f };
+            Vector2 c = centres[variant] * n; float rad = radii[variant] * n;
+            // jagged hole outline: radius per angle with spikes
+            int spokes = 9 + variant * 2;
+            var spike = new float[spokes];
+            for (int k = 0; k < spokes; k++) spike[k] = 0.55f + (float)rng.NextDouble() * 0.75f;
+            for (int y = 0; y < n; y++)
+                for (int x = 0; x < n; x++)
                 {
-                    float wob = Mathf.Sin(d * 0.08f + k) * 3f;
-                    int x = Mathf.RoundToInt(cx + Mathf.Cos(ang) * d - Mathf.Sin(ang) * wob), y = Mathf.RoundToInt(cy + Mathf.Sin(ang) * d + Mathf.Cos(ang) * wob);
-                    if (x >= 0 && x < n && y >= 0 && y < n) px[y * n + x] = crack;
+                    float dx = x - c.x, dy = y - c.y, d = Mathf.Sqrt(dx * dx + dy * dy);
+                    float a = (Mathf.Atan2(dy, dx) / (Mathf.PI * 2f) + 1f) % 1f * spokes;
+                    int k0 = (int)a % spokes, k1 = (k0 + 1) % spokes; float f = a - (int)a;
+                    float edge = rad * Mathf.Lerp(spike[k0], spike[k1], f);
+                    bool hole = d < edge;
+                    // dark room in the hole, a faint warm lamp glow; remaining glass is a cool reflective grey-blue
+                    float shade = 1f - Mathf.Clamp01(d / (rad * 1.6f));
+                    px[y * n + x] = hole
+                        ? new Color32((byte)(18 + 22 * shade), (byte)(15 + 14 * shade), (byte)(14 + 8 * shade), 255)
+                        : new Color32((byte)(118 + y / 8), (byte)(140 + y / 8), (byte)(160 + y / 10), 255);
                 }
-            }
-            for (int ring = 1; ring <= 3; ring++)
+            // cracks running from the hole out to the frame
+            var crack = new Color32(232, 238, 245, 255);
+            for (int k = 0; k < spokes + 3; k++)
             {
-                float rr = 22f * ring + (float)rng.NextDouble() * 10f;
-                for (float a = 0; a < Mathf.PI * 2f; a += 0.01f)
+                float ang = (float)rng.NextDouble() * Mathf.PI * 2f, wob = (float)rng.NextDouble() * 6f;
+                for (float d = rad * 0.6f; d < n; d += 0.7f)
                 {
-                    if (rng.NextDouble() < 0.25) continue; // broken rings
-                    int x = Mathf.RoundToInt(cx + Mathf.Cos(a) * rr), y = Mathf.RoundToInt(cy + Mathf.Sin(a) * rr);
-                    if (x >= 0 && x < n && y >= 0 && y < n) px[y * n + x] = crack;
+                    float w = Mathf.Sin(d * 0.07f + k) * wob;
+                    int x = Mathf.RoundToInt(c.x + Mathf.Cos(ang) * d - Mathf.Sin(ang) * w), y = Mathf.RoundToInt(c.y + Mathf.Sin(ang) * d + Mathf.Cos(ang) * w);
+                    if (x < 0 || x >= n || y < 0 || y >= n) break;
+                    if (px[y * n + x].r > 60) px[y * n + x] = crack;
                 }
             }
             tex.SetPixels32(px);
             tex.Apply();
-            brokenGlassMat = new Material(Shader.Find("Standard")) { mainTexture = tex, color = Color.white };
-            brokenGlassMat.SetFloat("_Glossiness", 0.6f);
-            return brokenGlassMat;
+            return tex;
         }
 
         static Color AverageColour(Texture2D tex, float fromV, float toV)
@@ -694,13 +717,14 @@ namespace Sheytoonak.Prototype
         {
             if (i < 0 || i >= windowRenderers.Length) return;
             windowRenderers[i].enabled = true; // the pane shows the dark room with a web of cracks (its material is set at build time)
-            WakeDetails(i);
-            for (int k = 0; k < 10; k++)
+            if (game != null) WakeDetails(i);
+            else WindowLife(windowRenderers[i].transform.position, windowRenderers[i].transform.lossyScale);
+            for (int k = 0; k < 18; k++)
             {
                 var shard = GameObject.CreatePrimitive(PrimitiveType.Cube);
                 Strip(shard);
                 shard.transform.position = point + Random.insideUnitSphere * 0.3f + Vector3.back * 0.1f;
-                shard.transform.localScale = new Vector3(0.12f, 0.12f, 0.01f) * Random.Range(0.5f, 1.3f);
+                shard.transform.localScale = new Vector3(Random.Range(0.05f, 0.18f), Random.Range(0.05f, 0.22f), 0.01f);
                 shard.transform.rotation = Random.rotation;
                 shard.GetComponent<Renderer>().sharedMaterial = glass;
                 var rb = shard.AddComponent<Rigidbody>();
@@ -709,6 +733,113 @@ namespace Sheytoonak.Prototype
                 Destroy(shard, 2.5f);
             }
             Toast(Ar.Smashed, 1.2f);
+        }
+
+        /// <summary>
+        /// Something happens behind every smashed pane (user, 2026-11-02: «گربه بیفته، پرده تکون بخوره و از این
+        /// چیزها»): a cat leaps out, a curtain billows out through the hole, or a flower pot topples off the sill.
+        /// Painted sprites Art/Props/fx_cat, fx_curtain, fx_pot are used when present, primitives otherwise.
+        /// </summary>
+        void WindowLife(Vector3 at, Vector3 size)
+        {
+            float roll = Random.value;
+            if (roll < 0.34f) StartCoroutine(CatLeap(at, size));
+            else if (roll < 0.67f) StartCoroutine(CurtainOut(at, size));
+            else StartCoroutine(PotFalls(at, size));
+        }
+
+        Transform FxSprite(string name, float worldHeight)
+        {
+            var tex = Resources.Load<Texture2D>("Art/Props/" + name);
+            if (tex == null) return null;
+            var go = new GameObject(name);
+            var r = go.AddComponent<SpriteRenderer>();
+            r.sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f), 100f);
+            go.transform.localScale = Vector3.one * (worldHeight / Mathf.Max(0.01f, r.sprite.bounds.size.y));
+            return go.transform;
+        }
+
+        IEnumerator CatLeap(Vector3 at, Vector3 size)
+        {
+            yield return new WaitForSeconds(0.25f);
+            var t = FxSprite("fx_cat", 0.45f);
+            if (t == null)
+            {
+                t = new GameObject("Cat").transform;
+                var fur = Mat(new Color(0.85f, 0.55f, 0.25f));
+                var b = Box(t, Vector3.zero, new Vector3(0.42f, 0.18f, 0.18f), fur);
+                Box(t, new Vector3(0.24f, 0.1f, 0f), new Vector3(0.16f, 0.15f, 0.15f), fur);
+                Box(t, new Vector3(-0.28f, 0.1f, 0f), new Vector3(0.22f, 0.04f, 0.04f), fur);
+            }
+            float dir = Random.value < 0.5f ? -1f : 1f;
+            if (t.GetComponent<SpriteRenderer>() is SpriteRenderer sr) sr.flipX = dir < 0f;
+            Vector3 from = at + new Vector3(0f, -size.y * 0.3f, -0.15f), to = new Vector3(at.x + dir * 2.5f, 0.2f, at.z - 3.5f);
+            for (float k = 0f; k < 1f && t != null; k += Time.deltaTime / 1.1f)
+            {
+                t.position = Vector3.Lerp(from, to, k) + Vector3.up * Mathf.Sin(k * Mathf.PI) * 1.2f;
+                t.localRotation = Quaternion.Euler(0f, 0f, -dir * 25f * Mathf.Sin(k * Mathf.PI));
+                yield return null;
+            }
+            // runs off along the street
+            for (float k = 0f; k < 1.5f && t != null; k += Time.deltaTime)
+            {
+                t.position += new Vector3(dir * 4f * Time.deltaTime, Mathf.Abs(Mathf.Sin(k * 18f)) * 0.01f, 0f);
+                yield return null;
+            }
+            if (t != null) Destroy(t.gameObject);
+        }
+
+        IEnumerator CurtainOut(Vector3 at, Vector3 size)
+        {
+            var t = FxSprite("fx_curtain", size.y * 0.9f);
+            if (t == null)
+            {
+                t = new GameObject("Curtain").transform;
+                Box(t, new Vector3(0f, -size.y * 0.3f, 0f), new Vector3(size.x * 0.45f, size.y * 0.6f, 0.01f), Mat(new Color(0.93f, 0.88f, 0.78f)));
+            }
+            t.position = at + new Vector3(0f, size.y * 0.3f, -0.08f);
+            float start = Time.time;
+            while (t != null && Time.time - start < 3.5f)
+            {
+                float e = Time.time - start, k = Mathf.Clamp01(1f - e / 3.5f);
+                t.localRotation = Quaternion.Euler(-25f * k, 0f, Mathf.Sin(e * 9f) * 14f * k);
+                t.localScale = new Vector3(Mathf.Abs(t.localScale.x) * (1f + 0.02f * Mathf.Sin(e * 13f)) , t.localScale.y, t.localScale.z);
+                yield return null;
+            }
+            if (t != null) t.localRotation = Quaternion.identity; // stays hanging in the hole
+        }
+
+        IEnumerator PotFalls(Vector3 at, Vector3 size)
+        {
+            var t = FxSprite("fx_pot", 0.35f);
+            if (t == null)
+            {
+                t = new GameObject("Pot").transform;
+                Box(t, Vector3.zero, new Vector3(0.22f, 0.2f, 0.22f), Mat(new Color(0.7f, 0.35f, 0.2f)));
+                var leaves = GameObject.CreatePrimitive(PrimitiveType.Sphere); Strip(leaves);
+                leaves.transform.SetParent(t, false); leaves.transform.localPosition = new Vector3(0f, 0.18f, 0f); leaves.transform.localScale = Vector3.one * 0.28f;
+                leaves.GetComponent<Renderer>().sharedMaterial = Mat(new Color(0.25f, 0.55f, 0.2f));
+            }
+            Vector3 p = at + new Vector3(Random.Range(-0.2f, 0.2f), -size.y * 0.5f, -0.2f);
+            float vy = 0.5f, spin = Random.Range(-200f, 200f);
+            while (t != null && p.y > 0.15f)
+            {
+                vy -= 9.8f * Time.deltaTime; p += new Vector3(0f, vy * Time.deltaTime, -0.6f * Time.deltaTime);
+                t.position = p; t.Rotate(0f, 0f, spin * Time.deltaTime);
+                yield return null;
+            }
+            if (t == null) yield break;
+            GameEvents.RaiseWallHit(p); // a thud
+            // smashed: little bits of terracotta and soil
+            for (int k = 0; k < 8; k++)
+            {
+                var bit = GameObject.CreatePrimitive(PrimitiveType.Cube); Strip(bit);
+                bit.transform.position = p; bit.transform.localScale = Vector3.one * Random.Range(0.04f, 0.09f);
+                bit.GetComponent<Renderer>().sharedMaterial = Mat(k % 2 == 0 ? new Color(0.7f, 0.35f, 0.2f) : new Color(0.3f, 0.2f, 0.12f));
+                var rb = bit.AddComponent<Rigidbody>(); rb.linearVelocity = new Vector3(Random.Range(-1.5f, 1.5f), Random.Range(1f, 2.5f), Random.Range(-1.5f, 0.5f));
+                Destroy(bit, 2f);
+            }
+            Destroy(t.gameObject);
         }
 
         void OnWalkStarted(HouseDefinition from, HouseDefinition to, float duration)

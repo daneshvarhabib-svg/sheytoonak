@@ -69,51 +69,52 @@ namespace Sheytoonak.Prototype
             Shadowed(new Rect(0, lineY, Screen.width, 32 * u), Ar.T(turnLine), new GUIStyle(label) { alignment = TextAnchor.MiddleCenter, normal = { textColor = mine ? new Color(0.6f, 1f, 0.6f) : new Color(1f, 0.8f, 0.6f) } });
             Shadowed(new Rect(0, top + 40 * u, Screen.width * 0.4f, 30 * u), Ar.T(Ar.WindowsLine(rules.Windows[0], rules.Windows[1], rules.Majority)), new GUIStyle(small) { alignment = TextAnchor.UpperLeft });
 
-            // active poisons
-            float y = top + 70 * u;
+            // active poisons: icon + turns left (∞ = until the antidote), no words
+            float y = top + 70 * u, isz = 40 * u;
+            float ix = Screen.width - pad - isz;
             foreach (var p in rules.Poisons)
             {
-                // ⚠️ no "(n)": brackets and digits came out mirrored in RTL (run 30)
-                string life = p.Tool.Life == Lifetime.UntilAntidote ? "حتى الدوا" : Ar.N(p.TurnsLeft) + " دور";
-                // ⚠️ run 31-33: the row was shorter than the line, so the tails of ر و ى ص were clipped into a stray mark
-                // (the shaped code points were right — checked). Taller rect and no clipping.
-                Shadowed(new Rect(Screen.width * 0.6f - pad, y, Screen.width * 0.4f, 40 * u), Ar.T(Ar.PoisonWord + " " + p.Tool.NameAr + " - " + life), new GUIStyle(label) { alignment = TextAnchor.UpperRight, clipping = TextClipping.Overflow, wordWrap = false, normal = { textColor = new Color(1f, 0.7f, 0.7f) } });
-                y += 34 * u;
+                var old = GUI.color; GUI.color = PoisonRed;
+                GUI.DrawTexture(new Rect(ix, y, isz, isz), Texture2D.whiteTexture); GUI.color = Color.white;
+                var tex = Icon(p.Tool.Id);
+                if (tex != null) GUI.DrawTexture(new Rect(ix + 4 * u, y + 4 * u, isz - 8 * u, isz - 8 * u), tex, ScaleMode.ScaleToFit);
+                GUI.color = old;
+                string life = p.Tool.Life == Lifetime.UntilAntidote ? "∞" : Ar.N(p.TurnsLeft);
+                Shadowed(new Rect(ix - 50 * u, y, 44 * u, isz), Ar.T(life), new GUIStyle(label) { alignment = TextAnchor.MiddleRight });
+                ix -= isz + 60 * u;
+                if (ix < Screen.width * 0.55f) { ix = Screen.width - pad - isz; y += isz + 6 * u; }
             }
 
             if (Time.time < toastUntil)
                 Shadowed(new Rect(0, Screen.height * 0.40f, Screen.width, 60 * u), Ar.T(toast), big);
 
-            // my actions: one dark strip along the bottom, six tool buttons left, three controls right
+            // my actions: icons, not words. User (2026-11-02): «سم و زهر نباید نوشته بشه … باید تصویر و آیکون باشه،
+            // کلا هم تو بازی نوشته زیاده». Poisons sit on red badges (top row), antidotes on green (bottom row),
+            // one column per hero; rage / pass / surrender on dark badges on the right.
             if (!ended && mine && !rules.KickInFlight)
             {
-                float bh = 40 * u, gap = 6 * u;
-                float stripH = bh * 3 + gap * 4;
-                var old = GUI.color; GUI.color = new Color(0f, 0f, 0f, 0.45f);
+                float sz = 62 * u, gap = 8 * u;
+                float stripH = sz * 2 + gap * 3;
+                var old = GUI.color; GUI.color = new Color(0f, 0f, 0f, 0.4f);
                 GUI.DrawTexture(new Rect(0, Screen.height - stripH, Screen.width, stripH), Texture2D.whiteTexture); GUI.color = old;
-                float bw = Mathf.Min(250 * u, Screen.width * 0.24f);
                 float x0 = pad, yb = Screen.height - stripH + gap;
                 for (int i = 0; i < 3; i++)
                 {
                     var h = rules.Heroes[0][i];
-                    bool poisonOk = rules.CanPoison(duel.Me, h.Poison, duel.TargetsFor(h.Poison)) == ActionReject.None;
-                    GUI.enabled = rules.ActionsLeft > 0 && poisonOk;
-                    if (GUI.Button(new Rect(x0, yb + i * (bh + gap), bw, bh), Ar.T(Ar.PoisonWord + ": " + h.Poison.NameAr), button)) { touch?.IgnoreFor(0.4f); duel.Poison(i); }
-                    GUI.enabled = rules.ActionsLeft > 0;
-                    if (GUI.Button(new Rect(x0 + bw + gap, yb + i * (bh + gap), bw, bh), Ar.T(Ar.AntidoteWord + ": " + h.Antidote.NameAr), button)) { touch?.IgnoreFor(0.4f); duel.Antidote(i); }
+                    float x = x0 + i * (sz + gap);
+                    bool poisonOk = rules.ActionsLeft > 0 && rules.CanPoison(duel.Me, h.Poison, duel.TargetsFor(h.Poison)) == ActionReject.None;
+                    if (IconButton(new Rect(x, yb, sz, sz), h.Poison.Id, PoisonRed, poisonOk, h.Poison.NameAr)) { touch?.IgnoreFor(0.4f); duel.Poison(i); }
+                    if (IconButton(new Rect(x, yb + sz + gap, sz, sz), h.Antidote.Id, AntidoteGreen, rules.ActionsLeft > 0, h.Antidote.NameAr)) { touch?.IgnoreFor(0.4f); duel.Antidote(i); }
                 }
-                GUI.enabled = true;
-                float cw = Mathf.Min(200 * u, Screen.width * 0.18f), xr = Screen.width - pad - cw;
-                if (rules.RageReady[0] && GUI.Button(new Rect(xr, yb, cw, bh), Ar.T(Ar.Rage + " ✦"), button)) { touch?.IgnoreFor(0.4f); duel.Rage(); }
-                if (GUI.Button(new Rect(xr, yb + bh + gap, cw, bh), Ar.T(Ar.PassTurn), button)) { touch?.IgnoreFor(0.4f); duel.Pass(); }
+                float xr = Screen.width - pad - sz;
                 bool armed = Time.time < surrenderArmedUntil;
-                if (GUI.Button(new Rect(xr, yb + (bh + gap) * 2, cw, bh), Ar.T(armed ? Ar.SurrenderSure : Ar.Surrender), button))
+                if (IconButton(new Rect(xr, yb + sz + gap, sz, sz), "surrender", armed ? new Color(0.95f, 0.75f, 0.2f) : ControlDark, true, null))
                 {
                     touch?.IgnoreFor(0.4f);
-                    if (armed) duel.Surrender(); else surrenderArmedUntil = Time.time + 3f; // two taps, like every costly button
+                    if (armed) duel.Surrender(); else { surrenderArmedUntil = Time.time + 3f; OnToast(Ar.SurrenderSure, 1.5f); } // two taps, like every costly button
                 }
-                if (rules.ActionsLeft > 0)
-                    Shadowed(new Rect(0, Screen.height - stripH + gap + bh + gap, Screen.width, bh), Ar.T(Ar.ServeHint), new GUIStyle(small) { alignment = TextAnchor.MiddleCenter });
+                if (IconButton(new Rect(xr - sz - gap, yb + sz + gap, sz, sz), "pass", ControlDark, true, null)) { touch?.IgnoreFor(0.4f); duel.Pass(); }
+                if (rules.RageReady[0] && IconButton(new Rect(xr, yb, sz, sz), "rage", new Color(0.85f, 0.4f, 0.1f), true, null)) { touch?.IgnoreFor(0.4f); duel.Rage(); }
             }
 
             if (ended)
@@ -129,6 +130,32 @@ namespace Sheytoonak.Prototype
                 if (GUILayout.Button(Ar.T(Ar.PlayAgain), button, GUILayout.Height(70 * u))) { touch?.IgnoreFor(0.5f); onPlayAgain?.Invoke(); }
                 GUILayout.EndArea();
             }
+        }
+
+        static readonly Color PoisonRed = new Color(0.72f, 0.18f, 0.15f), AntidoteGreen = new Color(0.16f, 0.5f, 0.32f), ControlDark = new Color(0.12f, 0.12f, 0.14f);
+        static readonly System.Collections.Generic.Dictionary<string, Texture2D> icons = new System.Collections.Generic.Dictionary<string, Texture2D>();
+
+        static Texture2D Icon(string id)
+        {
+            if (!icons.TryGetValue(id, out var t)) { t = Resources.Load<Texture2D>("Art/Icons/" + id); icons[id] = t; }
+            return t;
+        }
+
+        /// <summary>A rounded-looking badge with a white glyph; disabled = dimmed. Falls back to the Arabic name if the icon is missing.</summary>
+        static bool IconButton(Rect r, string iconId, Color bg, bool enabled, string fallbackAr)
+        {
+            var old = GUI.color;
+            GUI.color = enabled ? bg : new Color(bg.r * 0.45f, bg.g * 0.45f, bg.b * 0.45f, 0.8f);
+            GUI.DrawTexture(r, Texture2D.whiteTexture);
+            GUI.color = new Color(1f, 1f, 1f, 0.25f);
+            GUI.DrawTexture(new Rect(r.x, r.y, r.width, 3f), Texture2D.whiteTexture); // a thin highlight on top
+            GUI.color = enabled ? Color.white : new Color(1f, 1f, 1f, 0.35f);
+            var tex = Icon(iconId);
+            float m = r.width * 0.14f;
+            if (tex != null) GUI.DrawTexture(new Rect(r.x + m, r.y + m, r.width - 2 * m, r.height - 2 * m), tex, ScaleMode.ScaleToFit);
+            else if (fallbackAr != null) GUI.Label(r, Ar.T(fallbackAr), new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleCenter, wordWrap = true, font = Ar.Font, fontSize = Mathf.RoundToInt(r.height * 0.22f) });
+            GUI.color = old;
+            return enabled && GUI.Button(r, GUIContent.none, GUIStyle.none);
         }
 
         static void Shadowed(Rect r, string text, GUIStyle s)
