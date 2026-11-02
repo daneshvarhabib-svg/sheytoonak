@@ -27,7 +27,7 @@ namespace Sheytoonak.Prototype
             if (rules == null) return; // the draft screen is up
             float u = Mathf.Max(1f, Screen.height / 900f);
             var font = Ar.Font;
-            var label = new GUIStyle(GUI.skin.label) { fontSize = Mathf.RoundToInt(24 * u), normal = { textColor = Color.white }, font = font };
+            var label = new GUIStyle(GUI.skin.label) { fontSize = Mathf.RoundToInt(24 * u), normal = { textColor = Color.white }, font = font, clipping = TextClipping.Overflow };
             var small = new GUIStyle(label) { fontSize = Mathf.RoundToInt(19 * u) };
             var big = new GUIStyle(label) { fontSize = Mathf.RoundToInt(40 * u), alignment = TextAnchor.MiddleCenter, fontStyle = FontStyle.Bold };
             var button = new GUIStyle(GUI.skin.button) { fontSize = Mathf.RoundToInt(24 * u), font = font };
@@ -75,8 +75,10 @@ namespace Sheytoonak.Prototype
             {
                 // ⚠️ no "(n)": brackets and digits came out mirrored in RTL (run 30)
                 string life = p.Tool.Life == Lifetime.UntilAntidote ? "حتى الدوا" : Ar.N(p.TurnsLeft) + " دور";
-                Shadowed(new Rect(Screen.width * 0.6f - pad, y, Screen.width * 0.4f, 30 * u), Ar.T(Ar.PoisonWord + " " + p.Tool.NameAr + " - " + life), new GUIStyle(label) { alignment = TextAnchor.UpperRight, normal = { textColor = new Color(1f, 0.7f, 0.7f) } });
-                y += 30 * u;
+                // ⚠️ run 31-33: the row was shorter than the line, so the tails of ر و ى ص were clipped into a stray mark
+                // (the shaped code points were right — checked). Taller rect and no clipping.
+                Shadowed(new Rect(Screen.width * 0.6f - pad, y, Screen.width * 0.4f, 40 * u), Ar.T(Ar.PoisonWord + " " + p.Tool.NameAr + " - " + life), new GUIStyle(label) { alignment = TextAnchor.UpperRight, clipping = TextClipping.Overflow, wordWrap = false, normal = { textColor = new Color(1f, 0.7f, 0.7f) } });
+                y += 34 * u;
             }
 
             if (Time.time < toastUntil)
