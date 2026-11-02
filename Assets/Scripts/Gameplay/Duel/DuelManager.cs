@@ -48,6 +48,13 @@ namespace Sheytoonak
         int hitWindow = -1;
         int groundBounces;
         bool kickActive;
+        // rally inside one kick action: the ball came off the wall and may be hit again (like the old rally mode)
+        bool returning;
+        int bouncesSinceWall, rallyHits;
+        /// <summary>True while a kick action is still alive (outgoing or coming back to be hit again).</summary>
+        public bool RallyActive => kickActive;
+        public Side Kicker => kicker;
+        public event Action<Side> Rekicked;
         Side kicker;
         float kickStarted;
         const string PrefCurse = "sheytoonak.curses", PrefShards = "sheytoonak.shards";
@@ -56,7 +63,7 @@ namespace Sheytoonak
         {
             input = inputSource as IKickInput;
             ball.Init(this, config);
-            foot.Init(config, null);
+            foot.Init(config, input); // the finger moves the kicker along the sidewalk to reach the rebound (user: «باید بتونه توپ برگشتی رو هم بزنه»)
             EnsureWorldColliders();
             Curses[0] = PlayerPrefs.GetInt(PrefCurse, 0);
             ShardBank = PlayerPrefs.GetInt(PrefShards, 0);
@@ -171,6 +178,7 @@ namespace Sheytoonak
         void OnTurnStarted(Side s, int turn, int actions)
         {
             TurnTimeLeft = DuelRules.TurnSeconds;
+            foot.Hold = s != Me; // the bot always kicks from the middle; my finger moves the kicker on my turn
             TurnChanged?.Invoke(s);
             if (s != Me)
             {
@@ -258,6 +266,12 @@ namespace Sheytoonak
         void OnKickGesture(KickGesture g)
         {
             if (Rules == null || Rules.Finished || Rules.Current != Me) return;
+            if (kickActive)
+            {
+                // the same action goes on: hit the ball that came back off the wall, if the foot reaches it
+                if (kicker == Me && returning && ball.InPlay && foot.BallInReach(ball.transform.position, ball.Radius)) Rekick(Me, g);
+                return;
+            }
             var why = Rules.CanAct(Me);
             if (why != ActionReject.None) { if (why == ActionReject.NoActionsLeft) Toast?.Invoke(Ar.NoActions, 0.8f); return; }
             Kick(Me, g, -1);
@@ -278,10 +292,46 @@ namespace Sheytoonak
             var v = new Vector3(res.Velocity.X, res.Velocity.Y, res.Velocity.Z);
             ball.Launch(v, res.SpinY, 0f);
             kicker = s; kickActive = true; hitWindow = -1; groundBounces = 0; kickStarted = Time.time;
+            returning = false; bouncesSinceWall = 0; rallyHits = 0;
             GameEvents.RaiseKicked(g, quality, v);
             KickLaunched?.Invoke(s, target);
             float intercept = KickModifiers.Intercept(mods.Chance);
             if (intercept > 0f && Random.value < intercept) StartCoroutine(Intercept(config.kick.WallFlightTime * 0.45f));
+        }
+
+        /// <summary>Hits the rebound: same action, the contact (height, how far off the foot) decides how clean it is.</summary>
+        void Rekick(Side s, KickGesture g)
+        {
+            var mods = Rules.ModifiersFor(s);
+            if (mods.Accuracy > 0) g.Aim += Random.Range(-1f, 1f) * KickModifiers.ErrorDeg(mods.Accuracy) / Mathf.Max(1f, config.kick.MaxAimYawDeg);
+            if (mods.Reach > 0) g.Strength01 *= 1f - 0.18f * mods.Reach;
+            Vector3 b = ball.transform.position;
+            float offset = s == Me ? foot.ContactOffset(b) : 0f;
+            float quality = s == Me ? KickSolver.ContactQuality(b.y, offset, config.kick) : 1f;
+            var res = KickSolver.SolveAtWall(g, offset, quality, config.kick, Random.Range(-1f, 1f), Random.Range(-1f, 1f),
+                                             mapper.FacadeZ - b.z, b.y, mapper.MaxTargetHeight);
+            var v = new Vector3(res.Velocity.X, res.Velocity.Y, res.Velocity.Z);
+            ball.Launch(v, res.SpinY, 0f);
+            if (resolveRoutine != null) { StopCoroutine(resolveRoutine); resolveRoutine = null; }
+            returning = false; bouncesSinceWall = 0; groundBounces = 0; hitWindow = -1; rallyHits++;
+            Rules.NoteActivity(s);
+            GameEvents.RaiseKicked(g, quality, v);
+            Rekicked?.Invoke(s);
+            float intercept = KickModifiers.Intercept(mods.Chance);
+            if (intercept > 0f && Random.value < intercept) StartCoroutine(Intercept(config.kick.WallFlightTime * 0.45f));
+        }
+
+        /// <summary>Off the wall the ball comes back on a designed arc that lands where the kicker can run to it.</summary>
+        void SendBack()
+        {
+            if (!ball.InPlay) return;
+            Vector3 from = ball.transform.position;
+            Vector3 real = ball.Body.linearVelocity; if (real.z > 0f) real.z = -real.z * 0.6f;
+            float x = Mathf.Clamp(foot.X + Random.Range(-1f, 1f) * (house != null ? house.returnSpreadX : 0.8f), -config.laneHalfWidth, config.laneHalfWidth);
+            float z = foot.Z + Random.Range(config.returnLandingDepth.x, config.returnLandingDepth.y);
+            var d = KickSolver.BallisticVelocity(new Vec3(from.x, from.y, from.z), new Vec3(x, ball.Radius, z), house != null ? house.returnFlightTime : 1.6f, -Physics.gravity.y);
+            ball.SetVelocity(Vector3.Lerp(real, new Vector3(d.X, d.Y, d.Z), config.returnAssist));
+            returning = true; bouncesSinceWall = 0;
         }
 
         IEnumerator Intercept(float after)
@@ -358,6 +408,15 @@ namespace Sheytoonak
         public void OnBallGround(Vector3 point)
         {
             if (!kickActive) return;
+            if (returning)
+            {
+                // the rebound may be hit before it bounces twice
+                bouncesSinceWall++;
+                GameEvents.RaiseBounced(point, bouncesSinceWall, true);
+                if (kicker != Me && bouncesSinceWall == 1 && BotRehits()) return;
+                if (bouncesSinceWall >= 2 && resolveRoutine == null) resolveRoutine = StartCoroutine(ResolveAfter(0.3f));
+                return;
+            }
             groundBounces++;
             GameEvents.RaiseBounced(point, groundBounces, hitWindow >= 0 || groundBounces > 0);
             if (groundBounces >= 2 && resolveRoutine == null) resolveRoutine = StartCoroutine(ResolveAfter(0.3f));
@@ -365,9 +424,21 @@ namespace Sheytoonak
 
         public void OnBallRolling(Vector3 point) { if (kickActive && resolveRoutine == null) resolveRoutine = StartCoroutine(ResolveAfter(0.1f)); }
 
+        /// <summary>The bot "runs" to its rebound: hits it again now and then, aiming at the best window.</summary>
+        bool BotRehits()
+        {
+            if (rallyHits >= 3 || Random.value > botAccuracy * 0.8f) return false;
+            int best = -1;
+            for (int w = 0; w < Rules.WindowCount; w++)
+                if (Rules.IsBreakable(w) && (best < 0 || Rules.ShownValue(w) > Rules.ShownValue(best))) best = w;
+            if (best < 0) return false;
+            Rekick(kicker, GestureFor(best, 1f - botAccuracy));
+            return true;
+        }
+
         public void OnBallFacade(Vector3 point)
         {
-            if (!kickActive || hitWindow >= 0) { GameEvents.RaiseWallHit(point); return; }
+            if (!kickActive || hitWindow >= 0 || returning) { GameEvents.RaiseWallHit(point); return; }
             int w = mapper.FindWindow(point, ball.Radius);
             if (w >= 0)
             {
@@ -382,12 +453,9 @@ namespace Sheytoonak
                 Toast?.Invoke(Rules.IsCovered(w) ? Ar.Covered : Rules.IsClosed(w) ? Ar.Shut : Ar.AlreadyBroken, 1f);
             }
             GameEvents.RaiseWallHit(point);
-            // send it back toward the street so it settles quickly
-            if (ball.InPlay)
-            {
-                Vector3 v = ball.Body.linearVelocity; if (v.z > 0f) v.z = -v.z * 0.5f;
-                ball.SetVelocity(new Vector3(v.x * 0.5f, Mathf.Max(1f, v.y * 0.3f), Mathf.Min(-2f, v.z)));
-            }
+            // ⚠️ until 2026-11-02 the ball was just dropped here and the action ended: one shot, no rebound.
+            // User: «بازیکن نمی‌تونه توپ برگشتی رو بزنه … باید بتونه توپ برگشتی رو هم بزنه … مثل ورژن قبلی بازی».
+            SendBack();
         }
 
         public void OnBallKilled(LossReason reason) { if (kickActive && resolveRoutine == null) resolveRoutine = StartCoroutine(ResolveAfter(0.1f)); }

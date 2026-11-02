@@ -41,6 +41,7 @@ namespace Sheytoonak.Prototype
             }
             duel.DuelStarted += OnDuelStarted;
             duel.KickLaunched += OnKick;
+            duel.Rekicked += OnRekick;
         }
 
         void OnDestroy()
@@ -48,6 +49,7 @@ namespace Sheytoonak.Prototype
             if (duel == null) return;
             duel.DuelStarted -= OnDuelStarted;
             duel.KickLaunched -= OnKick;
+            duel.Rekicked -= OnRekick;
         }
 
         GameObject MakeHero(Material mat, Vector3 pos, string name)
@@ -79,6 +81,8 @@ namespace Sheytoonak.Prototype
         readonly Dictionary<string, Sprite> sprites = new Dictionary<string, Sprite>();
         readonly SpriteRenderer[][] painted = { new SpriteRenderer[3], new SpriteRenderer[3] };
         readonly string[][] lookIds = { new string[3], new string[3] };
+        readonly Vector3[] kickerScale = new Vector3[2];
+        readonly Coroutine[] striking = new Coroutine[2];
 
         Sprite HeroSprite(string id, string pose)
         {
@@ -109,6 +113,7 @@ namespace Sheytoonak.Prototype
                     r.flipX = side == 1;
                     go.transform.localScale = Vector3.one * (heroHeight / Mathf.Max(0.01f, idle.bounds.size.y));
                     painted[side][i] = r;
+                    if (i == 0) kickerScale[side] = go.transform.localScale;
                 }
         }
 
@@ -133,21 +138,87 @@ namespace Sheytoonak.Prototype
 
         void OnKick(Side side, int target)
         {
-            StartCoroutine(StepForward(Heroes[(int)side][0], side));
+            if (stepping[(int)side] == null) stepping[(int)side] = StartCoroutine(StepForward(Heroes[(int)side][0], side));
             if (duel.Rules.ModifiersFor(side).Chance > 0) StartCoroutine(PigeonCrossing());
         }
 
+        Coroutine[] stepping = new Coroutine[2];
+
+        /// <summary>
+        /// The kicker runs to the ball, winds up, strikes and stays with the ball while the rally lasts (the rebound
+        /// can be hit again), then walks back. User (2026-11-02): «فرم زدن ضربه … فقط دو تصویره و اصن حرکت نداره
+        /// توش، باید حرکت بیشتر شه و حالت انیمیشن بگیره» — until there are more painted frames the motion is
+        /// procedural on top of the two poses: a bobbing run-up, a crouch, a lean-and-hop strike, a settle.
+        /// </summary>
         IEnumerator StepForward(Transform hero, Side side)
         {
             Vector3 home = homes[(int)side][0];
-            Vector3 at = foot.StrikeSpot + new Vector3(side == Side.Left ? -0.4f : 0.4f, 0f, -0.3f);
-            for (float k = 0f; k < 1f; k += Time.deltaTime * 4f) { hero.position = Vector3.Lerp(home, at, k); yield return null; }
-            hero.position = at;
-            SetPose(side, 0, "kick");
-            yield return new WaitForSeconds(1.2f);
-            SetPose(side, 0, "idle");
-            for (float k = 0f; k < 1f; k += Time.deltaTime * 2.5f) { hero.position = Vector3.Lerp(at, home, k); yield return null; }
+            float sideOff = side == Side.Left ? -0.35f : 0.35f;
+            Vector3 Spot() => (side == duel.Me ? foot.StrikeSpot : new Vector3(ballX, 0f, foot.StrikeSpot.z)) + new Vector3(sideOff, 0f, -0.3f);
+            // run-up: a few bouncing steps
+            for (float k = 0f; k < 1f; k += Time.deltaTime * 3.2f)
+            {
+                hero.position = Vector3.Lerp(home, Spot(), k) + Vector3.up * Mathf.Abs(Mathf.Sin(k * Mathf.PI * 3f)) * 0.08f;
+                yield return null;
+            }
+            striking[(int)side] = StartCoroutine(Strike(hero, side));
+            while (striking[(int)side] != null) yield return null; // not `yield return` the coroutine: a re-kick stops and restarts it
+            // stay with the ball while it can still be hit
+            while (duel.RallyActive && duel.Kicker == side)
+            {
+                hero.position = Vector3.MoveTowards(hero.position, Spot(), 5f * Time.deltaTime);
+                yield return null;
+            }
+            yield return new WaitForSeconds(0.4f);
+            Vector3 from = hero.position;
+            for (float k = 0f; k < 1f; k += Time.deltaTime * 2.2f)
+            {
+                hero.position = Vector3.Lerp(from, home, k) + Vector3.up * Mathf.Abs(Mathf.Sin(k * Mathf.PI * 4f)) * 0.05f;
+                yield return null;
+            }
             hero.position = home;
+            stepping[(int)side] = null;
+        }
+
+        float ballX;
+        void LateUpdate() { if (duel != null && duel.ball != null) ballX = Mathf.Lerp(ballX, duel.ball.transform.position.x, 4f * Time.deltaTime); }
+
+        /// <summary>Crouch, swing (kick pose, lean into the shot, a little hop), settle back to idle.</summary>
+        IEnumerator Strike(Transform hero, Side side)
+        {
+            var r = painted[(int)side][0];
+            Transform body = r != null ? r.transform : hero;
+            Vector3 baseScale = r != null ? kickerScale[(int)side] : Vector3.one; // never read mid-animation (a quick re-kick would drift)
+            float lean = side == Side.Left ? -1f : 1f;
+            // anticipation
+            for (float k = 0f; k < 1f; k += Time.deltaTime * 9f) { body.localScale = new Vector3(baseScale.x * (1f + 0.06f * k), baseScale.y * (1f - 0.08f * k), baseScale.z); yield return null; }
+            SetPose(side, 0, "kick");
+            // the strike: stretch up, lean forward toward the wall, hop
+            for (float k = 0f; k < 1f; k += Time.deltaTime * 5f)
+            {
+                float e = Mathf.Sin(k * Mathf.PI);
+                body.localScale = new Vector3(baseScale.x * (1f - 0.04f * e), baseScale.y * (1f + 0.06f * e), baseScale.z);
+                body.localRotation = Quaternion.Euler(0f, 0f, lean * 8f * e);
+                body.localPosition = new Vector3(0f, 0.12f * e, 0f);
+                yield return null;
+            }
+            yield return new WaitForSeconds(0.15f);
+            SetPose(side, 0, "idle");
+            for (float k = 0f; k < 1f; k += Time.deltaTime * 6f)
+            {
+                body.localScale = Vector3.Lerp(new Vector3(baseScale.x * 1.04f, baseScale.y * 0.95f, baseScale.z), baseScale, k);
+                yield return null;
+            }
+            body.localScale = baseScale; body.localRotation = Quaternion.identity; body.localPosition = Vector3.zero;
+            striking[(int)side] = null;
+        }
+
+        void OnRekick(Side side)
+        {
+            var hero = Heroes[(int)side][0];
+            if (hero == null) return;
+            if (striking[(int)side] != null) StopCoroutine(striking[(int)side]);
+            striking[(int)side] = StartCoroutine(Strike(hero, side));
         }
 
         IEnumerator PigeonCrossing()

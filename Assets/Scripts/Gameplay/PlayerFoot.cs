@@ -14,6 +14,8 @@ namespace Sheytoonak
         public float X { get; private set; }
         public float Velocity { get; private set; }
         public float Z => transform.position.z;
+        /// <summary>Duel: while true the foot walks back to the centre and ignores the finger (the opponent's turn).</summary>
+        public bool Hold { get; set; }
 
         GameConfig cfg;
         IKickInput input;
@@ -36,7 +38,7 @@ namespace Sheytoonak
         void Update()
         {
             if (cfg == null || input == null) return;
-            float target = KickSolver.Clamp(input.Lateral, -1f, 1f) * cfg.laneHalfWidth;
+            float target = Hold ? 0f : KickSolver.Clamp(input.Lateral, -1f, 1f) * cfg.laneHalfWidth;
             float next = Mathf.MoveTowards(X, target, cfg.footMaxSpeed * Time.deltaTime);
             Velocity = Time.deltaTime > 0f ? (next - X) / Time.deltaTime : 0f;
             X = next;
