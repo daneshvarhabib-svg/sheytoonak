@@ -127,7 +127,7 @@ Same cartoon character, same style, same scale, same three-quarter back view as 
 * rima: `a scrappy 12-year-old Lebanese girl, wild curly black hair in a loose ponytail, an oversized faded football jersey, rolled-up jeans, scuffed sneakers, a plaster on one elbow`
 * zaatar: `a young cartoon Syrian kid, short curly hair, an olive-green tracksuit with white stripes, sneakers` (⚠️ «skinny 11-year-old» را فیلترِ ChatGPT رد کرد: سنِ دقیق و صفتِ بدنی برای بچه ننویس)
 * fulla (⚠️ چپ‌پا: در پرامپتِ ضربه «with the LEFT foot»): `a young cartoon girl from Alexandria, two long braids tied with small white jasmine flowers, a sea-blue dress over leggings, white sneakers`
-* toni: `a cocky cartoon Beirut street teenager with a below-the-knee prosthetic right leg (a sporty metal prosthesis with a red sneaker on it, clearly visible), baseball cap worn backwards, black sleeveless t-shirt, thin gold chain, ripped denim shorts, red sneakers` (⚠️ معلولیت عمدی است، کاربر: «همه سالم نباشن»)
+* toni: `a cocky cartoon Beirut street teenager with a below-the-knee prosthetic LEFT leg (a sporty metal prosthesis with a red sneaker on it, clearly visible), baseball cap worn backwards, black sleeveless t-shirt, thin gold chain, ripped denim shorts, red sneakers` (⚠️ معلولیت عمدی است، کاربر: «همه سالم نباشن»)
 
 ## جمله‌های فحشِ صاحب‌خانه (برای ضبط)
 
