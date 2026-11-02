@@ -74,7 +74,7 @@ namespace Sheytoonak.Prototype
             {
                 float tw = Screen.width * 0.2f, th = 10 * u;
                 float tx = Screen.width * 0.5f + (mine ? -tw - 20 * u : 20 * u);
-                float ty = Screen.height - (mine ? 62 * u * 2 + 8 * u * 3 : 40 * u) - 26 * u;
+                float ty = Screen.height - 22 * u; // inside the bottom strip, between the tool buttons (run 52: over the heroes' legs it was clutter)
                 Color tc = mine ? new Color(0.45f, 0.85f, 0.45f) : new Color(1f, 0.6f, 0.35f);
                 Bar(new Rect(tx, ty, tw, th), Mathf.Clamp01(duel.TurnTimeLeft / DuelRules.TurnSeconds), mine, duel.TurnTimeLeft < 10f ? new Color(1f, 0.3f, 0.25f) : tc);
                 DrawIcon(new Rect(mine ? tx - 30 * u : tx + tw + 6 * u, ty - 10 * u, 26 * u, 26 * u), "clock", tc);
@@ -89,7 +89,7 @@ namespace Sheytoonak.Prototype
                 Rect wr = mapper.WindowRects[gainWindow];
                 Vector3 sp = cam.WorldToScreenPoint(new Vector3(wr.center.x, wr.center.y, mapper.FacadeZ));
                 var st = new GUIStyle(big) { fontSize = Mathf.RoundToInt(54 * u), normal = { textColor = gainSide == duel.Me ? new Color(0.55f, 1f, 0.55f, 1f - k * k) : new Color(1f, 0.65f, 0.4f, 1f - k * k) } };
-                Shadowed(new Rect(sp.x - 100 * u, Screen.height - sp.y - 40 * u - k * 60 * u, 200 * u, 80 * u), Ar.T("+" + Ar.N(gainValue)), st);
+                Shadowed(new Rect(sp.x - 100 * u, Screen.height - sp.y - 40 * u - k * 60 * u, 200 * u, 80 * u), "+" + Ar.N(gainValue), st);
             }
 
             // pictures for what just happened: the tool's icon pops up over the side that played it
