@@ -1,0 +1,400 @@
+[Physics::Module] Integration Version: 1.0.0
+[Physics::Module] Threading Mode: Multi-Threaded
+PlayerPrefs - Creating folder: /root/.config/unity3d/Sheytoonak
+PlayerPrefs - Creating folder: /root/.config/unity3d/Sheytoonak/مدينة فاجعة
+Unable to load player prefs
+[Licensing::Client] Handshaking with LicensingClient:
+  Version:                 1.18.3+d7ffd15
+  Session Id:              7fe4fe40e4a244d7b42e94c8a93fd285
+  Correlation Id:          2f7396b740cce1cb416eae8d65368748
+  External correlation Id: 3579646736010556692
+  Machine Id:              ybeCXpDazQfjDUgbt+swBAE1d+w=
+[Licensing::Module] Successfully connected to LicensingClient on channel: "LicenseClient-root" (connect: 0.87s, validation: 0.34s, handshake: 0.00s)
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-root-notifications" at "2026-11-02T14:57:57.842513Z"
+[Licensing::Module] Connected to LicensingClient (PId: 1543, launch time: 0.00, total connection time: 1.21s)
+[Licensing::Module] Error: Access token is unavailable; failed to update
+Refreshing native plugins compatible for Editor in 0.11 ms, found 0 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Initialize engine version: 6000.0.84f1 (78ab6fc243d5)
+[Subsystems] Discovering subsystems at path /opt/unity/Editor/Data/Resources/UnitySubsystems
+[Subsystems] Discovering subsystems at path /github/workspace/Assets
+kGfxThreadingModeNonThreaded is not supported on OpenGL Core. Reverting to kGfxThreadingModeDirect instead.
+GfxDevice: creating device client; kGfxThreadingModeDirect
+GLX Extensions: GLX_ARB_context_flush_control GLX_ARB_create_context GLX_ARB_create_context_no_error GLX_ARB_create_context_profile GLX_ARB_fbconfig_float GLX_ARB_framebuffer_sRGB GLX_ARB_get_proc_address GLX_ARB_multisample GLX_EXT_create_context_es2_profile GLX_EXT_create_context_es_profile GLX_EXT_fbconfig_packed_float GLX_EXT_framebuffer_sRGB GLX_EXT_no_config_context GLX_EXT_texture_from_pixmap GLX_EXT_visual_info GLX_EXT_visual_rating GLX_MESA_copy_sub_buffer GLX_MESA_query_renderer GLX_OML_swap_method GLX_SGIS_multisample GLX_SGIX_fbconfig GLX_SGIX_pbuffer GLX_SGIX_visual_select_group GLX_SGI_make_current_read 
+Renderer: llvmpipe (LLVM 15.0.7, 256 bits)
+Vendor:   Mesa
+Version:  4.5 (Core Profile) Mesa 23.2.1-1ubuntu3.1~22.04.3
+GLES:     0
+ GL_3DFX_texture_compression_FXT1 GL_AMD_conservative_depth GL_AMD_draw_buffers_blend GL_AMD_gpu_shader_int64 GL_AMD_multi_draw_indirect GL_AMD_pinned_memory GL_AMD_query_buffer_object GL_AMD_seamless_cubemap_per_texture GL_AMD_shader_stencil_export GL_AMD_shader_trinary_minmax GL_AMD_texture_texture4 GL_AMD_vertex_shader_layer GL_AMD_vertex_shader_viewport_index GL_ANGLE_texture_compression_dxt3 GL_ANGLE_texture_compression_dxt5 GL_ARB_ES2_compatibility GL_ARB_ES3_1_compatibility GL_ARB_ES3_2_compatibility GL_ARB_ES3_compatibility GL_ARB_arrays_of_arrays GL_ARB_base_instance GL_ARB_blend_func_extended GL_ARB_buffer_storage GL_ARB_clear_buffer_object GL_ARB_clear_texture GL_ARB_clip_control GL_ARB_compressed_texture_pixel_storage GL_ARB_compute_shader GL_ARB_conditional_render_inverted GL_ARB_conservative_depth GL_ARB_copy_buffer GL_ARB_copy_image GL_ARB_cull_distance GL_ARB_debug_output GL_ARB_depth_buffer_float GL_ARB_depth_clamp GL_ARB_derivative_control GL_ARB_direct_state_access GL_ARB_draw_buffers GL_A
+RB_draw_buffers_blend GL_ARB_draw_elements_base_vertex GL_ARB_draw_indirect GL_ARB_draw_instanced GL_ARB_enhanced_layouts GL_ARB_explicit_attrib_location GL_ARB_explicit_uniform_location GL_ARB_fragment_coord_conventions GL_ARB_fragment_layer_viewport GL_ARB_fragment_shader GL_ARB_framebuffer_no_attachments GL_ARB_framebuffer_object GL_ARB_framebuffer_sRGB GL_ARB_get_program_binary GL_ARB_get_texture_sub_image GL_ARB_gl_spirv GL_ARB_gpu_shader5 GL_ARB_gpu_shader_fp64 GL_ARB_gpu_shader_int64 GL_ARB_half_float_pixel GL_ARB_half_float_vertex GL_ARB_indirect_parameters GL_ARB_instanced_arrays GL_ARB_internalformat_query GL_ARB_internalformat_query2 GL_ARB_invalidate_subdata GL_ARB_map_buffer_alignment GL_ARB_map_buffer_range GL_ARB_multi_bind GL_ARB_multi_draw_indirect GL_ARB_occlusion_query2 GL_ARB_parallel_shader_compile GL_ARB_pipeline_statistics_query GL_ARB_pixel_buffer_object GL_ARB_point_sprite GL_ARB_polygon_offset_clamp GL_ARB_post_depth_coverage GL_ARB_program_interface_query GL_ARB_provoking_vertex GL
+_ARB_query_buffer_object GL_ARB_robust_buffer_access_behavior GL_ARB_robustness GL_ARB_sample_shading GL_ARB_sampler_objects GL_ARB_seamless_cube_map GL_ARB_seamless_cubemap_per_texture GL_ARB_separate_shader_objects GL_ARB_shader_atomic_counter_ops GL_ARB_shader_atomic_counters GL_ARB_shader_ballot GL_ARB_shader_bit_encoding GL_ARB_shader_clock GL_ARB_shader_draw_parameters GL_ARB_shader_group_vote GL_ARB_shader_image_load_store GL_ARB_shader_image_size GL_ARB_shader_objects GL_ARB_shader_precision GL_ARB_shader_stencil_export GL_ARB_shader_storage_buffer_object GL_ARB_shader_subroutine GL_ARB_shader_texture_image_samples GL_ARB_shader_texture_lod GL_ARB_shader_viewport_layer_array GL_ARB_shading_language_420pack GL_ARB_shading_language_include GL_ARB_shading_language_packing GL_ARB_spirv_extensions GL_ARB_stencil_texturing GL_ARB_sync GL_ARB_tessellation_shader GL_ARB_texture_barrier GL_ARB_texture_buffer_object GL_ARB_texture_buffer_object_rgb32 GL_ARB_texture_buffer_range GL_ARB_texture_compression_bptc 
+GL_ARB_texture_compression_rgtc GL_ARB_texture_cube_map_array GL_ARB_texture_filter_anisotropic GL_ARB_texture_filter_minmax GL_ARB_texture_float GL_ARB_texture_gather GL_ARB_texture_mirror_clamp_to_edge GL_ARB_texture_multisample GL_ARB_texture_non_power_of_two GL_ARB_texture_query_levels GL_ARB_texture_query_lod GL_ARB_texture_rectangle GL_ARB_texture_rg GL_ARB_texture_rgb10_a2ui GL_ARB_texture_stencil8 GL_ARB_texture_storage GL_ARB_texture_storage_multisample GL_ARB_texture_swizzle GL_ARB_texture_view GL_ARB_timer_query GL_ARB_transform_feedback2 GL_ARB_transform_feedback3 GL_ARB_transform_feedback_instanced GL_ARB_transform_feedback_overflow_query GL_ARB_uniform_buffer_object GL_ARB_vertex_array_bgra GL_ARB_vertex_array_object GL_ARB_vertex_attrib_64bit GL_ARB_vertex_attrib_binding GL_ARB_vertex_buffer_object GL_ARB_vertex_shader GL_ARB_vertex_type_10f_11f_11f_rev GL_ARB_vertex_type_2_10_10_10_rev GL_ARB_viewport_array GL_ARM_shader_framebuffer_fetch_depth_stencil GL_ATI_blend_equation_separate GL_ATI_me
+minfo GL_ATI_texture_float GL_ATI_texture_mirror_once GL_EXT_EGL_image_storage GL_EXT_EGL_sync GL_EXT_abgr GL_EXT_blend_equation_separate GL_EXT_debug_label GL_EXT_draw_buffers2 GL_EXT_draw_instanced GL_EXT_framebuffer_blit GL_EXT_framebuffer_multisample GL_EXT_framebuffer_multisample_blit_scaled GL_EXT_framebuffer_object GL_EXT_framebuffer_sRGB GL_EXT_memory_object GL_EXT_memory_object_fd GL_EXT_packed_depth_stencil GL_EXT_packed_float GL_EXT_pixel_buffer_object GL_EXT_polygon_offset_clamp GL_EXT_provoking_vertex GL_EXT_shader_framebuffer_fetch GL_EXT_shader_framebuffer_fetch_non_coherent GL_EXT_shader_integer_mix GL_EXT_texture_array GL_EXT_texture_compression_dxt1 GL_EXT_texture_compression_rgtc GL_EXT_texture_compression_s3tc GL_EXT_texture_filter_anisotropic GL_EXT_texture_filter_minmax GL_EXT_texture_integer GL_EXT_texture_mirror_clamp GL_EXT_texture_sRGB GL_EXT_texture_sRGB_R8 GL_EXT_texture_sRGB_RG8 GL_EXT_texture_sRGB_decode GL_EXT_texture_shadow_lod GL_EXT_texture_shared_exponent GL_EXT_texture_sno
+rm GL_EXT_texture_swizzle GL_EXT_timer_query GL_EXT_transform_feedback GL_EXT_vertex_array_bgra GL_EXT_vertex_attrib_64bit GL_IBM_multimode_draw_arrays GL_INTEL_shader_atomic_float_minmax GL_KHR_blend_equation_advanced GL_KHR_blend_equation_advanced_coherent GL_KHR_context_flush_control GL_KHR_debug GL_KHR_no_error GL_KHR_parallel_shader_compile GL_KHR_robust_buffer_access_behavior GL_KHR_robustness GL_KHR_texture_compression_astc_ldr GL_KHR_texture_compression_astc_sliced_3d GL_MESA_framebuffer_flip_y GL_MESA_pack_invert GL_MESA_shader_integer_functions GL_MESA_texture_signed_rgba GL_MESA_ycbcr_texture GL_NVX_gpu_memory_info GL_NV_conditional_render GL_NV_copy_image GL_NV_depth_clamp GL_NV_packed_depth_stencil GL_NV_shader_atomic_float GL_NV_texture_barrier GL_OES_EGL_image GL_S3_s3tc
+OPENGL LOG: Creating OpenGL 4.5 graphics device ; Context level  <OpenGL 4.5> ; Context handle 1662565504
+Initialize mono
+Mono path[0] = '/opt/unity/Editor/Data/Managed'
+Mono path[1] = '/opt/unity/Editor/Data/MonoBleedingEdge/lib/mono/unityjit-linux'
+Mono config path = '/opt/unity/Editor/Data/MonoBleedingEdge/etc'
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56538
+Code Coverage is enabled. Note that Code Coverage can affect the performance.
+Using cacheserver namespaces - metadata:defaultmetadata, artifacts:defaultartifacts
+Using cacheserver namespaces - metadata:defaultmetadata, artifacts:defaultartifacts
+ImportWorker Server TCP listen port: 0
+AcceleratorClientConnectionCallback - disconnected - :0
+[Licensing::Client] Successfully resolved entitlement details
+[Licensing::Module] License group:
+  Id: F4-JAAR-SPUD-HWVH-39GN-XXXX
+  Product: Unity Personal
+  Type: ULF
+  Expiration: Unlimited
+Begin MonoManager ReloadAssembly
+[Licensing::Client] Successfully updated license, isAsync: True, time: 0.04
+[Licensing::Module] Licensing Background thread has ended after 1.73s
+Registering precompiled unity dll's ...
+Register platform support module: /opt/unity/Editor/Data/PlaybackEngines/LinuxStandaloneSupport/UnityEditor.LinuxStandalone.Extensions.dll
+Registered in 0.004262 seconds.
+- Loaded All Assemblies, in  0.868 seconds
+Native extension for LinuxStandalone target not found
+Package Manager log level set to [2]
+[Licensing::Client] Successfully resolved entitlement details
+Mono: successfully reloaded assembly
+- Finished resetting the current domain, in  4.975 seconds
+Domain Reload Profiling: 5844ms
+	BeginReloadAssembly (336ms)
+		ExecutionOrderSort (0ms)
+		DisableScriptedObjects (0ms)
+		BackupInstance (0ms)
+		ReleaseScriptingObjects (0ms)
+		CreateAndSetChildDomain (6ms)
+	RebuildCommonClasses (73ms)
+	RebuildNativeTypeToScriptingClass (17ms)
+	initialDomainReloadingComplete (101ms)
+	LoadAllAssembliesAndSetupDomain (340ms)
+		LoadAssemblies (329ms)
+		RebuildTransferFunctionScriptingTraits (0ms)
+		AnalyzeDomain (335ms)
+			TypeCache.Refresh (333ms)
+				TypeCache.ScanAssembly (311ms)
+			BuildScriptInfoCaches (0ms)
+			ResolveRequiredComponents (1ms)
+	FinalizeReload (4978ms)
+		ReleaseScriptCaches (0ms)
+		RebuildScriptCaches (0ms)
+		SetupLoadedEditorAssemblies (4880ms)
+			LogAssemblyErrors (0ms)
+			InitializePlatformSupportModulesInManaged (4092ms)
+			SetLoadedEditorAssemblies (14ms)
+			BeforeProcessingInitializeOnLoad (170ms)
+			ProcessInitializeOnLoadAttributes (433ms)
+			ProcessInitializeOnLoadMethodAttributes (171ms)
+			AfterProcessingInitializeOnLoad (0ms)
+			EditorAssembliesLoaded (0ms)
+		ExecutionOrderSort2 (0ms)
+		AwakeInstancesAfterBackupRestoration (0ms)
+[Licensing::Client] Successfully resolved entitlement details
+Application.AssetDatabase Initial Refresh Start
+[Package Manager] Restoring resolved packages state from cache
+[Licensing::Client] Successfully resolved entitlement details
+[Package Manager] Registered 19 packages:
+  Packages from [https://packages.unity.com]:
+    com.unity.inputsystem@1.20.0 (location: /github/workspace/Library/PackageCache/com.unity.inputsystem@7a4e1a2a8194)
+    com.unity.toolchain.linux-x86_64@2.0.11 (location: /github/workspace/Library/PackageCache/com.unity.toolchain.linux-x86_64@53b88ff74b51)
+    com.unity.sysroot@2.0.10 (location: /github/workspace/Library/PackageCache/com.unity.sysroot@7bbbb9339c14)
+    com.unity.sysroot.linux-x86_64@2.0.9 (location: /github/workspace/Library/PackageCache/com.unity.sysroot.linux-x86_64@1998d1c7730e)
+  Built-in packages:
+    com.unity.test-framework@1.6.0 (location: /github/workspace/Library/PackageCache/com.unity.test-framework@bd52b1c23814)
+    com.unity.ugui@2.0.0 (location: /github/workspace/Library/PackageCache/com.unity.ugui@6f02f23161e4)
+    com.unity.modules.androidjni@1.0.0 (location: /github/workspace/Library/PackageCache/com.unity.modules.androidjni)
+    com.unity.modules.animation@1.0.0 (location: /github/workspace/Library/PackageCache/com.unity.modules.animation)
+    com.unity.modules.audio@1.0.0 (location: /github/workspace/Library/PackageCache/com.unity.modules.audio)
+    com.unity.modules.imgui@1.0.0 (location: /github/workspace/Library/PackageCache/com.unity.modules.imgui)
+    com.unity.modules.jsonserialize@1.0.0 (location: /github/workspace/Library/PackageCache/com.unity.modules.jsonserialize)
+    com.unity.modules.physics@1.0.0 (location: /github/workspace/Library/PackageCache/com.unity.modules.physics)
+    com.unity.modules.screencapture@1.0.0 (location: /github/workspace/Library/PackageCache/com.unity.modules.screencapture)
+    com.unity.modules.ui@1.0.0 (location: /github/workspace/Library/PackageCache/com.unity.modules.ui)
+    com.unity.modules.uielements@1.0.0 (location: /github/workspace/Library/PackageCache/com.unity.modules.uielements)
+    com.unity.modules.unitywebrequest@1.0.0 (location: /github/workspace/Library/PackageCache/com.unity.modules.unitywebrequest)
+    com.unity.modules.hierarchycore@1.0.0 (location: /github/workspace/Library/PackageCache/com.unity.modules.hierarchycore)
+    com.unity.modules.imageconversion@1.0.0 (location: /github/workspace/Library/PackageCache/com.unity.modules.imageconversion)
+    com.unity.ext.nunit@2.0.5 (location: /github/workspace/Library/PackageCache/com.unity.ext.nunit@b16e6d09cd93)
+[Subsystems] No new subsystems found in resolved package list.
+[Package Manager] Done registering packages in 0.01 seconds
+[Package Manager] Done resolving packages in 0.39 seconds
+[Package Manager] Registered 19 packages:
+  Packages from [https://packages.unity.com]:
+    com.unity.inputsystem@1.20.0 (location: /github/workspace/Library/PackageCache/com.unity.inputsystem@7a4e1a2a8194)
+    com.unity.toolchain.linux-x86_64@2.0.11 (location: /github/workspace/Library/PackageCache/com.unity.toolchain.linux-x86_64@53b88ff74b51)
+    com.unity.sysroot@2.0.10 (location: /github/workspace/Library/PackageCache/com.unity.sysroot@7bbbb9339c14)
+    com.unity.sysroot.linux-x86_64@2.0.9 (location: /github/workspace/Library/PackageCache/com.unity.sysroot.linux-x86_64@1998d1c7730e)
+  Built-in packages:
+    com.unity.test-framework@1.6.0 (location: /github/workspace/Library/PackageCache/com.unity.test-framework@bd52b1c23814)
+    com.unity.ugui@2.0.0 (location: /github/workspace/Library/PackageCache/com.unity.ugui@6f02f23161e4)
+    com.unity.modules.androidjni@1.0.0 (location: /github/workspace/Library/PackageCache/com.unity.modules.androidjni)
+    com.unity.modules.animation@1.0.0 (location: /github/workspace/Library/PackageCache/com.unity.modules.animation)
+    com.unity.modules.audio@1.0.0 (location: /github/workspace/Library/PackageCache/com.unity.modules.audio)
+    com.unity.modules.imgui@1.0.0 (location: /github/workspace/Library/PackageCache/com.unity.modules.imgui)
+    com.unity.modules.jsonserialize@1.0.0 (location: /github/workspace/Library/PackageCache/com.unity.modules.jsonserialize)
+    com.unity.modules.physics@1.0.0 (location: /github/workspace/Library/PackageCache/com.unity.modules.physics)
+    com.unity.modules.screencapture@1.0.0 (location: /github/workspace/Library/PackageCache/com.unity.modules.screencapture)
+    com.unity.modules.ui@1.0.0 (location: /github/workspace/Library/PackageCache/com.unity.modules.ui)
+    com.unity.modules.uielements@1.0.0 (location: /github/workspace/Library/PackageCache/com.unity.modules.uielements)
+    com.unity.modules.unitywebrequest@1.0.0 (location: /github/workspace/Library/PackageCache/com.unity.modules.unitywebrequest)
+    com.unity.modules.hierarchycore@1.0.0 (location: /github/workspace/Library/PackageCache/com.unity.modules.hierarchycore)
+    com.unity.modules.imageconversion@1.0.0 (location: /github/workspace/Library/PackageCache/com.unity.modules.imageconversion)
+    com.unity.ext.nunit@2.0.5 (location: /github/workspace/Library/PackageCache/com.unity.ext.nunit@b16e6d09cd93)
+[Subsystems] No new subsystems found in resolved package list.
+[Package Manager] Done registering packages in 0.00 seconds
+[ScriptCompilation] Requested script compilation because: Assembly Definition File(s) changed
+[ScriptCompilation] Requested script compilation because: Assetdatabase observed changes in script compilation related files
+[40m[32minfo[39m[22m[49m: Microsoft.Hosting.Lifetime[14]
+      Now listening on: http://unix:/tmp/ilpp.sock-f07a9074cf124f978827f2e08a2ba3a4
+[40m[32minfo[39m[22m[49m: Microsoft.Hosting.Lifetime[0]
+      Application started. Press Ctrl+C to shut down.
+[40m[32minfo[39m[22m[49m: Microsoft.Hosting.Lifetime[0]
+      Hosting environment: Production
+[40m[32minfo[39m[22m[49m: Microsoft.Hosting.Lifetime[0]
+      Content root path: /github/workspace/
+[40m[32minfo[39m[22m[49m: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/2 POST http://ilpp/UnityILPP.PostProcessing/Ping application/grpc -
+[40m[32minfo[39m[22m[49m: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
+      Executing endpoint 'gRPC - /UnityILPP.PostProcessing/Ping'
+[40m[32minfo[39m[22m[49m: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
+      Executed endpoint 'gRPC - /UnityILPP.PostProcessing/Ping'
+[40m[32minfo[39m[22m[49m: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/2 POST http://ilpp/UnityILPP.PostProcessing/Ping application/grpc - - 200 - application/grpc 81.2080ms
+Starting: /opt/unity/Editor/Data/bee_backend --ipc --defer-dag-verification --dagfile="Library/Bee/2400b0aEDbg.dag" --continue-on-failure --profile="Library/Bee/backend1.traceevents" ScriptAssemblies
+WorkingDir: /github/workspace
+DisplayProgressbar: Compiling Scripts
+ExitCode: 4 Duration: 1s546ms
+Rebuilding DAG because FileSignature timestamp changed: Library/Bee/2400b0aEDbg-inputdata.json
+*** Tundra requires additional run (1.51 seconds), 0 items updated, 0 evaluated
+Starting: /opt/unity/Editor/Data/Tools/netcorerun/netcorerun "/opt/unity/Editor/Data/Tools/BuildPipeline/ScriptCompilationBuildProgram.exe" "Library/Bee/2400b0aEDbg.dag.json" "Library/Bee/2400b0aEDbg-inputdata.json" "Library/Bee/buildprogram0.traceevents"
+WorkingDir: /github/workspace
+ExitCode: 0 Duration: 0s613ms
+Starting: /opt/unity/Editor/Data/bee_backend --ipc --defer-dag-verification --dagfile="Library/Bee/2400b0aEDbg.dag" --continue-on-failure --dagfilejson="Library/Bee/2400b0aEDbg.dag.json" --profile="Library/Bee/backend2.traceevents" ScriptAssemblies
+WorkingDir: /github/workspace
+ExitCode: 0 Duration: 4s518ms
+Finished compiling graph: 289 nodes, 3015 flattened edges (2787 ToBuild, 38 ToUse), maximum node priority 156
+[171/286    0s] WriteText Library/Bee/artifacts/2400b0aEDbg.dag/Sheytoonak.Core.rsp
+[195/286    0s] WriteText Library/Bee/artifacts/2400b0aEDbg.dag/Sheytoonak.Game.rsp
+[235/286    0s] WriteText Library/Bee/artifacts/2400b0aEDbg.dag/Sheytoonak.Tests.EditMode.rsp
+[274/286    1s] Csc Library/Bee/artifacts/2400b0aEDbg.dag/Sheytoonak.Core.dll (+2 others)
+[275/286    2s] Csc Library/Bee/artifacts/2400b0aEDbg.dag/Sheytoonak.Tests.EditMode.dll (+2 others)
+[276/286    0s] CopyFiles Library/ScriptAssemblies/Sheytoonak.Core.dll
+[277/286    0s] CopyFiles Library/ScriptAssemblies/Sheytoonak.Tests.EditMode.dll
+[278/286    0s] CopyFiles Library/ScriptAssemblies/Sheytoonak.Tests.EditMode.pdb
+[279/286    0s] CopyFiles Library/ScriptAssemblies/Sheytoonak.Core.pdb
+[280/286    2s] Csc Library/Bee/artifacts/2400b0aEDbg.dag/Sheytoonak.Game.dll (+2 others)
+Assets/Scripts/Prototype/PrototypeBootstrap.cs(77,16): warning CS0414: The field 'PrototypeBootstrap.calibrationText' is assigned but its value is never used
+[281/286    0s] CopyFiles Library/ScriptAssemblies/Sheytoonak.Game.dll
+[282/286    0s] CopyFiles Library/ScriptAssemblies/Sheytoonak.Game.pdb
+[283/286    0s] Csc Library/Bee/artifacts/2400b0aEDbg.dag/Sheytoonak.Editor.dll (+2 others)
+[284/286    0s] CopyFiles Library/ScriptAssemblies/Sheytoonak.Editor.dll
+[285/286    0s] CopyFiles Library/ScriptAssemblies/Sheytoonak.Editor.pdb
+*** Tundra build success (4.49 seconds), 15 items updated, 286 evaluated
+Total cache size 683232
+Assets/Scripts/Prototype/PrototypeBootstrap.cs(77,16): warning CS0414: The field 'PrototypeBootstrap.calibrationText' is assigned but its value is never used
+Total cache size after purge 683232, took 00:00:00.0361002
+AssetDatabase: script compilation time: 7.666273s
+Begin MonoManager ReloadAssembly
+- Loaded All Assemblies, in  1.007 seconds
+Start importing Assets/Tests using Guid(4014189d02a4bd0fc992bbe8dc9eb4e7) (DefaultImporter) -> (artifact id: 'd6e7b73ab673c7dd308f21ddc8fcc287') in 0.033062981 seconds
+Start importing Assets/Resources using Guid(f49b7795746f9dcf1b26e14d581d5fac) (DefaultImporter) -> (artifact id: '79032f8dd12e8b9e4ac16d1c2c83f082') in 0.003470343 seconds
+Start importing Assets/Scripts using Guid(37b796971521c512d9e6d7acbb03cbf3) (DefaultImporter) -> (artifact id: 'dc4986d3ca16c1ab97fe199abebdae8a') in 0.003257675 seconds
+Start importing Assets/Editor using Guid(883e8095040efb7aab7783f31e5adf5a) (DefaultImporter) -> (artifact id: 'a2cfd55e37b56109027db5278dd3e6df') in 0.001207461 seconds
+Start importing Assets/Scripts/Input using Guid(23d89706825e0810496bc913ec1bca42) (DefaultImporter) -> (artifact id: '1a42e7c0b1863f3bba02666e266d36ba') in 0.001335781 seconds
+Start importing Assets/Scripts/Prototype using Guid(152e9b4052c2214bd934142d906789bd) (DefaultImporter) -> (artifact id: '59645f7be8cf3a73ffc66ffdb3767fca') in 0.002189804 seconds
+Start importing Assets/Resources/Art using Guid(554bcae290414fd1ca0feda3b0773ce5) (DefaultImporter) -> (artifact id: '0ee9adad58ef1ef649c2190c74031233') in 0.003625391 seconds
+Start importing Assets/Tests/EditMode using Guid(16e011da9abd1b78a85f110d44b6531f) (DefaultImporter) -> (artifact id: '14fa3a7e0fb5e9239d1f34436ac02d2e') in 0.003124747 seconds
+Start importing Assets/Resources/Fonts using Guid(96ea716084e7885d9b1ab0d534515c26) (DefaultImporter) -> (artifact id: 'e0e40bd1cebd13cf93e4be0140d22617') in 0.002470938 seconds
+Start importing Assets/Scripts/Core using Guid(db34c66ad9b5e6449b93de27673773a5) (DefaultImporter) -> (artifact id: '5116e8f997fb315ac9649535f61b47da') in 0.002579622 seconds
+Start importing Assets/Scripts/Gameplay using Guid(7dc3e4800230b9963b39049000c11560) (DefaultImporter) -> (artifact id: 'ad2852c0f62c3da82c7e1fb740812141') in 0.002175717 seconds
+Start importing Assets/Scripts/Config using Guid(cd66c3d00b3333ccda5ab1dedd96cf33) (DefaultImporter) -> (artifact id: 'd7b172136e8fdbec27da9f1042926271') in 0.00316323 seconds
+Start importing Assets/Scripts/Gameplay/Duel using Guid(d53d719d534bdf41f8566e83f85807bc) (DefaultImporter) -> (artifact id: '8918d369c2f32887c81807a939393877') in 0.002673526 seconds
+Start importing Assets/Resources/Art/Props using Guid(a9e66851f746f68ae8ebdf56556e3c02) (DefaultImporter) -> (artifact id: '0df2b9b3628beaf4fff2e9ece1cd04a6') in 0.002239766 seconds
+Start importing Assets/Scripts/Core/Duel using Guid(fe6f4cc04b640e767b3b7810d307c8db) (DefaultImporter) -> (artifact id: 'df115411804ae6e42704edc2d71bc444') in 0.001655147 seconds
+Start importing Assets/Scripts/Core/Sheytoonak.Core.asmdef using Guid(d02574bf47a27e8568619082bc8c859c) (AssemblyDefinitionImporter) -> (artifact id: '147c07a3c1dad41271d5ae285f459455') in 0.002108615 seconds
+Start importing Assets/Editor/Sheytoonak.Editor.asmdef using Guid(57607fbbbac4213e4927b6f157e01f75) (AssemblyDefinitionImporter) -> (artifact id: 'a224d86f734eddef1f44af6cfd0e221c') in 0.001776503 seconds
+Start importing Assets/Scripts/Sheytoonak.Game.asmdef using Guid(7b53c1b977bd8af6483400c77596a43a) (AssemblyDefinitionImporter) -> (artifact id: '28d6460f24aad35ee2cc596c58f73d37') in 0.001805697 seconds
+Start importing Assets/Tests/EditMode/Sheytoonak.Tests.EditMode.asmdef using Guid(dea36014cd61019e5adf2674bb5c09d3) (AssemblyDefinitionImporter) -> (artifact id: 'bb65698a3318be7cae689ad1d0370eeb') in 0.003306807 seconds
+Refreshing native plugins compatible for Editor in 0.18 ms, found 0 plugins.
+Native extension for LinuxStandalone target not found
+Mono: successfully reloaded assembly
+- Finished resetting the current domain, in  1.541 seconds
+Domain Reload Profiling: 2544ms
+	BeginReloadAssembly (309ms)
+		ExecutionOrderSort (0ms)
+		DisableScriptedObjects (33ms)
+		BackupInstance (0ms)
+		ReleaseScriptingObjects (0ms)
+		CreateAndSetChildDomain (70ms)
+	RebuildCommonClasses (66ms)
+	RebuildNativeTypeToScriptingClass (16ms)
+	initialDomainReloadingComplete (72ms)
+	LoadAllAssembliesAndSetupDomain (539ms)
+		LoadAssemblies (499ms)
+		RebuildTransferFunctionScriptingTraits (0ms)
+		AnalyzeDomain (141ms)
+			TypeCache.Refresh (106ms)
+				TypeCache.ScanAssembly (94ms)
+			BuildScriptInfoCaches (23ms)
+			ResolveRequiredComponents (8ms)
+	FinalizeReload (1541ms)
+		ReleaseScriptCaches (0ms)
+		RebuildScriptCaches (0ms)
+		SetupLoadedEditorAssemblies (1210ms)
+			LogAssemblyErrors (0ms)
+			InitializePlatformSupportModulesInManaged (137ms)
+			SetLoadedEditorAssemblies (16ms)
+			BeforeProcessingInitializeOnLoad (484ms)
+			ProcessInitializeOnLoadAttributes (455ms)
+			ProcessInitializeOnLoadMethodAttributes (93ms)
+			AfterProcessingInitializeOnLoad (24ms)
+			EditorAssembliesLoaded (1ms)
+		ExecutionOrderSort2 (0ms)
+		AwakeInstancesAfterBackupRestoration (24ms)
+Start importing Assets/Resources/Fonts/Vazirmatn-Regular.ttf using Guid(a063c18040b2531f59a181b2a13ac209) (TrueTypeFontImporter) -> (artifact id: 'a1e9e6c978bdc167c0ffad7fb386e11d') in 0.043713875 seconds
+Start importing Assets/Resources/Fonts/OFL.txt using Guid(49b9a19d1c4c6ff4fa0a2ff4f1bc7d50) (TextScriptImporter) -> (artifact id: '74a20e0437d3f0d4977067819fb9c10e') in 0.004562529 seconds
+Refreshing native plugins compatible for Editor in 0.20 ms, found 0 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Asset Pipeline Refresh (id=e178fe80795ed3800adae31ba82230d1): Total: 11.707 seconds - Initiated by InitialRefreshV2(ForceSynchronousImport)
+	Summary:
+		Imports: total=21 (actual=21, local cache=0, cache server=0)
+		Asset DB Process Time: managed=10 ms, native=2269 ms
+		Asset DB Callback time: managed=284 ms, native=419 ms
+		Scripting: domain reloads=1, domain reload time=1007 ms, compile time=7671 ms, other=44 ms
+		Project Asset Count: scripts=307, non-scripts=268
+		Asset File Changes: new=13, changed=62, moved=0, deleted=0
+		Scan Filter Count: 1
+	InvokeCustomDependenciesCallbacks: 0.007ms
+	InvokePackagesCallback: 411.532ms
+	ApplyChangesToAssetFolders: 0.230ms
+	Scan: 351.134ms
+	OnSourceAssetsModified: 0.957ms
+	CategorizeAssetsWithTransientArtifact: 13.105ms
+	ProcessAssetsWithTransientArtifactChanges: 53.659ms
+	CategorizeAssets: 25.233ms
+	ImportOutOfDateAssets: 1695.974ms (-6123.632ms without children)
+		ImportManagerImport: 147.843ms (8.286ms without children)
+			ImportInProcess: 139.421ms
+			UpdateCategorizedAssets: 0.136ms
+		CompileScripts: 7670.869ms
+		ReloadNativeAssets: 0.001ms
+		UnloadImportedAssets: 0.395ms
+		ReloadImportedAssets: 0.004ms
+		EnsureUptoDateAssetsAreRegisteredWithGuidPM: 0.215ms
+		InitializingProgressBar: 0.008ms
+		PostProcessAllAssetNotificationsAddChangedAssets: 0.000ms
+		OnDemandSchedulerStart: 0.269ms
+	PostProcessAllAssets: 289.691ms
+	Hotreload: 3.072ms
+	GatherAllCurrentPrimaryArtifactRevisions: 0.001ms
+	UnloadStreamsBegin: 2.206ms
+	PersistCurrentRevisions: 0.068ms
+	UnloadStreamsEnd: 0.001ms
+	GenerateScriptTypeHashes: 9.308ms
+	Untracked: 8860.289ms
+
+Application.AssetDatabase Initial Refresh End
+Scanning for USB devices : 0.171ms
+Initializing Unity extensions:
+UpdateMenuTitleForLanguage: 10
+[MODES] ModeService[none].Initialize
+[MODES] ModeService[none].LoadModes
+[MODES] Loading mode Default (0) for mode-current-id-مدينة فاجعة
+Unloading 3 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 1242 unused Assets / (0.6 MB). Loaded Objects now: 1779.
+Memory consumption went from 84.2 MB to 83.6 MB.
+Total: 27.294092 ms (FindLiveObjects: 0.287356 ms CreateObjectMapping: 1.291448 ms MarkObjects: 23.871739 ms  DeleteObjects: 1.842276 ms)
+
+
+(Unity:1538): GLib-GObject-CRITICAL **: 14:58:16.410: g_object_unref: assertion 'G_IS_OBJECT (object)' failed
+
+(Unity:1538): GLib-GObject-CRITICAL **: 14:58:16.411: g_object_unref: assertion 'G_IS_OBJECT (object)' failed
+
+(Unity:1538): GLib-GObject-CRITICAL **: 14:58:16.411: g_object_unref: assertion 'G_IS_OBJECT (object)' failed
+[Project] Loading completed in 19.785 seconds
+	Project init time: 				19.128 seconds
+		Template init time: 		0.000 seconds
+		Package Manager init time: 		0.599 seconds
+		Asset Database init time: 		0.258 seconds
+		Global illumination init time: 	0.011 seconds
+		Assemblies load time: 			5.920 seconds
+		Unity extensions init time: 	0.005 seconds
+		Asset Database refresh time: 	11.707 seconds
+	Scene opening time: 			0.317 seconds
+##utp:{"type":"ProjectInfo","version":2,"phase":"Immediate","time":1793631496413,"processId":1538,"projectLoad":19.785296702,"projectInit":19.12766867,"templateInit":0.0,"packageManagerInit":0.598689362,"assetDatabaseInit":0.258092559,"globalIlluminationInit":0.010929854,"assembliesLoad":5.91958412,"unityExtensionsInit":0.00506717,"assetDatabaseRefresh":11.7072428,"sceneOpening":0.316961597}
+##utp:{"type":"EditorInfo","version":2,"phase":"Immediate","time":1793631496413,"processId":1538,"editorVersion":"6000.0.84f1 (78ab6fc243d5)","branch":"6000.0/staging","buildType":"Release","platform":"Linux"}
+Asset Pipeline Refresh (id=ca8088d1645947aafb3484bde856b178): Total: 0.093 seconds - Initiated by RefreshV2(ForceSynchronousImport)
+Asset Pipeline Refresh (id=94f444728b7ff3205b7daa2944286546): Total: 0.048 seconds - Initiated by RefreshV2(NoUpdateAssetOptions)
+Launched and connected shader compiler UnityShaderCompiler after 0.02 seconds
+Running tests for ExecutionSettings with details:
+targetPlatform = 
+playerHeartbeatTimeout = 600
+filters[0] = 
+   Filter with settings:
+   testMode = EditMode
+   targetPlatform = 
+   testNames = null
+   groupNames = null
+   categoryNames = null
+   assemblyNames = null
+ignoreTests = {}
+featureFlags = null
+
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /home/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:35)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+UnityEditor.TestTools.TestRunner.CommandLineTest.Executer:InitializeAndExecuteRun (string[]) (at ./Library/PackageCache/com.unity.test-framework@bd52b1c23814/UnityEditor.TestRunner/CommandLineTest/Executer.cs:53)
+UnityEditor.TestTools.TestRunner.CommandLineTest.TestStarter:InitializeAndExecuteRun () (at ./Library/PackageCache/com.unity.test-framework@bd52b1c23814/UnityEditor.TestRunner/CommandLineTest/TestStarter.cs:64)
+UnityEditor.EditorApplication:Internal_CallUpdateFunctions () (at /home/bokken/build/output/unity/unity/Editor/Mono/EditorApplication.cs:384)
+
+(Filename: ./Library/PackageCache/com.unity.test-framework@bd52b1c23814/UnityEditor.TestRunner/CommandLineTest/Executer.cs Line: 53)
+
+[UnityConnectServicesConfig] config is NOT valid, switching to default
+Created GICache directory at /root/.cache/unity3d/GiCache. Took: 0.213s, timestamps: [19.847 - 20.061]
+Unloading 1 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 2 unused Assets / (1.3 KB). Loaded Objects now: 1822.
+Memory consumption went from 77.4 MB to 77.4 MB.
+Total: 9.342465 ms (FindLiveObjects: 0.090038 ms CreateObjectMapping: 0.029816 ms MarkObjects: 9.192245 ms  DeleteObjects: 0.029435 ms)
+
+Saving results to: /github/workspace/artifacts/editmode-results.xml
+Unloading 0 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 0 unused Assets / (0 B). Loaded Objects now: 1822.
+Memory consumption went from 77.2 MB to 77.2 MB.
+Total: 9.604391 ms (FindLiveObjects: 0.095117 ms CreateObjectMapping: 0.029635 ms MarkObjects: 9.474520 ms  DeleteObjects: 0.004197 ms)
+
+DisplayProgressbar: Undo
+Test run completed. Exiting with code 0 (Ok). Run completed.
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /home/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:35)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+UnityEditor.TestTools.TestRunner.CommandLineTest.Executer:ExitApplication (UnityEditor.TestTools.TestRunner.CommandLineTest.Executer/ReturnCodes,string) (at ./Library/PackageCache/com.unity.test-framework@bd52b1c23814/UnityEditor.TestRunner/CommandLineTest/Executer.cs:81)
+UnityEditor.TestTools.TestRunner.CommandLineTest.Executer:ExitIfRunIsCompleted () (at ./Library/PackageCache/com.unity.test-framework@bd52b1c23814/UnityEditor.TestRunner/CommandLineTest/Executer.cs:74)
+UnityEditor.EditorApplication:Internal_CallUpdateFunctions () (at /home/bokken/build/output/unity/unity/Editor/Mono/EditorApplication.cs:384)
+
+(Filename: ./Library/PackageCache/com.unity.test-framework@bd52b1c23814/UnityEditor.TestRunner/CommandLineTest/Executer.cs Line: 81)
+
+[Physics::Module] Cleanup current backned.
+[Physics::Module] Id: 0xf2b8ea05
+Input System module state changed to: ShutdownInProgress.
+Input System polling thread exited.
+Input System module state changed to: Shutdown.
+[Licensing::IpcConnector] LicenseClient-root-notifications channel disconnected successfully.
+[Licensing::IpcConnector] LicenseClient-root channel disconnected successfully.
+AcceleratorClientConnectionCallback - disconnected - :0
+[40m[32minfo[39m[22m[49m: Microsoft.Hosting.Lifetime[0]
+      Application is shutting down...
+Cleanup mono
+debugger-agent: Unable to listen on 40
+[Package Manager] Server process was shutdown
+Checking for leaked weakptr:
+  Found no leaked weakptrs.
+##utp:{"type":"MemoryLeaks","version":2,"phase":"Immediate","time":1793631500257,"processId":1538,"allocatedMemory":7236747,"memoryLabels":[{"Default":13965},{"Permanent":16080},{"Thread":1084616},{"Manager":17002},{"VertexData":8},{"Geometry":408},{"VFX":-104},{"Texture":296},{"Shader":79227},{"Material":24},{"GfxDevice":35976},{"Animation":456},{"Audio":4032},{"Font":122797},{"FreeType":5918},{"FontEngine":320},{"Physics":2081},{"Serialization":368},{"Input":26752},{"JobScheduler":33024},{"TextLib":160},{"Mono":32},{"ScriptingNativeRuntime":155096},{"BaseObject":1622936},{"Resource":1032},{"Renderer":2928},{"Transform":4678},{"File":832},{"WebCam":80},{"Culling":32},{"Terrain":11298},{"Wind":24},{"String":10098},{"DynamicArray":87790},{"HashMap":66524},{"Utility":2657904},{"PoolAlloc":1568},{"AI":72},{"TypeTree":5005},{"ScriptManager":512},{"RuntimeInitializeOnLoadManager":64},{"SpriteAtlas":112},{"GI":7448},{"Director":8208},{"WebRequest":552},{"VR":45689},{"SceneManager":528},{"Video":64},{"LazyScriptCache":32},{"NativeArray":540},{"Camera":17},{"Secure":265},{"SerializationCache":1576},{"APIUpdating":10320},{"Subsystems":336},{"VirtualTexturing":57552},{"StaticSafetyDebugInfo":278528},{"Analytics":336},{"Hierarchy":832},{"CoreStats":12536},{"Identifiers":6192},{"Gui":112},{"EditorUtility":27684},{"VersionControl":4},{"Undo":979},{"AssetDatabase":663862},{"EditorGi":328},{"UnityConnect":24816},{"Upm":1852},{"DrivenProperties":72},{"LocalIPC":147},{"ProfilerEditor":9746},{"CoreBusinessMetrics":2379},{"Licensing":1128},{"AssetReference":32},{"IPCStream":32}]}
