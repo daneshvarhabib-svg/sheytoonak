@@ -28,7 +28,22 @@ namespace Sheytoonak.Tests
                 for (int w = 0; w < 6; w++) if (w != r.HiddenWindow) Assert.AreNotEqual(3, r.WindowValue[w]);
                 int ones = 0; for (int w = 6; w < 9; w++) if (r.WindowValue[w] == 1) ones++;
                 Assert.GreaterOrEqual(ones, 2, "seed " + seed);
+                for (int w = 0; w < 6; w++) Assert.AreNotEqual(1, r.WindowValue[w], "no 1 in an upper row, seed " + seed);
                 Assert.AreEqual(1, r.TotalValue % 2);
+            }
+        }
+
+        [Test]
+        public void Odd_nudge_never_puts_a_one_in_an_upper_row()
+        {
+            var shards = new int[5];
+            var h = StarterHeroes.All;
+            var rowMap = new[] { 1, 1, 0, 0, 0 }; // top-first, like the facade
+            for (int seed = 1; seed < 30; seed++)
+            {
+                var r = new DuelRules(new[] { 3, 2 }, shards, new[] { h[0], h[1], h[2] }, new[] { h[3], h[4], h[0] }, seed, rowMap);
+                Assert.AreEqual(1, r.TotalValue % 2);
+                Assert.AreNotEqual(1, r.WindowValue[0]); Assert.AreNotEqual(1, r.WindowValue[1]);
             }
         }
 

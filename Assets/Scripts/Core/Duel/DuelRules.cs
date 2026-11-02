@@ -106,8 +106,14 @@ namespace Sheytoonak.Core.Duel
             // the total must be odd so the duel cannot tie (SCENARIO §2): nudge one non-hidden window
             if (total % 2 == 0)
             {
-                for (int i = 0; i < n; i++)
-                    if (i != HiddenWindow) { WindowValue[i] = WindowValue[i] == 1 ? 2 : 1; break; }
+                // ⚠️ run 31: flipping "the first window" turned a top-row 2 into a 1. Keep the rows readable:
+                // make one bottom-row 1 a 2 when the bottom row has more than one window, else an upper 2 a 1.
+                int pick = -1, bottomCount = 0;
+                for (int i = 0; i < n; i++) if (rowOfWindow[i] == 0) bottomCount++;
+                for (int i = 0; i < n && pick < 0; i++)
+                    if (i != HiddenWindow && (bottomCount > 1 ? rowOfWindow[i] == 0 : rowOfWindow[i] > 0)) pick = i;
+                if (pick < 0) for (int i = 0; i < n && pick < 0; i++) if (i != HiddenWindow) pick = i;
+                WindowValue[pick] = WindowValue[pick] == 1 ? 2 : 1;
                 total = 0; foreach (int v in WindowValue) total += v;
             }
             TotalValue = total;
