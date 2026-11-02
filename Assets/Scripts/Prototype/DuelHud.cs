@@ -53,7 +53,7 @@ namespace Sheytoonak.Prototype
                     for (int i = 0; i < 3 && stage.Heroes[s] != null; i++)
                     {
                         var h = stage.Heroes[s][i]; if (h == null) continue;
-                        Vector3 sp = cam.WorldToScreenPoint(h.position + Vector3.up * 1.45f);
+                        Vector3 sp = cam.WorldToScreenPoint(h.position + Vector3.up * (stage.heroHeight + 0.1f));
                         if (sp.z < 0) continue;
                         Shadowed(new Rect(sp.x - 120 * u, Screen.height - sp.y - 24 * u, 240 * u, 26 * u), Ar.T(rules.Heroes[s][i].NameAr.Split(' ')[0]),
                             new GUIStyle(small) { alignment = TextAnchor.MiddleCenter });

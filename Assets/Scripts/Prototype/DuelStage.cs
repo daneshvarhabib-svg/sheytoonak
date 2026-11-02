@@ -33,7 +33,8 @@ namespace Sheytoonak.Prototype
                 {
                     // smaller and a little ahead of the ball so the facade stays the centre of the picture (run 26 had them filling the frame)
                     float x = sign * (1.1f + i * 0.7f);
-                    var pos = new Vector3(x, 0f, foot.Z + 0.9f - i * 0.25f);
+                    // run 38: the painted kids stood with their legs under the bottom button strip; a step towards the wall lifts them above it
+                    var pos = new Vector3(x, 0f, foot.Z + 1.7f - i * 0.25f);
                     homes[side][i] = pos;
                     Heroes[side][i] = MakeHero(side == 0 ? leftMat : rightMat, pos, (side == 0 ? "L" : "R") + i).transform;
                 }
@@ -74,7 +75,7 @@ namespace Sheytoonak.Prototype
         /// Drawn facing right, three-quarter back view with about a third of the face showing (user: «یک سوم از صورت
         /// قهرمان رو ببینیم، کامل از پشت نباشه»); the right side is mirrored so both teams face the middle.
         /// No file yet = the capsule stays.</summary>
-        public float heroHeight = 1.35f;
+        public float heroHeight = 1.6f; // a bit over real kid height so they read on a phone
         readonly Dictionary<string, Sprite> sprites = new Dictionary<string, Sprite>();
         readonly SpriteRenderer[][] painted = { new SpriteRenderer[3], new SpriteRenderer[3] };
         readonly string[][] lookIds = { new string[3], new string[3] };
