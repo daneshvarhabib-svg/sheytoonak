@@ -658,7 +658,7 @@ namespace Sheytoonak.Prototype
             var rng = new System.Random(17 + variant * 31);
             // hole centre: middle / lower-left / upper-right / almost everything gone
             Vector2[] centres = { new Vector2(0.5f, 0.5f), new Vector2(0.32f, 0.3f), new Vector2(0.7f, 0.68f), new Vector2(0.5f, 0.45f) };
-            float[] radii = { 0.28f, 0.3f, 0.26f, 0.46f };
+            float[] radii = { 0.38f, 0.4f, 0.36f, 0.55f }; // run 48: smaller holes read as a black splat on intact glass
             Vector2 c = centres[variant] * n; float rad = radii[variant] * n;
             // jagged hole outline: radius per angle with spikes
             int spokes = 9 + variant * 2;
@@ -676,7 +676,7 @@ namespace Sheytoonak.Prototype
                     float shade = 1f - Mathf.Clamp01(d / (rad * 1.6f));
                     px[y * n + x] = hole
                         ? new Color32((byte)(18 + 22 * shade), (byte)(15 + 14 * shade), (byte)(14 + 8 * shade), 255)
-                        : new Color32((byte)(118 + y / 8), (byte)(140 + y / 8), (byte)(160 + y / 10), 255);
+                        : new Color32((byte)(72 + y / 9), (byte)(88 + y / 9), (byte)(104 + y / 10), 255); // left-over glass: darker than the painted intact pane
                 }
             // cracks running from the hole out to the frame
             var crack = new Color32(232, 238, 245, 255);
