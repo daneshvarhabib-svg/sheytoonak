@@ -14,7 +14,7 @@ namespace Sheytoonak.Prototype
         public System.Action onPlayAgain;
 
         string toast = ""; float toastUntil;
-        bool ended; bool won;
+        bool ended; bool won; float surrenderArmedUntil;
 
         void OnEnable() { duel.Toast += OnToast; duel.Finished += OnFinished; duel.DuelStarted += () => ended = false; }
         void OnDisable() { duel.Toast -= OnToast; duel.Finished -= OnFinished; }
@@ -64,8 +64,10 @@ namespace Sheytoonak.Prototype
             Shadowed(new Rect(Screen.width * 0.6f - pad, top, Screen.width * 0.4f, 44 * u), Ar.T("الخصم: " + Ar.N(rules.Windows[1]) + (rules.RageReady[1] ? "  " + Ar.Rage + " ✦" : "")), new GUIStyle(big) { alignment = TextAnchor.UpperRight, fontSize = Mathf.RoundToInt(32 * u) });
             bool mine = rules.Current == duel.Me;
             string turnLine = ended ? "" : (mine ? Ar.YourTurn : Ar.TheirTurn) + "  ·  " + Ar.Actions + " " + Ar.N(rules.ActionsLeft) + "  ·  " + Ar.Timer(Mathf.CeilToInt(duel.TurnTimeLeft));
-            Shadowed(new Rect(0, top + 2 * u, Screen.width, 36 * u), Ar.T(turnLine), new GUIStyle(label) { alignment = TextAnchor.UpperCenter, normal = { textColor = mine ? new Color(0.6f, 1f, 0.6f) : new Color(1f, 0.8f, 0.6f) } });
-            Shadowed(new Rect(0, top + 36 * u, Screen.width, 30 * u), Ar.T(Ar.WindowsLine(rules.Windows[0], rules.Windows[1], rules.Majority)), new GUIStyle(small) { alignment = TextAnchor.UpperCenter });
+            // the turn line lives at the bottom (the facade's top row is right under the top edge)
+            float lineY = Screen.height - 34 * u - (mine && !rules.KickInFlight ? 40 * u * 3 + 6 * u * 4 : 0f);
+            Shadowed(new Rect(0, lineY, Screen.width, 32 * u), Ar.T(turnLine), new GUIStyle(label) { alignment = TextAnchor.MiddleCenter, normal = { textColor = mine ? new Color(0.6f, 1f, 0.6f) : new Color(1f, 0.8f, 0.6f) } });
+            Shadowed(new Rect(0, top + 40 * u, Screen.width * 0.4f, 30 * u), Ar.T(Ar.WindowsLine(rules.Windows[0], rules.Windows[1], rules.Majority)), new GUIStyle(small) { alignment = TextAnchor.UpperLeft });
 
             // active poisons
             float y = top + 70 * u;
@@ -101,7 +103,12 @@ namespace Sheytoonak.Prototype
                 float cw = Mathf.Min(200 * u, Screen.width * 0.18f), xr = Screen.width - pad - cw;
                 if (rules.RageReady[0] && GUI.Button(new Rect(xr, yb, cw, bh), Ar.T(Ar.Rage + " ✦"), button)) { touch?.IgnoreFor(0.4f); duel.Rage(); }
                 if (GUI.Button(new Rect(xr, yb + bh + gap, cw, bh), Ar.T(Ar.PassTurn), button)) { touch?.IgnoreFor(0.4f); duel.Pass(); }
-                if (GUI.Button(new Rect(xr, yb + (bh + gap) * 2, cw, bh), Ar.T(Ar.Surrender), button)) { touch?.IgnoreFor(0.4f); duel.Surrender(); }
+                bool armed = Time.time < surrenderArmedUntil;
+                if (GUI.Button(new Rect(xr, yb + (bh + gap) * 2, cw, bh), Ar.T(armed ? Ar.SurrenderSure : Ar.Surrender), button))
+                {
+                    touch?.IgnoreFor(0.4f);
+                    if (armed) duel.Surrender(); else surrenderArmedUntil = Time.time + 3f; // two taps, like every costly button
+                }
                 if (rules.ActionsLeft > 0)
                     Shadowed(new Rect(0, Screen.height - stripH - 40 * u, Screen.width, 36 * u), Ar.T(Ar.ServeHint), new GUIStyle(label) { alignment = TextAnchor.MiddleCenter });
             }

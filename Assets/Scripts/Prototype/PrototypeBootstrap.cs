@@ -43,9 +43,10 @@ namespace Sheytoonak.Prototype
         [Tooltip("Duel mode (docs/SCENARIO.fa.md): shared stage seen from behind, three heroes a side, turns. Off = the old rally.")]
         public bool duel = true;
         // Seen from behind with the heroes in frame: higher, further back, a little pitched down, wider vertically.
-        public Vector3 duelCameraOffset = new Vector3(0f, 3.2f, -6.4f);
-        public float duelCameraPitchDeg = 11f;
-        public float duelMinVerticalFov = 55f;
+        public Vector3 duelCameraOffset = new Vector3(0f, 3.0f, -5.8f);
+        public float duelCameraPitchDeg = 9f;
+        public float duelMinVerticalFov = 46f;
+        public float duelHorizontalFov = 62f;
         DuelManager duelGame;
         [Tooltip("Horizontal field of view in degrees; the vertical one is derived from the screen aspect each frame.")]
         public float cameraHorizontalFov = 80f;
@@ -176,7 +177,7 @@ namespace Sheytoonak.Prototype
             ApplyFov();
             cam.nearClipPlane = 0.05f;
             cam.farClipPlane = 250f;
-            if (duel) { cameraOffset = duelCameraOffset; cameraPitchDeg = duelCameraPitchDeg; cameraMinVerticalFov = Mathf.Max(cameraMinVerticalFov, duelMinVerticalFov); }
+            if (duel) { cameraOffset = duelCameraOffset; cameraPitchDeg = duelCameraPitchDeg; cameraMinVerticalFov = duelMinVerticalFov; cameraHorizontalFov = duelHorizontalFov; }
             camGo.transform.SetPositionAndRotation(cameraOffset, Quaternion.Euler(cameraPitchDeg, 0f, 0f));
             camGo.AddComponent<AudioListener>();
             shake = camGo.AddComponent<CameraShake>();

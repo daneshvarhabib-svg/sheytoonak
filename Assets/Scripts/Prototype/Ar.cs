@@ -21,6 +21,7 @@ namespace Sheytoonak
         public const string RageUsed = "غيظ! حركة زيادة";
         public const string PassTurn = "خلص دوري";
         public const string Surrender = "بسلّم";
+        public const string SurrenderSure = "أكيد؟ دقّ كمان مرّة";
         public const string NoActions = "ما بقي حركات";
         public const string TimeUp = "خلص الوقت";
         public const string HiddenThree = "هيدا الشباك المخبّى: ٣!";
