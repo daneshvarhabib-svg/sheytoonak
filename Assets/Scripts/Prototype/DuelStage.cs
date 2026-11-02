@@ -68,8 +68,60 @@ namespace Sheytoonak.Prototype
             return root;
         }
 
+        // ------------------------------------------------------------------ painted heroes
+
+        /// <summary>Art/Heroes/&lt;id&gt;_idle.png and &lt;id&gt;_kick.png (docs/ART_SPEC.fa.md, heroes section).
+        /// Drawn facing right, three-quarter back view with about a third of the face showing (user: «یک سوم از صورت
+        /// قهرمان رو ببینیم، کامل از پشت نباشه»); the right side is mirrored so both teams face the middle.
+        /// No file yet = the capsule stays.</summary>
+        public float heroHeight = 1.35f;
+        readonly Dictionary<string, Sprite> sprites = new Dictionary<string, Sprite>();
+        readonly SpriteRenderer[][] painted = { new SpriteRenderer[3], new SpriteRenderer[3] };
+        readonly string[][] lookIds = { new string[3], new string[3] };
+
+        Sprite HeroSprite(string id, string pose)
+        {
+            string key = id + "_" + pose;
+            if (sprites.TryGetValue(key, out var sp)) return sp;
+            var tex = Resources.Load<Texture2D>("Art/Heroes/" + key);
+            sp = tex != null ? Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0f), 100f) : null;
+            sprites[key] = sp;
+            return sp;
+        }
+
+        void ApplyLooks()
+        {
+            for (int side = 0; side < 2; side++)
+                for (int i = 0; i < 3; i++)
+                {
+                    var hero = Heroes[side][i];
+                    string id = duel.Rules.Heroes[side][i].Id;
+                    lookIds[side][i] = id;
+                    var idle = HeroSprite(id, "idle");
+                    if (painted[side][i] != null) { Destroy(painted[side][i].gameObject); painted[side][i] = null; }
+                    foreach (Transform c in hero) c.gameObject.SetActive(idle == null); // the capsule placeholder
+                    if (idle == null) continue;
+                    var go = new GameObject("Painted " + id);
+                    go.transform.SetParent(hero, false);
+                    var r = go.AddComponent<SpriteRenderer>();
+                    r.sprite = idle;
+                    r.flipX = side == 1;
+                    go.transform.localScale = Vector3.one * (heroHeight / Mathf.Max(0.01f, idle.bounds.size.y));
+                    painted[side][i] = r;
+                }
+        }
+
+        void SetPose(Side side, int slot, string pose)
+        {
+            var r = painted[(int)side][slot];
+            if (r == null) return;
+            var sp = HeroSprite(lookIds[(int)side][slot], pose) ?? HeroSprite(lookIds[(int)side][slot], "idle");
+            if (sp != null) r.sprite = sp;
+        }
+
         void OnDuelStarted()
         {
+            ApplyLooks();
             foreach (var kv in props) foreach (var go in kv.Value) if (go != null) Destroy(go);
             props.Clear();
             duel.Rules.PoisonPlaced += OnPoison;
@@ -90,7 +142,9 @@ namespace Sheytoonak.Prototype
             Vector3 at = foot.StrikeSpot + new Vector3(side == Side.Left ? -0.4f : 0.4f, 0f, -0.3f);
             for (float k = 0f; k < 1f; k += Time.deltaTime * 4f) { hero.position = Vector3.Lerp(home, at, k); yield return null; }
             hero.position = at;
+            SetPose(side, 0, "kick");
             yield return new WaitForSeconds(1.2f);
+            SetPose(side, 0, "idle");
             for (float k = 0f; k < 1f; k += Time.deltaTime * 2.5f) { hero.position = Vector3.Lerp(at, home, k); yield return null; }
             hero.position = home;
         }

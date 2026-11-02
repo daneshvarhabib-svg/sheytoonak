@@ -84,6 +84,43 @@ Same style. Full-body Lebanese pedestrian seen exactly from the side, walking to
 Same style. An old Beirut car seen exactly from the side, facing right: [a cream 1980s Mercedes taxi with a red stripe] / [a dusty old Volkswagen Beetle] / [a small white pickup truck with a few crates in the back]. Transparent background, no ground, no shadow, no text, no number plate characters. Landscape 3:1.
 ```
 
+## قهرمان‌ها (۱۱ آبان ۱۴۰۵) — پنج قهرمانِ شروع
+
+کاربر: «زاویه دوربین یه جوری باشه که ما یک سوم از صورت قهرمان رو ببینیم، کامل از پشت نباشه». قهرمان‌ها
+اسپرایتِ دوبعدی‌اند، پس این زاویه در خودِ نقاشی است: **سه‌رخِ از پشت** — بدن رو به دیوار (دور از ما) و کمی به
+راست چرخیده، سر به راست برگشته تا حدودِ یک‌سوم صورت (گونه، گوش، گوشه‌ی چشم، نوکِ بینی) دیده شود.
+همه **رو به راست** کشیده می‌شوند؛ بازی برای تیمِ حریف (سمتِ راست) آینه‌شان می‌کند تا هر دو تیم رو به وسط باشند.
+
+* هر قهرمان **دو تصویر**: `<id>_idle.png` (ایستاده) و `<id>_kick.png` (لحظه‌ی ضربه به توپ با پای راست).
+* عمودی 2:3، **پس‌زمینه‌ی شفاف**، بدونِ سایه‌ی زمین، کلِ بدن داخلِ کادر با کمی حاشیه، **بدونِ توپ**.
+* همه در **یک گفت‌وگوی ChatGPT**: اول `docs/reference/street-reference.png` و یکی از رهگذرها
+  (`Assets/Resources/Art/Props/ped_01_tarboush.png`) را پیوست کن تا سبک همان شود؛ بعد از اولین قهرمان،
+  تصویرِ همان را هم پیوست کن و بنویس «same scale and style as this one» تا قدها یکی بمانند.
+* بفرست همین‌جا در چت؛ برش و جاگذاری در `Assets/Resources/Art/Heroes/` کارِ من است.
+
+| شناسه (نامِ فایل) | قهرمان | ظاهر |
+|---|---|---|
+| `abu_shahata` | أبو شحّاطة البيروتي | پسرِ ۱۱ ساله‌ی تپل، سرِ تراشیده، رکابیِ سفید، شلوارکِ جیب‌دارِ گشاد، **دمپاییِ پلاستیکی (شحّاطه)** |
+| `rima` | ريما الشرشوحة الصيداوية | دخترِ ۱۲ ساله‌ی شر، موهای فرِ مشکیِ ژولیده با کشِ شل، پیراهنِ فوتبالِ رنگ‌رفته‌ی گشاد، جینِ تا خورده، کتانیِ کهنه، چسب‌زخم روی آرنج |
+| `zaatar` | زعتر الشامي | پسرِ ۱۱ ساله‌ی لاغر، موهای فرِ کوتاه، **گرمکنِ سبزِ زیتونی** با نوارِ سفید، کتانی |
+| `fulla` | فُلّة الإسكندرانية | دخترِ ۱۰ ساله، دو بافتِ بلند با **گل‌های یاسِ سفید (فُل)**، پیراهنِ آبیِ دریایی رویِ ساپورت، کتانیِ سفید |
+| `toni` | طوني الزعران البيروتي | پسرِ ۱۳ ساله‌ی لات، **کلاهِ برعکس**، رکابیِ مشکی، زنجیرِ نازکِ طلایی، جینِ پاره، کتانیِ قرمز |
+
+### پرامپتِ ایستاده (پنج بار، هر بار یک قهرمان)
+```
+In exactly the style of the attached reference images (semi-realistic anime, sunny late afternoon, warm light from the upper left, clean line art, soft painted shading). Full-body character in a three-quarter BACK view: the body faces away from the viewer and is turned slightly to the right, the head turned to the right so that about one third of the face is visible (cheek, ear, the side of one eye, the tip of the nose); we never see the full face. Standing relaxed, ready, feet apart, looking at a building in front of them. Character: [DESCRIPTION]. Transparent background, no ground, no shadow, no ball, no text. Portrait 2:3, the whole figure inside the frame with a small margin.
+```
+### پرامپتِ ضربه (پنج بار)
+```
+Same character, same style, same scale and same three-quarter back view (about one third of the face visible, turned to the right): caught at the moment of kicking with the RIGHT foot, kicking leg swung forward, arms out for balance, body leaning slightly back. No ball. Transparent background, no ground, no shadow, no text. Portrait 2:3.
+```
+جاگذاریِ [DESCRIPTION] (انگلیسی):
+* abu_shahata: `a chubby 11-year-old Lebanese boy, shaved head, white tank top, baggy cargo shorts, worn plastic flip-flops`
+* rima: `a scrappy 12-year-old Lebanese girl, wild curly black hair in a loose ponytail, an oversized faded football jersey, rolled-up jeans, scuffed sneakers, a plaster on one elbow`
+* zaatar: `a skinny 11-year-old Syrian boy, short curly hair, an olive-green tracksuit with white stripes, sneakers`
+* fulla: `a 10-year-old Egyptian girl from Alexandria, two long braids tied with small white jasmine flowers, a sea-blue dress over leggings, white sneakers`
+* toni: `a cocky 13-year-old Beirut street boy, baseball cap worn backwards, black sleeveless t-shirt, thin gold chain, ripped jeans, red sneakers`
+
 ## جمله‌های فحشِ صاحب‌خانه (برای ضبط)
 
 کاربر: «هر بار شیشه می‌شکنه یه صدای فحشی از توی خونه به زبون عربی بیاد، ترجیحاً غیررکیک». هشت جمله‌ی شامی، تند ولی تمیز؛ هر کدام را یک نفر (ترجیحاً دو صدا: مرد و زن) با عصبانیت و کمی دور (از پشتِ پنجره) ضبط کند، ۱ تا ۲ ثانیه، فایلِ `.wav` یا `.mp3` یا `.ogg` (نه `.m4a`) با هر نامی در `Assets/Resources/Audio/Curses/`:
