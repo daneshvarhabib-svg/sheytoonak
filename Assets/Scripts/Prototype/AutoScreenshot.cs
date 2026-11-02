@@ -50,12 +50,30 @@ namespace Sheytoonak.Prototype
                 if (boot != null)
                 {
                     boot.StartGameFromScript();
-                    yield return Shot("02-game", 1.5f);
-                    // aim at the middle-low part of the facade: a realistic first kick
-                    boot.Router?.Inject(new KickGesture(0.7f, 0.1f, 0f));
-                    yield return Shot("03-kick-air", 0.45f);
-                    yield return Shot("04-kick-hit", 0.6f);
-                    yield return Shot("05-after", 2.0f);
+                    yield return Shot("02-stage", 2.0f);
+                    var duel = boot.Duel;
+                    if (duel != null)
+                    {
+                        // wait for my turn (the bot may open), then kick at the top-middle window, poison, and watch the bot
+                        float until = Time.realtimeSinceStartup + 12f;
+                        while (Time.realtimeSinceStartup < until && !duel.PlayerMayKick) yield return null;
+                        yield return Shot("03-my-turn", 0.2f);
+                        boot.Router?.Inject(new KickGesture(0.85f, 0.05f, 0f));
+                        yield return Shot("04-kick-air", 0.45f);
+                        yield return Shot("05-kick-hit", 0.6f);
+                        yield return Shot("06-after", 2.0f);
+                        if (duel.PlayerMayKick) duel.Poison(1); // zaatar: the bus
+                        yield return Shot("07-poison", 0.8f);
+                        yield return Shot("08-bot-turn", 4.0f);
+                        yield return Shot("09-later", 5.0f);
+                    }
+                    else
+                    {
+                        boot.Router?.Inject(new KickGesture(0.7f, 0.1f, 0f));
+                        yield return Shot("03-kick-air", 0.45f);
+                        yield return Shot("04-kick-hit", 0.6f);
+                        yield return Shot("05-after", 2.0f);
+                    }
                 }
                 Debug.Log("SHEYTOONAK SHOTS done in " + dir);
                 yield return null;
@@ -64,7 +82,7 @@ namespace Sheytoonak.Prototype
 
             IEnumerator Watchdog()
             {
-                yield return new WaitForSecondsRealtime(60f);
+                yield return new WaitForSecondsRealtime(90f);
                 Debug.LogWarning("SHEYTOONAK SHOTS watchdog: quitting after 60 s");
                 Application.Quit(2);
             }

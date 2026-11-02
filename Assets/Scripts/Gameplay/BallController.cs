@@ -18,12 +18,12 @@ namespace Sheytoonak
         public float Radius { get; private set; } = 0.11f;
         public bool InPlay => Body != null && !Body.isKinematic && gameObject.activeSelf;
 
-        GameManager gm;
+        IBallListener gm;
         float spinY, wind, magnus;
         float groundStay;
         bool rollReported;
 
-        public void Init(GameManager manager, GameConfig cfg)
+        public void Init(IBallListener manager, GameConfig cfg)
         {
             gm = manager;
             Body = GetComponent<Rigidbody>();

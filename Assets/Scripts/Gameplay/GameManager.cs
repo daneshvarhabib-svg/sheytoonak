@@ -11,7 +11,7 @@ namespace Sheytoonak
     /// a Ball (BallController prefab), a BackdropWindowMapper on the PlayerFoot's parent at z = 0,
     /// and a KickInputRouter. Ground, facade and kill-zone colliders are created at runtime if missing.
     /// </summary>
-    public class GameManager : MonoBehaviour
+    public class GameManager : MonoBehaviour, IBallListener
     {
         public GameConfig config;
         [Tooltip("The street, in order. Design: 8 houses.")]
@@ -176,7 +176,7 @@ namespace Sheytoonak
 
         // ------------------------------------------------------------------ physics reports (from BallController)
 
-        internal void OnBallGround(Vector3 point)
+        public void OnBallGround(Vector3 point)
         {
             if (Rules == null) return;
             var phase = Rules.Phase;
@@ -186,14 +186,14 @@ namespace Sheytoonak
         }
 
         /// <summary>The ball stopped hopping and rolls: counts as a further bounce (it touches the ground again).</summary>
-        internal void OnBallRolling(Vector3 point)
+        public void OnBallRolling(Vector3 point)
         {
             if (Rules == null) return;
             if (Rules.Phase == RallyPhase.Returning && Rules.BouncesSinceWall >= 1) Rules.OnGroundBounce();
             else if (Rules.Phase == RallyPhase.Outgoing) Rules.OnBallLost(LossReason.ShortShot);
         }
 
-        internal void OnBallFacade(Vector3 point)
+        public void OnBallFacade(Vector3 point)
         {
             if (Rules == null) return;
             if (Rules.Phase != RallyPhase.Outgoing && Rules.Phase != RallyPhase.Returning) return;
@@ -235,7 +235,7 @@ namespace Sheytoonak
             GameEvents.RaiseOwnerThrow(w);
         }
 
-        internal void OnBallKilled(LossReason reason)
+        public void OnBallKilled(LossReason reason)
         {
             Rules?.OnBallLost(reason);
         }

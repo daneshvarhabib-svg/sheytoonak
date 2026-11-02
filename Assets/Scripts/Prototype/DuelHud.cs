@@ -1,0 +1,128 @@
+using Sheytoonak.Core.Duel;
+using UnityEngine;
+
+namespace Sheytoonak.Prototype
+{
+    /// <summary>IMGUI head-up display of the duel: scores, turn, timer, actions, hero tools, window values, end panel.</summary>
+    public class DuelHud : MonoBehaviour
+    {
+        public DuelManager duel;
+        public DuelStage stage;
+        public BackdropWindowMapper mapper;
+        public Camera cam;
+        public TouchKickInput touch;
+        public System.Action onPlayAgain;
+
+        string toast = ""; float toastUntil;
+        bool ended; bool won;
+
+        void OnEnable() { duel.Toast += OnToast; duel.Finished += OnFinished; duel.DuelStarted += () => ended = false; }
+        void OnDisable() { duel.Toast -= OnToast; duel.Finished -= OnFinished; }
+        void OnToast(string t, float s) { toast = t; toastUntil = Time.time + s; }
+        void OnFinished(Side winner, bool iWon) { ended = true; won = iWon; }
+
+        void OnGUI()
+        {
+            var rules = duel.Rules;
+            if (rules == null) return;
+            float u = Mathf.Max(1f, Screen.height / 900f);
+            var font = Ar.Font;
+            var label = new GUIStyle(GUI.skin.label) { fontSize = Mathf.RoundToInt(24 * u), normal = { textColor = Color.white }, font = font };
+            var small = new GUIStyle(label) { fontSize = Mathf.RoundToInt(19 * u) };
+            var big = new GUIStyle(label) { fontSize = Mathf.RoundToInt(40 * u), alignment = TextAnchor.MiddleCenter, fontStyle = FontStyle.Bold };
+            var button = new GUIStyle(GUI.skin.button) { fontSize = Mathf.RoundToInt(24 * u), font = font };
+            float pad = 14f * u, top = pad + (Screen.height - Screen.safeArea.yMax);
+
+            // window value badges on the facade
+            if (!ended)
+                for (int w = 0; w < rules.WindowCount; w++)
+                {
+                    if (rules.IsBroken(w)) continue;
+                    Rect r = mapper.WindowRects[w];
+                    Vector3 sp = cam.WorldToScreenPoint(new Vector3(r.center.x, r.yMax + 0.1f, mapper.FacadeZ));
+                    if (sp.z < 0) continue;
+                    string v = Ar.N(rules.ShownValue(w));
+                    var st = new GUIStyle(small) { alignment = TextAnchor.MiddleCenter, fontStyle = FontStyle.Bold,
+                        normal = { textColor = rules.IsBreakable(w) ? new Color(1f, 0.95f, 0.5f) : new Color(0.6f, 0.6f, 0.6f) } };
+                    Shadowed(new Rect(sp.x - 30 * u, Screen.height - sp.y - 26 * u, 60 * u, 26 * u), v, st);
+                }
+
+            // hero names
+            if (stage != null)
+                for (int s = 0; s < 2; s++)
+                    for (int i = 0; i < 3 && stage.Heroes[s] != null; i++)
+                    {
+                        var h = stage.Heroes[s][i]; if (h == null) continue;
+                        Vector3 sp = cam.WorldToScreenPoint(h.position + Vector3.up * 1.95f);
+                        if (sp.z < 0) continue;
+                        Shadowed(new Rect(sp.x - 120 * u, Screen.height - sp.y - 24 * u, 240 * u, 26 * u), Ar.T(rules.Heroes[s][i].NameAr.Split(' ')[0]),
+                            new GUIStyle(small) { alignment = TextAnchor.MiddleCenter });
+                    }
+
+            // scores
+            Shadowed(new Rect(pad, top, Screen.width * 0.4f, 44 * u), Ar.T("شبابيكي: " + Ar.N(rules.Windows[0]) + (rules.RageReady[0] ? "  " + Ar.Rage + " ✦" : "")), new GUIStyle(big) { alignment = TextAnchor.UpperLeft, fontSize = Mathf.RoundToInt(32 * u) });
+            Shadowed(new Rect(Screen.width * 0.6f - pad, top, Screen.width * 0.4f, 44 * u), Ar.T("الخصم: " + Ar.N(rules.Windows[1]) + (rules.RageReady[1] ? "  " + Ar.Rage + " ✦" : "")), new GUIStyle(big) { alignment = TextAnchor.UpperRight, fontSize = Mathf.RoundToInt(32 * u) });
+            bool mine = rules.Current == duel.Me;
+            string turnLine = ended ? "" : (mine ? Ar.YourTurn : Ar.TheirTurn) + "  ·  " + Ar.Actions + " " + Ar.N(rules.ActionsLeft) + "  ·  " + Ar.Timer(Mathf.CeilToInt(duel.TurnTimeLeft));
+            Shadowed(new Rect(0, top, Screen.width, 40 * u), Ar.T(turnLine), new GUIStyle(label) { alignment = TextAnchor.UpperCenter, normal = { textColor = mine ? new Color(0.6f, 1f, 0.6f) : new Color(1f, 0.8f, 0.6f) } });
+            Shadowed(new Rect(0, top + 36 * u, Screen.width, 30 * u), Ar.T(Ar.WindowsLine(rules.Windows[0], rules.Windows[1], rules.Majority)), new GUIStyle(small) { alignment = TextAnchor.UpperCenter });
+
+            // active poisons
+            float y = top + 70 * u;
+            foreach (var p in rules.Poisons)
+            {
+                string life = p.Tool.Life == Lifetime.UntilAntidote ? "∞" : Ar.N(p.TurnsLeft);
+                Shadowed(new Rect(Screen.width * 0.6f - pad, y, Screen.width * 0.4f, 26 * u), Ar.T(Ar.PoisonWord + ": " + p.Tool.NameAr + " (" + life + ")"), new GUIStyle(small) { alignment = TextAnchor.UpperRight, normal = { textColor = new Color(1f, 0.7f, 0.7f) } });
+                y += 26 * u;
+            }
+
+            if (Time.time < toastUntil)
+                Shadowed(new Rect(0, Screen.height * 0.40f, Screen.width, 60 * u), Ar.T(toast), big);
+
+            // my actions
+            if (!ended && mine && !rules.KickInFlight)
+            {
+                float bh = 44 * u, bw = Mathf.Min(300 * u, Screen.width * 0.3f);
+                float x0 = pad, yb = Screen.height - pad - bh * 3 - 8 * u * 2;
+                GUI.enabled = rules.ActionsLeft > 0;
+                for (int i = 0; i < 3; i++)
+                {
+                    var h = rules.Heroes[0][i];
+                    bool poisonOk = rules.CanPoison(duel.Me, h.Poison, duel.TargetsFor(h.Poison)) == ActionReject.None;
+                    GUI.enabled = rules.ActionsLeft > 0 && poisonOk;
+                    if (GUI.Button(new Rect(x0, yb + i * (bh + 8 * u), bw, bh), Ar.T(Ar.PoisonWord + ": " + h.Poison.NameAr), button)) { touch?.IgnoreFor(0.4f); duel.Poison(i); }
+                    GUI.enabled = rules.ActionsLeft > 0;
+                    if (GUI.Button(new Rect(x0 + bw + 8 * u, yb + i * (bh + 8 * u), bw, bh), Ar.T(Ar.AntidoteWord + ": " + h.Antidote.NameAr), button)) { touch?.IgnoreFor(0.4f); duel.Antidote(i); }
+                }
+                GUI.enabled = true;
+                float xr = Screen.width - pad - bw;
+                if (rules.RageReady[0] && GUI.Button(new Rect(xr, yb, bw, bh), Ar.T(Ar.Rage + " ✦"), button)) { touch?.IgnoreFor(0.4f); duel.Rage(); }
+                if (GUI.Button(new Rect(xr, yb + bh + 8 * u, bw, bh), Ar.T(Ar.PassTurn), button)) { touch?.IgnoreFor(0.4f); duel.Pass(); }
+                if (GUI.Button(new Rect(xr, yb + (bh + 8 * u) * 2, bw, bh), Ar.T(Ar.Surrender), button)) { touch?.IgnoreFor(0.4f); duel.Surrender(); }
+                if (rules.ActionsLeft > 0)
+                    Shadowed(new Rect(0, Screen.height * 0.55f, Screen.width, 36 * u), Ar.T(Ar.ServeHint), new GUIStyle(label) { alignment = TextAnchor.MiddleCenter });
+            }
+
+            if (ended)
+            {
+                var old = GUI.color; GUI.color = new Color(0f, 0f, 0f, 0.65f);
+                GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), Texture2D.whiteTexture); GUI.color = old;
+                GUILayout.BeginArea(new Rect(pad * 2, Screen.height * 0.25f, Screen.width - pad * 4, Screen.height * 0.6f));
+                GUILayout.Label(Ar.T(won ? Ar.Won : Ar.Lost), big);
+                GUILayout.Label(Ar.T(Ar.WindowsLine(rules.Windows[0], rules.Windows[1], rules.Majority)), new GUIStyle(label) { alignment = TextAnchor.MiddleCenter });
+                var (shards, delta) = rules.RewardFor(duel.Me);
+                GUILayout.Label(Ar.T(Ar.Reward(shards, delta, duel.Curses[0])), new GUIStyle(label) { alignment = TextAnchor.MiddleCenter });
+                GUILayout.Space(16 * u);
+                if (GUILayout.Button(Ar.T(Ar.PlayAgain), button, GUILayout.Height(70 * u))) { touch?.IgnoreFor(0.5f); onPlayAgain?.Invoke(); }
+                GUILayout.EndArea();
+            }
+        }
+
+        static void Shadowed(Rect r, string text, GUIStyle s)
+        {
+            var shadow = new GUIStyle(s) { normal = { textColor = new Color(0f, 0f, 0f, 0.75f) } };
+            GUI.Label(new Rect(r.x + 2, r.y + 2, r.width, r.height), text, shadow);
+            GUI.Label(r, text, s);
+        }
+    }
+}

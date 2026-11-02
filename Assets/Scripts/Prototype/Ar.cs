@@ -1,3 +1,4 @@
+using System;
 using Sheytoonak.Core;
 using UnityEngine;
 
@@ -10,6 +11,35 @@ namespace Sheytoonak
     /// </summary>
     public static class Ar
     {
+        // ---- duel (docs/SCENARIO.fa.md)
+        public const string DuelIntro = "مبارزة شبابيك: كل واحد بدوره، حركتين بالدور. شباك تحتاني = ١، فوقاني = ٢، وفي شباك مخبّى = ٣. اللي بياخد أكتر من النص بيربح.";
+        public const string YourTurn = "دورك";
+        public const string TheirTurn = "دور الخصم";
+        public const string Actions = "حركات";
+        public const string Rage = "غيظ";
+        public const string RageReady = "عندك غيظ: حركة زيادة!";
+        public const string RageUsed = "غيظ! حركة زيادة";
+        public const string PassTurn = "خلص دوري";
+        public const string Surrender = "بسلّم";
+        public const string NoActions = "ما بقي حركات";
+        public const string TimeUp = "خلص الوقت";
+        public const string HiddenThree = "هيدا الشباك المخبّى: ٣!";
+        public const string Intercepted = "خبطت بشي بالهوا!";
+        public const string Covered = "مغطّى!";
+        public const string Shut = "مسكّر!";
+        public const string AlreadyBroken = "مكسور من قبل";
+        public const string Missed = "طابت";
+        public const string YouPoison = "رميت:";
+        public const string TheyPoison = "الخصم رمى:";
+        public const string YouAntidote = "دواك:";
+        public const string TheyAntidote = "دوا الخصم:";
+        public const string PoisonWord = "سمّ";
+        public const string AntidoteWord = "دوا";
+        public const string Won = "ربحت!";
+        public const string Lost = "خسرت";
+        public static string WindowsLine(int mine, int theirs, int majority) => "شبابيك " + N(mine) + " – " + N(theirs) + "  (الربح من " + N(majority) + ")";
+        public static string Reward(int shards, int curseDelta, int curses) => "زجاج: +" + N(shards) + "   فحش: " + (curseDelta >= 0 ? "+" : "−") + N(Math.Abs(curseDelta)) + " (" + N(curses) + ")";
+        public static string Timer(int seconds) => N(seconds) + " ث";
         public const string Title = "مدينة فاجعة";
         public const string Intro = "كبّ الطابة عالشبابيك! دقّ عالشاشة وين ما بدك تخبط الطابة: تحت الشاشة = الشبابيك التحتانية، فوق = الشبابيك الفوقانية. لما ترجع الطابة من الحيط لازم تنطّ عالأرض مرّة وحدة بس قبل ما تضربها.";
         public const string Play = "يلا نلعب";

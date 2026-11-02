@@ -40,6 +40,13 @@ namespace Sheytoonak.Prototype
         // ~19 deg above, facade +-21 deg sideways -> with pitch 1 the vertical span is -22..+20.
         public Vector3 cameraOffset = new Vector3(0f, 1.6f, -4.0f);
         public float cameraPitchDeg = 1f;
+        [Tooltip("Duel mode (docs/SCENARIO.fa.md): shared stage seen from behind, three heroes a side, turns. Off = the old rally.")]
+        public bool duel = true;
+        // Seen from behind with the heroes in frame: higher, further back, a little pitched down, wider vertically.
+        public Vector3 duelCameraOffset = new Vector3(0f, 2.6f, -5.2f);
+        public float duelCameraPitchDeg = 8f;
+        public float duelMinVerticalFov = 55f;
+        DuelManager duelGame;
         [Tooltip("Horizontal field of view in degrees; the vertical one is derived from the screen aspect each frame.")]
         public float cameraHorizontalFov = 80f;
         [Tooltip("Never narrower than this vertically, so a very wide phone still shows the ball at the feet.")]
@@ -69,7 +76,8 @@ namespace Sheytoonak.Prototype
         string calibrationText = "";
 
         /// <summary>Same as pressing the start button; used by AutoScreenshot in CI.</summary>
-        public void StartGameFromScript() { showStart = false; endTitle = null; touch?.IgnoreFor(0.5f); game.NewGame(); }
+        public void StartGameFromScript() { showStart = false; endTitle = null; touch?.IgnoreFor(0.5f); if (duel) duelGame.NewDuel(); else game.NewGame(); }
+        public DuelManager Duel => duelGame;
         public KickInputRouter Router => router;
 
         // ------------------------------------------------------------------ setup
@@ -168,6 +176,7 @@ namespace Sheytoonak.Prototype
             ApplyFov();
             cam.nearClipPlane = 0.05f;
             cam.farClipPlane = 250f;
+            if (duel) { cameraOffset = duelCameraOffset; cameraPitchDeg = duelCameraPitchDeg; cameraMinVerticalFov = Mathf.Max(cameraMinVerticalFov, duelMinVerticalFov); }
             camGo.transform.SetPositionAndRotation(cameraOffset, Quaternion.Euler(cameraPitchDeg, 0f, 0f));
             camGo.AddComponent<AudioListener>();
             shake = camGo.AddComponent<CameraShake>();
@@ -245,20 +254,47 @@ namespace Sheytoonak.Prototype
 
             var gameGo = new GameObject("Game");
             gameGo.SetActive(false);
-            game = gameGo.AddComponent<GameManager>();
-            game.config = config;
-            game.houses = houses;
-            game.ball = ballCtl;
-            game.foot = foot;
-            game.mapper = mapper;
-            game.inputSource = router;
-            game.autoStart = false;
+            if (duel)
+            {
+                duelGame = gameGo.AddComponent<DuelManager>();
+                duelGame.config = config;
+                duelGame.house = houses[1]; // 3x3 windows: a clear 1 / 2 split
+                duelGame.ball = ballCtl;
+                duelGame.foot = foot;
+                duelGame.mapper = mapper;
+                duelGame.inputSource = router;
+                var stage = gameGo.AddComponent<DuelStage>();
+                stage.duel = duelGame; stage.mapper = mapper; stage.foot = foot;
+                stage.leftMat = Mat(new Color(0.20f, 0.45f, 0.85f));
+                stage.rightMat = Mat(new Color(0.85f, 0.30f, 0.25f));
+                stage.propMat = Mat(new Color(0.35f, 0.38f, 0.42f));
+                stage.shutterMat = Mat(new Color(0.45f, 0.30f, 0.15f));
+                stage.puddleMat = Mat(new Color(0.25f, 0.4f, 0.6f), 0.8f);
+                var hud = gameGo.AddComponent<DuelHud>();
+                hud.duel = duelGame; hud.stage = stage; hud.mapper = mapper; hud.cam = cam; hud.touch = touch;
+                hud.onPlayAgain = () => duelGame.NewDuel();
+                duelGame.Toast += (t, sec) => { }; // the hud shows toasts; the bootstrap keeps its own for the rally only
+            }
+            else
+            {
+                game = gameGo.AddComponent<GameManager>();
+                game.config = config;
+                game.houses = houses;
+                game.ball = ballCtl;
+                game.foot = foot;
+                game.mapper = mapper;
+                game.inputSource = router;
+                game.autoStart = false;
+            }
             gameGo.AddComponent<ProceduralSfx>();
             gameGo.AddComponent<CurseVoice>();
             gameGo.AddComponent<StreetLife>();
-            var overlay = gameGo.AddComponent<SensorDebugOverlay>();
-            overlay.motion = motion;
-            overlay.game = game;
+            if (!duel)
+            {
+                var overlay = gameGo.AddComponent<SensorDebugOverlay>();
+                overlay.motion = motion;
+                overlay.game = game;
+            }
             gameGo.SetActive(true);
         }
 
@@ -790,10 +826,10 @@ namespace Sheytoonak.Prototype
                 GUILayout.BeginArea(new Rect(pad * 2, Screen.height * 0.12f, Screen.width - pad * 4, Screen.height * 0.8f));
                 GUILayout.Label(Ar.T(Ar.Title), big);
                 // IMGUI wraps left-to-right; a wrapped Arabic paragraph would break in the wrong places, so it is split by sentence.
-                foreach (var line in Ar.Intro.Split('.'))
+                foreach (var line in (duel ? Ar.DuelIntro : Ar.Intro).Split('.'))
                     if (line.Trim().Length > 0) GUILayout.Label(Ar.T(line.Trim() + "."), new GUIStyle(label) { alignment = TextAnchor.MiddleRight });
                 GUILayout.Space(20 * u);
-                if (GUILayout.Button(Ar.T(Ar.Play), button, GUILayout.Height(80 * u))) { showStart = false; endTitle = null; touch?.IgnoreFor(0.5f); game.NewGame(); }
+                if (GUILayout.Button(Ar.T(Ar.Play), button, GUILayout.Height(80 * u))) StartGameFromScript();
                 GUILayout.EndArea();
             }
             else if (endTitle != null)
