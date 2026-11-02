@@ -43,6 +43,8 @@ icons = {
    <text x="128" y="138" font-family="DejaVu Sans" font-weight="bold" font-size="78" text-anchor="middle" fill="#000" fill-opacity="0.55">#@!</text>''',
  "clock": f'''<circle cx="128" cy="138" r="96" {S}/><line x1="128" y1="138" x2="128" y2="76" {S}/><line x1="128" y1="138" x2="170" y2="160" {S}/><rect x="104" y="14" width="48" height="22" rx="6" {W}/>''',
  "replay": f'''<path d="M200 128 A72 72 0 1 1 170 70" {S}/><path d="M150 40 L206 60 L176 108 Z" {W}/>''',
+ "ban": f'''<circle cx="128" cy="128" r="96" {S}/><line x1="60" y1="196" x2="196" y2="60" {S}/>''',
+ "pick": f'''<path d="M40 136 L100 196 L218 66" fill="none" stroke="#fff" stroke-width="30" stroke-linecap="round" stroke-linejoin="round"/>''',
 }
 os.makedirs(OUT, exist_ok=True)
 for name, body in icons.items():
