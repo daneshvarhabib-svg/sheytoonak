@@ -135,6 +135,8 @@ Same cartoon character, same style, same scale, same three-quarter back view as 
 ```
 Use the attached character exactly (same face, clothes, colours, art style, three-quarter back view with about one third of the face visible, turned to the right). Make a sprite sheet: ONE horizontal row of 5 frames of this same character kicking a football toward a building in front of him, like an animation: 1) running toward the ball, 2) last step, planting the standing foot, 3) kicking leg pulled back with the knee bent, arms out, 4) kicking leg swung forward through the ball, foot pointing straight ahead toward the building, 5) landing and recovering balance. All 5 figures the same size and scale, feet on the same ground line, evenly spaced with clear empty space between them, nothing overlapping. No ball, no panel borders, no comic frames, no speech bubbles, no text, no numbers. Background: one flat solid pure green colour (#00FF00), no shadow. Landscape 3:2.
 ```
+⚠️ **قاعده برای قهرمان‌های بعدی (کاربر، ۱۱ آبان):** «واسه قهرمانان بعدی از اول تو پرامپتشون همین شکلی یه تیکه چندتا فریم خروجی بگیریم» — هر قهرمانِ تازه: یک تصویرِ ایستاده + همین شیتِ پنج‌فریمی، از همان اول.
+انتخابِ کاربر از شیت‌های پنج قهرمانِ شروع: طوني بی‌فریمِ ۱ (فریمِ ۵ جای دویدن)؛ فُلّة و ريما بی‌فریمِ ۴ (تصویرِ ضربه‌ی تکیِ قبلی جایش)؛ زعتر و أبو هر پنج.
 (فُلّة چپ‌پاست: «kicking with the LEFT leg» به ۳ و ۴ اضافه شود؛ دخترها «her».)
 
 ## جمله‌های فحشِ صاحب‌خانه (برای ضبط)

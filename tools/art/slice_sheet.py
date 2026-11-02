@@ -13,20 +13,26 @@ alpha = np.clip(1.0 - (gx - 40.0) / 100.0, 0, 1)
 g2 = np.where((gx > 0) & (alpha > 0), np.minimum(g, np.maximum(r, b) + 10), g)
 rgba = np.dstack([r, g2, b, alpha * 255]).astype(np.uint8)
 solid = alpha > 0.5
-# split into n figures: columns with content, then cut at the n-1 widest empty gaps
-cols = solid.sum(axis=0) > 2
+rows = np.where(solid.any(axis=1))[0]
+top, bottom = rows.min(), rows.max() + 1
+W = solid.shape[1]
+# heads: the top band of the figures; each head is one run of filled columns there
+band = solid[top: top + int((bottom - top) * 0.14)].any(axis=0)
 runs, x = [], 0
-W = len(cols)
 while x < W:
-    if not cols[x]:
-        s = x
-        while x < W and not cols[x]: x += 1
-        runs.append((s, x))
+    if band[x]:
+        s0 = x
+        while x < W and band[x]: x += 1
+        if x - s0 > 15: runs.append((s0, x))
     else: x += 1
-inner = [g for g in runs if g[0] > 0 and g[1] < W]
-inner.sort(key=lambda g: g[1] - g[0], reverse=True)
-cuts = sorted((a + b) // 2 for a, b in inner[:n - 1])
-if len(cuts) != n - 1: sys.exit("found %d gaps, need %d" % (len(cuts), n - 1))
+if len(runs) != n: sys.exit("found %d heads, need %d" % (len(runs), n))
+centres = [(a + b) // 2 for a, b in runs]
+# cut between neighbouring heads at the emptiest column (limbs that touch get split there)
+counts = solid.sum(axis=0)
+cuts = []
+for a, b in zip(centres, centres[1:]):
+    lo, hi = a + (b - a) // 4, b - (b - a) // 4
+    cuts.append(lo + int(np.argmin(counts[lo:hi])))
 bounds = [0] + cuts + [W]
 rows = np.where(solid.any(axis=1))[0]
 top, bottom = rows.min(), rows.max() + 1
@@ -41,9 +47,28 @@ for i in range(n):
     frames.append((fx0, fx1, head_cx))
 half = int(max(max(hc - f0, f1 - hc) for f0, f1, hc in frames)) + 10
 H = bottom - top + 10
+def largest_component(mask):
+    """Keep only the biggest 4-connected blob: a neighbour's hand reaching into this cell is dropped."""
+    from collections import deque
+    h, w = mask.shape
+    lab = np.zeros((h, w), np.int32); best, best_n, cur = 0, 0, 0
+    for y0, x0 in zip(*np.nonzero(mask)):
+        if lab[y0, x0]: continue
+        cur += 1; q = deque([(y0, x0)]); lab[y0, x0] = cur; cnt = 0
+        while q:
+            y, x = q.popleft(); cnt += 1
+            for yy, xx in ((y+1,x),(y-1,x),(y,x+1),(y,x-1)):
+                if 0 <= yy < h and 0 <= xx < w and mask[yy, xx] and not lab[yy, xx]:
+                    lab[yy, xx] = cur; q.append((yy, xx))
+        if cnt > best_n: best, best_n = cur, cnt
+    return lab == best
+
 for i, (f0, f1, hc) in enumerate(frames):
     canvas = Image.new("RGBA", (2 * half, H), (0, 0, 0, 0))
-    crop = Image.fromarray(rgba[top:bottom, bounds[i]:bounds[i + 1]], "RGBA")
+    cell = rgba[top:bottom, bounds[i]:bounds[i + 1]].copy()
+    keep = largest_component(cell[..., 3] > 20)
+    cell[..., 3] = np.where(keep, cell[..., 3], 0)
+    crop = Image.fromarray(cell, "RGBA")
     canvas.paste(crop, (int(round(half - (hc - bounds[i]))), 5))
     out = "%s%d.png" % (prefix, i + 1)
     canvas.save(out)

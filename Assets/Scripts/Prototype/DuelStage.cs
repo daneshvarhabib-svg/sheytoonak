@@ -203,7 +203,8 @@ namespace Sheytoonak.Prototype
                 var pr = painted[(int)side][0];
                 SetPose(side, 0, "k2"); yield return new WaitForSeconds(0.08f);
                 SetPose(side, 0, "k3"); yield return new WaitForSeconds(0.14f);
-                SetPose(side, 0, "k4");
+                // contact frame; where the sheet's contact frame was rejected (user: the girls' «زاویه پاشون خوب نیست») the single kick pose stands in
+                SetPose(side, 0, HeroSprite(lookIds[(int)side][0], "k4") != null ? "k4" : "kick");
                 for (float k = 0f; k < 1f && pr != null; k += Time.deltaTime / 0.18f) { pr.transform.localPosition = new Vector3(0f, 0.06f * Mathf.Sin(k * Mathf.PI), 0f); yield return null; }
                 if (pr != null) pr.transform.localPosition = Vector3.zero;
                 SetPose(side, 0, "k5"); yield return new WaitForSeconds(0.22f);
