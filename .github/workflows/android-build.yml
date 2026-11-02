@@ -119,15 +119,17 @@ jobs:
           buildMethod: Sheytoonak.EditorTools.SheytoonakBuild.BuildLinuxCI
       - name: Run the player under xvfb and collect screenshots
         run: |
-          sudo apt-get update -q && sudo apt-get install -y -q xvfb libgl1 libglu1-mesa > /dev/null
+          sudo apt-get update -q && sudo apt-get install -y -q xvfb libgl1 libglu1-mesa libgl1-mesa-dri libglx-mesa0 mesa-utils > /dev/null
           sudo chown -R "$USER" build
           BIN=$(find build/StandaloneLinux64 -name 'Sheytoonak.x86_64' | head -1)
           chmod +x "$BIN"
           mkdir -p shots
-          SHEYTOONAK_SHOTS="$PWD/shots" timeout 180 xvfb-run -a -s "-screen 0 1600x720x24" \
-            "$BIN" -screen-width 1600 -screen-height 720 -screen-fullscreen 0 -logFile shots/player.log || true
+          export SHEYTOONAK_SHOTS="$PWD/shots" LIBGL_ALWAYS_SOFTWARE=1 GALLIUM_DRIVER=llvmpipe
+          xvfb-run -a -s "-screen 0 1600x720x24" glxinfo -B > shots/glxinfo.txt 2>&1 || true
+          timeout 150 xvfb-run -a -s "-screen 0 1600x720x24" \
+            "$BIN" -screen-width 1600 -screen-height 720 -screen-fullscreen 0 -logFile "$PWD/shots/player.log" > shots/stdout.txt 2>&1 || echo "player exit $?"
           ls -la shots
-          grep -a 'SHEYTOONAK\|Exception\|error' shots/player.log | head -40 || true
+          grep -a 'SHEYTOONAK\|Exception\|rror\|GL\|Vulkan\|display' shots/player.log shots/stdout.txt | head -60 || true
           [ -n "$(ls shots/*.png 2>/dev/null)" ] || { echo '::error title=No screenshots::the player wrote no PNG; see player.log'; exit 1; }
       - uses: actions/upload-artifact@v4
         if: always()

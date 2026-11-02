@@ -20,6 +20,7 @@ namespace Sheytoonak.Prototype
             string dir = Environment.GetEnvironmentVariable("SHEYTOONAK_SHOTS");
             if (string.IsNullOrEmpty(dir)) return;
             Directory.CreateDirectory(dir);
+            Debug.Log("SHEYTOONAK SHOTS armed: " + dir + " gfx=" + SystemInfo.graphicsDeviceType + " " + Screen.width + "x" + Screen.height);
             var go = new GameObject("AutoScreenshot");
             UnityEngine.Object.DontDestroyOnLoad(go);
             go.AddComponent<Runner>().dir = dir;
@@ -30,7 +31,9 @@ namespace Sheytoonak.Prototype
             public string dir;
             IEnumerator Start()
             {
+                StartCoroutine(Watchdog());
                 var boot = FindFirstObjectByType<PrototypeBootstrap>();
+                Debug.Log("SHEYTOONAK SHOTS bootstrap " + (boot != null ? "found" : "missing"));
                 yield return Shot("01-start", 1.5f);
                 if (boot != null)
                 {
@@ -45,6 +48,13 @@ namespace Sheytoonak.Prototype
                 Debug.Log("SHEYTOONAK SHOTS done in " + dir);
                 yield return null;
                 Application.Quit(0);
+            }
+
+            IEnumerator Watchdog()
+            {
+                yield return new WaitForSecondsRealtime(60f);
+                Debug.LogWarning("SHEYTOONAK SHOTS watchdog: quitting after 60 s");
+                Application.Quit(2);
             }
 
             IEnumerator Shot(string name, float wait)

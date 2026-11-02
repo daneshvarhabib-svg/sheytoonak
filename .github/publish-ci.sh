@@ -17,5 +17,8 @@ cd "$out"
 git init -q && git checkout -q -b ci-shots
 git config user.email ci@sheytoonak && git config user.name "sheytoonak-ci"
 remote="https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
-git fetch -q "$remote" ci-shots 2>/dev/null && git reset -q --soft FETCH_HEAD || true
+# keep earlier runs: start from the branch's current tree, then add this run's folder
+if git fetch -q "$remote" ci-shots 2>/dev/null; then git reset -q --soft FETCH_HEAD && git checkout -q FETCH_HEAD -- . 2>/dev/null || true; fi
+# keep at most the 8 newest run folders so the branch stays small
+ls -d [0-9]*-* 2>/dev/null | sort -t- -k1,1n | head -n -8 | xargs -r rm -rf
 git add -A && git commit -qm "run $run $label ($sha)" && git push -q "$remote" HEAD:ci-shots || echo "::warning::could not publish to ci-shots"
