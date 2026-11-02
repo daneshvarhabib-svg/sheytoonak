@@ -80,18 +80,27 @@ namespace Sheytoonak.Core.Duel
         public event Action<Side, string> Ended;                 // winner, reason
 
         /// <param name="rows">windows per row, bottom row first (the bottom row is the "direct" row worth 1).</param>
-        public DuelRules(int[] rows, int[] shardsPerWindow, HeroDef[] left, HeroDef[] right, int seed = 0)
+        /// <param name="rowOfWindow">optional row of each window index (bottom = 0). ⚠️ the facade's window indices
+        /// are NOT bottom-first (run 30: the top row came out worth 1); without this map indices are assumed bottom-first.</param>
+        public DuelRules(int[] rows, int[] shardsPerWindow, HeroDef[] left, HeroDef[] right, int seed = 0, int[] rowOfWindow = null)
         {
             rng = seed != 0 ? new Random(seed) : new Random();
             int n = 0; foreach (int r in rows) n += r;
             if (n < 3) throw new ArgumentException("a duel needs at least 3 windows");
+            if (rowOfWindow != null && rowOfWindow.Length != n) throw new ArgumentException("row map must match the window count");
+            if (rowOfWindow == null)
+            {
+                rowOfWindow = new int[n];
+                int idx = 0;
+                for (int r = 0; r < rows.Length; r++)
+                    for (int c = 0; c < rows[r]; c++) rowOfWindow[idx++] = r;
+            }
             WindowValue = new int[n];
-            int idx = 0;
-            for (int r = 0; r < rows.Length; r++)
-                for (int c = 0; c < rows[r]; c++) WindowValue[idx++] = r == 0 ? 1 : 2;
+            for (int i = 0; i < n; i++) WindowValue[i] = rowOfWindow[i] == 0 ? 1 : 2;
             // the hidden 3: one window of an upper row when there is one, else any
-            int first = rows[0] < n ? rows[0] : 0;
-            HiddenWindow = first + rng.Next(n - first);
+            var upper = new System.Collections.Generic.List<int>();
+            for (int i = 0; i < n; i++) if (rowOfWindow[i] > 0) upper.Add(i);
+            HiddenWindow = upper.Count > 0 ? upper[rng.Next(upper.Count)] : rng.Next(n);
             WindowValue[HiddenWindow] = 3;
             int total = 0; foreach (int v in WindowValue) total += v;
             // the total must be odd so the duel cannot tie (SCENARIO §2): nudge one non-hidden window

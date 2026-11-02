@@ -49,7 +49,19 @@ namespace Sheytoonak.Prototype
         {
             float xMin = float.MaxValue, xMax = float.MinValue, top = 0f;
             foreach (var r in covered) { xMin = Mathf.Min(xMin, r.xMin); xMax = Mathf.Max(xMax, r.xMax); top = Mathf.Max(top, r.yMax); }
-            float len = Mathf.Max(6f, xMax - xMin + 1.4f), h = Mathf.Max(3.2f, top + 0.25f), w = 2.5f;
+            float len = Mathf.Max(6f, xMax - xMin + 1.4f), w = 2.5f;
+            // ⚠️ the bus stands ~3 m in front of the facade, so seen from the low camera its roof reads much higher
+            // than its real height (run 30: it hid the middle row too). Size it so its front roof edge lands just above
+            // the covered row *as projected onto the facade*.
+            float frontZ = facadeZ - w - 0.6f, h = top + 0.25f;
+            var cam = Camera.main;
+            if (cam != null)
+            {
+                Vector3 c = cam.transform.position;
+                float dFacade = facadeZ - c.z, dBus = frontZ - c.z;
+                if (dFacade > 0.5f && dBus > 0.5f) h = c.y + (top + 0.2f - c.y) * dBus / dFacade - 0.25f;
+            }
+            h = Mathf.Clamp(h, 2.2f, top + 0.25f);
             var root = new GameObject("Poison bus").transform;
             var body = M("bus", new Color(0.95f, 0.78f, 0.15f));
             var stripe = M("busstripe", new Color(0.75f, 0.12f, 0.1f));
@@ -119,12 +131,13 @@ namespace Sheytoonak.Prototype
         public static GameObject Wind(MonoBehaviour host, float facadeZ)
         {
             var root = new GameObject("Poison wind").transform;
-            var streak = M("streak", new Color(1f, 1f, 1f, 0.55f));
+            var streak = M("streak", new Color(1f, 1f, 1f, 0.45f));
             var list = new List<Transform>();
-            for (int i = 0; i < 14; i++)
+            // run 30: 14 streaks up to 9 m high cluttered the whole frame and the HUD band; keep a few, close to the wall
+            for (int i = 0; i < 7; i++)
             {
-                var s = Part(PrimitiveType.Cube, root, Vector3.zero, new Vector3(Random.Range(1.2f, 2.6f), 0.04f, 0.04f), streak).transform;
-                s.position = new Vector3(Random.Range(-9f, 9f), Random.Range(1.5f, 9f), Random.Range(facadeZ - 6f, facadeZ - 1f));
+                var s = Part(PrimitiveType.Cube, root, Vector3.zero, new Vector3(Random.Range(0.8f, 1.6f), 0.03f, 0.03f), streak).transform;
+                s.position = new Vector3(Random.Range(-6f, 6f), Random.Range(1.6f, 5.5f), Random.Range(facadeZ - 2f, facadeZ - 0.6f));
                 list.Add(s);
             }
             host.StartCoroutine(Blow(root, list));
@@ -139,7 +152,7 @@ namespace Sheytoonak.Prototype
                 {
                     if (s == null) continue;
                     var p = s.position + Vector3.right * 9f * Time.deltaTime;
-                    if (p.x > 10f) p.x = -10f;
+                    if (p.x > 7f) p.x = -7f;
                     s.position = p;
                 }
                 yield return null;
@@ -195,7 +208,7 @@ namespace Sheytoonak.Prototype
                         Part(PrimitiveType.Cube, root, new Vector3(Random.Range(-6f, 6f), 0f, Random.Range(-1.5f, 1.5f)), new Vector3(0.12f, 0.02f, 0.02f), metal, new Vector3(0f, Random.Range(0f, 180f), 0f));
                     break;
                 case "vane": // a weather vane on a pole beside the hero
-                    root.position = heroPos + new Vector3(0.4f, 0f, 0f);
+                    root.position = heroPos + new Vector3(heroPos.x < 0f ? -0.5f : 0.5f, 0f, 0.3f);
                     var iron = M("iron", new Color(0.15f, 0.15f, 0.17f));
                     Part(PrimitiveType.Cylinder, root, new Vector3(0f, 1.0f, 0f), new Vector3(0.05f, 1.0f, 0.05f), iron);
                     Part(PrimitiveType.Cube, root, new Vector3(0f, 2.05f, 0f), new Vector3(0.6f, 0.08f, 0.02f), iron);

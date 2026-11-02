@@ -73,8 +73,9 @@ namespace Sheytoonak.Prototype
             float y = top + 70 * u;
             foreach (var p in rules.Poisons)
             {
-                string life = p.Tool.Life == Lifetime.UntilAntidote ? "∞" : Ar.N(p.TurnsLeft);
-                Shadowed(new Rect(Screen.width * 0.6f - pad, y, Screen.width * 0.4f, 26 * u), Ar.T(Ar.PoisonWord + ": " + p.Tool.NameAr + " (" + life + ")"), new GUIStyle(small) { alignment = TextAnchor.UpperRight, normal = { textColor = new Color(1f, 0.7f, 0.7f) } });
+                // ⚠️ no "(n)": brackets and digits came out mirrored in RTL (run 30)
+                string life = p.Tool.Life == Lifetime.UntilAntidote ? "حتى الدوا" : Ar.N(p.TurnsLeft) + " دور";
+                Shadowed(new Rect(Screen.width * 0.6f - pad, y, Screen.width * 0.4f, 26 * u), Ar.T(Ar.PoisonWord + " " + p.Tool.NameAr + " - " + life), new GUIStyle(small) { alignment = TextAnchor.UpperRight, normal = { textColor = new Color(1f, 0.7f, 0.7f) } });
                 y += 26 * u;
             }
 

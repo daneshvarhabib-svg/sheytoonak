@@ -125,7 +125,8 @@ namespace Sheytoonak.Prototype
                     foreach (int w in p.Windows) list.Add(PoisonProps.OpenWindow(mapper.WindowRects[w], mapper.FacadeZ));
                     break;
                 case Effect.Reach:
-                    list.Add(PoisonProps.Puddle(foot.StrikeSpot + new Vector3(0f, 0f, 0.1f)));
+                    // a little towards the road: right at the ball it sat under the HUD turn line (run 30)
+                    list.Add(PoisonProps.Puddle(foot.StrikeSpot + new Vector3(0f, 0f, 1.4f)));
                     break;
                 case Effect.Accuracy:
                     list.Add(PoisonProps.Wind(this, mapper.FacadeZ));

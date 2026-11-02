@@ -15,6 +15,24 @@ namespace Sheytoonak.Tests
         }
 
         [Test]
+        public void Row_map_puts_the_ones_on_the_real_bottom_row()
+        {
+            // run 30: facade indices are top-first, so index order gave the TOP row the 1s
+            var rowMap = new[] { 2, 2, 2, 1, 1, 1, 0, 0, 0 };
+            var shards = new int[9];
+            var h = StarterHeroes.All;
+            for (int seed = 1; seed < 30; seed++)
+            {
+                var r = new DuelRules(new[] { 3, 3, 3 }, shards, new[] { h[0], h[1], h[2] }, new[] { h[3], h[4], h[0] }, seed, rowMap);
+                Assert.IsTrue(r.HiddenWindow < 6, "the 3 never sits in the bottom row");
+                for (int w = 0; w < 6; w++) if (w != r.HiddenWindow) Assert.AreNotEqual(3, r.WindowValue[w]);
+                int ones = 0; for (int w = 6; w < 9; w++) if (r.WindowValue[w] == 1) ones++;
+                Assert.GreaterOrEqual(ones, 2, "seed " + seed);
+                Assert.AreEqual(1, r.TotalValue % 2);
+            }
+        }
+
+        [Test]
         public void Total_value_is_always_odd_and_the_three_is_hidden()
         {
             for (int seed = 1; seed < 40; seed++)
