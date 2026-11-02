@@ -172,3 +172,56 @@ namespace Sheytoonak.Tests
         }
     }
 }
+
+namespace Sheytoonak.Tests
+{
+    using NUnit.Framework;
+    using Sheytoonak.Core.Duel;
+
+    public class DraftRulesTests
+    {
+        static string[] Five() { var a = new string[5]; for (int i = 0; i < 5; i++) a[i] = StarterHeroes.All[i].Id; return a; }
+
+        [Test]
+        public void Order_is_ban_ban_pick_pick_pick_pick_pick_pick_and_each_side_gets_three()
+        {
+            var d = new DraftRules(Side.Left, Five(), Five());
+            var k = DraftRules.Kind.Ban; var p = DraftRules.Kind.Pick;
+            var expect = new[] { (Side.Left, k), (Side.Right, k), (Side.Right, p), (Side.Left, p), (Side.Left, p), (Side.Right, p), (Side.Right, p), (Side.Left, p) };
+            for (int i = 0; i < expect.Length; i++) { Assert.AreEqual(expect[i].Item1, d.Steps[i].Who); Assert.AreEqual(expect[i].Item2, d.Steps[i].What); }
+            Assert.IsTrue(d.Act(Side.Left, "toni"));          // ban
+            Assert.IsFalse(d.Act(Side.Left, "rima"), "not Left's step");
+            Assert.IsTrue(d.Act(Side.Right, "rima"));         // ban
+            Assert.IsFalse(d.Act(Side.Right, "toni"), "banned for both");
+            Assert.IsTrue(d.Act(Side.Right, "zaatar"));
+            Assert.IsTrue(d.Act(Side.Left, "zaatar"), "both may field the same hero");
+            Assert.IsTrue(d.Act(Side.Left, "fulla"));
+            Assert.IsTrue(d.Act(Side.Right, "fulla"));
+            Assert.IsTrue(d.Act(Side.Right, "abu_shahata"));
+            Assert.IsTrue(d.Act(Side.Left, "abu_shahata"));
+            Assert.IsTrue(d.Done);
+            Assert.AreEqual(3, d.Picked[0].Count); Assert.AreEqual(3, d.Picked[1].Count);
+        }
+
+        [Test]
+        public void A_blind_ban_may_hit_a_hero_nobody_owns_and_the_bot_always_finishes()
+        {
+            var pool = new System.Collections.Generic.List<string>(Five()) { "someone_else" };
+            for (int seed = 1; seed < 30; seed++)
+            {
+                var d = new DraftRules(Side.Right, Five(), Five());
+                var rng = new System.Random(seed);
+                int guard = 0;
+                while (!d.Done && guard++ < 20)
+                {
+                    var s = d.Current.Who;
+                    var h = d.BotChoice(s, StarterHeroes.Get, pool.ToArray(), rng);
+                    Assert.IsNotNull(h);
+                    Assert.IsTrue(d.Act(s, h));
+                }
+                Assert.IsTrue(d.Done, "seed " + seed);
+                Assert.AreEqual(3, d.Picked[0].Count); Assert.AreEqual(3, d.Picked[1].Count);
+            }
+        }
+    }
+}

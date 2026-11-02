@@ -67,19 +67,73 @@ namespace Sheytoonak
 
         // ------------------------------------------------------------------ flow
 
+        public DraftRules Draft { get; private set; }
+        [Tooltip("CI screenshots: the player's draft steps are taken by the bot logic too.")]
+        public bool autoDraftForMe;
+        public event Action DraftStarted;
+        System.Random draftRng;
+
+        /// <summary>Starts the pre-duel draft (ban/pick); the duel itself begins when the draft is done.</summary>
         public void NewDuel()
         {
             StopAllCoroutines(); botRoutine = resolveRoutine = null;
+            Rules = null;
+            ball.Hide();
             mapper.Map(house);
             GameEvents.RaiseHouseLoaded(house, 0);
+            draftRng = randomSeed != 0 ? new System.Random(randomSeed) : new System.Random();
+            var mine = PoolIds();
+            var theirs = PoolIds();
+            Draft = new DraftRules(Random.value < 0.5f ? Side.Left : Side.Right, mine, theirs);
+            Draft.Acted += (side, kind, hero) =>
+            {
+                if (kind == DraftRules.Kind.Ban) Toast?.Invoke((side == Me ? Ar.YouBan : Ar.TheyBan) + " " + StarterHeroes.Get(hero).NameAr, 1.2f);
+            };
+            Draft.Finished += () => StartCoroutine(BeginAfterDraft());
+            DraftStarted?.Invoke();
+            StartCoroutine(DraftBots());
+        }
+
+        static string[] PoolIds()
+        {
+            var a = new string[StarterHeroes.All.Length];
+            for (int i = 0; i < a.Length; i++) a[i] = StarterHeroes.All[i].Id;
+            return a;
+        }
+
+        /// <summary>The player's own draft step (from the draft screen).</summary>
+        public bool DraftAct(string hero) => Draft != null && Draft.Act(Me, hero);
+
+        IEnumerator DraftBots()
+        {
+            while (Draft != null && !Draft.Done)
+            {
+                var who = Draft.Current.Who;
+                if (who == Me && !autoDraftForMe) { yield return null; continue; }
+                yield return new WaitForSeconds(who == Me ? 0.4f : botThinkSeconds);
+                if (Draft == null || Draft.Done || Draft.Current.Who != who) continue;
+                var h = Draft.BotChoice(who, StarterHeroes.Get, PoolIds(), draftRng);
+                if (h != null) Draft.Act(who, h);
+            }
+        }
+
+        IEnumerator BeginAfterDraft()
+        {
+            yield return new WaitForSeconds(0.8f);
+            var left = new HeroDef[3]; var right = new HeroDef[3];
+            for (int i = 0; i < 3; i++) { left[i] = StarterHeroes.Get(Draft.Picked[0][i]); right[i] = StarterHeroes.Get(Draft.Picked[1][i]); }
+            BeginDuel(left, right, Draft.First);
+        }
+
+        void BeginDuel(HeroDef[] left, HeroDef[] right, Side first)
+        {
             int n = mapper.WindowRects.Length;
             // rows: bottom row = direct (1), the rest indirect (2). Rows are found by y of the window rects.
             var rows = RowsOf(mapper.WindowRects);
             var shards = new int[n];
             float meanArea = 0f; foreach (var r in mapper.WindowRects) meanArea += r.width * r.height; meanArea /= Mathf.Max(1, n);
             for (int i = 0; i < n; i++) shards[i] = Mathf.Max(5, Mathf.RoundToInt(shardsPerWindow * (mapper.WindowRects[i].width * mapper.WindowRects[i].height) / Mathf.Max(0.01f, meanArea)));
-            var h = StarterHeroes.All;
-            Rules = new DuelRules(rows, shards, new[] { h[0], h[1], h[2] }, new[] { h[3], h[4], h[1] }, randomSeed);
+            Rules = new DuelRules(rows, shards, left, right, randomSeed);
             Bot = new DuelBot(randomSeed);
             Rules.TurnStarted += OnTurnStarted;
             Rules.WindowTaken += (s, w, v) => { if (w == Rules.HiddenWindow) Toast?.Invoke(Ar.HiddenThree, 1.6f); };
@@ -88,7 +142,8 @@ namespace Sheytoonak
             PlaceBallAtCentre();
             Curses[1] = Mathf.Max(0, Curses[0] + Random.Range(-3, 4)); // a "matched" opponent
             DuelStarted?.Invoke();
-            Rules.Start(Random.value < 0.5f ? Side.Left : Side.Right);
+            // the drafter who banned first also opens (and gets the single first action)
+            Rules.Start(first);
         }
 
         static int[] RowsOf(Rect[] rects)

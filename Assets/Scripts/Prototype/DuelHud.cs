@@ -24,7 +24,7 @@ namespace Sheytoonak.Prototype
         void OnGUI()
         {
             var rules = duel.Rules;
-            if (rules == null) return;
+            if (rules == null) return; // the draft screen is up
             float u = Mathf.Max(1f, Screen.height / 900f);
             var font = Ar.Font;
             var label = new GUIStyle(GUI.skin.label) { fontSize = Mathf.RoundToInt(24 * u), normal = { textColor = Color.white }, font = font };
@@ -65,7 +65,7 @@ namespace Sheytoonak.Prototype
             bool mine = rules.Current == duel.Me;
             string turnLine = ended ? "" : (mine ? Ar.YourTurn : Ar.TheirTurn) + "  ·  " + Ar.Actions + " " + Ar.N(rules.ActionsLeft) + "  ·  " + Ar.Timer(Mathf.CeilToInt(duel.TurnTimeLeft));
             // the turn line lives at the bottom (the facade's top row is right under the top edge)
-            float lineY = Screen.height - 34 * u - (mine && !rules.KickInFlight ? 40 * u * 3 + 6 * u * 4 : 0f);
+            float lineY = Screen.height - 40 * u * 3 - 6 * u * 3; // first row of the bottom strip, between the button columns
             Shadowed(new Rect(0, lineY, Screen.width, 32 * u), Ar.T(turnLine), new GUIStyle(label) { alignment = TextAnchor.MiddleCenter, normal = { textColor = mine ? new Color(0.6f, 1f, 0.6f) : new Color(1f, 0.8f, 0.6f) } });
             Shadowed(new Rect(0, top + 40 * u, Screen.width * 0.4f, 30 * u), Ar.T(Ar.WindowsLine(rules.Windows[0], rules.Windows[1], rules.Majority)), new GUIStyle(small) { alignment = TextAnchor.UpperLeft });
 
@@ -110,7 +110,7 @@ namespace Sheytoonak.Prototype
                     if (armed) duel.Surrender(); else surrenderArmedUntil = Time.time + 3f; // two taps, like every costly button
                 }
                 if (rules.ActionsLeft > 0)
-                    Shadowed(new Rect(0, Screen.height - stripH - 40 * u, Screen.width, 36 * u), Ar.T(Ar.ServeHint), new GUIStyle(label) { alignment = TextAnchor.MiddleCenter });
+                    Shadowed(new Rect(0, Screen.height - stripH + gap + bh + gap, Screen.width, bh), Ar.T(Ar.ServeHint), new GUIStyle(small) { alignment = TextAnchor.MiddleCenter });
             }
 
             if (ended)

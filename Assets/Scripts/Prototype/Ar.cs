@@ -21,6 +21,15 @@ namespace Sheytoonak
         public const string RageUsed = "غيظ! حركة زيادة";
         public const string PassTurn = "خلص دوري";
         public const string Surrender = "بسلّم";
+        public const string DraftTitle = "اختار فريقك";
+        public const string DraftBanYou = "شيل بطل (بينشال من الكل)";
+        public const string DraftPickYou = "اختار بطل";
+        public const string DraftWait = "الخصم عم يختار...";
+        public const string YouBan = "شلت:";
+        public const string TheyBan = "الخصم شال:";
+        public const string Banned = "مشطوب";
+        public const string Mine = "إلك";
+        public const string TheirPicks = "فريق الخصم";
         public const string SurrenderSure = "أكيد؟ دقّ كمان مرّة";
         public const string NoActions = "ما بقي حركات";
         public const string TimeUp = "خلص الوقت";

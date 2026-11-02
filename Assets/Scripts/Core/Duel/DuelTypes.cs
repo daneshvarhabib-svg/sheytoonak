@@ -71,7 +71,8 @@ namespace Sheytoonak.Core.Duel
         public static HeroDef Get(string id)
         {
             foreach (var h in All) if (h.Id == id) return h;
-            throw new ArgumentException("unknown hero " + id);
+            // a blind ban can name a hero this build does not know; it is never fielded, so a stub is enough
+            return new HeroDef(id, id, new Tool(id, id, Effect.Chance, 1), new Tool(id, id, Effect.Chance, 1));
         }
     }
 }

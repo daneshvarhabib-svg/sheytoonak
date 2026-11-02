@@ -49,11 +49,15 @@ namespace Sheytoonak.Prototype
                 yield return Shot("01-start", 1.5f);
                 if (boot != null)
                 {
-                    boot.StartGameFromScript();
-                    yield return Shot("02-stage", 2.0f);
                     var duel = boot.Duel;
+                    if (duel != null) duel.autoDraftForMe = true;
+                    boot.StartGameFromScript();
                     if (duel != null)
                     {
+                        yield return Shot("02a-draft", 1.6f);
+                        float d0 = Time.realtimeSinceStartup + 20f;
+                        while (Time.realtimeSinceStartup < d0 && duel.Rules == null) yield return null;
+                        yield return Shot("02-stage", 1.0f);
                         // wait for my turn (the bot may open), then kick at the top-middle window, poison, and watch the bot
                         float until = Time.realtimeSinceStartup + 12f;
                         while (Time.realtimeSinceStartup < until && !duel.PlayerMayKick) yield return null;
