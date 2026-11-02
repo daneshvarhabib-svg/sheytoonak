@@ -43,8 +43,8 @@ namespace Sheytoonak.Prototype
         [Tooltip("Duel mode (docs/SCENARIO.fa.md): shared stage seen from behind, three heroes a side, turns. Off = the old rally.")]
         public bool duel = true;
         // Seen from behind with the heroes in frame: higher, further back, a little pitched down, wider vertically.
-        public Vector3 duelCameraOffset = new Vector3(0f, 2.6f, -5.2f);
-        public float duelCameraPitchDeg = 8f;
+        public Vector3 duelCameraOffset = new Vector3(0f, 3.2f, -6.4f);
+        public float duelCameraPitchDeg = 11f;
         public float duelMinVerticalFov = 55f;
         DuelManager duelGame;
         [Tooltip("Horizontal field of view in degrees; the vertical one is derived from the screen aspect each frame.")]
@@ -203,10 +203,13 @@ namespace Sheytoonak.Prototype
             for (int i = -6; i <= 6; i++)
                 Box(root, new Vector3(i * 4f, -0.005f, 8.0f), new Vector3(2f, 0.01f, 0.15f), shoe);   // centre line
             Box(root, new Vector3(0f, -0.04f, 12f), new Vector3(80f, 0.1f, 2f), Tiled(paveMat, 80f, 2f, 2f));  // far sidewalk
-            Box(root, new Vector3(-3.4f, 3f, 2.4f), new Vector3(0.12f, 6f, 0.12f), metal);           // lamp post
-            Box(root, new Vector3(-2.9f, 5.95f, 2.4f), new Vector3(1.0f, 0.1f, 0.12f), metal);
-            for (int i = 0; i < 2; i++)
-                Box(root, new Vector3(2.6f + i * 1.6f, 0.45f, 2.6f), new Vector3(0.1f, 0.9f, 0.1f), metal); // bollards
+            if (!duel)
+            {
+                Box(root, new Vector3(-3.4f, 3f, 2.4f), new Vector3(0.12f, 6f, 0.12f), metal);           // lamp post
+                Box(root, new Vector3(-2.9f, 5.95f, 2.4f), new Vector3(1.0f, 0.1f, 0.12f), metal);
+                for (int i = 0; i < 2; i++)
+                    Box(root, new Vector3(2.6f + i * 1.6f, 0.45f, 2.6f), new Vector3(0.1f, 0.9f, 0.1f), metal); // bollards
+            }
         }
 
         void BuildGameObjects()

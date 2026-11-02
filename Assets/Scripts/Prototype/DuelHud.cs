@@ -53,7 +53,7 @@ namespace Sheytoonak.Prototype
                     for (int i = 0; i < 3 && stage.Heroes[s] != null; i++)
                     {
                         var h = stage.Heroes[s][i]; if (h == null) continue;
-                        Vector3 sp = cam.WorldToScreenPoint(h.position + Vector3.up * 1.95f);
+                        Vector3 sp = cam.WorldToScreenPoint(h.position + Vector3.up * 1.45f);
                         if (sp.z < 0) continue;
                         Shadowed(new Rect(sp.x - 120 * u, Screen.height - sp.y - 24 * u, 240 * u, 26 * u), Ar.T(rules.Heroes[s][i].NameAr.Split(' ')[0]),
                             new GUIStyle(small) { alignment = TextAnchor.MiddleCenter });
@@ -64,7 +64,7 @@ namespace Sheytoonak.Prototype
             Shadowed(new Rect(Screen.width * 0.6f - pad, top, Screen.width * 0.4f, 44 * u), Ar.T("الخصم: " + Ar.N(rules.Windows[1]) + (rules.RageReady[1] ? "  " + Ar.Rage + " ✦" : "")), new GUIStyle(big) { alignment = TextAnchor.UpperRight, fontSize = Mathf.RoundToInt(32 * u) });
             bool mine = rules.Current == duel.Me;
             string turnLine = ended ? "" : (mine ? Ar.YourTurn : Ar.TheirTurn) + "  ·  " + Ar.Actions + " " + Ar.N(rules.ActionsLeft) + "  ·  " + Ar.Timer(Mathf.CeilToInt(duel.TurnTimeLeft));
-            Shadowed(new Rect(0, top, Screen.width, 40 * u), Ar.T(turnLine), new GUIStyle(label) { alignment = TextAnchor.UpperCenter, normal = { textColor = mine ? new Color(0.6f, 1f, 0.6f) : new Color(1f, 0.8f, 0.6f) } });
+            Shadowed(new Rect(0, top + 2 * u, Screen.width, 36 * u), Ar.T(turnLine), new GUIStyle(label) { alignment = TextAnchor.UpperCenter, normal = { textColor = mine ? new Color(0.6f, 1f, 0.6f) : new Color(1f, 0.8f, 0.6f) } });
             Shadowed(new Rect(0, top + 36 * u, Screen.width, 30 * u), Ar.T(Ar.WindowsLine(rules.Windows[0], rules.Windows[1], rules.Majority)), new GUIStyle(small) { alignment = TextAnchor.UpperCenter });
 
             // active poisons
@@ -79,28 +79,31 @@ namespace Sheytoonak.Prototype
             if (Time.time < toastUntil)
                 Shadowed(new Rect(0, Screen.height * 0.40f, Screen.width, 60 * u), Ar.T(toast), big);
 
-            // my actions
+            // my actions: one dark strip along the bottom, six tool buttons left, three controls right
             if (!ended && mine && !rules.KickInFlight)
             {
-                float bh = 44 * u, bw = Mathf.Min(300 * u, Screen.width * 0.3f);
-                float x0 = pad, yb = Screen.height - pad - bh * 3 - 8 * u * 2;
-                GUI.enabled = rules.ActionsLeft > 0;
+                float bh = 40 * u, gap = 6 * u;
+                float stripH = bh * 3 + gap * 4;
+                var old = GUI.color; GUI.color = new Color(0f, 0f, 0f, 0.45f);
+                GUI.DrawTexture(new Rect(0, Screen.height - stripH, Screen.width, stripH), Texture2D.whiteTexture); GUI.color = old;
+                float bw = Mathf.Min(250 * u, Screen.width * 0.24f);
+                float x0 = pad, yb = Screen.height - stripH + gap;
                 for (int i = 0; i < 3; i++)
                 {
                     var h = rules.Heroes[0][i];
                     bool poisonOk = rules.CanPoison(duel.Me, h.Poison, duel.TargetsFor(h.Poison)) == ActionReject.None;
                     GUI.enabled = rules.ActionsLeft > 0 && poisonOk;
-                    if (GUI.Button(new Rect(x0, yb + i * (bh + 8 * u), bw, bh), Ar.T(Ar.PoisonWord + ": " + h.Poison.NameAr), button)) { touch?.IgnoreFor(0.4f); duel.Poison(i); }
+                    if (GUI.Button(new Rect(x0, yb + i * (bh + gap), bw, bh), Ar.T(Ar.PoisonWord + ": " + h.Poison.NameAr), button)) { touch?.IgnoreFor(0.4f); duel.Poison(i); }
                     GUI.enabled = rules.ActionsLeft > 0;
-                    if (GUI.Button(new Rect(x0 + bw + 8 * u, yb + i * (bh + 8 * u), bw, bh), Ar.T(Ar.AntidoteWord + ": " + h.Antidote.NameAr), button)) { touch?.IgnoreFor(0.4f); duel.Antidote(i); }
+                    if (GUI.Button(new Rect(x0 + bw + gap, yb + i * (bh + gap), bw, bh), Ar.T(Ar.AntidoteWord + ": " + h.Antidote.NameAr), button)) { touch?.IgnoreFor(0.4f); duel.Antidote(i); }
                 }
                 GUI.enabled = true;
-                float xr = Screen.width - pad - bw;
-                if (rules.RageReady[0] && GUI.Button(new Rect(xr, yb, bw, bh), Ar.T(Ar.Rage + " ✦"), button)) { touch?.IgnoreFor(0.4f); duel.Rage(); }
-                if (GUI.Button(new Rect(xr, yb + bh + 8 * u, bw, bh), Ar.T(Ar.PassTurn), button)) { touch?.IgnoreFor(0.4f); duel.Pass(); }
-                if (GUI.Button(new Rect(xr, yb + (bh + 8 * u) * 2, bw, bh), Ar.T(Ar.Surrender), button)) { touch?.IgnoreFor(0.4f); duel.Surrender(); }
+                float cw = Mathf.Min(200 * u, Screen.width * 0.18f), xr = Screen.width - pad - cw;
+                if (rules.RageReady[0] && GUI.Button(new Rect(xr, yb, cw, bh), Ar.T(Ar.Rage + " ✦"), button)) { touch?.IgnoreFor(0.4f); duel.Rage(); }
+                if (GUI.Button(new Rect(xr, yb + bh + gap, cw, bh), Ar.T(Ar.PassTurn), button)) { touch?.IgnoreFor(0.4f); duel.Pass(); }
+                if (GUI.Button(new Rect(xr, yb + (bh + gap) * 2, cw, bh), Ar.T(Ar.Surrender), button)) { touch?.IgnoreFor(0.4f); duel.Surrender(); }
                 if (rules.ActionsLeft > 0)
-                    Shadowed(new Rect(0, Screen.height * 0.55f, Screen.width, 36 * u), Ar.T(Ar.ServeHint), new GUIStyle(label) { alignment = TextAnchor.MiddleCenter });
+                    Shadowed(new Rect(0, Screen.height - stripH - 40 * u, Screen.width, 36 * u), Ar.T(Ar.ServeHint), new GUIStyle(label) { alignment = TextAnchor.MiddleCenter });
             }
 
             if (ended)

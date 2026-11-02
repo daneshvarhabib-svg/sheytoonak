@@ -31,8 +31,9 @@ namespace Sheytoonak.Prototype
                 float sign = side == 0 ? -1f : 1f;
                 for (int i = 0; i < 3; i++)
                 {
-                    float x = sign * (1.3f + i * 0.8f);
-                    var pos = new Vector3(x, 0f, foot.Z - 1.0f - i * 0.15f);
+                    // smaller and a little ahead of the ball so the facade stays the centre of the picture (run 26 had them filling the frame)
+                    float x = sign * (1.1f + i * 0.7f);
+                    var pos = new Vector3(x, 0f, foot.Z + 0.9f - i * 0.25f);
                     homes[side][i] = pos;
                     Heroes[side][i] = MakeHero(side == 0 ? leftMat : rightMat, pos, (side == 0 ? "L" : "R") + i).transform;
                 }
@@ -55,14 +56,14 @@ namespace Sheytoonak.Prototype
             var body = GameObject.CreatePrimitive(PrimitiveType.Capsule);
             Object.Destroy(body.GetComponent<Collider>());
             body.transform.SetParent(root.transform, false);
-            body.transform.localPosition = new Vector3(0f, 0.75f, 0f);
-            body.transform.localScale = new Vector3(0.45f, 0.75f, 0.45f);
+            body.transform.localPosition = new Vector3(0f, 0.55f, 0f);
+            body.transform.localScale = new Vector3(0.34f, 0.55f, 0.34f);
             body.GetComponent<Renderer>().sharedMaterial = mat;
             var head = GameObject.CreatePrimitive(PrimitiveType.Sphere);
             Object.Destroy(head.GetComponent<Collider>());
             head.transform.SetParent(root.transform, false);
-            head.transform.localPosition = new Vector3(0f, 1.65f, 0f);
-            head.transform.localScale = Vector3.one * 0.32f;
+            head.transform.localPosition = new Vector3(0f, 1.22f, 0f);
+            head.transform.localScale = Vector3.one * 0.26f;
             head.GetComponent<Renderer>().sharedMaterial = mat;
             return root;
         }
@@ -85,7 +86,7 @@ namespace Sheytoonak.Prototype
         IEnumerator StepForward(Transform hero, Side side)
         {
             Vector3 home = homes[(int)side][0];
-            Vector3 at = foot.StrikeSpot + new Vector3(side == Side.Left ? -0.45f : 0.45f, 0f, -0.35f);
+            Vector3 at = foot.StrikeSpot + new Vector3(side == Side.Left ? -0.4f : 0.4f, 0f, -0.3f);
             for (float k = 0f; k < 1f; k += Time.deltaTime * 4f) { hero.position = Vector3.Lerp(home, at, k); yield return null; }
             hero.position = at;
             yield return new WaitForSeconds(1.2f);
