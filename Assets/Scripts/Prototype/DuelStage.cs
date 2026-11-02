@@ -126,7 +126,7 @@ namespace Sheytoonak.Prototype
                     break;
                 case Effect.Reach:
                     // a little towards the road: right at the ball it sat under the HUD turn line (run 30)
-                    list.Add(PoisonProps.Puddle(foot.StrikeSpot + new Vector3(0f, 0f, 1.4f)));
+                    list.Add(PoisonProps.Puddle(foot.StrikeSpot + new Vector3(0f, 0f, 2.6f)));
                     break;
                 case Effect.Accuracy:
                     list.Add(PoisonProps.Wind(this, mapper.FacadeZ));

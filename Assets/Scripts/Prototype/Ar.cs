@@ -76,10 +76,36 @@ namespace Sheytoonak
         {
             get
             {
-                if (font == null) font = Resources.Load<Font>("Fonts/Vazirmatn-Regular");
+                if (font == null)
+                {
+                    font = Resources.Load<Font>("Fonts/Vazirmatn-Regular");
+                    if (font != null) { UnityEngine.Font.textureRebuilt += OnRebuilt; Warm(); }
+                }
                 return font;
             }
         }
+
+        // ⚠️ run 31/32: final ر/ى/و/ص came out as a stray mark in the poison list. The dynamic font atlas rebuilds
+        // mid-frame when it meets a new glyph/size, and text drawn earlier that frame keeps the old UVs. Put every
+        // glyph we can emit into the atlas at the sizes the HUD uses, once, and again after any rebuild.
+        static readonly int[] warmSizes = { 16, 19, 22, 24, 28, 32, 36, 40, 48 };
+        static bool warming;
+        static void Warm()
+        {
+            if (font == null || warming) return;
+            warming = true;
+            string all = ArabicShaper.AllGlyphs();
+            float u = Mathf.Max(1f, Screen.height / 900f);
+            foreach (int s in warmSizes)
+            {
+                int px = Mathf.RoundToInt(s * u);
+                font.RequestCharactersInTexture(all, px, FontStyle.Normal);
+                font.RequestCharactersInTexture(all, px, FontStyle.Bold);
+                if (px != s) font.RequestCharactersInTexture(all, s, FontStyle.Normal);
+            }
+            warming = false;
+        }
+        static void OnRebuilt(UnityEngine.Font f) { if (f == font) Warm(); }
 
         /// <summary>Shaped, reordered, Eastern digits: ready for GUI.Label.</summary>
         public static string T(string s) => ArabicShaper.ForLtrRenderer(ArabicShaper.EasternDigits(s));

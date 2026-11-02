@@ -67,6 +67,16 @@ namespace Sheytoonak.Core
             ['ا'] = new[] { 'ﻻ', 'ﻼ' },
         };
 
+        /// <summary>Every presentation glyph the shaper can emit, plus digits and marks: for warming a dynamic font atlas.</summary>
+        public static string AllGlyphs()
+        {
+            var sb = new StringBuilder();
+            foreach (var kv in Forms) { sb.Append(kv.Key); foreach (char c in kv.Value) if (c != '\0') sb.Append(c); }
+            foreach (var kv in LamAlef) foreach (char c in kv.Value) sb.Append(c);
+            sb.Append("٠١٢٣٤٥٦٧٨٩0123456789:.-()/%،؟!✦♥♡←→ ّ");
+            return sb.ToString();
+        }
+
         static bool IsTashkeel(char c) => (c >= 'ً' && c <= 'ٟ') || c == 'ٰ' || c == 'ـ' && false;
         static bool IsArabicLetter(char c) => Forms.ContainsKey(c) || c == 'ـ';
         static bool JoinsNext(char c) => c == 'ـ' || (Forms.TryGetValue(c, out var f) && f[2] != '\0');
