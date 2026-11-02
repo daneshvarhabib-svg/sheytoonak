@@ -125,9 +125,9 @@ Same cartoon character, same style, same scale, same three-quarter back view as 
 جاگذاریِ [DESCRIPTION] (انگلیسی):
 * abu_shahata: `a chubby 11-year-old Lebanese boy, shaved head, white tank top, baggy cargo shorts, worn plastic flip-flops`
 * rima: `a scrappy 12-year-old Lebanese girl, wild curly black hair in a loose ponytail, an oversized faded football jersey, rolled-up jeans, scuffed sneakers, a plaster on one elbow`
-* zaatar: `a skinny 11-year-old Syrian boy, short curly hair, an olive-green tracksuit with white stripes, sneakers`
-* fulla: `a 10-year-old Egyptian girl from Alexandria, two long braids tied with small white jasmine flowers, a sea-blue dress over leggings, white sneakers`
-* toni: `a cocky 13-year-old Beirut street boy, baseball cap worn backwards, black sleeveless t-shirt, thin gold chain, ripped jeans, red sneakers`
+* zaatar: `a young cartoon Syrian kid, short curly hair, an olive-green tracksuit with white stripes, sneakers` (⚠️ «skinny 11-year-old» را فیلترِ ChatGPT رد کرد: سنِ دقیق و صفتِ بدنی برای بچه ننویس)
+* fulla: `a young cartoon girl from Alexandria, two long braids tied with small white jasmine flowers, a sea-blue dress over leggings, white sneakers`
+* toni: `a cocky cartoon Beirut street teenager, baseball cap worn backwards, black sleeveless t-shirt, thin gold chain, ripped jeans, red sneakers`
 
 ## جمله‌های فحشِ صاحب‌خانه (برای ضبط)
 
