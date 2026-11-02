@@ -129,6 +129,14 @@ Same cartoon character, same style, same scale, same three-quarter back view as 
 * fulla (⚠️ چپ‌پا: در پرامپتِ ضربه «with the LEFT foot»): `a young cartoon girl from Alexandria, two long braids tied with small white jasmine flowers, a sea-blue dress over leggings, white sneakers`
 * toni: `a cocky cartoon Beirut street teenager with a below-the-knee prosthetic leg (the leg on the RIGHT side of the picture when standing) (a sporty metal prosthesis with a red sneaker on it, clearly visible), baseball cap worn backwards, black sleeveless t-shirt, thin gold chain, ripped denim shorts, red sneakers` (⚠️ معلولیت عمدی است، کاربر: «همه سالم نباشن»)
 
+### شیتِ ضربه‌ی پنج‌فریمی (کاربر، ۱۱ آبان: «تو یه پرامپت از خروجی چندتا تصویر بگیریم … پنج تا تصویر به شکل کمیک»)
+گفت‌وگوی تازه، فقط تصویرِ ایستاده‌ی همان قهرمان پیوست. خروجی را `tools/art/slice_sheet.py <sheet> Assets/Resources/Art/Heroes/<id>_k 5` می‌بُرد
+(فریم‌ها رویِ سر هم‌تراز). اولین نمونه: أبو شحّاطة، درست درآمد.
+```
+Use the attached character exactly (same face, clothes, colours, art style, three-quarter back view with about one third of the face visible, turned to the right). Make a sprite sheet: ONE horizontal row of 5 frames of this same character kicking a football toward a building in front of him, like an animation: 1) running toward the ball, 2) last step, planting the standing foot, 3) kicking leg pulled back with the knee bent, arms out, 4) kicking leg swung forward through the ball, foot pointing straight ahead toward the building, 5) landing and recovering balance. All 5 figures the same size and scale, feet on the same ground line, evenly spaced with clear empty space between them, nothing overlapping. No ball, no panel borders, no comic frames, no speech bubbles, no text, no numbers. Background: one flat solid pure green colour (#00FF00), no shadow. Landscape 3:2.
+```
+(فُلّة چپ‌پاست: «kicking with the LEFT leg» به ۳ و ۴ اضافه شود؛ دخترها «her».)
+
 ## جمله‌های فحشِ صاحب‌خانه (برای ضبط)
 
 کاربر: «هر بار شیشه می‌شکنه یه صدای فحشی از توی خونه به زبون عربی بیاد، ترجیحاً غیررکیک». هشت جمله‌ی شامی، تند ولی تمیز؛ هر کدام را یک نفر (ترجیحاً دو صدا: مرد و زن) با عصبانیت و کمی دور (از پشتِ پنجره) ضبط کند، ۱ تا ۲ ثانیه، فایلِ `.wav` یا `.mp3` یا `.ogg` (نه `.m4a`) با هر نامی در `Assets/Resources/Audio/Curses/`:
