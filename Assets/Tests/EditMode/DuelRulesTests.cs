@@ -1,0 +1,174 @@
+using NUnit.Framework;
+using Sheytoonak.Core.Duel;
+
+namespace Sheytoonak.Tests
+{
+    public class DuelRulesTests
+    {
+        static DuelRules Make(int seed = 7, int[] rows = null)
+        {
+            rows = rows ?? new[] { 3, 3 };
+            int n = 0; foreach (int r in rows) n += r;
+            var shards = new int[n]; for (int i = 0; i < n; i++) shards[i] = 40;
+            var h = StarterHeroes.All;
+            return new DuelRules(rows, shards, new[] { h[0], h[1], h[2] }, new[] { h[3], h[4], h[0] }, seed);
+        }
+
+        [Test]
+        public void Total_value_is_always_odd_and_the_three_is_hidden()
+        {
+            for (int seed = 1; seed < 40; seed++)
+            {
+                var r = Make(seed, new[] { 3, 3, 4 });
+                Assert.AreEqual(1, r.TotalValue % 2, "seed " + seed);
+                Assert.AreEqual(3, r.WindowValue[r.HiddenWindow]);
+                Assert.AreEqual(2, r.ShownValue(r.HiddenWindow), "hidden reads as 2 until it breaks");
+                Assert.IsTrue(r.HiddenWindow >= 3, "the 3 sits in an upper row");
+            }
+        }
+
+        [Test]
+        public void Opener_has_one_action_then_everyone_has_two()
+        {
+            var r = Make();
+            r.Start(Side.Left);
+            Assert.AreEqual(1, r.ActionsLeft);
+            Assert.AreEqual(ActionReject.None, r.BeginKick(Side.Left));
+            Assert.AreEqual(ActionReject.NotYourTurn, r.BeginKick(Side.Right));
+            r.EndKick(Side.Left, -1);
+            Assert.AreEqual(Side.Right, r.Current);
+            Assert.AreEqual(2, r.ActionsLeft);
+        }
+
+        [Test]
+        public void Breaking_windows_wins_at_the_majority()
+        {
+            var r = Make();
+            r.Start(Side.Left);
+            r.BeginKick(Side.Left); r.EndKick(Side.Left, -1);           // opener burns its single action
+            int need = r.Majority, got = 0;
+            // Right breaks windows until the majority, Left passes in between
+            for (int w = 0; w < r.WindowCount && !r.Finished; w++)
+            {
+                Assert.AreEqual(Side.Right, r.Current);
+                Assert.AreEqual(ActionReject.None, r.BeginKick(Side.Right));
+                Assert.AreEqual(KickOutcome.Broke, r.EndKick(Side.Right, w));
+                got += r.WindowValue[w];
+                if (r.Finished) break;
+                Assert.AreEqual(KickOutcome.Bounced, r.EndKickTwice(w), "second ball into the same window gives nothing");
+                if (!r.Finished && r.Current == Side.Left) r.Pass(Side.Left);
+            }
+            Assert.IsTrue(r.Finished);
+            Assert.AreEqual(Side.Right, r.Winner);
+            Assert.IsTrue(got >= need);
+            Assert.AreEqual(r.Shards[0] + r.Shards[1], r.RewardFor(Side.Right).shards, "winner takes every shard of the round");
+            Assert.AreEqual(0, r.RewardFor(Side.Left).shards);
+            Assert.AreEqual(5, r.RewardFor(Side.Right).curseDelta);
+            Assert.AreEqual(-2, r.RewardFor(Side.Left).curseDelta);
+            Assert.AreEqual(0, DuelRules.ApplyCurse(1, -2), "curses never go below zero");
+        }
+
+        [Test]
+        public void Poison_cannot_close_every_window_and_expires_by_turns()
+        {
+            var r = Make(seed: 3, rows: new[] { 2, 1 });
+            r.Start(Side.Left); r.BeginKick(Side.Left); r.EndKick(Side.Left, -1);
+            var bus = StarterHeroes.Get("zaatar").Poison;
+            Assert.AreEqual(ActionReject.PoisonWouldCloseEverything, r.CanPoison(Side.Right, bus, new[] { 0, 1, 2 }));
+            Assert.AreEqual(ActionReject.None, r.Poison(Side.Right, bus, new[] { 0 }));
+            Assert.IsTrue(r.IsCovered(0));
+            Assert.IsFalse(r.IsBreakable(0));
+            r.Pass(Side.Right);                     // Right's turn ends: 2 → 1
+            Assert.AreEqual(Side.Left, r.Current);
+            Assert.IsTrue(r.IsCovered(0), "two-turn poison still covers during the opponent's turn");
+            Assert.AreEqual(KickOutcome.Bounced, r.BeginAndEnd(Side.Left, 0), "a covered window does not break");
+            r.Pass(Side.Left);                      // still Right's own next turn
+            Assert.IsTrue(r.IsCovered(0), "two turns = the opponent's and the poisoner's own next turn");
+            r.Pass(Side.Right);
+            Assert.IsFalse(r.IsCovered(0), "gone afterwards");
+        }
+
+        [Test]
+        public void Antidote_lifts_an_until_antidote_poison_and_shields_modifiers()
+        {
+            var r = Make();
+            r.Start(Side.Left); r.BeginKick(Side.Left); r.EndKick(Side.Left, -1);
+            var wind = StarterHeroes.Get("fulla").Poison;      // accuracy, one turn
+            var open = StarterHeroes.Get("rima").Poison;       // close, until antidote
+            r.Poison(Side.Right, wind);
+            r.Poison(Side.Right, open, new[] { 4 });
+            Assert.AreEqual(Side.Left, r.Current);
+            Assert.AreEqual(1, r.ModifiersFor(Side.Left).Accuracy, "the wind blows on the stage");
+            Assert.AreEqual(1, r.ModifiersFor(Side.Right).Accuracy, "for both sides");
+            r.Antidote(Side.Left, StarterHeroes.Get("zaatar").Antidote); // vane: accuracy 1
+            Assert.AreEqual(0, r.ModifiersFor(Side.Left).Accuracy, "the antidote shields its user");
+            Assert.AreEqual(1, r.ModifiersFor(Side.Right).Accuracy, "not the other side");
+            Assert.IsTrue(r.IsClosed(4));
+            r.Antidote(Side.Left, StarterHeroes.Get("fulla").Antidote);  // pebble: close 1
+            Assert.IsFalse(r.IsClosed(4), "an until-antidote poison is lifted by a matching antidote");
+        }
+
+        [Test]
+        public void Rage_arrives_every_third_turn_and_restarts_when_spent()
+        {
+            var r = Make();
+            r.Start(Side.Left);
+            Assert.IsFalse(r.RageReady[0]);
+            r.Pass(Side.Left); r.Pass(Side.Right);   // L turn 2 → timer 2
+            r.Pass(Side.Left); r.Pass(Side.Right);   // L turn 3 → timer 1
+            r.Pass(Side.Left); r.Pass(Side.Right);   // L turn 4 → timer 0 → ready
+            Assert.IsTrue(r.RageReady[0]);
+            Assert.AreEqual(2, r.ActionsLeft);
+            Assert.AreEqual(ActionReject.None, r.UseRage(Side.Left));
+            Assert.AreEqual(3, r.ActionsLeft, "rage is one extra action");
+            Assert.AreEqual(ActionReject.NoRage, r.UseRage(Side.Left));
+            r.Pass(Side.Left); r.Pass(Side.Right); r.Pass(Side.Left); r.Pass(Side.Right);
+            Assert.IsFalse(r.RageReady[0], "three own turns after spending it");
+        }
+
+        [Test]
+        public void Two_timeouts_in_a_row_surrender()
+        {
+            var r = Make();
+            r.Start(Side.Left);
+            r.Timeout(Side.Left);
+            Assert.AreEqual(Side.Right, r.Current);
+            r.Pass(Side.Right);
+            r.Timeout(Side.Left);
+            Assert.IsTrue(r.Finished);
+            Assert.AreEqual(Side.Right, r.Winner);
+            Assert.AreEqual("surrender", r.FinishReason);
+        }
+
+        [Test]
+        public void Bot_cures_then_kicks_then_poisons()
+        {
+            var r = Make(seed: 5);
+            r.Start(Side.Left); r.BeginKick(Side.Left); r.EndKick(Side.Left, -1);
+            r.Poison(Side.Right, StarterHeroes.Get("fulla").Poison); // Right poisons itself... it is Right's turn: wind on stage
+            // now it is still Right's turn with one action; the bot (Right) should kick, not poison again
+            var bot = new DuelBot(1);
+            bot.NewTurn();
+            var m = bot.Next(r, Side.Right);
+            Assert.AreEqual(BotMove.Kind.Kick, m.What, "with one action left it kicks");
+            Assert.IsTrue(r.IsBreakable(m.Window));
+        }
+    }
+
+    static class DuelTestExt
+    {
+        public static KickOutcome BeginAndEnd(this DuelRules r, Side s, int window)
+        {
+            Assert.AreEqual(ActionReject.None, r.BeginKick(s));
+            return r.EndKick(s, window);
+        }
+        /// <summary>Second kick of the same turn into an already broken window.</summary>
+        public static KickOutcome EndKickTwice(this DuelRules r, int window)
+        {
+            var s = r.Current;
+            if (r.ActionsLeft == 0) return KickOutcome.Bounced;
+            Assert.AreEqual(ActionReject.None, r.BeginKick(s));
+            return r.EndKick(s, window);
+        }
+    }
+}
