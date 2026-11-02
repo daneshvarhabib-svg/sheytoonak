@@ -108,12 +108,17 @@ Same style. An old Beirut car seen exactly from the side, facing right: [a cream
 
 ### پرامپتِ ایستاده (پنج بار، هر بار یک قهرمان)
 ```
-In exactly the style of the attached reference images (semi-realistic anime, sunny late afternoon, warm light from the upper left, clean line art, soft painted shading). Full-body character in a three-quarter BACK view: the body faces away from the viewer and is turned slightly to the right, the head turned to the right so that about one third of the face is visible (cheek, ear, the side of one eye, the tip of the nose); we never see the full face. Standing relaxed, ready, feet apart, looking at a building in front of them. Character: [DESCRIPTION]. Transparent background, no ground, no shadow, no ball, no text. Portrait 2:3, the whole figure inside the frame with a small margin.
+In exactly the style of the attached reference images (semi-realistic anime, sunny late afternoon, warm light from the upper left, clean line art, soft painted shading). Full-body character in a three-quarter BACK view: the body faces away from the viewer and is turned slightly to the right, the head turned to the right so that about one third of the face is visible (cheek, ear, the side of one eye, the tip of the nose); we never see the full face. Standing relaxed, ready, feet apart, looking at a building in front of them. Character: [DESCRIPTION]. Background: one flat solid pure green colour (#00FF00) filling the whole frame, no glow, no halo, no vignette, no gradient, no ground, no shadow. No ball, no text. Portrait 2:3, the whole figure inside the frame with a small margin.
 ```
 ### پرامپتِ ضربه (پنج بار)
+⚠️ کاربر رویِ اولین نسخه (أبو شحّاطة): «زاویه پاش موقع زدن ضربه درست نیست، انگار مچ پاش چرخیده، از زانو به پایین».
+در آن نسخه ساقِ پای ضربه به سمتِ ما چرخیده بود و کفِ پا رو به بیننده بود. پرامپتِ تازه جهتِ ساق، مچ و کفِ پا را صریح می‌گوید.
 ```
-Same character, same style, same scale and same three-quarter back view (about one third of the face visible, turned to the right): caught at the moment of kicking with the RIGHT foot, kicking leg swung forward, arms out for balance, body leaning slightly back. No ball. Transparent background, no ground, no shadow, no text. Portrait 2:3.
+Same character, same style, same scale and same three-quarter back view (about one third of the face visible, turned to the right). He is kicking a football toward the building in front of him with the RIGHT foot, a natural instep kick: the kicking leg swings straight forward, AWAY from the viewer, in line with the body; the knee points forward and slightly up, the lower leg stays straight under the knee and extends forward, the ankle is locked and straight, the toes point forward and slightly down, so from behind we see the back of the calf and the heel, NOT the sole of the foot and NOT the front of the shin; the foot is not twisted sideways. The left standing foot is planted flat on the ground, knee slightly bent; arms out for balance, body leaning slightly back. No ball. Background: one flat solid pure green colour (#00FF00) filling the whole frame, no glow, no halo, no vignette, no gradient, no ground, no shadow, no text. Portrait 2:3.
 ```
+⚠️ پس‌زمینه: ChatGPT به‌جایِ «شفاف» یک هاله‌ی نارنجی رویِ مشکی کشید که دورِ بدن را نمی‌شود تمیز برید؛ سبزِ یک‌دست را
+خودم شفاف می‌کنم (سفید نه، چون رکابیِ أبو شحّاطة سفید است).
+
 جاگذاریِ [DESCRIPTION] (انگلیسی):
 * abu_shahata: `a chubby 11-year-old Lebanese boy, shaved head, white tank top, baggy cargo shorts, worn plastic flip-flops`
 * rima: `a scrappy 12-year-old Lebanese girl, wild curly black hair in a loose ponytail, an oversized faded football jersey, rolled-up jeans, scuffed sneakers, a plaster on one elbow`
