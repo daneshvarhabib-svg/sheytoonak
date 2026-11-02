@@ -122,8 +122,15 @@ namespace Sheytoonak.Prototype
             var r = painted[(int)side][slot];
             if (r == null) return;
             var sp = HeroSprite(lookIds[(int)side][slot], pose) ?? HeroSprite(lookIds[(int)side][slot], "idle");
-            if (sp != null) r.sprite = sp;
+            if (sp == null) return;
+            r.sprite = sp;
+            // frames come from different sheets (a 5-frame sheet is ~1/3 the pixels of a single pose): scale per sprite
+            r.transform.localScale = Vector3.one * (heroHeight / Mathf.Max(0.01f, sp.bounds.size.y));
+            if (slot == 0) kickerScale[(int)side] = r.transform.localScale;
         }
+
+        /// <summary>True when the hero has the 5-frame kick sheet (k1 run, k2 plant, k3 wind-up, k4 contact, k5 land).</summary>
+        bool HasFrames(Side side) => painted[(int)side][0] != null && HeroSprite(lookIds[(int)side][0], "k1") != null;
 
         void OnDuelStarted()
         {
@@ -156,9 +163,11 @@ namespace Sheytoonak.Prototype
             float sideOff = side == Side.Left ? -0.35f : 0.35f;
             Vector3 Spot() => (side == duel.Me ? foot.StrikeSpot : new Vector3(ballX, 0f, foot.StrikeSpot.z)) + new Vector3(sideOff, 0f, -0.3f);
             // run-up: a few bouncing steps
+            bool frames = HasFrames(side);
             for (float k = 0f; k < 1f; k += Time.deltaTime * 3.2f)
             {
                 hero.position = Vector3.Lerp(home, Spot(), k) + Vector3.up * Mathf.Abs(Mathf.Sin(k * Mathf.PI * 3f)) * 0.08f;
+                if (frames) SetPose(side, 0, (int)(k * 6f) % 2 == 0 ? "k1" : "k2"); // two running frames, three steps
                 yield return null;
             }
             striking[(int)side] = StartCoroutine(Strike(hero, side));
@@ -174,9 +183,11 @@ namespace Sheytoonak.Prototype
             for (float k = 0f; k < 1f; k += Time.deltaTime * 2.2f)
             {
                 hero.position = Vector3.Lerp(from, home, k) + Vector3.up * Mathf.Abs(Mathf.Sin(k * Mathf.PI * 4f)) * 0.05f;
+                if (frames) { var pr = painted[(int)side][0]; SetPose(side, 0, (int)(k * 8f) % 2 == 0 ? "k1" : "k2"); if (pr != null) pr.flipX = side == Side.Left; } // walking back faces home
                 yield return null;
             }
             hero.position = home;
+            if (frames) { var pr = painted[(int)side][0]; if (pr != null) pr.flipX = side == Side.Right; SetPose(side, 0, "idle"); }
             stepping[(int)side] = null;
         }
 
@@ -186,6 +197,20 @@ namespace Sheytoonak.Prototype
         /// <summary>Crouch, swing (kick pose, lean into the shot, a little hop), settle back to idle.</summary>
         IEnumerator Strike(Transform hero, Side side)
         {
+            if (HasFrames(side))
+            {
+                // painted sequence (user: «پنج تا تصویر رو به شکل کمیک از زدن یه توپ»): plant, wind-up, contact, land
+                var pr = painted[(int)side][0];
+                SetPose(side, 0, "k2"); yield return new WaitForSeconds(0.08f);
+                SetPose(side, 0, "k3"); yield return new WaitForSeconds(0.14f);
+                SetPose(side, 0, "k4");
+                for (float k = 0f; k < 1f && pr != null; k += Time.deltaTime / 0.18f) { pr.transform.localPosition = new Vector3(0f, 0.06f * Mathf.Sin(k * Mathf.PI), 0f); yield return null; }
+                if (pr != null) pr.transform.localPosition = Vector3.zero;
+                SetPose(side, 0, "k5"); yield return new WaitForSeconds(0.22f);
+                SetPose(side, 0, "idle");
+                striking[(int)side] = null;
+                yield break;
+            }
             var r = painted[(int)side][0];
             Transform body = r != null ? r.transform : hero;
             Vector3 baseScale = r != null ? kickerScale[(int)side] : Vector3.one; // never read mid-animation (a quick re-kick would drift)
