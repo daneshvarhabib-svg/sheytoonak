@@ -20,6 +20,10 @@ namespace Sheytoonak.Prototype
             string dir = Environment.GetEnvironmentVariable("SHEYTOONAK_SHOTS");
             if (string.IsNullOrEmpty(dir)) return;
             Directory.CreateDirectory(dir);
+            // Under xvfb the window never gets focus and a standalone player pauses without it:
+            // coroutines never advanced in run 24. Keep running whatever the focus state.
+            Application.runInBackground = true;
+            Application.targetFrameRate = 30;
             Debug.Log("SHEYTOONAK SHOTS armed: " + dir + " gfx=" + SystemInfo.graphicsDeviceType + " " + Screen.width + "x" + Screen.height);
             var go = new GameObject("AutoScreenshot");
             UnityEngine.Object.DontDestroyOnLoad(go);
@@ -29,6 +33,14 @@ namespace Sheytoonak.Prototype
         class Runner : MonoBehaviour
         {
             public string dir;
+            int frames;
+            void Update()
+            {
+                frames++;
+                if (frames <= 3 || frames % 150 == 0)
+                    Debug.Log($"SHEYTOONAK SHOTS frame {frames} t={Time.realtimeSinceStartup:0.0}s focus={Application.isFocused}");
+            }
+
             IEnumerator Start()
             {
                 StartCoroutine(Watchdog());
