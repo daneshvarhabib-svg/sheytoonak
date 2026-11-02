@@ -126,7 +126,7 @@ jobs:
           mkdir -p shots
           export SHEYTOONAK_SHOTS="$PWD/shots" LIBGL_ALWAYS_SOFTWARE=1 GALLIUM_DRIVER=llvmpipe
           xvfb-run -a -s "-screen 0 1600x720x24" glxinfo -B > shots/glxinfo.txt 2>&1 || true
-          timeout 170 xvfb-run -a -s "-screen 0 1600x720x24" \
+          timeout 200 xvfb-run -a -s "-screen 0 1600x720x24" \
             "$BIN" -screen-width 1600 -screen-height 720 -screen-fullscreen 0 -logFile "$PWD/shots/player.log" > shots/stdout.txt 2>&1 || echo "player exit $?"
           ls -la shots
           grep -a 'SHEYTOONAK\|Exception\|rror\|GL\|Vulkan\|display' shots/player.log shots/stdout.txt | head -60 || true

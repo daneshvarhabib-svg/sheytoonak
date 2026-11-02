@@ -74,6 +74,7 @@ namespace Sheytoonak.Prototype
             props.Clear();
             duel.Rules.PoisonPlaced += OnPoison;
             duel.Rules.PoisonExpired += OnExpired;
+            duel.Rules.AntidoteUsed += OnAntidote;
             duel.Rules.WindowTaken += (s, w, v) => Refresh();
         }
 
@@ -96,14 +97,7 @@ namespace Sheytoonak.Prototype
 
         IEnumerator PigeonCrossing()
         {
-            if (pigeon == null)
-            {
-                pigeon = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-                Destroy(pigeon.GetComponent<Collider>());
-                pigeon.name = "Pigeon (placeholder)";
-                pigeon.transform.localScale = new Vector3(0.35f, 0.2f, 0.45f);
-                pigeon.GetComponent<Renderer>().sharedMaterial = propMat;
-            }
+            if (pigeon == null) pigeon = PoisonProps.Pigeon();
             pigeon.SetActive(true);
             float z = mapper.FacadeZ - 4f, y = 2.8f;
             for (float t = 0f; t < 1f; t += Time.deltaTime / 1.1f)
@@ -120,24 +114,44 @@ namespace Sheytoonak.Prototype
             switch (p.Tool.Effect)
             {
                 case Effect.Cover:
-                    foreach (int w in p.Windows)
+                    if (p.Windows.Length > 0)
                     {
-                        Rect r = mapper.WindowRects[w];
-                        list.Add(Box("Cover " + p.Tool.Id, new Vector3(r.center.x, r.center.y, mapper.FacadeZ - 0.35f), new Vector3(r.width * 1.3f, r.height * 1.3f, 0.5f), propMat));
+                        var rects = new Rect[p.Windows.Length];
+                        for (int i = 0; i < rects.Length; i++) rects[i] = mapper.WindowRects[p.Windows[i]];
+                        list.Add(PoisonProps.Bus(this, rects, mapper.FacadeZ));
                     }
                     break;
                 case Effect.Close:
-                    foreach (int w in p.Windows)
-                    {
-                        Rect r = mapper.WindowRects[w];
-                        list.Add(Box("Shut " + p.Tool.Id, new Vector3(r.center.x, r.center.y, mapper.FacadeZ - 0.06f), new Vector3(r.width, r.height, 0.08f), shutterMat));
-                    }
+                    foreach (int w in p.Windows) list.Add(PoisonProps.OpenWindow(mapper.WindowRects[w], mapper.FacadeZ));
                     break;
                 case Effect.Reach:
-                    list.Add(Box("Puddle", foot.StrikeSpot + new Vector3(0f, 0.005f, 0.2f), new Vector3(1.6f, 0.01f, 1.0f), puddleMat));
+                    list.Add(PoisonProps.Puddle(foot.StrikeSpot + new Vector3(0f, 0f, 0.1f)));
+                    break;
+                case Effect.Accuracy:
+                    list.Add(PoisonProps.Wind(this, mapper.FacadeZ));
+                    break;
+                case Effect.Chance:
+                    StartCoroutine(PigeonsWhile(p));
                     break;
             }
             props[p] = list;
+        }
+
+        /// <summary>The pigeon poison: birds keep crossing the stage while it lasts.</summary>
+        IEnumerator PigeonsWhile(ActivePoison p)
+        {
+            while (duel.Rules != null && duel.Rules.Poisons.Contains(p))
+            {
+                yield return PigeonCrossing();
+                yield return new WaitForSeconds(0.6f);
+            }
+        }
+
+        void OnAntidote(Side s, Tool a)
+        {
+            var hero = Heroes[(int)s] != null ? Heroes[(int)s][0] : null;
+            var go = PoisonProps.Antidote(a, hero != null ? hero.position : foot.StrikeSpot, mapper.FacadeZ);
+            Destroy(go, 2.5f);
         }
 
         void OnExpired(ActivePoison p)

@@ -66,8 +66,14 @@ namespace Sheytoonak.Prototype
                         yield return Shot("04-kick-air", 0.45f);
                         yield return Shot("05-kick-hit", 0.6f);
                         yield return Shot("06-after", 2.0f);
-                        if (duel.PlayerMayKick) duel.Poison(1); // zaatar: the bus
-                        yield return Shot("07-poison", 0.8f);
+                        // show every poison my heroes carry, one per action, so CI pictures all the props
+                        for (int i = 0; i < 3 && duel.Rules != null && !duel.Rules.Finished; i++)
+                        {
+                            float w0 = Time.realtimeSinceStartup + 25f;
+                            while (Time.realtimeSinceStartup < w0 && !duel.PlayerMayKick) yield return null;
+                            if (duel.PlayerMayKick) duel.Poison(i);
+                            yield return Shot("07-poison-" + i, 1.4f);
+                        }
                         yield return Shot("08-bot-turn", 4.0f);
                         yield return Shot("09-later", 5.0f);
                     }
@@ -86,7 +92,7 @@ namespace Sheytoonak.Prototype
 
             IEnumerator Watchdog()
             {
-                yield return new WaitForSecondsRealtime(90f);
+                yield return new WaitForSecondsRealtime(140f);
                 Debug.LogWarning("SHEYTOONAK SHOTS watchdog: quitting after 60 s");
                 Application.Quit(2);
             }

@@ -239,10 +239,17 @@ namespace Sheytoonak
             if (poison.Effect != Effect.Cover && poison.Effect != Effect.Close) return new int[0];
             var list = new System.Collections.Generic.List<int>();
             for (int w = 0; w < Rules.WindowCount; w++) if (Rules.IsBreakable(w)) list.Add(w);
+            if (poison.Effect == Effect.Cover)
+            {
+                // a bus can only hide what is behind it: the lowest breakable windows, never all of them
+                list.Sort((a, b) => RowOf(a) != RowOf(b) ? RowOf(a).CompareTo(RowOf(b)) : mapper.WindowRects[a].x.CompareTo(mapper.WindowRects[b].x));
+                int lowRow = list.Count > 0 ? RowOf(list[0]) : 0;
+                var row = list.FindAll(w => RowOf(w) == lowRow);
+                int take = Mathf.Min(row.Count, list.Count - 1);
+                return row.GetRange(0, Mathf.Max(0, take)).ToArray();
+            }
             list.Sort((a, b) => Rules.ShownValue(b).CompareTo(Rules.ShownValue(a)));
-            int take = poison.Effect == Effect.Close ? 1 : Mathf.Min(poison.Power + 1, list.Count - 1);
-            take = Mathf.Clamp(take, 0, Mathf.Max(0, list.Count - 1));
-            return list.GetRange(0, take).ToArray();
+            return list.Count > 1 ? new[] { list[0] } : new int[0];
         }
 
         // ------------------------------------------------------------------ kicks
