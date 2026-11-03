@@ -1,0 +1,39 @@
+# One-time: makes a fixed Android signing key so a new APK installs over the old one
+# (user 2026-11-02: every CI build was signed with a fresh debug key -> "package conflicts").
+# Run it by hand (Actions > Make signing key > Run workflow). It uploads ONE artifact, kept for 1 day,
+# holding the keystore as base64 and its password. Copy both into repository secrets
+# ANDROID_KEYSTORE_BASE64 and ANDROID_KEYSTORE_PASS, then delete the artifact.
+# Nothing secret is printed to the log.
+name: Make signing key
+
+on:
+  workflow_dispatch:
+  push: # runs once when this file lands on the branch (dispatching a workflow that is not on main is awkward from a phone)
+    paths: ['.github/workflows/make-signing-key.yml']
+
+permissions:
+  contents: read
+
+jobs:
+  key:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate keystore
+        run: |
+          set -euo pipefail
+          umask 077
+          PASS=$(openssl rand -hex 16)
+          echo "::add-mask::$PASS"
+          mkdir -p out
+          keytool -genkeypair -noprompt -storetype PKCS12 -keystore out/sheytoonak.keystore \
+            -alias sheytoonak -keyalg RSA -keysize 2048 -validity 10000 \
+            -storepass "$PASS" -keypass "$PASS" -dname "CN=Sheytoonak, O=Sheytoonak" > /dev/null 2>&1
+          base64 -w0 out/sheytoonak.keystore > out/ANDROID_KEYSTORE_BASE64.txt
+          printf '%s' "$PASS" > out/ANDROID_KEYSTORE_PASS.txt
+          rm out/sheytoonak.keystore
+          echo "keystore made: $(wc -c < out/ANDROID_KEYSTORE_BASE64.txt) base64 characters (contents not shown)"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: signing-key-COPY-INTO-SECRETS-THEN-DELETE
+          path: out
+          retention-days: 1

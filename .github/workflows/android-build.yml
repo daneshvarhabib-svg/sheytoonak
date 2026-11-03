@@ -168,6 +168,12 @@ jobs:
           androidExportType: androidPackage
           buildName: Sheytoonak
           buildMethod: Sheytoonak.EditorTools.SheytoonakBuild.BuildAndroidCI
+          # fixed signing key (workflow "Make signing key"); without these secrets the build falls back to Unity's debug key
+          androidKeystoreName: sheytoonak.keystore
+          androidKeystoreBase64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          androidKeystorePass: ${{ secrets.ANDROID_KEYSTORE_PASS }}
+          androidKeyaliasName: sheytoonak
+          androidKeyaliasPass: ${{ secrets.ANDROID_KEYSTORE_PASS }}
       - uses: actions/upload-artifact@v4
         with:
           name: Sheytoonak-APK

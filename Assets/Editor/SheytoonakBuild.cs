@@ -182,6 +182,7 @@ namespace Sheytoonak.EditorTools
                     if (!path.EndsWith(".apk", StringComparison.OrdinalIgnoreCase)) path = Path.Combine(path, "Sheytoonak.apk");
                     int versionCode = 0;
                     if (args.TryGetValue("androidVersionCode", out var vc)) int.TryParse(vc, out versionCode);
+                    UseFixedKeystore(args);
                     code = BuildAndroid(path, versionCode) ? 0 : 1;
                 }
             }
@@ -192,6 +193,33 @@ namespace Sheytoonak.EditorTools
                 code = 1;
             }
             EditorApplication.Exit(code);
+        }
+
+        /// <summary>
+        /// The fixed signing key from the repository secrets (GameCI writes the keystore file next to the project and
+        /// passes the names and passwords as arguments). User 2026-11-02: every build signed with a fresh debug key
+        /// would not install over the previous one ("package conflicts"). No key = Unity's debug key, as before.
+        /// ⚠️ Passwords are never logged.
+        /// </summary>
+        static void UseFixedKeystore(Dictionary<string, string> args)
+        {
+            args.TryGetValue("androidKeystoreName", out var name);
+            args.TryGetValue("androidKeystorePass", out var pass);
+            args.TryGetValue("androidKeyaliasName", out var alias);
+            args.TryGetValue("androidKeyaliasPass", out var aliasPass);
+            string file = string.IsNullOrEmpty(name) ? null : Path.GetFullPath(name);
+            if (file == null || !File.Exists(file) || string.IsNullOrEmpty(pass) || string.IsNullOrEmpty(alias))
+            {
+                PlayerSettings.Android.useCustomKeystore = false;
+                Debug.Log("SHEYTOONAK SIGNING debug key (no fixed keystore given)");
+                return;
+            }
+            PlayerSettings.Android.useCustomKeystore = true;
+            PlayerSettings.Android.keystoreName = file;
+            PlayerSettings.Android.keystorePass = pass;
+            PlayerSettings.Android.keyaliasName = alias;
+            PlayerSettings.Android.keyaliasPass = string.IsNullOrEmpty(aliasPass) ? pass : aliasPass;
+            Debug.Log("SHEYTOONAK SIGNING fixed keystore, alias " + alias);
         }
 
         /// <summary>Builds the APK. Returns true only if Unity reports success and the file exists.</summary>
