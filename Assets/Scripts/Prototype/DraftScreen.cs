@@ -23,6 +23,8 @@ namespace Sheytoonak.Prototype
         /// <summary>Head and shoulders out of the painted standing pose (no separate portrait art yet).</summary>
         static void Portrait(Rect r, string heroId)
         {
+            var face = Load("Art/Heroes/" + heroId + "_face"); // painted head-and-shoulders portrait (2026-11-03)
+            if (face != null) { GUI.DrawTexture(r, face, ScaleMode.ScaleAndCrop); return; }
             var t = Load("Art/Heroes/" + heroId + "_idle");
             if (t == null) return;
             // the top ~42% of the figure, centred, cropped to the rect's aspect

@@ -52,7 +52,10 @@ icons = {
  "heart": f'''<path d="M128 214 C 40 150 24 104 50 70 C 76 40 112 50 128 82 C 144 50 180 40 206 70 C 232 104 216 150 128 214 Z" {W}/>''',
 }
 os.makedirs(OUT, exist_ok=True)
+# painted icons (ChatGPT sheet, 2026-11-03) replace these glyphs; only the ones without a painted version are written
+PAINTED = {"pigeon","bus","wind","open_window","puddle","nails","vane","pebble","plank","fart","rage","pass","surrender","window","shards","curse","clock","replay"}
 for name, body in icons.items():
+    if name in PAINTED and "--all" not in sys.argv: continue
     svg = f'<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">{body}</svg>'
     cairosvg.svg2png(bytestring=svg.encode(), write_to=os.path.join(OUT, name + ".png"), output_width=256, output_height=256)
 print(len(icons), "icons")

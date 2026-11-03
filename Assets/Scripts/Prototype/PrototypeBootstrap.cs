@@ -741,7 +741,7 @@ namespace Sheytoonak.Prototype
         /// <summary>
         /// Something happens behind every smashed pane (user, 2026-11-02: «گربه بیفته، پرده تکون بخوره و از این
         /// چیزها»): a cat leaps out, a curtain billows out through the hole, or a flower pot topples off the sill.
-        /// Painted sprites Art/Props/fx_cat, fx_curtain, fx_pot are used when present, primitives otherwise.
+        /// Painted sprites Art/Fx/fx_cat, fx_curtain, fx_pot are used when present, primitives otherwise.
         /// </summary>
         void WindowLife(Vector3 at, Vector3 size)
         {
@@ -753,7 +753,7 @@ namespace Sheytoonak.Prototype
 
         Transform FxSprite(string name, float worldHeight)
         {
-            var tex = Resources.Load<Texture2D>("Art/Props/" + name);
+            var tex = Resources.Load<Texture2D>("Art/Fx/" + name);
             if (tex == null) return null;
             var go = new GameObject(name);
             var r = go.AddComponent<SpriteRenderer>();

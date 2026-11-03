@@ -232,8 +232,13 @@ namespace Sheytoonak.Prototype
             GUI.Label(new Rect(r.x + ps + 8 * u, py, r.width * 0.6f, ps), prize, st);
         }
 
+        /// <summary>Icons that are painted (full colour, from the ChatGPT sheet) are never tinted, only faded.</summary>
+        static readonly System.Collections.Generic.HashSet<string> Painted = new System.Collections.Generic.HashSet<string>
+            { "pigeon","bus","wind","open_window","puddle","nails","vane","pebble","plank","fart","rage","pass","surrender","window","shards","curse","clock","replay" };
+
         internal static void DrawIcon(Rect r, string id, Color tint)
         {
+            if (Painted.Contains(id)) tint = new Color(1f, 1f, 1f, tint.a);
             var tex = Icon(id); if (tex == null) return;
             var old = GUI.color;
             GUI.color = new Color(0f, 0f, 0f, 0.5f); GUI.DrawTexture(new Rect(r.x + 2, r.y + 2, r.width, r.height), tex, ScaleMode.ScaleToFit);
