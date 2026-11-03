@@ -70,6 +70,7 @@ namespace Sheytoonak.Prototype
         Renderer[] windowRenderers = new Renderer[0];
         float wind;
         string toast = "";
+        int lootShards, lootCards; float lootUntil; // the last opened bag, shown over the home screen
         float toastUntil;
         string endTitle;
         int endScore, endBest, endMedals;
@@ -282,6 +283,7 @@ namespace Sheytoonak.Prototype
                 hud.onHome = () => { duelGame.ToHome(); showStart = true; };
                 var draft = gameGo.AddComponent<DraftScreen>();
                 draft.duel = duelGame; draft.touch = touch;
+                duelGame.BagOpened += (slot, shards, cards) => { lootShards = shards; lootCards = cards; lootUntil = Time.time + 2.8f; };
                 duelGame.Toast += (t, sec) => { }; // the hud shows toasts; the bootstrap keeps its own for the rally only
             }
             else
@@ -1028,6 +1030,66 @@ namespace Sheytoonak.Prototype
                 DuelHud.DrawIcon(new Rect(chalR.x + chalR.width * 0.5f - 40 * u, sy, 34 * u, 34 * u), "shards", can ? Color.white : new Color(1f, 0.4f, 0.4f));
                 GUI.Label(new Rect(chalR.x + chalR.width * 0.5f, sy, 200 * u, 34 * u), Ar.N(duelGame.ChallengeFree ? 0 : Sheytoonak.Core.Challenge.ChallengeRun.DefaultEntry),
                     new GUIStyle(num) { fontSize = Mathf.RoundToInt(26 * u) });
+            }
+            BagRack(u);
+        }
+
+        static readonly Color[] BagTint =
+        {
+            new Color(0.55f, 0.75f, 0.45f), new Color(0.40f, 0.65f, 1f), new Color(0.75f, 0.45f, 1f), new Color(1f, 0.8f, 0.25f)
+        };
+
+        /// <summary>
+        /// The four garbage-bag slots along the bottom (SCENARIO §8). Tap a closed bag: its timer starts (one at a time);
+        /// tap a ready one: it opens. Under each: its hours, the time left, or a pulsing «open». No words.
+        /// </summary>
+        void BagRack(float u)
+        {
+            var rack = duelGame.Bags;
+            var now = System.DateTime.UtcNow;
+            float sw = Mathf.Min(150 * u, (Screen.width - 80 * u) / 4f), gap = 14 * u;
+            float total = sw * 4 + gap * 3, x0 = (Screen.width - total) * 0.5f, y = Screen.height - sw - 70 * u;
+            var num = new GUIStyle(GUI.skin.label) { font = Ar.Font, fontSize = Mathf.RoundToInt(22 * u), alignment = TextAnchor.MiddleCenter };
+            num.normal.textColor = Color.white;
+            for (int i = 0; i < Sheytoonak.Core.Bags.BagRules.Slots; i++)
+            {
+                // right-to-left: slot 0 is on the right
+                var r = new Rect(x0 + (3 - i) * (sw + gap), y, sw, sw);
+                var old = GUI.color;
+                GUI.color = new Color(0f, 0f, 0f, 0.35f); GUI.DrawTexture(r, Texture2D.whiteTexture); GUI.color = old;
+                var b = rack.Rack[i];
+                if (b == null) continue;
+                bool ready = rack.IsReady(i, now);
+                float pulse = ready ? 1f + 0.06f * Mathf.Sin(Time.time * 6f) : 1f;
+                var ir = new Rect(r.center.x - r.width * 0.4f * pulse, r.center.y - r.height * 0.4f * pulse, r.width * 0.8f * pulse, r.height * 0.8f * pulse);
+                DuelHud.DrawIcon(ir, "bag", BagTint[(int)b.Size]);
+                if (GUI.Button(r, GUIContent.none, GUIStyle.none)) { touch?.IgnoreFor(0.5f); duelGame.TapBag(i); }
+                var lr = new Rect(r.x, r.yMax + 4 * u, r.width, 30 * u);
+                if (ready) DuelHud.DrawIcon(new Rect(lr.center.x - 15 * u, lr.y, 30 * u, 30 * u), "pick", new Color(0.4f, 1f, 0.5f));
+                else if (b.Unlocking)
+                {
+                    var left = rack.TimeLeft(i, now);
+                    GUI.Label(lr, Ar.N((int)left.TotalHours) + ":" + Ar.N(left.Minutes).PadLeft(2, '٠'), num);
+                }
+                else
+                {
+                    DuelHud.DrawIcon(new Rect(lr.center.x - 34 * u, lr.y + 2 * u, 26 * u, 26 * u), "clock", Color.white);
+                    GUI.Label(new Rect(lr.center.x - 4 * u, lr.y, 50 * u, lr.height), Ar.N(Sheytoonak.Core.Bags.BagRules.Hours[(int)b.Size]), num);
+                }
+            }
+            if (Time.time < lootUntil)
+            {
+                var big = new GUIStyle(num) { fontSize = Mathf.RoundToInt(44 * u) };
+                float cy = Screen.height * 0.5f;
+                var old = GUI.color; GUI.color = new Color(0f, 0f, 0f, 0.7f);
+                GUI.DrawTexture(new Rect(Screen.width * 0.5f - 200 * u, cy - 70 * u, 400 * u, 140 * u), Texture2D.whiteTexture); GUI.color = old;
+                DuelHud.DrawIcon(new Rect(Screen.width * 0.5f - 170 * u, cy - 30 * u, 60 * u, 60 * u), "shards", Color.white);
+                GUI.Label(new Rect(Screen.width * 0.5f - 110 * u, cy - 30 * u, 110 * u, 60 * u), "+" + lootShards, big);
+                if (lootCards > 0)
+                {
+                    DuelHud.DrawIcon(new Rect(Screen.width * 0.5f + 20 * u, cy - 30 * u, 60 * u, 60 * u), "card", new Color(1f, 0.85f, 0.4f));
+                    GUI.Label(new Rect(Screen.width * 0.5f + 80 * u, cy - 30 * u, 100 * u, 60 * u), "+" + lootCards, big);
+                }
             }
         }
 

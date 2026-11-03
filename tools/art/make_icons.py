@@ -49,6 +49,8 @@ icons = {
    <rect x="116" y="150" width="24" height="40" {W}/><rect x="80" y="190" width="96" height="30" rx="6" {W}/>''',
  "home": f'''<path d="M28 128 L128 40 L228 128" {S}/><path d="M60 110 V220 H196 V110" {S}/><rect x="108" y="150" width="40" height="70" {W}/>''',
  "duel": f'''<circle cx="128" cy="128" r="70" {W}/><path d="M128 58 L150 104 L198 106 L160 136 L172 182 L128 156 L84 182 L96 136 L58 106 L106 104 Z" fill="#000" fill-opacity="0.45"/>''',
+ "bag": f'''<path d="M100 70 C 40 110 30 170 50 206 Q 128 238 206 206 C 226 170 216 110 156 70 Z" {W}/><path d="M100 70 L 86 30 L 128 52 L 170 30 L 156 70" {W}/><path d="M92 120 Q 128 140 164 118" fill="none" stroke="#000" stroke-opacity="0.35" stroke-width="10"/>''',
+ "card": f'''<rect x="60" y="30" width="136" height="196" rx="16" {W}/><path d="M128 80 L148 122 L194 126 L160 156 L170 200 L128 176 L86 200 L96 156 L62 126 L108 122 Z" fill="#000" fill-opacity="0.4" transform="translate(0,-6) scale(1) "/>''',
  "heart": f'''<path d="M128 214 C 40 150 24 104 50 70 C 76 40 112 50 128 82 C 144 50 180 40 206 70 C 232 104 216 150 128 214 Z" {W}/>''',
 }
 os.makedirs(OUT, exist_ok=True)

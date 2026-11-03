@@ -3,6 +3,7 @@ using System.Collections;
 using Sheytoonak.Core;
 using Sheytoonak.Core.Duel;
 using Sheytoonak.Core.Challenge;
+using Sheytoonak.Core.Bags;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -100,6 +101,56 @@ namespace Sheytoonak
         void SaveChallenge() { if (challenge != null) PlayerPrefs.SetString(PrefChallenge, challenge.Serialize()); PlayerPrefs.SetInt(PrefShards, ShardBank); PlayerPrefs.Save(); }
 
         /// <summary>Pays any finished run, then starts a new one if needed (paying the entry), then the next duel of the run.</summary>
+        // ------------------------------------------------------------------ garbage bags (SCENARIO §8)
+
+        const string PrefBags = "sheytoonak.bags", PrefCards = "sheytoonak.cards";
+        BagRules bags;
+        /// <summary>Four slots; created on first use with the install time (the first-week clock counts from it).</summary>
+        public BagRules Bags => bags ?? (bags = BagRules.Parse(PlayerPrefs.GetString(PrefBags, "")) ?? new BagRules(DateTime.UtcNow));
+        /// <summary>slot, shards, cards — raised when a bag is opened so the HUD can show the loot.</summary>
+        public event Action<int, int, int> BagOpened;
+        void SaveBags() { PlayerPrefs.SetString(PrefBags, Bags.Serialize()); PlayerPrefs.SetInt(PrefShards, ShardBank); PlayerPrefs.Save(); }
+
+        static string[] ToolIds()
+        {
+            var ids = new System.Collections.Generic.List<string>();
+            foreach (var h in StarterHeroes.All) { ids.Add(h.Poison.Id); ids.Add(h.Antidote.Id); }
+            return ids.ToArray();
+        }
+
+        /// <summary>Tap on a slot: starts its timer if nothing else is unlocking, or opens it when ready. Returns true if something happened.</summary>
+        public bool TapBag(int slot)
+        {
+            var now = DateTime.UtcNow;
+            if (Bags.IsReady(slot, now))
+            {
+                var c = Bags.Open(slot, now, ToolIds());
+                if (c == null) return false;
+                ShardBank += c.Value.Shards;
+                // ⚠️ upgrade cards are only counted for now: the tool-upgrade screen comes later (SCENARIO §8)
+                var cards = PlayerPrefs.GetString(PrefCards, "");
+                foreach (var id in c.Value.UpgradeCards) cards += (cards.Length > 0 ? "," : "") + id;
+                PlayerPrefs.SetString(PrefCards, cards);
+                SaveBags();
+                BagOpened?.Invoke(slot, c.Value.Shards, c.Value.UpgradeCards.Length);
+                return true;
+            }
+            bool started = Bags.StartUnlock(slot, now);
+            if (started) SaveBags();
+            return started;
+        }
+
+        /// <summary>CI screenshots only: three bags, one counting down and one ready to open.</summary>
+        public void ScreenshotBags()
+        {
+            var now = DateTime.UtcNow;
+            while (Bags.AddFromWin() >= 0 && Bags.FreeSlot() > 0) { }
+            Bags.StartUnlock(1, now);
+            if (Bags.Rack[0] != null) { Bags.Rack[0].UnlockStartTicks = now.Ticks - 1; Bags.Rack[0].ReadyTicks = now.Ticks - 1; }
+        }
+
+        public int UpgradeCardCount { get { var s = PlayerPrefs.GetString(PrefCards, ""); return s.Length == 0 ? 0 : s.Split(',').Length; } }
+
         public bool PlayChallenge()
         {
             CollectChallengeIfOver();
@@ -295,7 +346,11 @@ namespace Sheytoonak
                 Curses[0] = DuelRules.ApplyCurse(Curses[0], curse);
                 ShardBank += shards;
                 PlayerPrefs.SetInt(PrefCurse, Curses[0]); PlayerPrefs.SetInt(PrefShards, ShardBank); PlayerPrefs.Save();
+                Bags.AddFromCurses(Curses[0]);
             }
+            // a bag comes from a win (any duel, challenge too), not from time; a full rack gets nothing
+            if (winner == Me) Bags.AddFromWin();
+            SaveBags();
             ball.Hide();
             Finished?.Invoke(winner, winner == Me);
         }

@@ -81,6 +81,10 @@ namespace Sheytoonak.Prototype
                         yield return Shot("10-challenge", 2.5f);
                         boot.GoHomeFromScript();
                         yield return Shot("11-home", 1.0f);
+                        boot.Duel.ScreenshotBags();
+                        yield return Shot("12-bags", 0.5f);
+                        boot.Duel.TapBag(0);
+                        yield return Shot("13-loot", 0.4f);
                     }
                     else
                     {
