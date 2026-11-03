@@ -17,8 +17,17 @@ cd "$out"
 git init -q && git checkout -q -b ci-shots
 git config user.email ci@sheytoonak && git config user.name "sheytoonak-ci"
 remote="https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
-# keep earlier runs: start from the branch's current tree, then add this run's folder
-if git fetch -q "$remote" ci-shots 2>/dev/null; then git reset -q --soft FETCH_HEAD && git checkout -q FETCH_HEAD -- . 2>/dev/null || true; fi
-# keep at most the 8 newest run folders so the branch stays small
-ls -d [0-9]*-* 2>/dev/null | sort -t- -k1,1n | head -n -8 | xargs -r rm -rf
-git add -A && git commit -qm "run $run $label ($sha)" && git push -q "$remote" HEAD:ci-shots || echo "::warning::could not publish to ci-shots"
+# Two jobs (tests, screenshots) publish at the same moment; a plain push lost the screenshots of runs 58 and 59
+# ("cannot lock ref"). So: rebuild on top of the branch as it is now and retry a few times.
+mv "$dest" "$out.new"
+for try in 1 2 3 4 5; do
+  git checkout -q --orphan "tmp$try" 2>/dev/null; git rm -rq --cached . 2>/dev/null; find . -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
+  # keep earlier runs: start from the branch's current tree, then add this run's folder
+  if git fetch -q "$remote" ci-shots 2>/dev/null; then git reset -q --soft FETCH_HEAD && git checkout -q FETCH_HEAD -- . 2>/dev/null || true; fi
+  rm -rf "$run-$label"; cp -r "$out.new" "$run-$label"
+  # keep at most the 12 newest run folders so the branch stays small
+  ls -d [0-9]*-* 2>/dev/null | sort -t- -k1,1n | head -n -12 | xargs -r rm -rf
+  git add -A && git commit -qm "run $run $label ($sha)" && git push -q "$remote" HEAD:ci-shots && exit 0
+  sleep $((try * 7))
+done
+echo "::warning::could not publish to ci-shots"
