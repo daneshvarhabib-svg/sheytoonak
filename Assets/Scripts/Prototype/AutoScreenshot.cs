@@ -76,6 +76,11 @@ namespace Sheytoonak.Prototype
                         }
                         yield return Shot("08-bot-turn", 4.0f);
                         yield return Shot("09-later", 5.0f);
+                        // the challenge: a duel dealt at random (no draft), then home with the run under its button
+                        boot.StartChallengeFromScript();
+                        yield return Shot("10-challenge", 2.5f);
+                        boot.GoHomeFromScript();
+                        yield return Shot("11-home", 1.0f);
                     }
                     else
                     {
@@ -92,7 +97,7 @@ namespace Sheytoonak.Prototype
 
             IEnumerator Watchdog()
             {
-                yield return new WaitForSecondsRealtime(140f);
+                yield return new WaitForSecondsRealtime(170f);
                 Debug.LogWarning("SHEYTOONAK SHOTS watchdog: quitting after 60 s");
                 Application.Quit(2);
             }

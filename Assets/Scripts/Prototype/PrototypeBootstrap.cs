@@ -77,6 +77,8 @@ namespace Sheytoonak.Prototype
         string calibrationText = "";
 
         /// <summary>Same as pressing the start button; used by AutoScreenshot in CI.</summary>
+        public void StartChallengeFromScript() { showStart = false; endTitle = null; duelGame?.PlayChallenge(); }
+        public void GoHomeFromScript() { duelGame?.ToHome(); showStart = true; }
         public void StartGameFromScript() { showStart = false; endTitle = null; touch?.IgnoreFor(0.5f); if (duel) duelGame.NewDuel(); else game.NewGame(); }
         public DuelManager Duel => duelGame;
         public KickInputRouter Router => router;
@@ -276,7 +278,8 @@ namespace Sheytoonak.Prototype
                 stage.puddleMat = Mat(new Color(0.25f, 0.4f, 0.6f), 0.8f);
                 var hud = gameGo.AddComponent<DuelHud>();
                 hud.duel = duelGame; hud.stage = stage; hud.mapper = mapper; hud.cam = cam; hud.touch = touch;
-                hud.onPlayAgain = () => duelGame.NewDuel();
+                hud.onPlayAgain = () => { if (duelGame.InChallenge) duelGame.PlayChallenge(); else duelGame.NewDuel(); };
+                hud.onHome = () => { duelGame.ToHome(); showStart = true; };
                 var draft = gameGo.AddComponent<DraftScreen>();
                 draft.duel = duelGame; draft.touch = touch;
                 duelGame.Toast += (t, sec) => { }; // the hud shows toasts; the bootstrap keeps its own for the rally only
@@ -957,7 +960,12 @@ namespace Sheytoonak.Prototype
                         new GUIStyle(label) { alignment = TextAnchor.MiddleCenter }, TextAnchor.MiddleCenter);
             }
 
-            if (showStart)
+            if (showStart && duel)
+            {
+                Panel();
+                HomeScreen(u, big);
+            }
+            else if (showStart)
             {
                 Panel();
                 GUILayout.BeginArea(new Rect(pad * 2, Screen.height * 0.12f, Screen.width - pad * 4, Screen.height * 0.8f));
@@ -978,6 +986,48 @@ namespace Sheytoonak.Prototype
                 GUILayout.Space(20 * u);
                 if (GUILayout.Button(Ar.T(Ar.PlayAgain), button, GUILayout.Height(80 * u))) { endTitle = null; touch?.IgnoreFor(0.5f); game.NewGame(); }
                 GUILayout.EndArea();
+            }
+        }
+
+        /// <summary>
+        /// Home: two big picture buttons, a duel and the 12/3 challenge (SCENARIO §10), shards and curses in the corners,
+        /// the running challenge under its button. No paragraphs (user 2026-11-02: «کلا تو بازی نوشته زیاده»).
+        /// </summary>
+        void HomeScreen(float u, GUIStyle big)
+        {
+            float pad = 16 * u, isz = 44 * u;
+            var num = new GUIStyle(big) { fontSize = Mathf.RoundToInt(32 * u), alignment = TextAnchor.MiddleLeft };
+            GUI.Label(new Rect(0, pad + SafeTop(), Screen.width, 70 * u), Ar.T(Ar.Title), new GUIStyle(big) { alignment = TextAnchor.MiddleCenter });
+            DuelHud.DrawIcon(new Rect(pad, pad + SafeTop(), isz, isz), "shards", Color.white);
+            GUI.Label(new Rect(pad + isz + 8 * u, pad + SafeTop(), 200 * u, isz), Ar.N(duelGame.ShardBank), num);
+            DuelHud.DrawIcon(new Rect(Screen.width - pad - isz, pad + SafeTop(), isz, isz), "curse", Color.white);
+            GUI.Label(new Rect(Screen.width - pad - isz - 208 * u, pad + SafeTop(), 200 * u, isz), Ar.N(duelGame.Curses[0]), new GUIStyle(num) { alignment = TextAnchor.MiddleRight });
+
+            float bw = Mathf.Min(260 * u, Screen.width * 0.3f), bh = bw * 0.75f, by = Screen.height * 0.3f;
+            var duelR = new Rect(Screen.width * 0.5f + 20 * u, by, bw, bh);       // right = first for a right-to-left reader
+            var chalR = new Rect(Screen.width * 0.5f - 20 * u - bw, by, bw, bh);
+            if (DuelHud.IconButton(duelR, "duel", new Color(0.16f, 0.5f, 0.32f), true, null)) StartGameFromScript();
+            bool can = duelGame.CanEnterChallenge;
+            if (DuelHud.IconButton(chalR, "trophy", new Color(0.85f, 0.5f, 0.12f), can, null))
+            {
+                showStart = false; endTitle = null; touch?.IgnoreFor(0.5f); duelGame.PlayChallenge();
+            }
+            float sy = by + bh + 16 * u;
+            var run = duelGame.Challenge;
+            if (duelGame.ChallengeActive)
+            {
+                DuelHud.ChallengeStrip(new Rect(chalR.x - 40 * u, sy, chalR.width + 80 * u, 40 * u), run, u);
+                var left = run.EndsUtc - System.DateTime.UtcNow;
+                DuelHud.DrawIcon(new Rect(chalR.x, sy + 90 * u, 30 * u, 30 * u), "clock", Color.white);
+                GUI.Label(new Rect(chalR.x + 38 * u, sy + 90 * u, 200 * u, 30 * u), Ar.N(Mathf.Max(0, (int)left.TotalHours)) + ":" + Ar.N(Mathf.Max(0, left.Minutes)).PadLeft(2, '٠'),
+                    new GUIStyle(num) { fontSize = Mathf.RoundToInt(24 * u) });
+            }
+            else
+            {
+                // the entry: shards price (0 = the free first run)
+                DuelHud.DrawIcon(new Rect(chalR.x + chalR.width * 0.5f - 40 * u, sy, 34 * u, 34 * u), "shards", can ? Color.white : new Color(1f, 0.4f, 0.4f));
+                GUI.Label(new Rect(chalR.x + chalR.width * 0.5f, sy, 200 * u, 34 * u), Ar.N(duelGame.ChallengeFree ? 0 : Sheytoonak.Core.Challenge.ChallengeRun.DefaultEntry),
+                    new GUIStyle(num) { fontSize = Mathf.RoundToInt(26 * u) });
             }
         }
 

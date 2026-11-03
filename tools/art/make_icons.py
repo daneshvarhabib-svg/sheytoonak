@@ -45,6 +45,11 @@ icons = {
  "replay": f'''<path d="M200 128 A72 72 0 1 1 170 70" {S}/><path d="M150 40 L206 60 L176 108 Z" {W}/>''',
  "ban": f'''<circle cx="128" cy="128" r="96" {S}/><line x1="60" y1="196" x2="196" y2="60" {S}/>''',
  "pick": f'''<path d="M40 136 L100 196 L218 66" fill="none" stroke="#fff" stroke-width="30" stroke-linecap="round" stroke-linejoin="round"/>''',
+ "trophy": f'''<path d="M74 34 H182 V100 A54 54 0 0 1 74 100 Z" {W}/><path d="M74 50 H36 Q36 116 84 122 M182 50 H220 Q220 116 172 122" {S}/>
+   <rect x="116" y="150" width="24" height="40" {W}/><rect x="80" y="190" width="96" height="30" rx="6" {W}/>''',
+ "home": f'''<path d="M28 128 L128 40 L228 128" {S}/><path d="M60 110 V220 H196 V110" {S}/><rect x="108" y="150" width="40" height="70" {W}/>''',
+ "duel": f'''<circle cx="128" cy="128" r="70" {W}/><path d="M128 58 L150 104 L198 106 L160 136 L172 182 L128 156 L84 182 L96 136 L58 106 L106 104 Z" fill="#000" fill-opacity="0.45"/>''',
+ "heart": f'''<path d="M128 214 C 40 150 24 104 50 70 C 76 40 112 50 128 82 C 144 50 180 40 206 70 C 232 104 216 150 128 214 Z" {W}/>''',
 }
 os.makedirs(OUT, exist_ok=True)
 for name, body in icons.items():

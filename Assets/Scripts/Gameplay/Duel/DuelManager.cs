@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using Sheytoonak.Core;
 using Sheytoonak.Core.Duel;
+using Sheytoonak.Core.Challenge;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -83,9 +84,79 @@ namespace Sheytoonak
         public event Action DraftStarted;
         System.Random draftRng;
 
+        // ------------------------------------------------------------------ challenge (12 wins / 3 losses, SCENARIO §10)
+
+        const string PrefChallenge = "sheytoonak.challenge", PrefChallengeFree = "sheytoonak.challenge.freeUsed";
+        ChallengeRun challenge;
+        /// <summary>The current or last run (null = never started). Saved after every duel.</summary>
+        public ChallengeRun Challenge => challenge ?? (challenge = ChallengeRun.Parse(PlayerPrefs.GetString(PrefChallenge, "")));
+        public bool InChallenge { get; private set; }
+        public bool ChallengeActive => Challenge != null && !Challenge.Collected && !Challenge.IsOver(DateTime.UtcNow);
+        /// <summary>⚠️ The first run is free: a new player has no shards yet and could never try it otherwise.</summary>
+        public bool ChallengeFree => PlayerPrefs.GetInt(PrefChallengeFree, 0) == 0;
+        public bool CanEnterChallenge => ChallengeActive || ChallengeFree || ShardBank >= ChallengeRun.DefaultEntry;
+        public event Action<int> ChallengeCollected; // shards paid
+
+        void SaveChallenge() { if (challenge != null) PlayerPrefs.SetString(PrefChallenge, challenge.Serialize()); PlayerPrefs.SetInt(PrefShards, ShardBank); PlayerPrefs.Save(); }
+
+        /// <summary>Pays any finished run, then starts a new one if needed (paying the entry), then the next duel of the run.</summary>
+        public bool PlayChallenge()
+        {
+            CollectChallengeIfOver();
+            if (!ChallengeActive)
+            {
+                if (!CanEnterChallenge) return false;
+                int entry = ChallengeRun.DefaultEntry;
+                if (ChallengeFree) { PlayerPrefs.SetInt(PrefChallengeFree, 1); }
+                else ShardBank -= entry;
+                challenge = new ChallengeRun(entry, DateTime.UtcNow);
+                SaveChallenge();
+            }
+            NewChallengeDuel();
+            return true;
+        }
+
+        public int CollectChallengeIfOver()
+        {
+            if (Challenge == null) return 0;
+            int paid = Challenge.Collect(DateTime.UtcNow);
+            if (paid > 0) { ShardBank += paid; SaveChallenge(); ChallengeCollected?.Invoke(paid); }
+            else if (Challenge.Collected) SaveChallenge();
+            return paid;
+        }
+
+        /// <summary>No draft: three heroes dealt at random from the shared pool to each side, equal tools (money does not help).</summary>
+        void NewChallengeDuel()
+        {
+            StopAllCoroutines(); botRoutine = resolveRoutine = null;
+            Rules = null; Draft = null;
+            ball.Hide();
+            mapper.Map(house);
+            GameEvents.RaiseHouseLoaded(house, 0);
+            InChallenge = true;
+            BeginDuel(Deal(), Deal(), Random.value < 0.5f ? Side.Left : Side.Right);
+        }
+
+        static HeroDef[] Deal()
+        {
+            var pool = new System.Collections.Generic.List<HeroDef>(StarterHeroes.All);
+            var hand = new HeroDef[3];
+            for (int i = 0; i < 3; i++) { int k = Random.Range(0, pool.Count); hand[i] = pool[k]; pool.RemoveAt(k); }
+            return hand;
+        }
+
+        /// <summary>Back to the home screen: nothing on the stage, no HUD (it draws only while Rules exist).</summary>
+        public void ToHome()
+        {
+            StopAllCoroutines(); botRoutine = resolveRoutine = null;
+            Rules = null; Draft = null; InChallenge = false;
+            ball.Hide();
+        }
+
         /// <summary>Starts the pre-duel draft (ban/pick); the duel itself begins when the draft is done.</summary>
         public void NewDuel()
         {
+            InChallenge = false;
             StopAllCoroutines(); botRoutine = resolveRoutine = null;
             Rules = null;
             ball.Hide();
@@ -211,10 +282,20 @@ namespace Sheytoonak
         void OnEnded(Side winner, string reason)
         {
             if (botRoutine != null) StopCoroutine(botRoutine);
-            var (shards, curse) = Rules.RewardFor(Me);
-            Curses[0] = DuelRules.ApplyCurse(Curses[0], curse);
-            ShardBank += shards;
-            PlayerPrefs.SetInt(PrefCurse, Curses[0]); PlayerPrefs.SetInt(PrefShards, ShardBank); PlayerPrefs.Save();
+            if (InChallenge)
+            {
+                // a challenge duel pays nothing on its own: it counts toward the run, the run pays at its end
+                Challenge?.Record(winner == Me, DateTime.UtcNow);
+                SaveChallenge();
+                CollectChallengeIfOver();
+            }
+            else
+            {
+                var (shards, curse) = Rules.RewardFor(Me);
+                Curses[0] = DuelRules.ApplyCurse(Curses[0], curse);
+                ShardBank += shards;
+                PlayerPrefs.SetInt(PrefCurse, Curses[0]); PlayerPrefs.SetInt(PrefShards, ShardBank); PlayerPrefs.Save();
+            }
             ball.Hide();
             Finished?.Invoke(winner, winner == Me);
         }

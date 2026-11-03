@@ -11,7 +11,7 @@ namespace Sheytoonak.Prototype
         public BackdropWindowMapper mapper;
         public Camera cam;
         public TouchKickInput touch;
-        public System.Action onPlayAgain;
+        public System.Action onPlayAgain, onHome;
 
         string toast = ""; float toastUntil;
         bool ended; bool won; float surrenderArmedUntil;
@@ -161,35 +161,46 @@ namespace Sheytoonak.Prototype
             {
                 var old = GUI.color; GUI.color = new Color(0f, 0f, 0f, 0.65f);
                 GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), Texture2D.whiteTexture); GUI.color = old;
-                // the result in pictures: windows, shards won, curses gained or lost
-                float cx = Screen.width * 0.5f, y0 = Screen.height * 0.24f, esz = 56 * u;
+                // the result in pictures: windows, shards won, curses gained or lost (or, in a challenge, the run so far)
+                float cx = Screen.width * 0.5f, y0 = Screen.height * 0.2f, esz = 56 * u;
                 Shadowed(new Rect(0, y0, Screen.width, 60 * u), Ar.T(won ? Ar.Won : Ar.Lost), big);
-                var (shards, delta) = rules.RewardFor(duel.Me);
                 var enumSt = new GUIStyle(big) { fontSize = Mathf.RoundToInt(34 * u), alignment = TextAnchor.MiddleLeft };
-                string[] ids = { "window", "shards", "curse" };
-                string[] vals = { Ar.N(rules.Windows[0]) + " - " + Ar.N(rules.Windows[1]), "+" + Ar.N(shards), (delta >= 0 ? "+" : "-") + Ar.N(Mathf.Abs(delta)) };
-                for (int k = 0; k < 3; k++)
+                float ey = y0 + 90 * u;
+                if (duel.InChallenge && duel.Challenge != null)
                 {
-                    float ex = cx - Screen.width * 0.33f + k * Screen.width * 0.23f, ey = y0 + 90 * u;
-                    DrawIcon(new Rect(ex, ey, esz, esz), ids[k], k == 2 && delta < 0 ? new Color(1f, 0.5f, 0.4f) : Color.white);
-                    Shadowed(new Rect(ex + esz + 10 * u, ey, 200 * u, esz), Ar.T(vals[k]), enumSt);
+                    ChallengeStrip(new Rect(cx - Screen.width * 0.35f, ey, Screen.width * 0.7f, esz), duel.Challenge, u);
                 }
-                var br = new Rect(cx - 70 * u, y0 + 190 * u, 140 * u, 90 * u);
-                if (IconButton(br, "replay", AntidoteGreen, true, Ar.PlayAgain)) { touch?.IgnoreFor(0.5f); onPlayAgain?.Invoke(); }
+                else
+                {
+                    var (shards, delta) = rules.RewardFor(duel.Me);
+                    string[] ids = { "window", "shards", "curse" };
+                    string[] vals = { Ar.N(rules.Windows[0]) + " - " + Ar.N(rules.Windows[1]), "+" + Ar.N(shards), (delta >= 0 ? "+" : "-") + Ar.N(Mathf.Abs(delta)) };
+                    for (int k = 0; k < 3; k++)
+                    {
+                        float ex = cx - Screen.width * 0.33f + k * Screen.width * 0.23f;
+                        DrawIcon(new Rect(ex, ey, esz, esz), ids[k], k == 2 && delta < 0 ? new Color(1f, 0.5f, 0.4f) : Color.white);
+                        Shadowed(new Rect(ex + esz + 10 * u, ey, 200 * u, esz), vals[k], enumSt);
+                    }
+                }
+                bool more = !duel.InChallenge || duel.ChallengeActive;
+                var br = new Rect(cx + 10 * u, y0 + 190 * u, 140 * u, 90 * u);
+                if (more && IconButton(br, "replay", AntidoteGreen, true, Ar.PlayAgain)) { touch?.IgnoreFor(0.5f); onPlayAgain?.Invoke(); }
+                var hr = new Rect(cx - 150 * u, y0 + 190 * u, 140 * u, 90 * u);
+                if (IconButton(more ? hr : new Rect(cx - 70 * u, hr.y, hr.width, hr.height), "home", ControlDark, true, null)) { touch?.IgnoreFor(0.5f); onHome?.Invoke(); }
             }
         }
 
-        static readonly Color PoisonRed = new Color(0.72f, 0.18f, 0.15f), AntidoteGreen = new Color(0.16f, 0.5f, 0.32f), ControlDark = new Color(0.12f, 0.12f, 0.14f);
+        internal static readonly Color PoisonRed = new Color(0.72f, 0.18f, 0.15f), AntidoteGreen = new Color(0.16f, 0.5f, 0.32f), ControlDark = new Color(0.12f, 0.12f, 0.14f);
         static readonly System.Collections.Generic.Dictionary<string, Texture2D> icons = new System.Collections.Generic.Dictionary<string, Texture2D>();
 
-        static Texture2D Icon(string id)
+        internal static Texture2D Icon(string id)
         {
             if (!icons.TryGetValue(id, out var t)) { t = Resources.Load<Texture2D>("Art/Icons/" + id); icons[id] = t; }
             return t;
         }
 
         /// <summary>A rounded-looking badge with a white glyph; disabled = dimmed. Falls back to the Arabic name if the icon is missing.</summary>
-        static bool IconButton(Rect r, string iconId, Color bg, bool enabled, string fallbackAr)
+        internal static bool IconButton(Rect r, string iconId, Color bg, bool enabled, string fallbackAr)
         {
             var old = GUI.color;
             GUI.color = enabled ? bg : new Color(bg.r * 0.45f, bg.g * 0.45f, bg.b * 0.45f, 0.8f);
@@ -205,7 +216,23 @@ namespace Sheytoonak.Prototype
             return enabled && GUI.Button(r, GUIContent.none, GUIStyle.none);
         }
 
-        static void DrawIcon(Rect r, string id, Color tint)
+        /// <summary>The run at a glance: 12 win slots, 3 hearts, the prize now and after the next win.</summary>
+        internal static void ChallengeStrip(Rect r, Sheytoonak.Core.Challenge.ChallengeRun run, float u)
+        {
+            float d = Mathf.Min(r.height * 0.42f, r.width / 22f);
+            for (int k = 0; k < Sheytoonak.Core.Challenge.ChallengeRun.MaxWins; k++)
+                DrawDot(new Rect(r.x + k * (d + 4 * u), r.y, d, d), k < run.Wins ? new Color(0.45f, 0.9f, 0.45f) : new Color(1f, 1f, 1f, 0.25f));
+            for (int k = 0; k < Sheytoonak.Core.Challenge.ChallengeRun.MaxLosses; k++)
+                DrawIcon(new Rect(r.xMax - (k + 1) * (d * 1.4f + 4 * u), r.y - d * 0.2f, d * 1.4f, d * 1.4f), "heart",
+                    k < Sheytoonak.Core.Challenge.ChallengeRun.MaxLosses - run.Losses ? new Color(0.95f, 0.3f, 0.3f) : new Color(1f, 1f, 1f, 0.2f));
+            float py = r.y + d + 10 * u, ps = 34 * u;
+            var st = new GUIStyle(GUI.skin.label) { font = Ar.Font, fontSize = Mathf.RoundToInt(28 * u), alignment = TextAnchor.MiddleLeft, normal = { textColor = Color.white }, clipping = TextClipping.Overflow };
+            DrawIcon(new Rect(r.x, py, ps, ps), "shards", Color.white);
+            string prize = Ar.N(run.PrizeNow) + (run.Wins < Sheytoonak.Core.Challenge.ChallengeRun.MaxWins ? "  →  " + Ar.N(run.PrizeNext) : "");
+            GUI.Label(new Rect(r.x + ps + 8 * u, py, r.width * 0.6f, ps), prize, st);
+        }
+
+        internal static void DrawIcon(Rect r, string id, Color tint)
         {
             var tex = Icon(id); if (tex == null) return;
             var old = GUI.color;
@@ -214,7 +241,7 @@ namespace Sheytoonak.Prototype
             GUI.color = old;
         }
 
-        static void Bar(Rect r, float fill, bool fromLeft, Color c)
+        internal static void Bar(Rect r, float fill, bool fromLeft, Color c)
         {
             var old = GUI.color;
             GUI.color = new Color(0f, 0f, 0f, 0.45f); GUI.DrawTexture(r, Texture2D.whiteTexture);
@@ -225,7 +252,7 @@ namespace Sheytoonak.Prototype
         }
 
         static Texture2D dot;
-        static void DrawDot(Rect r, Color c)
+        internal static void DrawDot(Rect r, Color c)
         {
             if (dot == null)
             {
