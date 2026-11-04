@@ -223,3 +223,11 @@ Use the attached character exactly (same face, clothes, colours, art style, thre
 2. برای هر نما: شبکه رویِ تصویر، مختصاتِ نرمالِ هر پنجره و خطِ بام → `HouseDefinition`؛ گزارشِ دسترسی (هیچ پنجره‌ای دست‌نیافتنی نباشد).
 3. صحنه‌ی prototype با تصویرها ساخته می‌شود: صفحه‌ی نما، همسایه‌ها، زمین، skybox، اسپرایتِ بازیکن، توپ.
 4. بیلد از UBA؛ تو تست می‌کنی و سبک/اندازه‌ها را با تصویر تطبیق می‌دهیم.
+
+### ⚠️ قهرمانِ چپ‌پا (کشفِ کاربر، ۱۴ آبان)
+فُلّة و أم العربيات هر دو در تصویر با پای **راست** شوت زدند، با اینکه «چپ‌پا» توی پرامپت بود؛ پس چپ‌پا بودنشان دیده نمی‌شود.
+برای قهرمانِ چپ‌پا در پرامپتِ ۵ فریم این جمله‌ها حتماً بیاید:
+```
+IMPORTANT: this character is LEFT-footed. The kicking leg in frames 3, 4 and 5 is the LEFT leg (the leg on the left side of the body as seen from behind); the RIGHT leg is the standing leg planted on the ground. Do not kick with the right leg.
+```
+و در تصویرِ ایستاده: `standing with weight on the right leg, left foot slightly forward, ready to kick with the LEFT foot`.
