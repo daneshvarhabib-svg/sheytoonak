@@ -318,6 +318,10 @@ namespace Sheytoonak
             if (Rules == null || Rules.Finished) return;
             if (!Rules.KickInFlight)
             {
+                // the resting ball moves with the kicker (my finger walks the kicker along the pavement); before, it stayed
+                // where the last kick left it and jumped to the foot only at the kick
+                if (!kickActive && ball.gameObject.activeSelf && ball.Body != null && ball.Body.isKinematic)
+                    ball.transform.position = foot.StrikeSpot + Vector3.up * ball.Radius;
                 TurnTimeLeft -= Time.deltaTime;
                 if (TurnTimeLeft <= 0f)
                 {

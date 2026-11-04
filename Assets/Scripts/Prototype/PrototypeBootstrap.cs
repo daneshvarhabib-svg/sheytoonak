@@ -495,7 +495,7 @@ namespace Sheytoonak.Prototype
             for (int i = 0; i < rects.Length; i++)
             {
                 Rect r = rects[i];
-                var pane = Box(root, new Vector3(r.center.x, r.center.y, -0.02f), new Vector3(r.width * 0.9f, r.height * 0.9f, 0.02f), BrokenGlassMat(i));
+                var pane = Box(root, new Vector3(r.center.x, r.center.y, -0.02f), new Vector3(r.width * 0.9f, r.height * 0.9f, 0.02f), BrokenGlassMat(i, r.width / Mathf.Max(0.01f, r.height)));
                 pane.name = "Broken pane " + i;
                 windowRenderers[i] = pane.GetComponent<Renderer>();
                 windowRenderers[i].enabled = false; // the painting shows the intact glass
@@ -643,15 +643,39 @@ namespace Sheytoonak.Prototype
         /// پنجره شکسته هم داشته باشیم». Painted panes (Art/Broken/pane_0..3) win when they exist; otherwise four
         /// procedural ones: the hole sits in a different place each time, glass is left hanging round the frame.
         /// </summary>
-        Material BrokenGlassMat(int window)
+        // painted panes are tall (a door-like portrait) and the windows are wide: stretching made a squashed room and
+        // turned the painted curtain of pane_3 into a brown "boat" (user 2026-11-04: افتادن گلدون و پرده … طبیعی نیست).
+        // So the painting is cropped to the window's shape around its hole, and pane_3 (curtain painted in) is not used:
+        // the curtain is the moving sprite.
+        static readonly float[] PaneHoleV = { 0.5f, 0.24f, 0.5f };
+        Material BrokenGlassMat(int window, float aspect)
         {
-            int v = (window * 7 + 3) % BrokenVariants;
-            if (brokenMats.TryGetValue(v, out var m) && m != null) return m;
+            var painted0 = Resources.Load<Texture2D>("Art/Broken/pane_0");
+            int variants = painted0 != null ? PaneHoleV.Length : BrokenVariants;
+            int v = (window * 7 + 3) % variants;
+            int key = v * 100 + Mathf.RoundToInt(aspect * 10f);
+            if (brokenMats.TryGetValue(key, out var m) && m != null) return m;
             var painted = Resources.Load<Texture2D>("Art/Broken/pane_" + v);
             var tex = painted != null ? painted : ProceduralPane(v);
             m = new Material(Shader.Find("Standard")) { mainTexture = tex, color = Color.white };
             m.SetFloat("_Glossiness", 0.55f);
-            brokenMats[v] = m;
+            if (painted != null)
+            {
+                float ta = tex.width / (float)tex.height;
+                if (aspect > ta)
+                {
+                    float sy = ta / aspect;
+                    m.mainTextureScale = new Vector2(1f, sy);
+                    m.mainTextureOffset = new Vector2(0f, Mathf.Clamp(PaneHoleV[v] - sy * 0.5f, 0f, 1f - sy));
+                }
+                else
+                {
+                    float sx = aspect / ta;
+                    m.mainTextureScale = new Vector2(sx, 1f);
+                    m.mainTextureOffset = new Vector2((1f - sx) * 0.5f, 0f);
+                }
+            }
+            brokenMats[key] = m;
             return m;
         }
 
@@ -753,13 +777,15 @@ namespace Sheytoonak.Prototype
             else StartCoroutine(PotFalls(at, size));
         }
 
-        Transform FxSprite(string name, float worldHeight)
+        Transform FxSprite(string name, float worldHeight) => FxSprite(name, worldHeight, new Vector2(0.5f, 0.5f));
+
+        Transform FxSprite(string name, float worldHeight, Vector2 pivot)
         {
             var tex = Resources.Load<Texture2D>("Art/Fx/" + name);
             if (tex == null) return null;
             var go = new GameObject(name);
             var r = go.AddComponent<SpriteRenderer>();
-            r.sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f), 100f);
+            r.sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), pivot, 100f);
             go.transform.localScale = Vector3.one * (worldHeight / Mathf.Max(0.01f, r.sprite.bounds.size.y));
             return go.transform;
         }
@@ -778,40 +804,71 @@ namespace Sheytoonak.Prototype
             }
             float dir = Random.value < 0.5f ? -1f : 1f;
             if (t.GetComponent<SpriteRenderer>() is SpriteRenderer sr) sr.flipX = dir < 0f;
-            Vector3 from = at + new Vector3(0f, -size.y * 0.3f, -0.15f), to = new Vector3(at.x + dir * 2.5f, 0.2f, at.z - 3.5f);
-            for (float k = 0f; k < 1f && t != null; k += Time.deltaTime / 1.1f)
+            // it pops out of the hole (grows from the dark), leaps down to the pavement under the house and runs off:
+            // the nose follows the arc (up on the way out, down on the way down), a squash on landing.
+            Vector3 full = t.localScale;
+            Vector3 from = at + new Vector3(0f, -size.y * 0.25f, -0.1f), to = new Vector3(at.x + dir * 1.6f, 0.22f, at.z - 1.2f);
+            for (float k = 0f; k < 1f && t != null; k += Time.deltaTime / 0.25f) { t.position = from; t.localScale = full * Mathf.SmoothStep(0.3f, 1f, k); yield return null; }
+            float hop = 0.6f, T = 0.9f;
+            Vector3 last = from;
+            for (float k = 0f; k < 1f && t != null; k += Time.deltaTime / T)
             {
-                t.position = Vector3.Lerp(from, to, k) + Vector3.up * Mathf.Sin(k * Mathf.PI) * 1.2f;
-                t.localRotation = Quaternion.Euler(0f, 0f, -dir * 25f * Mathf.Sin(k * Mathf.PI));
+                Vector3 pos = Vector3.Lerp(from, to, k) + Vector3.up * (4f * hop * k * (1f - k));
+                Vector3 v = pos - last; last = pos;
+                if (v.sqrMagnitude > 1e-6f) t.localRotation = Quaternion.Euler(0f, 0f, Mathf.Clamp(Mathf.Atan2(v.y, Mathf.Abs(v.x) + 0.001f) * Mathf.Rad2Deg, -60f, 40f) * dir);
+                t.position = pos;
                 yield return null;
             }
-            // runs off along the street
-            for (float k = 0f; k < 1.5f && t != null; k += Time.deltaTime)
+            if (t == null) yield break;
+            t.localRotation = Quaternion.identity;
+            for (float k = 0f; k < 1f && t != null; k += Time.deltaTime / 0.15f) { t.localScale = new Vector3(full.x * (1f + 0.15f * Mathf.Sin(k * Mathf.PI)), full.y * (1f - 0.2f * Mathf.Sin(k * Mathf.PI)), full.z); yield return null; }
+            // runs off along the pavement, a little bound in every stride
+            for (float k = 0f; k < 2f && t != null; k += Time.deltaTime)
             {
-                t.position += new Vector3(dir * 4f * Time.deltaTime, Mathf.Abs(Mathf.Sin(k * 18f)) * 0.01f, 0f);
+                Vector3 q = t.position; q.x += dir * 4.5f * Time.deltaTime; q.y = 0.22f + Mathf.Abs(Mathf.Sin(k * 14f)) * 0.06f;
+                t.position = q;
                 yield return null;
             }
             if (t != null) Destroy(t.gameObject);
         }
 
+        /// <summary>The curtain hangs from its rod at the top of the hole, a gust blows it out through the broken glass,
+        /// then it keeps breathing in the wind and finally drops out of the frame. Pivot at the rod, never bigger than the window.</summary>
         IEnumerator CurtainOut(Vector3 at, Vector3 size)
         {
-            var t = FxSprite("fx_curtain", size.y * 0.9f);
-            if (t == null)
+            var t = FxSprite("fx_curtain", size.y * 0.8f, new Vector2(0.5f, 1f));
+            if (t == null) yield break;
+            var sr = t.GetComponent<SpriteRenderer>();
+            float fit = Mathf.Min(1f, size.x * 0.8f / Mathf.Max(0.01f, sr.bounds.size.x));
+            Vector3 baseScale = t.localScale * fit;
+            t.localScale = baseScale;
+            t.position = at + new Vector3(0f, size.y * 0.42f, -0.06f);
+            float dir = Random.value < 0.5f ? -1f : 1f;
+            sr.flipX = dir < 0f;
+            float start = Time.time, life = 5f;
+            while (t != null && Time.time - start < life)
             {
-                t = new GameObject("Curtain").transform;
-                Box(t, new Vector3(0f, -size.y * 0.3f, 0f), new Vector3(size.x * 0.45f, size.y * 0.6f, 0.01f), Mat(new Color(0.93f, 0.88f, 0.78f)));
-            }
-            t.position = at + new Vector3(0f, size.y * 0.3f, -0.08f);
-            float start = Time.time;
-            while (t != null && Time.time - start < 3.5f)
-            {
-                float e = Time.time - start, k = Mathf.Clamp01(1f - e / 3.5f);
-                t.localRotation = Quaternion.Euler(-25f * k, 0f, Mathf.Sin(e * 9f) * 14f * k);
-                t.localScale = new Vector3(Mathf.Abs(t.localScale.x) * (1f + 0.02f * Mathf.Sin(e * 13f)) , t.localScale.y, t.localScale.z);
+                float e = Time.time - start;
+                float gust = Mathf.Exp(-e * 1.4f);              // the first push, dying out
+                float breath = 0.25f * (1f + Mathf.Sin(e * 2.3f)) * Mathf.Sin(e * 5.1f + 1f); // slow wind afterwards
+                // out through the hole: the bottom swings toward the street (scale y shrinks a bit as it tilts at us)
+                t.localRotation = Quaternion.Euler(0f, 0f, dir * (28f * gust + 9f * breath));
+                t.localScale = new Vector3(baseScale.x * (1f + 0.08f * gust * Mathf.Sin(e * 14f)), baseScale.y * (1f - 0.18f * gust), baseScale.z);
                 yield return null;
             }
-            if (t != null) t.localRotation = Quaternion.identity; // stays hanging in the hole
+            if (t == null) yield break;
+            // the rod gives way: it falls to the pavement, crumples and is gone
+            float vy = 0f, rot = dir * 40f;
+            Vector3 p = t.position;
+            while (t != null && p.y > 0.1f)
+            {
+                vy -= 9.8f * 0.35f * Time.deltaTime;         // cloth: slower than a stone
+                p += new Vector3(dir * 0.4f * Time.deltaTime, vy * Time.deltaTime, -0.8f * Time.deltaTime);
+                t.position = p; t.Rotate(0f, 0f, rot * Time.deltaTime);
+                yield return null;
+            }
+            for (float k = 0f; k < 1f && t != null; k += Time.deltaTime * 2f) { t.localScale = new Vector3(baseScale.x * (1f + 0.3f * k), baseScale.y * (1f - k), baseScale.z); yield return null; }
+            if (t != null) Destroy(t.gameObject);
         }
 
         IEnumerator PotFalls(Vector3 at, Vector3 size)
@@ -825,11 +882,23 @@ namespace Sheytoonak.Prototype
                 leaves.transform.SetParent(t, false); leaves.transform.localPosition = new Vector3(0f, 0.18f, 0f); leaves.transform.localScale = Vector3.one * 0.28f;
                 leaves.GetComponent<Renderer>().sharedMaterial = Mat(new Color(0.25f, 0.55f, 0.2f));
             }
-            Vector3 p = at + new Vector3(Random.Range(-0.2f, 0.2f), -size.y * 0.5f, -0.2f);
-            float vy = 0.5f, spin = Random.Range(-200f, 200f);
+            // it sits on the sill, wobbles from the blow, tips over the edge and falls with a spin
+            float side = Random.value < 0.5f ? -1f : 1f;
+            Vector3 p = at + new Vector3(side * size.x * 0.22f, -size.y * 0.5f + 0.17f, -0.12f);
+            t.position = p;
+            for (float k = 0f; k < 1f && t != null; k += Time.deltaTime / 0.7f)
+            {
+                t.localRotation = Quaternion.Euler(0f, 0f, side * (Mathf.Sin(k * 22f) * 8f * (1f - k) + 35f * k * k));
+                t.position = p + new Vector3(0f, 0f, -0.12f * k * k);
+                yield return null;
+            }
+            if (t == null) yield break;
+            p = t.position;
+            float vy = 0.6f, spin = side * Random.Range(120f, 240f);
+            Vector3 drift = new Vector3(side * 0.3f, 0f, -0.9f);
             while (t != null && p.y > 0.15f)
             {
-                vy -= 9.8f * Time.deltaTime; p += new Vector3(0f, vy * Time.deltaTime, -0.6f * Time.deltaTime);
+                vy -= 9.8f * Time.deltaTime; p += (drift + Vector3.up * vy) * Time.deltaTime;
                 t.position = p; t.Rotate(0f, 0f, spin * Time.deltaTime);
                 yield return null;
             }
