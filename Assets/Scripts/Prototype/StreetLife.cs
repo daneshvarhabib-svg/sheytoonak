@@ -16,6 +16,8 @@ namespace Sheytoonak
         public Vector2 pedEvery = new Vector2(5f, 12f), carEvery = new Vector2(9f, 20f);
         public float pedSpeed = 1.1f, carSpeed = 7f;
 
+        // ⚠️ ped_01's third frame was dropped (user 2026-11-04: «یکی از عکسا تسبیح تو یه دستشه، تو دو تای دیگه اون یکی
+        // دستش»): its prayer beads were in the far hand. Stride (a) and passing (b) alternate; a and c were the same stride.
         // A "set" is one character: ped_01.png alone, or ped_01_a.png / ped_01_b.png / ped_01_c.png as walk frames
         // (legs crossing, apart, crossing the other way). User 2026-10-28: a single frame sliding along "does not walk".
         readonly List<Sprite> trees = new List<Sprite>();
