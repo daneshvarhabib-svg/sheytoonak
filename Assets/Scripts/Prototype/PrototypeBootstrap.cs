@@ -1089,8 +1089,10 @@ namespace Sheytoonak.Prototype
             {
                 DuelHud.ChallengeStrip(new Rect(chalR.x - 40 * u, sy, chalR.width + 80 * u, 40 * u), run, u);
                 var left = run.EndsUtc - System.DateTime.UtcNow;
-                DuelHud.DrawIcon(new Rect(chalR.x, sy + 90 * u, 30 * u, 30 * u), "clock", Color.white);
-                GUI.Label(new Rect(chalR.x + 38 * u, sy + 90 * u, 200 * u, 30 * u), Ar.N(Mathf.Max(0, (int)left.TotalHours)) + ":" + Ar.N(Mathf.Max(0, left.Minutes)).PadLeft(2, '٠'),
+                // left of the run strip (below it collided with the bag rack, run 60)
+                float cx = chalR.x - 40 * u - 140 * u;
+                DuelHud.DrawIcon(new Rect(cx, sy + 5 * u, 30 * u, 30 * u), "clock", Color.white);
+                GUI.Label(new Rect(cx + 34 * u, sy, 110 * u, 40 * u), Ar.N(Mathf.Max(0, (int)left.TotalHours)) + ":" + Ar.N(Mathf.Max(0, left.Minutes)).PadLeft(2, '٠'),
                     new GUIStyle(num) { fontSize = Mathf.RoundToInt(24 * u) });
             }
             else
@@ -1116,8 +1118,8 @@ namespace Sheytoonak.Prototype
         {
             var rack = duelGame.Bags;
             var now = System.DateTime.UtcNow;
-            float sw = Mathf.Min(150 * u, (Screen.width - 80 * u) / 4f), gap = 14 * u;
-            float total = sw * 4 + gap * 3, x0 = (Screen.width - total) * 0.5f, y = Screen.height - sw - 70 * u;
+            float sw = Mathf.Min(105 * u, (Screen.width - 80 * u) / 4f), gap = 14 * u;
+            float total = sw * 4 + gap * 3, x0 = (Screen.width - total) * 0.5f, y = Screen.height - sw - 44 * u;
             var num = new GUIStyle(GUI.skin.label) { font = Ar.Font, fontSize = Mathf.RoundToInt(22 * u), alignment = TextAnchor.MiddleCenter };
             num.normal.textColor = Color.white;
             for (int i = 0; i < Sheytoonak.Core.Bags.BagRules.Slots; i++)

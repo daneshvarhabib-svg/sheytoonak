@@ -224,10 +224,9 @@ namespace Sheytoonak.Prototype
             if (striking[(int)side] != null) { StopCoroutine(striking[(int)side]); striking[(int)side] = null; }
             var pr = painted[(int)side][slot];
             if (pr != null) { pr.transform.localPosition = Vector3.zero; pr.transform.localRotation = Quaternion.identity; }
-            yield return new WaitForSeconds(0.3f);
             bool frames = HasFrames(side);
             Vector3 from = hero.position, home = homes[(int)side][slot];
-            for (float k = 0f; k < 1f; k += Time.deltaTime * 1.8f)
+            for (float k = 0f; k < 1f; k += Time.deltaTime * 2.6f)
             {
                 hero.position = Vector3.Lerp(from, home, k) + Vector3.up * Mathf.Abs(Mathf.Sin(k * Mathf.PI * 4f)) * 0.05f;
                 if (frames) { SetPose(side, slot, (int)(k * 8f) % 2 == 0 ? "k1" : "k2"); if (pr != null) pr.flipX = side == Side.Left; } // walking back faces home
