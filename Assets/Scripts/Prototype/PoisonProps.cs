@@ -61,7 +61,7 @@ namespace Sheytoonak.Prototype
             var go = new GameObject(sp.name);
             go.transform.SetParent(parent, false);
             go.transform.localPosition = local;
-            if (flat) go.transform.localRotation = Quaternion.Euler(90f, 0f, 0f); // lying on the ground
+            if (flat) go.transform.localRotation = Quaternion.Euler(60f, 0f, 0f); // lying on the ground, tilted toward the low camera (at 90° the puddle was a thin line, run 62)
             var r = go.AddComponent<SpriteRenderer>();
             r.sprite = sp;
             go.transform.localScale = Vector3.one * (worldHeight / Mathf.Max(0.01f, sp.bounds.size.y));
