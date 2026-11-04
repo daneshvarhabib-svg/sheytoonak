@@ -42,6 +42,47 @@ namespace Sheytoonak.Prototype
             return go;
         }
 
+        // ------------------------------------------------------------------ painted sprites (Art/Poison, 2026-11-04)
+
+        static readonly Dictionary<string, Sprite> sprites = new Dictionary<string, Sprite>();
+        /// <summary>Art/Poison/&lt;name&gt;.png as a sprite (bottom-centre pivot unless told), or null: the primitive stays.</summary>
+        static Sprite Art(string name, float pivotY = 0f)
+        {
+            string key = name + pivotY;
+            if (sprites.TryGetValue(key, out var sp)) return sp;
+            var tex = Resources.Load<Texture2D>("Art/Poison/" + name);
+            sp = tex != null ? Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, pivotY), 100f) : null;
+            sprites[key] = sp;
+            return sp;
+        }
+
+        static SpriteRenderer Spr(Sprite sp, Transform parent, Vector3 local, float worldHeight, bool flat = false)
+        {
+            var go = new GameObject(sp.name);
+            go.transform.SetParent(parent, false);
+            go.transform.localPosition = local;
+            if (flat) go.transform.localRotation = Quaternion.Euler(90f, 0f, 0f); // lying on the ground
+            var r = go.AddComponent<SpriteRenderer>();
+            r.sprite = sp;
+            go.transform.localScale = Vector3.one * (worldHeight / Mathf.Max(0.01f, sp.bounds.size.y));
+            return r;
+        }
+
+        /// <summary>Plays sprite frames once (hold the last) or in a loop.</summary>
+        class Frames : MonoBehaviour
+        {
+            public SpriteRenderer r; public Sprite[] frames; public float fps = 8f; public bool loop = true; public float delay;
+            float t;
+            void Update()
+            {
+                if (r == null || frames == null || frames.Length == 0) return;
+                t += Time.deltaTime;
+                if (t < delay) { r.sprite = frames[0]; return; }
+                int i = (int)((t - delay) * fps);
+                r.sprite = frames[loop ? i % frames.Length : Mathf.Min(i, frames.Length - 1)];
+            }
+        }
+
         // ------------------------------------------------------------------ bus (Cover)
 
         /// <summary>A tall city bus that drives in and parks in front of the covered windows.</summary>
@@ -63,6 +104,19 @@ namespace Sheytoonak.Prototype
             }
             h = Mathf.Clamp(h, 2.2f, top + 0.25f);
             var root = new GameObject("Poison bus").transform;
+            var busArt = Art("bus");
+            if (busArt != null)
+            {
+                // painted side view (front on the left in the picture): it drives in from the left, so mirrored
+                var r = Spr(busArt, root, new Vector3(0f, 0f, -w * 0.5f), h);
+                r.flipX = true;
+                float paintedLen = r.bounds.size.x;
+                if (paintedLen < xMax - xMin + 0.6f) r.transform.localScale *= (xMax - xMin + 0.6f) / paintedLen; // must cover every covered window
+                Vector3 at = new Vector3((xMin + xMax) * 0.5f, 0f, facadeZ - w * 0.5f - 0.6f);
+                root.position = at + Vector3.left * 30f;
+                host.StartCoroutine(Slide(root, at, 1.1f));
+                return root.gameObject;
+            }
             var body = M("bus", new Color(0.95f, 0.78f, 0.15f));
             var stripe = M("busstripe", new Color(0.75f, 0.12f, 0.1f));
             var glass = M("busglass", new Color(0.15f, 0.22f, 0.3f), 0.8f);
@@ -100,6 +154,16 @@ namespace Sheytoonak.Prototype
         {
             var root = new GameObject("Poison open window").transform;
             root.position = new Vector3(r.center.x, r.center.y, facadeZ - 0.05f);
+            var w0 = Art("window_open_0", 0.5f); var w1 = Art("window_open_1", 0.5f);
+            if (w0 != null && w1 != null)
+            {
+                // the casement swings open, then the angry neighbour leans out (two painted frames); the painted frame
+                // is ~60% of the picture's width (the sashes stick out), so it is sized from the window's width
+                var sr = Spr(w0, root, Vector3.zero, 1f);
+                sr.transform.localScale = Vector3.one * (r.width * 1.55f / Mathf.Max(0.01f, w0.bounds.size.x));
+                var f = sr.gameObject.AddComponent<Frames>(); f.r = sr; f.frames = new[] { w0, w1 }; f.fps = 1f / 0.45f; f.loop = false; f.delay = 0f;
+                return root.gameObject;
+            }
             var frame = M("sash", new Color(0.92f, 0.9f, 0.84f));
             var dark = M("room", new Color(0.12f, 0.1f, 0.09f));
             var skin = M("skin", new Color(0.86f, 0.66f, 0.5f));
@@ -119,6 +183,8 @@ namespace Sheytoonak.Prototype
         {
             var root = new GameObject("Poison puddle").transform;
             root.position = at;
+            var pa = Art("puddle", 0.5f);
+            if (pa != null) { Spr(pa, root, new Vector3(0f, 0.012f, 0f), 1.4f, true); return root.gameObject; }
             var water = M("water", new Color(0.35f, 0.55f, 0.75f, 0.7f), 0.95f);
             Part(PrimitiveType.Cylinder, root, new Vector3(0f, 0.012f, 0f), new Vector3(1.8f, 0.005f, 1.1f), water);
             Part(PrimitiveType.Cylinder, root, new Vector3(0.5f, 0.013f, 0.35f), new Vector3(0.7f, 0.005f, 0.5f), water);
@@ -164,6 +230,13 @@ namespace Sheytoonak.Prototype
         public static GameObject Pigeon()
         {
             var root = new GameObject("Pigeon").transform;
+            var p0 = Art("pigeon_0", 0.5f); var p1 = Art("pigeon_1", 0.5f); var p2 = Art("pigeon_2", 0.5f);
+            if (p0 != null && p1 != null && p2 != null)
+            {
+                var sr = Spr(p0, root, Vector3.zero, 0.38f);
+                var f = sr.gameObject.AddComponent<Frames>(); f.r = sr; f.frames = new[] { p0, p1, p2, p1 }; f.fps = 12f;
+                return root.gameObject;
+            }
             var grey = M("pigeon", new Color(0.55f, 0.57f, 0.62f));
             var neck = M("pigeonneck", new Color(0.35f, 0.5f, 0.45f));
             var beak = M("beak", new Color(0.9f, 0.6f, 0.2f));
@@ -193,6 +266,22 @@ namespace Sheytoonak.Prototype
         public static GameObject Antidote(Tool a, Vector3 heroPos, float facadeZ)
         {
             var root = new GameObject("Antidote " + a.Id).transform;
+            var art = Art(a.Id, a.Id == "fart" || a.Id == "nails" || a.Id == "plank" ? 0.5f : 0f);
+            if (art != null)
+            {
+                switch (a.Id)
+                {
+                    case "fart": root.position = heroPos + Vector3.up * 0.9f; Spr(art, root, Vector3.zero, 1.3f); break;
+                    case "nails":
+                        root.position = new Vector3(0f, 0.02f, facadeZ - 6f);
+                        for (int i = 0; i < 7; i++) Spr(art, root, new Vector3(-6f + i * 2f + Random.Range(-0.4f, 0.4f), 0f, Random.Range(-1f, 1f)), 0.6f, true);
+                        break;
+                    case "vane": root.position = heroPos + new Vector3(heroPos.x < 0f ? -0.6f : 0.6f, 0f, 0.3f); Spr(art, root, Vector3.zero, 1.4f); break;
+                    case "plank": root.position = heroPos + new Vector3(0f, 0.04f, 1.0f); Spr(art, root, Vector3.zero, 0.9f, true); break;
+                    default: root.position = heroPos + Vector3.up * 1.4f; Spr(art, root, Vector3.zero, 0.22f); break; // pebble
+                }
+                return root.gameObject;
+            }
             switch (a.Id)
             {
                 case "fart": // a green cloud: nothing alive wants to pass

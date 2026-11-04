@@ -1133,7 +1133,9 @@ namespace Sheytoonak.Prototype
                 bool ready = rack.IsReady(i, now);
                 float pulse = ready ? 1f + 0.06f * Mathf.Sin(Time.time * 6f) : 1f;
                 var ir = new Rect(r.center.x - r.width * 0.4f * pulse, r.center.y - r.height * 0.4f * pulse, r.width * 0.8f * pulse, r.height * 0.8f * pulse);
-                DuelHud.DrawIcon(ir, "bag", BagTint[(int)b.Size]);
+                var bagTex = Resources.Load<Texture2D>("Art/Bags/bag_" + (int)b.Size); // painted bags (2026-11-04), glyph otherwise
+                if (bagTex != null) GUI.DrawTexture(ir, bagTex, ScaleMode.ScaleToFit);
+                else DuelHud.DrawIcon(ir, "bag", BagTint[(int)b.Size]);
                 if (GUI.Button(r, GUIContent.none, GUIStyle.none)) { touch?.IgnoreFor(0.5f); duelGame.TapBag(i); }
                 var lr = new Rect(r.x, r.yMax + 4 * u, r.width, 30 * u);
                 if (ready) DuelHud.DrawIcon(new Rect(lr.center.x - 15 * u, lr.y, 30 * u, 30 * u), "pick", new Color(0.4f, 1f, 0.5f));
