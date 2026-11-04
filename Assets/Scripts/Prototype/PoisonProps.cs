@@ -52,6 +52,7 @@ namespace Sheytoonak.Prototype
             if (sprites.TryGetValue(key, out var sp)) return sp;
             var tex = Resources.Load<Texture2D>("Art/Poison/" + name);
             sp = tex != null ? Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, pivotY), 100f) : null;
+            if (sp != null) sp.name = name;
             sprites[key] = sp;
             return sp;
         }
@@ -86,7 +87,7 @@ namespace Sheytoonak.Prototype
         // ------------------------------------------------------------------ bus (Cover)
 
         /// <summary>A tall city bus that drives in and parks in front of the covered windows.</summary>
-        public static GameObject Bus(MonoBehaviour host, Rect[] covered, float facadeZ)
+        public static GameObject Bus(MonoBehaviour host, Rect[] covered, float facadeZ, string id = "bus")
         {
             float xMin = float.MaxValue, xMax = float.MinValue, top = 0f;
             foreach (var r in covered) { xMin = Mathf.Min(xMin, r.xMin); xMax = Mathf.Max(xMax, r.xMax); top = Mathf.Max(top, r.yMax); }
@@ -104,12 +105,14 @@ namespace Sheytoonak.Prototype
             }
             h = Mathf.Clamp(h, 2.2f, top + 0.25f);
             var root = new GameObject("Poison bus").transform;
-            var busArt = Art("bus");
+            // the same Cover prop for every vehicle poison: bus (zaatar), lorry (um al-arabiyat), pickle cart (hamada)
+            var busArt = Art(id) ?? Art("bus");
             if (busArt != null)
             {
-                // painted side view (front on the left in the picture): it drives in from the left, so mirrored
+                // painted side views: the bus faces left in its picture, the lorry right; all drive in from the left
+                if (id == "cart") h = Mathf.Min(h, 2.6f); // a hand cart is not as tall as a bus: it hides the lower row only
                 var r = Spr(busArt, root, new Vector3(0f, 0f, -w * 0.5f), h);
-                r.flipX = true;
+                r.flipX = busArt.name.StartsWith("bus");
                 float paintedLen = r.bounds.size.x;
                 if (paintedLen < xMax - xMin + 0.6f) r.transform.localScale *= (xMax - xMin + 0.6f) / paintedLen; // must cover every covered window
                 Vector3 at = new Vector3((xMin + xMax) * 0.5f, 0f, facadeZ - w * 0.5f - 0.6f);
@@ -191,6 +194,26 @@ namespace Sheytoonak.Prototype
             return root.gameObject;
         }
 
+        // ------------------------------------------------------------------ rain (Reach, bubakr)
+
+        /// <summary>A rain cloud over the street in front of the house, bobbing, while the rain poison lasts (with a puddle).</summary>
+        public static GameObject Rain(MonoBehaviour host, Vector3 at)
+        {
+            var art = Art("rain", 0.5f);
+            if (art == null) return null;
+            var root = new GameObject("Poison rain").transform;
+            root.position = at;
+            var r = Spr(art, root, Vector3.zero, 2.4f);
+            host.StartCoroutine(Bob(root));
+            return root.gameObject;
+        }
+
+        static IEnumerator Bob(Transform t)
+        {
+            Vector3 p0 = t != null ? t.position : Vector3.zero;
+            while (t != null) { t.position = p0 + new Vector3(Mathf.Sin(Time.time * 0.6f) * 0.8f, Mathf.Sin(Time.time * 1.3f) * 0.1f, 0f); yield return null; }
+        }
+
         // ------------------------------------------------------------------ wind (Accuracy)
 
         /// <summary>White streaks blowing across in front of the facade while the wind poison lasts.</summary>
@@ -266,7 +289,7 @@ namespace Sheytoonak.Prototype
         public static GameObject Antidote(Tool a, Vector3 heroPos, float facadeZ)
         {
             var root = new GameObject("Antidote " + a.Id).transform;
-            var art = Art(a.Id, a.Id == "fart" || a.Id == "nails" || a.Id == "plank" ? 0.5f : 0f);
+            var art = Art(a.Id, a.Id == "fart" || a.Id == "nails" || a.Id == "plank" || a.Id == "complaint" || a.Id == "flashlight" ? 0.5f : 0f);
             if (art != null)
             {
                 switch (a.Id)
@@ -278,6 +301,9 @@ namespace Sheytoonak.Prototype
                         break;
                     case "vane": root.position = heroPos + new Vector3(heroPos.x < 0f ? -0.6f : 0.6f, 0f, 0.3f); Spr(art, root, Vector3.zero, 1.4f); break;
                     case "plank": root.position = heroPos + new Vector3(0f, 0.04f, 1.0f); Spr(art, root, Vector3.zero, 0.9f, true); break;
+                    case "complaint": root.position = heroPos + new Vector3(0f, 1.9f, 0f); Spr(art, root, Vector3.zero, 0.7f); break; // waved over the head
+                    case "umbrella": root.position = heroPos + new Vector3(heroPos.x < 0f ? 0.3f : -0.3f, 0.6f, -0.1f); Spr(art, root, Vector3.zero, 1.5f); break;
+                    case "flashlight": root.position = heroPos + new Vector3(0f, 1.2f, 0.2f); Spr(art, root, Vector3.zero, 0.45f); break;
                     default: root.position = heroPos + Vector3.up * 1.4f; Spr(art, root, Vector3.zero, 0.22f); break; // pebble
                 }
                 return root.gameObject;

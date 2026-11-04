@@ -70,7 +70,7 @@ namespace Sheytoonak.Core.Duel
                 new Tool("fart", "ضرطة", Effect.Chance, 1)),
             // ⚠️ heroes 4, 5 and 7 of docs/HEROES.fa.md (2026-11-04): grown-ups after the five kids (user: «باقی قهرمانان
             // همه بچه نباشن … تا پیرمرد و پیرزن»). Their poisons reuse the stage props of the same effect until their
-            // own art arrives (truck/cart show as the bus, rain as the puddle). Um al-Arabiyat kicks with her left foot.
+            // own art arrives (painted the same day: lorry, pickle cart, rain cloud, complaint, umbrella, flashlight). Um al-Arabiyat kicks with her left foot.
             new HeroDef("um_arabiyat", "أم العربيات البغدادية",
                 new Tool("truck", "شاحنة عالية", Effect.Cover, 1, Lifetime.TwoTurns),
                 new Tool("complaint", "شكوى للبلدية", Effect.Cover, 1)),

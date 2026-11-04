@@ -389,7 +389,7 @@ namespace Sheytoonak.Prototype
                     {
                         var rects = new Rect[p.Windows.Length];
                         for (int i = 0; i < rects.Length; i++) rects[i] = mapper.WindowRects[p.Windows[i]];
-                        list.Add(PoisonProps.Bus(this, rects, mapper.FacadeZ));
+                        list.Add(PoisonProps.Bus(this, rects, mapper.FacadeZ, p.Tool.Id));
                     }
                     break;
                 case Effect.Close:
@@ -398,6 +398,7 @@ namespace Sheytoonak.Prototype
                 case Effect.Reach:
                     // a little towards the road: right at the ball it sat under the HUD turn line (run 30)
                     list.Add(PoisonProps.Puddle(foot.StrikeSpot + new Vector3(0f, 0f, 2.6f)));
+                    if (p.Tool.Id == "rain") { var cloud = PoisonProps.Rain(this, new Vector3(0f, 4.2f, mapper.FacadeZ - 3f)); if (cloud != null) list.Add(cloud); }
                     break;
                 case Effect.Accuracy:
                     list.Add(PoisonProps.Wind(this, mapper.FacadeZ));
