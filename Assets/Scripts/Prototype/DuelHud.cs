@@ -193,9 +193,20 @@ namespace Sheytoonak.Prototype
         internal static readonly Color PoisonRed = new Color(0.72f, 0.18f, 0.15f), AntidoteGreen = new Color(0.16f, 0.5f, 0.32f), ControlDark = new Color(0.12f, 0.12f, 0.14f);
         static readonly System.Collections.Generic.Dictionary<string, Texture2D> icons = new System.Collections.Generic.Dictionary<string, Texture2D>();
 
+        static readonly System.Collections.Generic.Dictionary<string, string> IconStandIn = new System.Collections.Generic.Dictionary<string, string>
+        {
+            { "truck", "bus" }, { "cart", "bus" }, { "complaint", "nails" }, { "umbrella", "plank" }, { "rain", "puddle" }, { "flashlight", "vane" },
+        };
+
         internal static Texture2D Icon(string id)
         {
-            if (!icons.TryGetValue(id, out var t)) { t = Resources.Load<Texture2D>("Art/Icons/" + id); icons[id] = t; }
+            if (!icons.TryGetValue(id, out var t))
+            {
+                t = Resources.Load<Texture2D>("Art/Icons/" + id);
+                // tools of the new heroes until their icons are painted: the icon of a tool with the same effect
+                if (t == null && IconStandIn.TryGetValue(id, out var alt)) t = Resources.Load<Texture2D>("Art/Icons/" + alt);
+                icons[id] = t;
+            }
             return t;
         }
 
@@ -238,7 +249,7 @@ namespace Sheytoonak.Prototype
 
         internal static void DrawIcon(Rect r, string id, Color tint)
         {
-            if (Painted.Contains(id)) tint = new Color(1f, 1f, 1f, tint.a);
+            if (Painted.Contains(id) || (IconStandIn.TryGetValue(id, out var alt) && Painted.Contains(alt))) tint = new Color(1f, 1f, 1f, tint.a);
             var tex = Icon(id); if (tex == null) return;
             var old = GUI.color;
             GUI.color = new Color(0f, 0f, 0f, 0.5f); GUI.DrawTexture(new Rect(r.x + 2, r.y + 2, r.width, r.height), tex, ScaleMode.ScaleToFit);
