@@ -61,7 +61,9 @@ namespace Sheytoonak.Core.Duel
                 new Tool("wind", "هوا قوي", Effect.Accuracy, 1, Lifetime.OneTurn),
                 new Tool("pebble", "حصوة عالشباك", Effect.Close, 1)),
             new HeroDef("rima", "ريما الشرشوحة الصيداوية",
-                new Tool("open_window", "الجار فتح الشباك", Effect.Close, 1, Lifetime.UntilAntidote),
+                // ⚠️ until 2026-11-04 the neighbour stayed until an antidote (pebble). User: «اون سه تا شیشه‌ای که بازه چیه؟ … نباید بعد از
+                // یکی دو نوبت خودش بسته شه؟» -- with every other window broken the duel could not end. Now she shuts it after two turns.
+                new Tool("open_window", "الجار فتح الشباك", Effect.Close, 1, Lifetime.TwoTurns),
                 new Tool("plank", "لوح عالجورة", Effect.Reach, 1)),
             new HeroDef("toni", "طوني الزعران البيروتي",
                 new Tool("puddle", "جورة مي", Effect.Reach, 1, Lifetime.OneTurn),

@@ -127,7 +127,7 @@ namespace Sheytoonak.Tests
             var r = Make();
             r.Start(Side.Left); r.BeginKick(Side.Left); r.EndKick(Side.Left, -1);
             var wind = StarterHeroes.Get("fulla").Poison;      // accuracy, one turn
-            var open = StarterHeroes.Get("rima").Poison;       // close, until antidote
+            var open = new Tool("test_until", "x", Effect.Close, 1, Lifetime.UntilAntidote); // close, until antidote (no starter has one any more)
             r.Poison(Side.Right, wind);
             r.Poison(Side.Right, open, new[] { 4 });
             Assert.AreEqual(Side.Left, r.Current);
@@ -139,6 +139,19 @@ namespace Sheytoonak.Tests
             Assert.IsTrue(r.IsClosed(4));
             r.Antidote(Side.Left, StarterHeroes.Get("fulla").Antidote);  // pebble: close 1
             Assert.IsFalse(r.IsClosed(4), "an until-antidote poison is lifted by a matching antidote");
+        }
+
+        [Test]
+        public void The_neighbour_shuts_her_window_after_two_turns()
+        {
+            var r = Make();
+            r.Start(Side.Left);
+            r.Poison(Side.Left, StarterHeroes.Get("rima").Poison, new[] { 4 });
+            Assert.IsTrue(r.IsClosed(4));
+            r.Pass(Side.Left); r.Pass(Side.Right);
+            Assert.IsTrue(r.IsClosed(4), "still there during the next two turns");
+            r.Pass(Side.Left);
+            Assert.IsFalse(r.IsClosed(4), "gone after two turns: the duel can always end");
         }
 
         [Test]
