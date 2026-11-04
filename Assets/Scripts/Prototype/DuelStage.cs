@@ -135,6 +135,15 @@ namespace Sheytoonak.Prototype
             if (slot == kickSlot[(int)side]) kickerScale[(int)side] = r.transform.localScale;
         }
 
+        /// <summary>The 6-frame run cycle (r1..r6, 2026-11-04: «حرکت بازیکن‌ها هنوز طبیعی نیست») when painted; otherwise the
+        /// two first kick frames as before. <paramref name="cycles"/> counts strides: one stride = the six frames.</summary>
+        bool HasRun(Side side, int slot) => painted[(int)side][slot] != null && HeroSprite(lookIds[(int)side][slot], "r1") != null;
+        void RunPose(Side side, int slot, float cycles, bool kickFrames)
+        {
+            if (HasRun(side, slot)) { SetPose(side, slot, "r" + (1 + (int)(cycles * 6f) % 6)); return; }
+            if (kickFrames) SetPose(side, slot, (int)(cycles * 4f) % 2 == 0 ? "k1" : "k2");
+        }
+
         /// <summary>True when the hero has the 5-frame kick sheet (k1 run, k2 plant, k3 wind-up, k4 contact, k5 land).</summary>
         bool HasFrames(Side side) => painted[(int)side][K(side)] != null && HeroSprite(lookIds[(int)side][K(side)], "k1") != null;
         int K(Side side) => kickSlot[(int)side];
@@ -204,10 +213,10 @@ namespace Sheytoonak.Prototype
             for (float k = 0f; k < 1f; k += Time.deltaTime * 2.4f)
             {
                 hero.position = Vector3.Lerp(home, Spot(side), Mathf.SmoothStep(0f, 1f, k)) + Vector3.up * Mathf.Abs(Mathf.Sin(k * Mathf.PI * 3f)) * 0.06f;
-                if (frames) SetPose(side, slot, (int)(k * 6f) % 2 == 0 ? "k1" : "k2");
+                RunPose(side, slot, k * 1.6f, frames);
                 yield return null;
             }
-            if (frames) SetPose(side, slot, "idle");
+            if (frames || HasRun(side, slot)) SetPose(side, slot, "idle");
             duel.KickerArrived(side);
             // waits behind the ball, follows it (my finger moves the ball spot; the rebound moves the ball)
             while (true)
@@ -232,11 +241,13 @@ namespace Sheytoonak.Prototype
             for (float k = 0f; k < 1f; k += Time.deltaTime * 2.6f)
             {
                 hero.position = Vector3.Lerp(from, home, k) + Vector3.up * Mathf.Abs(Mathf.Sin(k * Mathf.PI * 4f)) * 0.05f;
-                if (frames) { SetPose(side, slot, (int)(k * 8f) % 2 == 0 ? "k1" : "k2"); if (pr != null) pr.flipX = side == Side.Left; } // walking back faces home
+                RunPose(side, slot, k * 2f, frames);
+                if (pr != null && (frames || HasRun(side, slot))) pr.flipX = side == Side.Left; // walking back faces home
                 yield return null;
             }
             hero.position = home;
             if (pr != null) { pr.flipX = side == Side.Right; SetPose(side, slot, "idle"); }
+            yield break;
         }
 
         void OnKick(Side side, int target)
