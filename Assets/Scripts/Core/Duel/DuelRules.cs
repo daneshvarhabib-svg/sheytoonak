@@ -221,6 +221,15 @@ namespace Sheytoonak.Core.Duel
                 }
                 else outcome = KickOutcome.Bounced;
             }
+            // user (2026-11-04): «قدرت‌ها گاهی هستن و هیچ پنجره‌ی قابل شکستنی نیست». When the last open window breaks and
+            // only covered/closed ones are left, the poisons blocking them go away at once: there must always be a target.
+            if (!Finished && Windows[(int)s] < Majority && BreakableCount() == 0 && !AllBrokenOrDead())
+                for (int i = Poisons.Count - 1; i >= 0; i--)
+                {
+                    var p = Poisons[i];
+                    if (p.Tool.Effect != Effect.Cover && p.Tool.Effect != Effect.Close) continue;
+                    Poisons.RemoveAt(i); PoisonExpired?.Invoke(p);
+                }
             if (Windows[(int)s] >= Majority) Finish(s, "majority");
             else if (BreakableCount() == 0 && AllBrokenOrDead()) Finish(Windows[0] > Windows[1] ? Side.Left : Side.Right, "no windows left");
             else if (ActionsLeft <= 0) EndTurn();

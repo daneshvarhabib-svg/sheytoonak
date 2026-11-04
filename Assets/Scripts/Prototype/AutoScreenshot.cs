@@ -62,6 +62,13 @@ namespace Sheytoonak.Prototype
                         float until = Time.realtimeSinceStartup + 12f;
                         while (Time.realtimeSinceStartup < until && !duel.PlayerMayKick) yield return null;
                         yield return Shot("03-my-turn", 0.2f);
+                        // a hero first, then its kick button: it walks up behind the ball, then the swipe
+                        duel.Select(1);
+                        yield return Shot("03a-selected", 0.3f);
+                        duel.ArmKick();
+                        float a0 = Time.realtimeSinceStartup + 4f;
+                        while (Time.realtimeSinceStartup < a0 && !duel.KickArmed) yield return null;
+                        yield return Shot("03b-at-ball", 0.2f);
                         boot.Router?.Inject(new KickGesture(0.85f, 0.05f, 0f));
                         yield return Shot("04-kick-air", 0.45f);
                         yield return Shot("05-kick-hit", 0.6f);

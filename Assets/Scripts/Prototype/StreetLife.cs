@@ -125,9 +125,13 @@ namespace Sheytoonak
                         m.frame += Time.deltaTime * walkFps;
                         m.sr.sprite = m.frames[(int)m.frame % m.frames.Count];
                     }
-                    float bob = Mathf.Abs(Mathf.Sin(t * 7f)) * 0.04f;
+                    // user (2026-11-04): «حرکت عابر پیاده هنوز مصنوعیه». The rocking tilt looked like a toy: gone. The step bob
+                    // now follows the walking speed (two steps per stride, ~0.7 m a step) and is a little smaller; a real walk
+                    // still needs the three painted frames ped_NN_a/b/c (asked for).
+                    float steps = Mathf.Abs(m.speed) / 0.7f;
+                    float bob = Mathf.Abs(Mathf.Sin(t * Mathf.PI * steps)) * 0.025f;
                     m.t.position = new Vector3(m.t.position.x, bob, m.t.position.z);
-                    m.t.localRotation = Quaternion.Euler(0f, 0f, Mathf.Sin(t * 7f) * 1.5f);
+                    m.t.localRotation = Quaternion.identity;
                 }
                 if ((m.speed > 0f && m.t.position.x > m.endX) || (m.speed < 0f && m.t.position.x < -m.endX))
                 {

@@ -138,13 +138,31 @@ namespace Sheytoonak.Prototype
                 var old = GUI.color; GUI.color = new Color(0f, 0f, 0f, 0.4f);
                 GUI.DrawTexture(new Rect(0, Screen.height - stripH, Screen.width, stripH), Texture2D.whiteTexture); GUI.color = old;
                 float x0 = pad, yb = Screen.height - stripH + gap;
+                // ⚠️ user (2026-11-04): «باید اول قهرمان انتخاب شه بعد قدرتش یا زدن ضربه. اگر خواست ضربه بزنه تازه
+                // بیاد پشت توپ». Bottom row: my three heroes' faces; top row: the chosen hero's poison, antidote and kick.
                 for (int i = 0; i < 3; i++)
                 {
-                    var h = rules.Heroes[0][i];
-                    float x = x0 + i * (sz + gap);
+                    var h = rules.Heroes[(int)duel.Me][i];
+                    var fr = new Rect(x0 + i * (sz + gap), yb + sz + gap, sz, sz);
+                    bool sel = duel.Selected == i;
+                    var oc = GUI.color;
+                    GUI.color = sel ? new Color(1f, 0.85f, 0.25f) : new Color(0f, 0f, 0f, 0.5f);
+                    GUI.DrawTexture(new Rect(fr.x - 3 * u, fr.y - 3 * u, fr.width + 6 * u, fr.height + 6 * u), Texture2D.whiteTexture);
+                    GUI.color = duel.Selected < 0 ? new Color(1f, 1f, 1f, 0.75f + 0.25f * Mathf.Sin(Time.time * 5f)) : sel ? Color.white : new Color(0.7f, 0.7f, 0.7f);
+                    Face(fr, h.Id);
+                    GUI.color = oc;
+                    if (GUI.Button(fr, GUIContent.none, GUIStyle.none)) { touch?.IgnoreFor(0.4f); duel.Select(i); }
+                }
+                if (duel.Selected >= 0)
+                {
+                    int i = duel.Selected;
+                    var h = rules.Heroes[(int)duel.Me][i];
                     bool poisonOk = rules.ActionsLeft > 0 && rules.CanPoison(duel.Me, h.Poison, duel.TargetsFor(h.Poison)) == ActionReject.None;
+                    float x = x0;
                     if (IconButton(new Rect(x, yb, sz, sz), h.Poison.Id, PoisonRed, poisonOk, h.Poison.NameAr)) { touch?.IgnoreFor(0.4f); duel.Poison(i); }
-                    if (IconButton(new Rect(x, yb + sz + gap, sz, sz), h.Antidote.Id, AntidoteGreen, rules.ActionsLeft > 0, h.Antidote.NameAr)) { touch?.IgnoreFor(0.4f); duel.Antidote(i); }
+                    if (IconButton(new Rect(x + sz + gap, yb, sz, sz), h.Antidote.Id, AntidoteGreen, rules.ActionsLeft > 0, h.Antidote.NameAr)) { touch?.IgnoreFor(0.4f); duel.Antidote(i); }
+                    var kr = new Rect(x + 2 * (sz + gap), yb, sz, sz);
+                    if (IconButton(kr, "kick", duel.KickArmed ? new Color(1f, 0.85f, 0.25f) : new Color(0.2f, 0.45f, 0.75f), rules.ActionsLeft > 0, null)) { touch?.IgnoreFor(0.4f); duel.ArmKick(); }
                 }
                 float xr = Screen.width - pad - sz;
                 bool armed = Time.time < surrenderArmedUntil;
@@ -228,6 +246,18 @@ namespace Sheytoonak.Prototype
         }
 
         /// <summary>The run at a glance: 12 win slots, 3 hearts, the prize now and after the next win.</summary>
+        static readonly System.Collections.Generic.Dictionary<string, Texture2D> faces = new System.Collections.Generic.Dictionary<string, Texture2D>();
+        /// <summary>The hero's painted portrait (or the top of the standing figure) cropped into the rect.</summary>
+        static void Face(Rect r, string heroId)
+        {
+            if (!faces.TryGetValue(heroId, out var t)) { t = Resources.Load<Texture2D>("Art/Heroes/" + heroId + "_face"); faces[heroId] = t; }
+            if (t != null) { GUI.DrawTexture(r, t, ScaleMode.ScaleAndCrop); return; }
+            var idle = Resources.Load<Texture2D>("Art/Heroes/" + heroId + "_idle");
+            if (idle == null) return;
+            float vh = 0.3f, vw = Mathf.Min(1f, vh * (r.width / r.height) * idle.height / idle.width);
+            GUI.DrawTextureWithTexCoords(r, idle, new Rect(0.5f - vw * 0.5f, 1f - vh - 0.01f, vw, vh));
+        }
+
         internal static void ChallengeStrip(Rect r, Sheytoonak.Core.Challenge.ChallengeRun run, float u)
         {
             float d = Mathf.Min(r.height * 0.42f, r.width / 22f);

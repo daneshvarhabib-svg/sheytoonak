@@ -42,7 +42,8 @@ namespace Sheytoonak.Prototype
             duel.DuelStarted += OnDuelStarted;
             duel.KickLaunched += OnKick;
             duel.Rekicked += OnRekick;
-            duel.TurnChanged += OnTurnChanged;
+            duel.KickerChosen += OnKickerChosen;
+            duel.KickerReleased += SendHome;
             duel.Finished += OnFinished;
         }
 
@@ -52,7 +53,8 @@ namespace Sheytoonak.Prototype
             duel.DuelStarted -= OnDuelStarted;
             duel.KickLaunched -= OnKick;
             duel.Rekicked -= OnRekick;
-            duel.TurnChanged -= OnTurnChanged;
+            duel.KickerChosen -= OnKickerChosen;
+            duel.KickerReleased -= SendHome;
             duel.Finished -= OnFinished;
         }
 
@@ -164,13 +166,13 @@ namespace Sheytoonak.Prototype
         readonly int[] kickSlot = new int[2], turns = new int[2];
         readonly Coroutine[] stepping = new Coroutine[2];
 
-        void OnTurnChanged(Side side)
+        /// <summary>A hero was chosen to kick: the one already at the ball (if another) walks home, the chosen one walks up.</summary>
+        void OnKickerChosen(Side side, int slot)
         {
-            var other = side == Side.Left ? Side.Right : Side.Left;
-            SendHome(other);
-            if (stepping[(int)side] != null) return; // already out (a re-start of the same side's turn)
-            kickSlot[(int)side] = turns[(int)side]++ % 3;
-            var r = painted[(int)side][K(side)];
+            if (stepping[(int)side] != null && kickSlot[(int)side] == slot) { duel.KickerArrived(side); return; }
+            SendHome(side);
+            kickSlot[(int)side] = slot;
+            var r = painted[(int)side][slot];
             if (r != null) kickerScale[(int)side] = r.transform.localScale;
             stepping[(int)side] = StartCoroutine(StandAtBall(side));
         }
@@ -181,7 +183,8 @@ namespace Sheytoonak.Prototype
         {
             if (stepping[(int)side] == null) return;
             StopCoroutine(stepping[(int)side]);
-            stepping[(int)side] = StartCoroutine(WalkHome(side));
+            stepping[(int)side] = null;
+            StartCoroutine(WalkHome(side, kickSlot[(int)side])); // not tracked: a newly chosen hero may walk up at the same time
         }
 
         /// <summary>Behind and to the side of the ball (right-footers stand left of it), so the ball itself stays visible.</summary>
@@ -205,6 +208,7 @@ namespace Sheytoonak.Prototype
                 yield return null;
             }
             if (frames) SetPose(side, slot, "idle");
+            duel.KickerArrived(side);
             // waits behind the ball, follows it (my finger moves the ball spot; the rebound moves the ball)
             while (true)
             {
@@ -217,9 +221,8 @@ namespace Sheytoonak.Prototype
             }
         }
 
-        IEnumerator WalkHome(Side side)
+        IEnumerator WalkHome(Side side, int slot)
         {
-            int slot = K(side);
             var hero = Heroes[(int)side][slot];
             if (striking[(int)side] != null) { StopCoroutine(striking[(int)side]); striking[(int)side] = null; }
             var pr = painted[(int)side][slot];
@@ -234,13 +237,12 @@ namespace Sheytoonak.Prototype
             }
             hero.position = home;
             if (pr != null) { pr.flipX = side == Side.Right; SetPose(side, slot, "idle"); }
-            stepping[(int)side] = null;
         }
 
         void OnKick(Side side, int target)
         {
-            // the hero should already be at the ball; if the turn event was missed (first turn), walk up now
-            if (stepping[(int)side] == null) OnTurnChanged(side);
+            // the chosen hero is already at the ball (a kick needs it); a kick without one (tests) uses the current slot
+            if (stepping[(int)side] == null) OnKickerChosen(side, K(side));
             var hero = Heroes[(int)side][K(side)];
             if (striking[(int)side] != null) StopCoroutine(striking[(int)side]);
             striking[(int)side] = StartCoroutine(Strike(hero, side));
@@ -276,7 +278,7 @@ namespace Sheytoonak.Prototype
                 ballShadow.transform.localScale = Vector3.one * r * 2.4f * (1f + lift) / 0.64f;
                 ballShadow.color = new Color(0f, 0f, 0f, 0.45f * (1f - 0.7f * lift));
             }
-            bool resting = on && duel.Rules.Current == duel.Me && !duel.RallyActive && b.Body != null && b.Body.isKinematic;
+            bool resting = on && duel.Rules.Current == duel.Me && duel.KickArmed && !duel.RallyActive && b.Body != null && b.Body.isKinematic;
             ballRing.enabled = resting;
             if (resting)
             {

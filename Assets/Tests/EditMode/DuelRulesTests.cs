@@ -155,6 +155,27 @@ namespace Sheytoonak.Tests
         }
 
         [Test]
+        public void Breaking_the_last_open_window_lifts_the_poisons_that_block_the_rest()
+        {
+            var r = Make();
+            r.Start(Side.Left);
+            int n = r.WindowCount;
+            // cover every window but two, then let the opponent break one and Left break the last open one
+            var covered = new System.Collections.Generic.List<int>();
+            for (int i = 2; i < n; i++) covered.Add(i);
+            Assert.AreEqual(ActionReject.None, r.Poison(Side.Left, StarterHeroes.Get("zaatar").Poison, covered.ToArray()));
+            r.Pass(Side.Left);
+            r.BeginKick(Side.Right); r.EndKick(Side.Right, 0);
+            if (!r.Finished && r.Current == Side.Right) r.Pass(Side.Right);
+            if (r.Finished) return; // a tiny house can end on majority first: nothing to check
+            r.BeginKick(Side.Left); r.EndKick(Side.Left, 1);
+            if (r.Finished) return;
+            int open = 0;
+            for (int i = 0; i < n; i++) if (r.IsBreakable(i)) open++;
+            Assert.Greater(open, 0, "there is always something to break");
+        }
+
+        [Test]
         public void Rage_arrives_every_third_turn_and_restarts_when_spent()
         {
             var r = Make();

@@ -304,6 +304,8 @@ namespace Sheytoonak
         {
             TurnTimeLeft = DuelRules.TurnSeconds;
             foot.Hold = s != Me; // the bot always kicks from the middle; my finger moves the kicker on my turn
+            Selected = -1; KickArmed = false; kickerReady[0] = kickerReady[1] = false;
+            KickerReleased?.Invoke(Side.Left); KickerReleased?.Invoke(Side.Right);
             TurnChanged?.Invoke(s);
             if (s != Me)
             {
@@ -361,6 +363,43 @@ namespace Sheytoonak
 
         // ------------------------------------------------------------------ player actions (from the HUD)
 
+        // ------------------------------------------------------------------ choosing the hero of the action
+        // User (2026-11-04): «باید اول قهرمان انتخاب شه بعد قدرتش یا زدن ضربه. اگر خواست ضربه بزنه تازه بیاد پشت توپ».
+        // ⚠️ until then a hero walked to the ball by itself at the start of every turn and any swipe kicked.
+
+        /// <summary>My chosen hero this turn (0..2), -1 = none yet.</summary>
+        public int Selected { get; private set; } = -1;
+        /// <summary>The chosen hero stands behind the ball: only now does a swipe kick.</summary>
+        public bool KickArmed { get; private set; }
+        /// <summary>side, hero slot: that hero should walk up behind the ball (the stage answers with <see cref="KickerArrived"/>).</summary>
+        public event Action<Side, int> KickerChosen;
+        /// <summary>side: whoever stands at the ball goes home (another hero was chosen, or the turn passed).</summary>
+        public event Action<Side> KickerReleased;
+        readonly bool[] kickerReady = new bool[2];
+
+        public void Select(int slot)
+        {
+            if (Rules == null || Rules.Current != Me || Rules.KickInFlight || slot < 0 || slot > 2) return;
+            if (Selected == slot) return;
+            if (KickArmed || kickerReady[(int)Me]) { KickArmed = false; kickerReady[(int)Me] = false; KickerReleased?.Invoke(Me); }
+            Selected = slot;
+        }
+
+        /// <summary>The kick button of the chosen hero: it walks up behind the ball; the swipe is accepted when it is there.</summary>
+        public void ArmKick()
+        {
+            if (Selected < 0 || Rules == null || Rules.CanAct(Me) != ActionReject.None || KickArmed) return;
+            kickerReady[(int)Me] = false;
+            KickerChosen?.Invoke(Me, Selected);
+        }
+
+        /// <summary>Called by the stage when the hero has reached the ball (or at once when there is no stage).</summary>
+        public void KickerArrived(Side s)
+        {
+            kickerReady[(int)s] = true;
+            if (s == Me && Selected >= 0) KickArmed = true;
+        }
+
         public ActionReject Poison(int hero) => Act(Me, hero, true);
         public ActionReject Antidote(int hero) => Act(Me, hero, false);
         public ActionReject Rage() { var r = Rules.UseRage(Me); if (r == ActionReject.None) Pop?.Invoke("rage", Me, PopKind.Info); return r; }
@@ -417,6 +456,7 @@ namespace Sheytoonak
             }
             var why = Rules.CanAct(Me);
             if (why != ActionReject.None) { return; }
+            if (!KickArmed) { Pop?.Invoke("pick", Me, PopKind.Info); return; } // first a hero, then its kick button
             Kick(Me, g, -1);
         }
 
@@ -507,6 +547,7 @@ namespace Sheytoonak
             return new KickGesture(Mathf.Clamp01(strength), Mathf.Clamp(aim, -1f, 1f), 0f);
         }
 
+        int botKicks;
         IEnumerator BotTurn()
         {
             Side bot = Side.Right;
@@ -520,6 +561,13 @@ namespace Sheytoonak
                     case BotMove.Kind.Antidote: Act(bot, move.Hero, false); break;
                     case BotMove.Kind.Poison: Act(bot, move.Hero, true); break;
                     case BotMove.Kind.Kick:
+                        if (!kickerReady[(int)bot])
+                        {
+                            KickerChosen?.Invoke(bot, botKicks++ % 3);
+                            float wait = Time.time + 2.5f;
+                            while (!kickerReady[(int)bot] && Time.time < wait) yield return null;
+                            yield return new WaitForSeconds(0.3f);
+                        }
                         Kick(bot, GestureFor(move.Window, 1f - botAccuracy), move.Window);
                         while (Rules.KickInFlight) yield return null;
                         break;

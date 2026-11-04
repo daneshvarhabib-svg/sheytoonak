@@ -679,6 +679,36 @@ namespace Sheytoonak.Prototype
             return m;
         }
 
+        // User (2026-11-04): «توپ وقتی می‌خوره به شیشه اون بخشی که توپ خورده نمی‌شکنه، یه بخش دیگه‌ش می‌شکنه». The painted
+        // panes have their hole in a fixed place, so at the moment of the break the painting is picked and moved so that
+        // its hole lands where the ball hit: low hits get the low hole (pane_1, mirrored for the right half), others the
+        // central one (pane_0) slid up or down; mirroring moves the hole sideways.
+        static readonly Vector2[] PaneHoleUV = { new Vector2(0.45f, 0.5f), new Vector2(0.3f, 0.24f), new Vector2(0.5f, 0.5f) };
+        void HoleWhereHit(int window, Vector3 point)
+        {
+            var r = windowRenderers[window];
+            var p0 = Resources.Load<Texture2D>("Art/Broken/pane_0");
+            if (r == null || p0 == null) return;
+            Vector3 c = r.transform.position, sz = r.transform.lossyScale;
+            float hx = Mathf.Clamp01((point.x - c.x) / Mathf.Max(0.01f, sz.x) + 0.5f);
+            float hy = Mathf.Clamp01((point.y - c.y) / Mathf.Max(0.01f, sz.y) + 0.5f);
+            int v = hy < 0.38f ? 1 : (window % 2 == 0 ? 0 : 2);
+            var tex = Resources.Load<Texture2D>("Art/Broken/pane_" + v);
+            if (tex == null) return;
+            var m = new Material(r.sharedMaterial) { mainTexture = tex };
+            float aspect = sz.x / Mathf.Max(0.01f, sz.y), ta = tex.width / (float)tex.height;
+            float sx = 1f, sy = 1f;
+            if (aspect > ta) sy = ta / aspect; else sx = aspect / ta;
+            // mirror when the hit is on the other side of the hole
+            bool flip = (hx - 0.5f) * (PaneHoleUV[v].x - 0.5f) < 0f && Mathf.Abs(hx - 0.5f) > 0.08f;
+            float holeU = flip ? 1f - PaneHoleUV[v].x : PaneHoleUV[v].x;
+            float offX = Mathf.Clamp(holeU - hx * sx, 0f, 1f - sx);
+            float offY = Mathf.Clamp(PaneHoleUV[v].y - hy * sy, 0f, 1f - sy);
+            if (flip) { m.mainTextureScale = new Vector2(-sx, sy); m.mainTextureOffset = new Vector2(1f - offX, offY); }
+            else { m.mainTextureScale = new Vector2(sx, sy); m.mainTextureOffset = new Vector2(offX, offY); }
+            r.material = m;
+        }
+
         static Texture2D ProceduralPane(int variant)
         {
             const int n = 256;
@@ -746,8 +776,9 @@ namespace Sheytoonak.Prototype
         {
             if (i < 0 || i >= windowRenderers.Length) return;
             windowRenderers[i].enabled = true; // the pane shows the dark room with a web of cracks (its material is set at build time)
+            if (duel) HoleWhereHit(i, point);
             if (game != null) WakeDetails(i);
-            else WindowLife(windowRenderers[i].transform.position, windowRenderers[i].transform.lossyScale);
+            else WindowLife(i, windowRenderers[i].transform.position, windowRenderers[i].transform.lossyScale);
             for (int k = 0; k < 18; k++)
             {
                 var shard = GameObject.CreatePrimitive(PrimitiveType.Cube);
@@ -769,12 +800,19 @@ namespace Sheytoonak.Prototype
         /// چیزها»): a cat leaps out, a curtain billows out through the hole, or a flower pot topples off the sill.
         /// Painted sprites Art/Fx/fx_cat, fx_curtain, fx_pot are used when present, primitives otherwise.
         /// </summary>
-        void WindowLife(Vector3 at, Vector3 size)
+        // ⚠️ until 2026-11-04 any window could throw out an orange cat. User: «پنجره‌ای که پشتش گربه نیست می‌خوره زمین گربه
+        // ازش … پشت پنجره گربه خاکستریه ولی گربه‌ای که می‌افته زمین نارنجیه». Now only what the painting shows behind
+        // that window comes out (the house's details: the grey cat of window 8, the pots on the sills), else a curtain.
+        void WindowLife(int window, Vector3 at, Vector3 size)
         {
-            float roll = Random.value;
-            if (roll < 0.34f) StartCoroutine(CatLeap(at, size));
-            else if (roll < 0.67f) StartCoroutine(CurtainOut(at, size));
-            else StartCoroutine(PotFalls(at, size));
+            bool cat = false, pot = false;
+            var house = duelGame != null ? duelGame.house : null;
+            if (house != null && house.details != null)
+                foreach (var d in house.details)
+                    if (d.window == window) { if (d.kind == DetailKind.Cat) cat = true; if (d.kind == DetailKind.Pot) pot = true; }
+            if (cat) StartCoroutine(CatLeap(at, size));
+            else if (pot && Random.value < 0.6f) StartCoroutine(PotFalls(at, size));
+            else StartCoroutine(CurtainOut(at, size));
         }
 
         Transform FxSprite(string name, float worldHeight) => FxSprite(name, worldHeight, new Vector2(0.5f, 0.5f));
@@ -793,7 +831,7 @@ namespace Sheytoonak.Prototype
         IEnumerator CatLeap(Vector3 at, Vector3 size)
         {
             yield return new WaitForSeconds(0.25f);
-            var t = FxSprite("fx_cat", 0.45f);
+            var t = FxSprite("fx_cat_grey", 0.45f) ?? FxSprite("fx_cat", 0.45f); // the cat in the painting is grey
             if (t == null)
             {
                 t = new GameObject("Cat").transform;
