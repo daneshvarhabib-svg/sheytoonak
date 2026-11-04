@@ -1,0 +1,400 @@
+Application.AssetDatabase Initial Refresh Start
+[Package Manager] Restoring resolved packages state from cache
+[Licensing::Client] Successfully resolved entitlement details
+[Package Manager] Registered 19 packages:
+  Packages from [https://packages.unity.com]:
+    com.unity.inputsystem@1.20.0 (location: /github/workspace/Library/PackageCache/com.unity.inputsystem@7a4e1a2a8194)
+    com.unity.toolchain.linux-x86_64@2.0.11 (location: /github/workspace/Library/PackageCache/com.unity.toolchain.linux-x86_64@53b88ff74b51)
+    com.unity.sysroot@2.0.10 (location: /github/workspace/Library/PackageCache/com.unity.sysroot@7bbbb9339c14)
+    com.unity.sysroot.linux-x86_64@2.0.9 (location: /github/workspace/Library/PackageCache/com.unity.sysroot.linux-x86_64@1998d1c7730e)
+  Built-in packages:
+    com.unity.test-framework@1.6.0 (location: /github/workspace/Library/PackageCache/com.unity.test-framework@bd52b1c23814)
+    com.unity.ugui@2.0.0 (location: /github/workspace/Library/PackageCache/com.unity.ugui@6f02f23161e4)
+    com.unity.modules.androidjni@1.0.0 (location: /github/workspace/Library/PackageCache/com.unity.modules.androidjni)
+    com.unity.modules.animation@1.0.0 (location: /github/workspace/Library/PackageCache/com.unity.modules.animation)
+    com.unity.modules.audio@1.0.0 (location: /github/workspace/Library/PackageCache/com.unity.modules.audio)
+    com.unity.modules.imgui@1.0.0 (location: /github/workspace/Library/PackageCache/com.unity.modules.imgui)
+    com.unity.modules.jsonserialize@1.0.0 (location: /github/workspace/Library/PackageCache/com.unity.modules.jsonserialize)
+    com.unity.modules.physics@1.0.0 (location: /github/workspace/Library/PackageCache/com.unity.modules.physics)
+    com.unity.modules.screencapture@1.0.0 (location: /github/workspace/Library/PackageCache/com.unity.modules.screencapture)
+    com.unity.modules.ui@1.0.0 (location: /github/workspace/Library/PackageCache/com.unity.modules.ui)
+    com.unity.modules.uielements@1.0.0 (location: /github/workspace/Library/PackageCache/com.unity.modules.uielements)
+    com.unity.modules.unitywebrequest@1.0.0 (location: /github/workspace/Library/PackageCache/com.unity.modules.unitywebrequest)
+    com.unity.modules.hierarchycore@1.0.0 (location: /github/workspace/Library/PackageCache/com.unity.modules.hierarchycore)
+    com.unity.modules.imageconversion@1.0.0 (location: /github/workspace/Library/PackageCache/com.unity.modules.imageconversion)
+    com.unity.ext.nunit@2.0.5 (location: /github/workspace/Library/PackageCache/com.unity.ext.nunit@b16e6d09cd93)
+[Subsystems] No new subsystems found in resolved package list.
+[Package Manager] Done registering packages in 0.01 seconds
+[Package Manager] Done resolving packages in 0.33 seconds
+[Package Manager] Registered 19 packages:
+  Packages from [https://packages.unity.com]:
+    com.unity.inputsystem@1.20.0 (location: /github/workspace/Library/PackageCache/com.unity.inputsystem@7a4e1a2a8194)
+    com.unity.toolchain.linux-x86_64@2.0.11 (location: /github/workspace/Library/PackageCache/com.unity.toolchain.linux-x86_64@53b88ff74b51)
+    com.unity.sysroot@2.0.10 (location: /github/workspace/Library/PackageCache/com.unity.sysroot@7bbbb9339c14)
+    com.unity.sysroot.linux-x86_64@2.0.9 (location: /github/workspace/Library/PackageCache/com.unity.sysroot.linux-x86_64@1998d1c7730e)
+  Built-in packages:
+    com.unity.test-framework@1.6.0 (location: /github/workspace/Library/PackageCache/com.unity.test-framework@bd52b1c23814)
+    com.unity.ugui@2.0.0 (location: /github/workspace/Library/PackageCache/com.unity.ugui@6f02f23161e4)
+    com.unity.modules.androidjni@1.0.0 (location: /github/workspace/Library/PackageCache/com.unity.modules.androidjni)
+    com.unity.modules.animation@1.0.0 (location: /github/workspace/Library/PackageCache/com.unity.modules.animation)
+    com.unity.modules.audio@1.0.0 (location: /github/workspace/Library/PackageCache/com.unity.modules.audio)
+    com.unity.modules.imgui@1.0.0 (location: /github/workspace/Library/PackageCache/com.unity.modules.imgui)
+    com.unity.modules.jsonserialize@1.0.0 (location: /github/workspace/Library/PackageCache/com.unity.modules.jsonserialize)
+    com.unity.modules.physics@1.0.0 (location: /github/workspace/Library/PackageCache/com.unity.modules.physics)
+    com.unity.modules.screencapture@1.0.0 (location: /github/workspace/Library/PackageCache/com.unity.modules.screencapture)
+    com.unity.modules.ui@1.0.0 (location: /github/workspace/Library/PackageCache/com.unity.modules.ui)
+    com.unity.modules.uielements@1.0.0 (location: /github/workspace/Library/PackageCache/com.unity.modules.uielements)
+    com.unity.modules.unitywebrequest@1.0.0 (location: /github/workspace/Library/PackageCache/com.unity.modules.unitywebrequest)
+    com.unity.modules.hierarchycore@1.0.0 (location: /github/workspace/Library/PackageCache/com.unity.modules.hierarchycore)
+    com.unity.modules.imageconversion@1.0.0 (location: /github/workspace/Library/PackageCache/com.unity.modules.imageconversion)
+    com.unity.ext.nunit@2.0.5 (location: /github/workspace/Library/PackageCache/com.unity.ext.nunit@b16e6d09cd93)
+[Subsystems] No new subsystems found in resolved package list.
+[Package Manager] Done registering packages in 0.00 seconds
+[ScriptCompilation] Requested script compilation because: Assembly Definition File(s) changed
+[ScriptCompilation] Requested script compilation because: Assetdatabase observed changes in script compilation related files
+[40m[32minfo[39m[22m[49m: Microsoft.Hosting.Lifetime[14]
+      Now listening on: http://unix:/tmp/ilpp.sock-f07a9074cf124f978827f2e08a2ba3a4
+[40m[32minfo[39m[22m[49m: Microsoft.Hosting.Lifetime[0]
+      Application started. Press Ctrl+C to shut down.
+[40m[32minfo[39m[22m[49m: Microsoft.Hosting.Lifetime[0]
+      Hosting environment: Production
+[40m[32minfo[39m[22m[49m: Microsoft.Hosting.Lifetime[0]
+      Content root path: /github/workspace/
+[40m[32minfo[39m[22m[49m: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/2 POST http://ilpp/UnityILPP.PostProcessing/Ping application/grpc -
+[40m[32minfo[39m[22m[49m: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
+      Executing endpoint 'gRPC - /UnityILPP.PostProcessing/Ping'
+[40m[32minfo[39m[22m[49m: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
+      Executed endpoint 'gRPC - /UnityILPP.PostProcessing/Ping'
+[40m[32minfo[39m[22m[49m: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/2 POST http://ilpp/UnityILPP.PostProcessing/Ping application/grpc - - 200 - application/grpc 65.4918ms
+Starting: /opt/unity/Editor/Data/bee_backend --ipc --defer-dag-verification --dagfile="Library/Bee/2400b0aEDbg.dag" --continue-on-failure --profile="Library/Bee/backend1.traceevents" ScriptAssemblies
+WorkingDir: /github/workspace
+DisplayProgressbar: Compiling Scripts
+ExitCode: 4 Duration: 1s552ms
+Rebuilding DAG because FileSignature timestamp changed: Library/Bee/2400b0aEDbg-inputdata.json
+*** Tundra requires additional run (1.51 seconds), 0 items updated, 48 evaluated
+Starting: /opt/unity/Editor/Data/Tools/netcorerun/netcorerun "/opt/unity/Editor/Data/Tools/BuildPipeline/ScriptCompilationBuildProgram.exe" "Library/Bee/2400b0aEDbg.dag.json" "Library/Bee/2400b0aEDbg-inputdata.json" "Library/Bee/buildprogram0.traceevents"
+WorkingDir: /github/workspace
+ExitCode: 0 Duration: 0s511ms
+Starting: /opt/unity/Editor/Data/bee_backend --ipc --defer-dag-verification --dagfile="Library/Bee/2400b0aEDbg.dag" --continue-on-failure --dagfilejson="Library/Bee/2400b0aEDbg.dag.json" --profile="Library/Bee/backend2.traceevents" ScriptAssemblies
+WorkingDir: /github/workspace
+ExitCode: 0 Duration: 3s960ms
+Finished compiling graph: 289 nodes, 3015 flattened edges (2787 ToBuild, 38 ToUse), maximum node priority 156
+[172/286    0s] WriteText Library/Bee/artifacts/2400b0aEDbg.dag/Sheytoonak.Core.rsp
+[195/286    0s] WriteText Library/Bee/artifacts/2400b0aEDbg.dag/Sheytoonak.Game.rsp
+[235/286    0s] WriteText Library/Bee/artifacts/2400b0aEDbg.dag/Sheytoonak.Tests.EditMode.rsp
+[274/286    1s] Csc Library/Bee/artifacts/2400b0aEDbg.dag/Sheytoonak.Core.dll (+2 others)
+[275/286    2s] Csc Library/Bee/artifacts/2400b0aEDbg.dag/Sheytoonak.Tests.EditMode.dll (+2 others)
+[276/286    0s] CopyFiles Library/ScriptAssemblies/Sheytoonak.Core.dll
+[277/286    0s] CopyFiles Library/ScriptAssemblies/Sheytoonak.Tests.EditMode.dll
+[278/286    0s] CopyFiles Library/ScriptAssemblies/Sheytoonak.Tests.EditMode.pdb
+[279/286    0s] CopyFiles Library/ScriptAssemblies/Sheytoonak.Core.pdb
+[280/286    2s] Csc Library/Bee/artifacts/2400b0aEDbg.dag/Sheytoonak.Game.dll (+2 others)
+Assets/Scripts/Prototype/PrototypeBootstrap.cs(78,16): warning CS0414: The field 'PrototypeBootstrap.calibrationText' is assigned but its value is never used
+[281/286    0s] CopyFiles Library/ScriptAssemblies/Sheytoonak.Game.dll
+[282/286    0s] CopyFiles Library/ScriptAssemblies/Sheytoonak.Game.pdb
+[283/286    0s] Csc Library/Bee/artifacts/2400b0aEDbg.dag/Sheytoonak.Editor.dll (+2 others)
+[284/286    0s] CopyFiles Library/ScriptAssemblies/Sheytoonak.Editor.dll
+[285/286    0s] CopyFiles Library/ScriptAssemblies/Sheytoonak.Editor.pdb
+*** Tundra build success (3.93 seconds), 15 items updated, 286 evaluated
+Assets/Scripts/Prototype/PrototypeBootstrap.cs(78,16): warning CS0414: The field 'PrototypeBootstrap.calibrationText' is assigned but its value is never used
+Total cache size 683232
+Total cache size after purge 683232, took 00:00:00.0255854
+AssetDatabase: script compilation time: 6.826007s
+Begin MonoManager ReloadAssembly
+- Loaded All Assemblies, in  0.912 seconds
+Start importing Assets/Tests using Guid(4014189d02a4bd0fc992bbe8dc9eb4e7) (DefaultImporter) -> (artifact id: 'd6e7b73ab673c7dd308f21ddc8fcc287') in 0.052449538 seconds
+Start importing Assets/Resources using Guid(f49b7795746f9dcf1b26e14d581d5fac) (DefaultImporter) -> (artifact id: '79032f8dd12e8b9e4ac16d1c2c83f082') in 0.002779273 seconds
+Start importing Assets/Scripts using Guid(37b796971521c512d9e6d7acbb03cbf3) (DefaultImporter) -> (artifact id: 'dc4986d3ca16c1ab97fe199abebdae8a') in 0.003604996 seconds
+Start importing Assets/Editor using Guid(883e8095040efb7aab7783f31e5adf5a) (DefaultImporter) -> (artifact id: 'a2cfd55e37b56109027db5278dd3e6df') in 0.001726265 seconds
+Start importing Assets/Scripts/Input using Guid(23d89706825e0810496bc913ec1bca42) (DefaultImporter) -> (artifact id: '1a42e7c0b1863f3bba02666e266d36ba') in 0.003045707 seconds
+Start importing Assets/Scripts/Prototype using Guid(152e9b4052c2214bd934142d906789bd) (DefaultImporter) -> (artifact id: '59645f7be8cf3a73ffc66ffdb3767fca') in 0.003477777 seconds
+Start importing Assets/Resources/Art using Guid(554bcae290414fd1ca0feda3b0773ce5) (DefaultImporter) -> (artifact id: '0ee9adad58ef1ef649c2190c74031233') in 0.00118209 seconds
+Start importing Assets/Tests/EditMode using Guid(16e011da9abd1b78a85f110d44b6531f) (DefaultImporter) -> (artifact id: '14fa3a7e0fb5e9239d1f34436ac02d2e') in 0.002443206 seconds
+Start importing Assets/Resources/Fonts using Guid(96ea716084e7885d9b1ab0d534515c26) (DefaultImporter) -> (artifact id: 'e0e40bd1cebd13cf93e4be0140d22617') in 0.002693216 seconds
+Start importing Assets/Scripts/Core using Guid(db34c66ad9b5e6449b93de27673773a5) (DefaultImporter) -> (artifact id: '5116e8f997fb315ac9649535f61b47da') in 0.000918009 seconds
+Start importing Assets/Scripts/Gameplay using Guid(7dc3e4800230b9963b39049000c11560) (DefaultImporter) -> (artifact id: 'ad2852c0f62c3da82c7e1fb740812141') in 0.001112636 seconds
+Start importing Assets/Scripts/Config using Guid(cd66c3d00b3333ccda5ab1dedd96cf33) (DefaultImporter) -> (artifact id: 'd7b172136e8fdbec27da9f1042926271') in 0.00308755 seconds
+Start importing Assets/Resources/Art/Fx using Guid(304469b460fe4b65aa8ef8e0ed4d7656) (DefaultImporter) -> (artifact id: '0c2d40d00001ae743924ae06730dffa7') in 0.000533279 seconds
+Start importing Assets/Resources/Art/Bags using Guid(71ede497271b4fcda29e83bd332aa66e) (DefaultImporter) -> (artifact id: '3f47e0bb564a26ccf21586bf58aed851') in 0.000997286 seconds
+Start importing Assets/Scripts/Core/Bags using Guid(b7eb183b6294292f0ae47b8e92fd19b3) (DefaultImporter) -> (artifact id: '499576eff76467b3d92a3e55a5cf6816') in 0.00108114 seconds
+Start importing Assets/Resources/Art/Icons using Guid(898e8a2d129a4e7cb36859d29dfc261b) (DefaultImporter) -> (artifact id: 'b250a94efde85b280e6fde0d1bd29127') in 0.00047241 seconds
+Start importing Assets/Resources/Art/Props using Guid(a9e66851f746f68ae8ebdf56556e3c02) (DefaultImporter) -> (artifact id: '0df2b9b3628beaf4fff2e9ece1cd04a6') in 0.000872562 seconds
+Start importing Assets/Scripts/Core/Challenge using Guid(f92c9f96cf23c3fb39cfd3f85cac1f5e) (DefaultImporter) -> (artifact id: '519b2b67e772b4f1c4f6f63d7641b860') in 0.002637564 seconds
+Start importing Assets/Resources/Art/Heroes using Guid(6aeed760171f411f94f790f726357d9d) (DefaultImporter) -> (artifact id: 'a1b82901f709ca55a2b032970b309948') in 0.002294025 seconds
+Start importing Assets/Resources/Art/Broken using Guid(ecb3830564964c5eb41ee98f47948b93) (DefaultImporter) -> (artifact id: 'c5d751744471b8f35b8127447c7941fc') in 0.000492589 seconds
+Start importing Assets/Resources/Art/Poison using Guid(1d25ea0a1a104691818e27064ef23c76) (DefaultImporter) -> (artifact id: 'fa1bbed3a7317836cbdf9e0a28b308d9') in 0.000472469 seconds
+Start importing Assets/Scripts/Core/Duel using Guid(8e0c61d85a252b2eeabd1f036d3522be) (DefaultImporter) -> (artifact id: '9db61def5bf416278d0ed4e8a8955648') in 0.002314175 seconds
+Start importing Assets/Scripts/Gameplay/Duel using Guid(9f4b04c54af4e14b18d55c2eb97f3689) (DefaultImporter) -> (artifact id: '33d24efdb1e022869700796cf5c55b01') in 0.00340491 seconds
+Start importing Assets/Scripts/Core/Sheytoonak.Core.asmdef using Guid(d02574bf47a27e8568619082bc8c859c) (AssemblyDefinitionImporter) -> (artifact id: '147c07a3c1dad41271d5ae285f459455') in 0.003555181 seconds
+Start importing Assets/Editor/Sheytoonak.Editor.asmdef using Guid(57607fbbbac4213e4927b6f157e01f75) (AssemblyDefinitionImporter) -> (artifact id: 'a224d86f734eddef1f44af6cfd0e221c') in 0.001260376 seconds
+Start importing Assets/Scripts/Sheytoonak.Game.asmdef using Guid(7b53c1b977bd8af6483400c77596a43a) (AssemblyDefinitionImporter) -> (artifact id: '28d6460f24aad35ee2cc596c58f73d37') in 0.003835457 seconds
+Start importing Assets/Tests/EditMode/Sheytoonak.Tests.EditMode.asmdef using Guid(dea36014cd61019e5adf2674bb5c09d3) (AssemblyDefinitionImporter) -> (artifact id: 'bb65698a3318be7cae689ad1d0370eeb') in 0.003915906 seconds
+Refreshing native plugins compatible for Editor in 0.20 ms, found 0 plugins.
+Native extension for LinuxStandalone target not found
+Mono: successfully reloaded assembly
+- Finished resetting the current domain, in  1.383 seconds
+Domain Reload Profiling: 2292ms
+	BeginReloadAssembly (246ms)
+		ExecutionOrderSort (0ms)
+		DisableScriptedObjects (14ms)
+		BackupInstance (0ms)
+		ReleaseScriptingObjects (0ms)
+		CreateAndSetChildDomain (104ms)
+	RebuildCommonClasses (50ms)
+	RebuildNativeTypeToScriptingClass (13ms)
+	initialDomainReloadingComplete (75ms)
+	LoadAllAssembliesAndSetupDomain (524ms)
+		LoadAssemblies (491ms)
+		RebuildTransferFunctionScriptingTraits (0ms)
+		AnalyzeDomain (112ms)
+			TypeCache.Refresh (81ms)
+				TypeCache.ScanAssembly (69ms)
+			BuildScriptInfoCaches (24ms)
+			ResolveRequiredComponents (3ms)
+	FinalizeReload (1383ms)
+		ReleaseScriptCaches (0ms)
+		RebuildScriptCaches (0ms)
+		SetupLoadedEditorAssemblies (1039ms)
+			LogAssemblyErrors (0ms)
+			InitializePlatformSupportModulesInManaged (97ms)
+			SetLoadedEditorAssemblies (5ms)
+			BeforeProcessingInitializeOnLoad (363ms)
+			ProcessInitializeOnLoadAttributes (426ms)
+			ProcessInitializeOnLoadMethodAttributes (125ms)
+			AfterProcessingInitializeOnLoad (20ms)
+			EditorAssembliesLoaded (3ms)
+		ExecutionOrderSort2 (0ms)
+		AwakeInstancesAfterBackupRestoration (21ms)
+Start importing Assets/Resources/Art/Heroes/abu_shahata_face.png using Guid(203324f876fa4617b865e5f21a9e36ee) (TextureImporter) -> (artifact id: '0aadd844c0131ac2e8a8de2cd3a0dd69') in 0.036873985 seconds
+Start importing Assets/Resources/Art/Icons/clock.png using Guid(40b6ce4189304c869d14899cf9020e19) (TextureImporter) -> (artifact id: 'dcf7a7b031c7ac22e689d74f5b19d220') in 0.009070595 seconds
+Start importing Assets/Resources/Art/Fx/fx_curtain.png using Guid(a0c3f4247a2e4117819bcaa0ffe240b3) (TextureImporter) -> (artifact id: 'f369aba543cce406d937352e1c4acabd') in 0.041671516 seconds
+Start importing Assets/Resources/Art/Heroes/zaatar_k4.png using Guid(c0682fc255e843dfae9c6e9dd4f89e2c) (TextureImporter) -> (artifact id: '97992a1667245f8a0677c88a7e43e48b') in 0.02419442 seconds
+Start importing Assets/Resources/Art/Heroes/zaatar_k3.png using Guid(f0b7045758bb4d8c8388cfd61753fc46) (TextureImporter) -> (artifact id: '2ac796cec9e58ee87e4e6ee6dbc1893a') in 0.023899203 seconds
+Start importing Assets/Resources/Art/Heroes/toni_k4.png using Guid(0149b8d44a504853b4b5bedcc3b085e8) (TextureImporter) -> (artifact id: '85045100ad6d9dd782c93bab95105381') in 0.021933142 seconds
+Start importing Assets/Resources/Art/Icons/window.png using Guid(018cd5a962c241b0a79612744e60b179) (TextureImporter) -> (artifact id: '44b16bbbeb9ae3a8c9624f611ff221c4') in 0.00481064 seconds
+Start importing Assets/Resources/Art/Broken/pane_1.png using Guid(2166799fc37f40418743945c01d660f9) (TextureImporter) -> (artifact id: '76330f5dc81009002d32876fe5ee5b17') in 0.013020381 seconds
+Start importing Assets/Resources/Art/Icons/shards.png using Guid(61dce562305f4a09add4f38f5307419d) (TextureImporter) -> (artifact id: '0e80b64fc00f6d043aa0ca330eb5a2ca') in 0.007362928 seconds
+Start importing Assets/Resources/Art/Heroes/toni_k5.png using Guid(a156dc64be9741039b2859813639075c) (TextureImporter) -> (artifact id: 'b5dc12fc4a34ea9ee36185cfd8a90cb7') in 0.021608372 seconds
+Start importing Assets/Resources/Art/Heroes/abu_shahata_k1.png using Guid(d1c3ffa0c4304c39884b58421a4e813a) (TextureImporter) -> (artifact id: 'a01c3692c16c1ebe7ebcb78bd4bf2780') in 0.018892982 seconds
+Start importing Assets/Resources/Art/Heroes/rima_k5.png using Guid(d17a7820c0514e14902a2f1862acb55a) (TextureImporter) -> (artifact id: 'e9d065e12d62cd2eb8b35ba2ba70c66b') in 0.025718916 seconds
+Start importing Assets/Resources/Art/Bags/bag_1.png using Guid(f194ebf31fac4b5fbf4f923cc4f674cc) (TextureImporter) -> (artifact id: '0226d08f7c513a20b748532cce316914') in 0.022941425 seconds
+Start importing Assets/Resources/Art/Broken/pane_3.png using Guid(02606e52926e439e92131ecb83ae6556) (TextureImporter) -> (artifact id: '8f3235226ef9330e52a6c1bc3393474b') in 0.022571406 seconds
+Start importing Assets/Resources/Art/Heroes/abu_shahata_k5.png using Guid(024295024bef4146894ff172e1df3219) (TextureImporter) -> (artifact id: '658711873a3dc58413265bd452feea11') in 0.028172177 seconds
+Start importing Assets/Resources/Art/Bags/bag_2.png using Guid(324887b52d5e4ae29149851e0d59e8a2) (TextureImporter) -> (artifact id: 'cb07b3daf3f52490ddc9df919a528888') in 0.032200258 seconds
+Start importing Assets/Resources/Art/Heroes/rima_k3.png using Guid(4264ff6e15064dbdbf32dfbcf42b92ba) (TextureImporter) -> (artifact id: '78d827b82b381acf4594f784d2cad78c') in 0.033620731 seconds
+Start importing Assets/Resources/Art/Heroes/fulla_face.png using Guid(42ccc57586c44404975a9c11e761115f) (TextureImporter) -> (artifact id: '4dc146fbff5723d6412020b3a6468500') in 0.012049514 seconds
+Start importing Assets/Resources/Art/Poison/pigeon_2.png using Guid(426d0b29752c4c0497308e80e57137e6) (TextureImporter) -> (artifact id: '318ea0d6d2b78862b2737aae5abb6810') in 0.02834393 seconds
+Start importing Assets/Resources/Art/Icons/vane.png using Guid(72a24d31c63d468ab3ad6cf5b23672f2) (TextureImporter) -> (artifact id: 'dac4cdaa38144c2dbff7b2ad3c0da2a3') in 0.007003025 seconds
+Start importing Assets/Resources/Art/Heroes/abu_shahata_k4.png using Guid(725992897f9e490db7e255e350ada861) (TextureImporter) -> (artifact id: 'f64f84d8bc0aeb2f39423ef8382a5e5c') in 0.019594601 seconds
+Start importing Assets/Resources/Art/Icons/card.png using Guid(92b4b3e1100d49e08c9541d10619fdef) (TextureImporter) -> (artifact id: 'b8ba23805f953506da30d6712d2d4c2f') in 0.006280646 seconds
+Start importing Assets/Resources/Art/Poison/vane.png using Guid(f22730872a774f3181caaf6b6c577afb) (TextureImporter) -> (artifact id: '217ec988f9e0f1cf2ddf4fb4c74efa3d') in 0.020933873 seconds
+Start importing Assets/Resources/Art/Icons/trophy.png using Guid(a3c94e6e6a3e408e83c00b017aa79299) (TextureImporter) -> (artifact id: 'd5698104adfc1f66d514663b4258304a') in 0.007061071 seconds
+Start importing Assets/Resources/Art/Heroes/zaatar_idle.png using Guid(0418d32b7a1647cd823bd06d94559b18) (TextureImporter) -> (artifact id: 'ea0e50bc596768d747fae34faadaed65') in 0.156900011 seconds
+Start importing Assets/Resources/Art/Heroes/abu_shahata_idle.png using Guid(14e21c87b56c4f278775fecc5351445d) (TextureImporter) -> (artifact id: '4ed813e5644219c8982e5d790fa7fc18') in 0.11788733 seconds
+Start importing Assets/Resources/Art/Bags/bag_0.png using Guid(541f7da11afc485facbac8645d63dcf5) (TextureImporter) -> (artifact id: 'a1e9c1c5fecc7d85b89c0e3570e00e6e') in 0.009358531 seconds
+Start importing Assets/Resources/Art/Heroes/abu_shahata_k2.png using Guid(b4d986f9bfe24493877e8e2216d59977) (TextureImporter) -> (artifact id: '70944c707b560f114f7177077262fee2') in 0.020511878 seconds
+Start importing Assets/Resources/Art/Icons/curse.png using Guid(d4cd8826ba19451c922127c172a5dbbf) (TextureImporter) -> (artifact id: 'ad762ba1facd217297396e36153fc0de') in 0.005184073 seconds
+Start importing Assets/Resources/Art/Poison/window_open_1.png using Guid(f43935cace6540e5a12680ff0314fbff) (TextureImporter) -> (artifact id: 'a2f0edfb663a9a5a0837ec2b2e411bdc') in 0.042796391 seconds
+Start importing Assets/Resources/Art/Icons/bus.png using Guid(253b8c72e94048a5a4ec81de175e5da9) (TextureImporter) -> (artifact id: 'ab58296fe4cf3ddb5fd35dab5ae23beb') in 0.00614819 seconds
+Start importing Assets/Resources/Art/Icons/home.png using Guid(254c0cf75ec24d5dba44f4e90d095845) (TextureImporter) -> (artifact id: '07f92f0b545a0c65e3897a79a7cb2daf') in 0.00684397 seconds
+Start importing Assets/Resources/Art/Icons/plank.png using Guid(555e1cf7f7e94ec1acf05aa67a6d4b71) (TextureImporter) -> (artifact id: 'c1ffac68d664b85a3c98f69f7ec5e831') in 0.005146937 seconds
+Start importing Assets/Resources/Art/Heroes/rima_kick.png using Guid(65ae80a5608b4165928bd2143692f116) (TextureImporter) -> (artifact id: '5b9eb888ca32bb966ecd64064731c069') in 0.13074465 seconds
+Start importing Assets/Resources/Art/Poison/puddle.png using Guid(d51514f45c0c481fb6463d1f8ee5a2bb) (TextureImporter) -> (artifact id: '8a52e85bd573aa4c56e197f02aa9f44d') in 0.017430128 seconds
+Start importing Assets/Resources/Art/Heroes/toni_k2.png using Guid(96c8919350934426b758b9c530fcfae9) (TextureImporter) -> (artifact id: '49bbb4daa20699076ece88cc60305684') in 0.022252475 seconds
+Start importing Assets/Resources/Art/Fx/fx_pot.png using Guid(078c6b52aeb34f799eaa55ab2421d92a) (TextureImporter) -> (artifact id: '9a9d32ec3a742266139bfc30dc16bb62') in 0.0150201 seconds
+Start importing Assets/Resources/Art/Icons/ban.png using Guid(776d62ef050942ce869dfb8c174262c5) (TextureImporter) -> (artifact id: '981c8d6ebf7d5c94f8879739ae2a3d6f') in 0.007266595 seconds
+Start importing Assets/Resources/Art/Heroes/fulla_k1.png using Guid(58008b89d6194d0aa9d94dc0458cf127) (TextureImporter) -> (artifact id: '82c58c40cbab02bd4b7c535a65b3f728') in 0.021522715 seconds
+Start importing Assets/Resources/Art/Icons/pass.png using Guid(884940742b7b49d2938ee0f298855f2b) (TextureImporter) -> (artifact id: 'e846034d2803f1945a2e3a70805f62d5') in 0.00412864 seconds
+Start importing Assets/Resources/Art/Icons/surrender.png using Guid(98f41371b55a41c1a2d67a644588ccb7) (TextureImporter) -> (artifact id: '2868c5280a3d158b8f460d46820db6a0') in 0.005999349 seconds
+Start importing Assets/Resources/Art/Poison/bus.png using Guid(c8f36fac23734eff8c9921d64ffafcc3) (TextureImporter) -> (artifact id: '9dc46067a7f049af7389ccab0771d881') in 0.081223716 seconds
+Start importing Assets/Resources/Art/Poison/pigeon_1.png using Guid(e8bf6156b54941ee8407cfe988d3c4d1) (TextureImporter) -> (artifact id: '5e787c0affbae313520e98e0378c4a1e') in 0.019443618 seconds
+Start importing Assets/Resources/Art/Poison/pebble.png using Guid(09de023f28eb48a486361459aa3fda7c) (TextureImporter) -> (artifact id: '0101a37ee1c392479e89d016fff943cb') in 0.008631605 seconds
+Start importing Assets/Resources/Art/Heroes/fulla_k2.png using Guid(491465f9d67e483089263356ff79d9ec) (TextureImporter) -> (artifact id: '8ac7629fe54d36ac3b4e1352b92f091a') in 0.021932221 seconds
+Start importing Assets/Resources/Art/Heroes/rima_idle.png using Guid(0abee99605134f63b060ea0402bee1f9) (TextureImporter) -> (artifact id: 'a487eec4eb26586ab24b387799ced513') in 0.131724038 seconds
+Start importing Assets/Resources/Art/Icons/puddle.png using Guid(5a33a768de974e2ba3cc287a172251a6) (TextureImporter) -> (artifact id: 'd61a55512370ee327b641f609352405c') in 0.003805132 seconds
+Start importing Assets/Resources/Art/Heroes/toni_k3.png using Guid(8ac2d5a071fb46ca96d9f7f2da14d534) (TextureImporter) -> (artifact id: '09717744b73fc0aba0174943395583f7') in 0.021896218 seconds
+Start importing Assets/Resources/Art/Icons/pigeon.png using Guid(ba81f0179de843f88e5fb8210f0284fd) (TextureImporter) -> (artifact id: 'a0bfc6257780227e9f6481909eb54a8e') in 0.006665886 seconds
+Start importing Assets/Resources/Art/Heroes/zaatar_k2.png using Guid(ea99116c341b41aa898c8e711b56388c) (TextureImporter) -> (artifact id: 'c23130a024916dd7ac48d7b307421e3b') in 0.030332454 seconds
+Start importing Assets/Resources/Art/Heroes/abu_shahata_kick.png using Guid(ea9f1a7da4ae451babd3a54861e12b83) (TextureImporter) -> (artifact id: '859ec305df20c5558791446f52d4f84b') in 0.121747963 seconds
+Start importing Assets/Resources/Art/Icons/rage.png using Guid(fa2b5aca511741f3816e959416e84d53) (TextureImporter) -> (artifact id: '3638f0eaa40053d6120dc38ad48ba52a') in 0.004467882 seconds
+Start importing Assets/Resources/Art/Heroes/zaatar_kick.png using Guid(fa9cfeda2c814005bbc677f9b7a2f5eb) (TextureImporter) -> (artifact id: 'e4edb85c25bccb89d26e955ab290fa58') in 0.126339189 seconds
+Start importing Assets/Resources/Art/Heroes/fulla_idle.png using Guid(3b424e004fef4cfba2d1a80e35799a77) (TextureImporter) -> (artifact id: '17e147c97fe7314b4171a6cdddf29f93') in 0.123397705 seconds
+Start importing Assets/Resources/Art/Icons/open_window.png using Guid(3bb5d8da4ae345429cba08adb86c0fa8) (TextureImporter) -> (artifact id: 'cc2f150edbf13659b0b09d19673d6723') in 0.006713376 seconds
+Start importing Assets/Resources/Art/Poison/fart.png using Guid(7b00a4f4e9a54e67bd70ae26e49f5bb5) (TextureImporter) -> (artifact id: '24b3d4755008cae2a59b60c2396f0ee4') in 0.015920814 seconds
+Start importing Assets/Resources/Art/Broken/pane_0.png using Guid(ebe156b0263d4c5485bc6c5b99038ec4) (TextureImporter) -> (artifact id: '266b9abaeba218e30623787cdf455d4f') in 0.013273926 seconds
+Start importing Assets/Resources/Art/Heroes/zaatar_k5.png using Guid(2cad2f4ac45245d0bd185d688ca70f52) (TextureImporter) -> (artifact id: 'a32d19eaa6b7cf6aa56a1cb6f05ae460') in 0.023545498 seconds
+Start importing Assets/Resources/Art/Icons/nails.png using Guid(4c029ed1ffe64437a27d469b9472d015) (TextureImporter) -> (artifact id: '54a8db26f3f37a561a8d802c43448cb0') in 0.005041933 seconds
+Start importing Assets/Resources/Art/Heroes/fulla_k3.png using Guid(4cbb3f55d5d44644bacf053598f71197) (TextureImporter) -> (artifact id: '2bcf125ed17aca618becf6ee6e81d7bb') in 0.021312323 seconds
+Start importing Assets/Resources/Art/Heroes/fulla_k5.png using Guid(6c3731f32f774adcb00d92cc52de5811) (TextureImporter) -> (artifact id: 'b0aae32076b534f2d3da296b3fc190be') in 0.022142612 seconds
+Start importing Assets/Resources/Art/Poison/nails.png using Guid(8c2a2819ffc84114badd06f0c13de2c9) (TextureImporter) -> (artifact id: '6d5d3d5c20a539d10de953dffc217326') in 0.016974312 seconds
+Start importing Assets/Resources/Art/Icons/fart.png using Guid(9cecb9b0219f4840a6cda8c143d31f07) (TextureImporter) -> (artifact id: '34a88297c6a35914c17acbce9f6246c3') in 0.005982114 seconds
+Start importing Assets/Resources/Art/Heroes/toni_kick.png using Guid(cc1515baa7be4ccaad6aa6a064e49f2d) (TextureImporter) -> (artifact id: 'f7aabf5ca66da2cf750132d9fe4290c9') in 0.130593315 seconds
+Start importing Assets/Resources/Art/Heroes/rima_k2.png using Guid(2de96e247d8c405e918d3af945f5fb57) (TextureImporter) -> (artifact id: 'd0db0844e68c32d3d40bfddef9f5dba7') in 0.025893584 seconds
+Start importing Assets/Resources/Art/Broken/pane_2.png using Guid(3d360560007f40b4920c399bf55b1347) (TextureImporter) -> (artifact id: '998bc3c179ee05ecb7ba553c601aad91') in 0.012980361 seconds
+Start importing Assets/Resources/Art/Icons/bag.png using Guid(6d30c97971c34a0099e269751367b039) (TextureImporter) -> (artifact id: '64ad3ea8770e322bc2dee6ffcf8be1af') in 0.007011658 seconds
+Start importing Assets/Resources/Art/Icons/duel.png using Guid(6daa9b87148940fd8c420a16d81ab77c) (TextureImporter) -> (artifact id: '83935d70e81f5e031f8cea926d25bb74') in 0.006935035 seconds
+Start importing Assets/Resources/Art/Heroes/rima_face.png using Guid(8de9ac8ba7854cf9ba4780a33f6231b4) (TextureImporter) -> (artifact id: '71197701190d971d72796ec63ed43eb1') in 0.013004277 seconds
+Start importing Assets/Resources/Art/Poison/pigeon_0.png using Guid(cdcdaf64d7ea44a5a92cda928fe4061f) (TextureImporter) -> (artifact id: 'bdf9d931dea777b81612f66d749cb89c') in 0.028785585 seconds
+Start importing Assets/Resources/Art/Icons/pebble.png using Guid(fd31b539a030418f997cb47278109aec) (TextureImporter) -> (artifact id: '23de28110412ea00a3513845e1ab9fa0') in 0.006089813 seconds
+Start importing Assets/Resources/Art/Heroes/rima_k1.png using Guid(1e3722c97cde483da61a6f5be5e719f1) (TextureImporter) -> (artifact id: 'd4c1bdca07f8fd525fb6a89712d645d5') in 0.028983117 seconds
+Start importing Assets/Resources/Art/Heroes/toni_k1.png using Guid(6edefe36d7a34c8a9f4fa5d588a6dad5) (TextureImporter) -> (artifact id: '38cfa50370c1a53010d7472ac74c3d74') in 0.022527892 seconds
+Start importing Assets/Resources/Art/Fx/fx_cat.png using Guid(befa35b50fc7434c8bd60dc15269b372) (TextureImporter) -> (artifact id: '8ec987fa305187af93f4ac1d07ef4207') in 0.018030215 seconds
+Start importing Assets/Resources/Art/Poison/window_open_0.png using Guid(ceb01e3d9aed4cc8984b0a27e89606a6) (TextureImporter) -> (artifact id: 'ffcb65812c0b4915780a799d29fdf857') in 0.040062094 seconds
+Start importing Assets/Resources/Art/Heroes/zaatar_k1.png using Guid(ce8830540c774d95a1000c45a497f680) (TextureImporter) -> (artifact id: 'b8fc6562e65835afb89d4f8730da8c99') in 0.024858262 seconds
+Start importing Assets/Resources/Art/Heroes/zaatar_face.png using Guid(ee2c02f9e8704d879d98e71fbf3551e1) (TextureImporter) -> (artifact id: '2a3eab64e38cad2d67f07601b410d12d') in 0.013886162 seconds
+Start importing Assets/Resources/Art/Icons/replay.png using Guid(0f775e1f420d47a685f0b92a0601eab3) (TextureImporter) -> (artifact id: 'af9eba671c2c971a6c899055ce5f5f5d') in 0.005303809 seconds
+Start importing Assets/Resources/Art/Icons/pick.png using Guid(1fa79cad3143476fb0fa6cd661f82792) (TextureImporter) -> (artifact id: '897b53b7920d1eafb1d05d448fc11a07') in 0.007226275 seconds
+Start importing Assets/Resources/Art/Heroes/toni_idle.png using Guid(3f8f6ef071e64aaca416a546a08f1791) (TextureImporter) -> (artifact id: 'bc36446e8707961d647367b6e99352bf') in 0.136496021 seconds
+Start importing Assets/Resources/Art/Icons/heart.png using Guid(5f8ff41da6684fa8ab85c8d13c6c9a8b) (TextureImporter) -> (artifact id: '503547fd5c45fb3862eac19a2279d0c0') in 0.012183693 seconds
+Start importing Assets/Resources/Art/Bags/bag_3.png using Guid(7ff24ffc285f45748bda6b74b949361a) (TextureImporter) -> (artifact id: '56d24f18299ffb79b9ae8f09343f6d47') in 0.034976307 seconds
+Start importing Assets/Resources/Art/Heroes/abu_shahata_k3.png using Guid(8f9b636c81644377aaf7c91d0380f7f5) (TextureImporter) -> (artifact id: '4a2fb46d79545bf067b553ca7f1cdc35') in 0.019757933 seconds
+Start importing Assets/Resources/Art/Icons/wind.png using Guid(8fbffd7230ab465ebfe2a525bb2386a7) (TextureImporter) -> (artifact id: '579f26cd93e1e8472a0479347bcba176') in 0.006063715 seconds
+Start importing Assets/Resources/Art/Heroes/fulla_kick.png using Guid(cfb4b9ab20d64500a582e2a66b53ceaf) (TextureImporter) -> (artifact id: '1e26f504149287a25b5b55fc6895b1d1') in 0.123739962 seconds
+Start importing Assets/Resources/Art/Poison/plank.png using Guid(ef75577e6d114202a511a0e872756281) (TextureImporter) -> (artifact id: 'f26561b865a31fb2f90d23d15af3b339') in 0.016292264 seconds
+Start importing Assets/Resources/Art/Heroes/toni_face.png using Guid(ef3f728d45064bf28e9415a690e9614a) (TextureImporter) -> (artifact id: '8035b406e308c205572d3abcc9f53dd5') in 0.01274976 seconds
+Start importing Assets/Resources/Fonts/Vazirmatn-Regular.ttf using Guid(a063c18040b2531f59a181b2a13ac209) (TrueTypeFontImporter) -> (artifact id: 'a1e9e6c978bdc167c0ffad7fb386e11d') in 0.018799765 seconds
+Start importing Assets/Resources/Fonts/OFL.txt using Guid(49b9a19d1c4c6ff4fa0a2ff4f1bc7d50) (TextScriptImporter) -> (artifact id: '74a20e0437d3f0d4977067819fb9c10e') in 0.001882597 seconds
+Refreshing native plugins compatible for Editor in 0.21 ms, found 0 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Asset Pipeline Refresh (id=2f20eb5341a4cc6beaf6ba3a1c4b96cb): Total: 13.275 seconds - Initiated by InitialRefreshV2(ForceSynchronousImport)
+	Summary:
+		Imports: total=116 (actual=116, local cache=0, cache server=0)
+		Asset DB Process Time: managed=34 ms, native=4934 ms
+		Asset DB Callback time: managed=168 ms, native=359 ms
+		Scripting: domain reloads=1, domain reload time=913 ms, compile time=6830 ms, other=34 ms
+		Project Asset Count: scripts=315, non-scripts=355
+		Asset File Changes: new=112, changed=161, moved=0, deleted=0
+		Scan Filter Count: 1
+	InvokeCustomDependenciesCallbacks: 0.005ms
+	InvokePackagesCallback: 352.382ms
+	ApplyChangesToAssetFolders: 0.196ms
+	Scan: 553.907ms
+	OnSourceAssetsModified: 1.175ms
+	CategorizeAssetsWithTransientArtifact: 11.037ms
+	ProcessAssetsWithTransientArtifactChanges: 24.513ms
+	CategorizeAssets: 13.204ms
+	ImportOutOfDateAssets: 4262.508ms (-5439.724ms without children)
+		ImportManagerImport: 2871.544ms (18.776ms without children)
+			ImportInProcess: 2852.082ms
+			UpdateCategorizedAssets: 0.686ms
+		CompileScripts: 6829.685ms
+		ReloadNativeAssets: 0.001ms
+		UnloadImportedAssets: 0.483ms
+		ReloadImportedAssets: 0.023ms
+		EnsureUptoDateAssetsAreRegisteredWithGuidPM: 0.208ms
+		InitializingProgressBar: 0.013ms
+		PostProcessAllAssetNotificationsAddChangedAssets: 0.001ms
+		OnDemandSchedulerStart: 0.273ms
+	PostProcessAllAssets: 173.162ms
+	Hotreload: 2.372ms
+	GatherAllCurrentPrimaryArtifactRevisions: 0.000ms
+	UnloadStreamsBegin: 2.151ms
+	PersistCurrentRevisions: 0.218ms
+	UnloadStreamsEnd: 0.001ms
+	GenerateScriptTypeHashes: 4.012ms
+	Untracked: 7877.799ms
+
+Application.AssetDatabase Initial Refresh End
+Scanning for USB devices : 0.154ms
+Initializing Unity extensions:
+UpdateMenuTitleForLanguage: 10
+[MODES] ModeService[none].Initialize
+[MODES] ModeService[none].LoadModes
+[MODES] Loading mode Default (0) for mode-current-id-مدينة فاجعة
+Unloading 3 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 1246 unused Assets / (1.4 MB). Loaded Objects now: 1783.
+Memory consumption went from 84.7 MB to 83.3 MB.
+Total: 13.495103 ms (FindLiveObjects: 0.268608 ms CreateObjectMapping: 0.054811 ms MarkObjects: 10.606789 ms  DeleteObjects: 2.563984 ms)
+
+
+(Unity:1534): GLib-GObject-CRITICAL **: 07:31:51.184: g_object_unref: assertion 'G_IS_OBJECT (object)' failed
+
+(Unity:1534): GLib-GObject-CRITICAL **: 07:31:51.184: g_object_unref: assertion 'G_IS_OBJECT (object)' failed
+
+(Unity:1534): GLib-GObject-CRITICAL **: 07:31:51.184: g_object_unref: assertion 'G_IS_OBJECT (object)' failed
+[Project] Loading completed in 19.514 seconds
+	Project init time: 				19.155 seconds
+		Template init time: 		0.000 seconds
+		Package Manager init time: 		0.530 seconds
+		Asset Database init time: 		0.226 seconds
+		Global illumination init time: 	0.006 seconds
+		Assemblies load time: 			4.752 seconds
+		Unity extensions init time: 	0.003 seconds
+		Asset Database refresh time: 	13.275 seconds
+	Scene opening time: 			0.132 seconds
+##utp:{"type":"ProjectInfo","version":2,"phase":"Immediate","time":1793777511185,"processId":1534,"projectLoad":19.514379956,"projectInit":19.154800578,"templateInit":0.0,"packageManagerInit":0.530055351,"assetDatabaseInit":0.225590547,"globalIlluminationInit":0.00588512,"assembliesLoad":4.751599367,"unityExtensionsInit":0.002515863,"assetDatabaseRefresh":13.274717335,"sceneOpening":0.131955712}
+##utp:{"type":"EditorInfo","version":2,"phase":"Immediate","time":1793777511185,"processId":1534,"editorVersion":"6000.0.84f1 (78ab6fc243d5)","branch":"6000.0/staging","buildType":"Release","platform":"Linux"}
+Asset Pipeline Refresh (id=307576f51909bdb75b46c3ca4db1319b): Total: 0.093 seconds - Initiated by RefreshV2(ForceSynchronousImport)
+Asset Pipeline Refresh (id=e7f239b9a1e0baf7fa1f6dbbfdccddba): Total: 0.043 seconds - Initiated by RefreshV2(NoUpdateAssetOptions)
+Launched and connected shader compiler UnityShaderCompiler after 0.02 seconds
+Running tests for ExecutionSettings with details:
+targetPlatform = 
+playerHeartbeatTimeout = 600
+filters[0] = 
+   Filter with settings:
+   testMode = EditMode
+   targetPlatform = 
+   testNames = null
+   groupNames = null
+   categoryNames = null
+   assemblyNames = null
+ignoreTests = {}
+featureFlags = null
+
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /home/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:35)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+UnityEditor.TestTools.TestRunner.CommandLineTest.Executer:InitializeAndExecuteRun (string[]) (at ./Library/PackageCache/com.unity.test-framework@bd52b1c23814/UnityEditor.TestRunner/CommandLineTest/Executer.cs:53)
+UnityEditor.TestTools.TestRunner.CommandLineTest.TestStarter:InitializeAndExecuteRun () (at ./Library/PackageCache/com.unity.test-framework@bd52b1c23814/UnityEditor.TestRunner/CommandLineTest/TestStarter.cs:64)
+UnityEditor.EditorApplication:Internal_CallUpdateFunctions () (at /home/bokken/build/output/unity/unity/Editor/Mono/EditorApplication.cs:384)
+
+(Filename: ./Library/PackageCache/com.unity.test-framework@bd52b1c23814/UnityEditor.TestRunner/CommandLineTest/Executer.cs Line: 53)
+
+[UnityConnectServicesConfig] config is NOT valid, switching to default
+Created GICache directory at /root/.cache/unity3d/GiCache. Took: 0.092s, timestamps: [19.534 - 19.626]
+Unloading 1 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 2 unused Assets / (1.3 KB). Loaded Objects now: 1826.
+Memory consumption went from 77.8 MB to 77.8 MB.
+Total: 7.900392 ms (FindLiveObjects: 0.098416 ms CreateObjectMapping: 0.019879 ms MarkObjects: 7.738063 ms  DeleteObjects: 0.043144 ms)
+
+Saving results to: /github/workspace/artifacts/editmode-results.xml
+Unloading 0 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 0 unused Assets / (0 B). Loaded Objects now: 1826.
+Memory consumption went from 77.6 MB to 77.6 MB.
+Total: 6.995063 ms (FindLiveObjects: 0.086578 ms CreateObjectMapping: 0.019619 ms MarkObjects: 6.884360 ms  DeleteObjects: 0.003906 ms)
+
+DisplayProgressbar: Undo
+Test run completed. Exiting with code 0 (Ok). Run completed.
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /home/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:35)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+UnityEditor.TestTools.TestRunner.CommandLineTest.Executer:ExitApplication (UnityEditor.TestTools.TestRunner.CommandLineTest.Executer/ReturnCodes,string) (at ./Library/PackageCache/com.unity.test-framework@bd52b1c23814/UnityEditor.TestRunner/CommandLineTest/Executer.cs:81)
+UnityEditor.TestTools.TestRunner.CommandLineTest.Executer:ExitIfRunIsCompleted () (at ./Library/PackageCache/com.unity.test-framework@bd52b1c23814/UnityEditor.TestRunner/CommandLineTest/Executer.cs:74)
+UnityEditor.EditorApplication:Internal_CallUpdateFunctions () (at /home/bokken/build/output/unity/unity/Editor/Mono/EditorApplication.cs:384)
+
+(Filename: ./Library/PackageCache/com.unity.test-framework@bd52b1c23814/UnityEditor.TestRunner/CommandLineTest/Executer.cs Line: 81)
+
+[Physics::Module] Cleanup current backned.
+[Physics::Module] Id: 0xf2b8ea05
+Input System module state changed to: ShutdownInProgress.
+Input System polling thread exited.
+Input System module state changed to: Shutdown.
+[Licensing::IpcConnector] LicenseClient-root-notifications channel disconnected successfully.
+[Licensing::IpcConnector] LicenseClient-root channel disconnected successfully.
+AcceleratorClientConnectionCallback - disconnected - :0
+[40m[32minfo[39m[22m[49m: Microsoft.Hosting.Lifetime[0]
+      Application is shutting down...
+Cleanup mono
+debugger-agent: Unable to listen on 40
+[Package Manager] Server process was shutdown
+Checking for leaked weakptr:
+  Found no leaked weakptrs.
+##utp:{"type":"MemoryLeaks","version":2,"phase":"Immediate","time":1793777513755,"processId":1534,"allocatedMemory":7276823,"memoryLabels":[{"Default":13965},{"Permanent":16080},{"Thread":1084616},{"Manager":17062},{"VertexData":8},{"Geometry":408},{"VFX":-104},{"Texture":296},{"Shader":79227},{"Material":24},{"GfxDevice":35976},{"Animation":456},{"Audio":4032},{"Font":122797},{"FreeType":5918},{"FontEngine":320},{"Physics":2081},{"Serialization":368},{"Input":26752},{"JobScheduler":33024},{"TextLib":160},{"Mono":32},{"ScriptingNativeRuntime":155096},{"BaseObject":1622936},{"Resource":1032},{"Renderer":2928},{"Transform":4678},{"File":832},{"WebCam":80},{"Culling":32},{"Terrain":11298},{"Wind":24},{"String":10098},{"DynamicArray":87790},{"HashMap":69596},{"Utility":2657904},{"PoolAlloc":1568},{"AI":72},{"TypeTree":5005},{"ScriptManager":512},{"RuntimeInitializeOnLoadManager":64},{"SpriteAtlas":112},{"GI":7448},{"Director":8208},{"WebRequest":552},{"VR":45689},{"SceneManager":528},{"Video":64},{"LazyScriptCache":32},{"NativeArray":540},{"Camera":17},{"Secure":265},{"SerializationCache":1576},{"APIUpdating":10320},{"Subsystems":336},{"VirtualTexturing":57552},{"StaticSafetyDebugInfo":278528},{"Analytics":336},{"Hierarchy":832},{"CoreStats":12536},{"Identifiers":6192},{"Gui":112},{"EditorUtility":27684},{"VersionControl":4},{"Undo":979},{"AssetDatabase":700806},{"EditorGi":328},{"UnityConnect":24816},{"Upm":1852},{"DrivenProperties":72},{"LocalIPC":147},{"ProfilerEditor":9746},{"CoreBusinessMetrics":2379},{"Licensing":1128},{"AssetReference":32},{"IPCStream":32}]}
