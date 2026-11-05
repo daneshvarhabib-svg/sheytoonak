@@ -34,6 +34,9 @@ namespace Sheytoonak
                  "worldFacadeWidth metres wide at facadeDistance; windows come from worldWindows, which the " +
                  "prototype derives from the image's uv rectangles. Empty = coloured boxes.")]
         public string paintedTexture = "";
+        [Tooltip("Same painting with every pane smashed (same size, same framing). When set, a broken window shows " +
+                 "its own rectangle cut from this picture instead of a generic broken pane (user 2026-11-05).")]
+        public string brokenTexture = "";
         [Tooltip("Things painted in or on the windows that should move: a pot or cat falls when the window breaks, " +
                  "a curtain flutters, laundry sways in the wind all the time. Pixel rect empty = a default part of the window.")]
         public WindowDetail[] details = Array.Empty<WindowDetail>();

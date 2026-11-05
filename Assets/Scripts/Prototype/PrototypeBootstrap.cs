@@ -219,7 +219,7 @@ namespace Sheytoonak.Prototype
         void BuildGameObjects()
         {
             var config = ScriptableObject.CreateInstance<GameConfig>();
-            var houses = new[] { House1(), House2(), House3(), House4(), House5(), House6() };
+            var houses = new[] { House1(), House2(), House3(), House4(), House5(), House6(), House7() };
 
             // Player: foot position + window mapping. No body: the game is first-person (POV).
             var player = new GameObject("Player");
@@ -363,6 +363,17 @@ namespace Sheytoonak.Prototype
                 new WindowDetail(6, DetailKind.Laundry) { pixel = R(820f, 413f, 1032f, 502f) },
             });
 
+        // Alexandria corniche, balcony doors behind railings, 4 x 2 (user, 2026-11-05) -- painted twice, once with every pane
+        // smashed (house_07_broken): a broken window shows its own rectangle of that picture. The rect runs down behind the
+        // railing to the balcony floor, where the broken glass still shows through the bars.
+        HouseDefinition House7() => MakePaintedHouse("البيت ٧", "Art/house_07", 1536f, 1024f, 13f,
+            new[]
+            {
+                R(244f, 153f, 383f, 349f), R(545f, 153f, 683f, 349f), R(863f, 153f, 1003f, 349f), R(1161f, 153f, 1299f, 349f),
+                R(244f, 449f, 383f, 645f), R(545f, 449f, 683f, 645f), R(863f, 449f, 1003f, 645f), R(1161f, 449f, 1299f, 645f),
+            },
+            0.25f, 1.95f, 0f, 1.1f, null, "Art/house_07_broken");
+
         static Rect R(float x0, float y0, float x1, float y1) => Rect.MinMaxRect(x0, y0, x1, y1);
         static WindowDetail Pot(int w, float x0, float y0, float x1, float y1) => new WindowDetail(w, DetailKind.Pot) { pixel = R(x0, y0, x1, y1) };
 
@@ -389,13 +400,15 @@ namespace Sheytoonak.Prototype
 
         /// <summary>Facade from a painting: pixel rects (origin top-left, as measured on the image) become world rects on a quad w metres wide.</summary>
         static HouseDefinition MakePaintedHouse(string name, string texture, float imgW, float imgH, float w, Rect[] pixelWindows,
-                                                float wind, float returnTime, float spread, float hitScale, WindowDetail[] details = null)
+                                                float wind, float returnTime, float spread, float hitScale, WindowDetail[] details = null,
+                                                string broken = null)
         {
             float h = w * imgH / imgW;
             var house = ScriptableObject.CreateInstance<HouseDefinition>();
             house.name = name;
             house.displayName = name;
             house.paintedTexture = texture;
+            house.brokenTexture = broken ?? "";
             house.facadeDistance = 13f;
             house.worldRoofHeight = h;          // where the painting (and the windows) stop; the wall itself continues
             house.worldFacadeWidth = w;
@@ -518,7 +531,25 @@ namespace Sheytoonak.Prototype
 
             var rects = h.worldWindows;
             windowRenderers = new Renderer[rects.Length];
-            for (int i = 0; i < rects.Length; i++)
+            // User (2026-11-05): «دو تا خروجی گرفتم یکی با فرض شکستن همه شیشه‌های پنجره و یکی معمولی … هر پنجره که شیشه‌ش
+            // شکست پنجره‌اش رو از تصویر پنجره شکسته کراپ می‌کنی». The broken painting has the same framing, so the pane
+            // is exactly the window's rectangle of that picture, laid over the intact one: the room, the torn curtain and the
+            // glass left in the frame are the painter's, not a generic pane.
+            var brokenTex = string.IsNullOrEmpty(h.brokenTexture) ? null : Resources.Load<Texture2D>(h.brokenTexture);
+            paintedBroken = brokenTex != null;
+            for (int i = 0; paintedBroken && i < rects.Length; i++)
+            {
+                Rect r = rects[i];
+                var m = new Material(mat) { mainTexture = brokenTex };
+                float u0 = r.xMin / w + 0.5f, u1 = r.xMax / w + 0.5f, v0 = r.yMin / paintedHeight, v1 = r.yMax / paintedHeight;
+                m.mainTextureScale = new Vector2(u1 - u0, v1 - v0);
+                m.mainTextureOffset = new Vector2(u0, v0);
+                var pane = Box(root, new Vector3(r.center.x, r.center.y, -0.01f), new Vector3(r.width, r.height, 0.005f), m);
+                pane.name = "Broken pane " + i;
+                windowRenderers[i] = pane.GetComponent<Renderer>();
+                windowRenderers[i].enabled = false;
+            }
+            for (int i = 0; !paintedBroken && i < rects.Length; i++)
             {
                 Rect r = rects[i];
                 var pane = Box(root, new Vector3(r.center.x, r.center.y, -0.02f), new Vector3(r.width * 0.9f, r.height * 0.9f, 0.02f), BrokenGlassMat(i, r.width / Mathf.Max(0.01f, r.height)));
@@ -536,6 +567,7 @@ namespace Sheytoonak.Prototype
         }
 
         Texture2D paintedTex; float paintedW, paintedH; Transform detailRoot;
+        bool paintedBroken; // the house has a smashed twin painting (BuildPaintedFacade)
 
         Rect DetailPixels(WindowDetail d)
         {
@@ -802,7 +834,7 @@ namespace Sheytoonak.Prototype
         {
             if (i < 0 || i >= windowRenderers.Length) return;
             windowRenderers[i].enabled = true; // the pane shows the dark room with a web of cracks (its material is set at build time)
-            if (duel) HoleWhereHit(i, point);
+            if (duel && !paintedBroken) HoleWhereHit(i, point);
             if (game != null) WakeDetails(i);
             else WindowLife(i, windowRenderers[i].transform.position, windowRenderers[i].transform.lossyScale);
             for (int k = 0; k < 18; k++)
