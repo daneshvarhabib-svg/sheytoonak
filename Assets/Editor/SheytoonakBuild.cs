@@ -244,7 +244,10 @@ namespace Sheytoonak.EditorTools
             foreach (var probe in new[] { "Assets/Resources/Art/house_11.png", "Assets/Resources/Art/Heroes/zaatar_idle.png" })
             {
                 var t = AssetDatabase.LoadAssetAtPath<Texture2D>(probe);
-                if (t != null) Debug.Log("SHEYTOONAK TEXTURE " + probe + ": " + t.format + " " + t.width + "x" + t.height + " mips " + t.mipmapCount);
+                var imp = AssetImporter.GetAtPath(probe) as TextureImporter;
+                var ps = imp != null ? imp.GetPlatformTextureSettings("Android") : null;
+                if (t != null) Debug.Log("SHEYTOONAK TEXTURE " + probe + ": " + t.format + " " + t.width + "x" + t.height + " mips " + t.mipmapCount +
+                                         ", target " + EditorUserBuildSettings.activeBuildTarget + ", android override " + (ps != null ? ps.overridden + " " + ps.format : "?"));
             }
 
             string dir = Path.GetDirectoryName(apkPath);
