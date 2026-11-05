@@ -642,22 +642,25 @@ namespace Sheytoonak.Prototype
             quad.transform.localScale = new Vector3(w, paintedHeight, 1f);
             quad.GetComponent<Renderer>().sharedMaterial = mat;
             // User (2026-11-05): «عکس خونه باید ابعادش بزرگتر شه و کل تصویر رو بگیره … کلا ما تو قاب فقط همون خونه رو ببینیم».
-            // The painting is sized in BuildFacade as large as its windows allow; the rest of the view on each side is the
-            // same painting mirrored (then straight again), so the street continues in the painter's own strokes.
+            // ⚠️ run 89 filled the width and lost the upper window rows; run 90 mirrored the house beside itself and the user
+            // said «خونه رو تکرار کرده فقط». A 3:2 painting cannot fill a 2.2:1 screen above the road without either, so the
+            // house is sized to its windows and the strip left on each side is the painting's own outer 3 % stretched
+            // sideways: the wall, the floor lines and the awning band run on, nothing repeats. (A wider painting fixes it.)
             if (viewHalfWidth > w * 0.5f + 0.05f)
             {
-                var mirror = new Material(mat) { mainTextureScale = new Vector2(-1f, 1f), mainTextureOffset = new Vector2(1f, 0f) };
-                for (int side = -1; side <= 1; side += 2)
-                    for (int n = 1; n * w - w * 0.5f < viewHalfWidth + 0.5f && n <= 3; n++)
-                    {
-                        var copy = GameObject.CreatePrimitive(PrimitiveType.Quad);
-                        Strip(copy);
-                        copy.name = "Painting side " + side * n;
-                        copy.transform.SetParent(root, false);
-                        copy.transform.localPosition = new Vector3(side * n * w, paintedHeight * 0.5f, 0.05f);
-                        copy.transform.localScale = new Vector3(w, paintedHeight, 1f);
-                        copy.GetComponent<Renderer>().sharedMaterial = (n % 2 == 1) ? mirror : mat;
-                    }
+                const float edge = 0.03f;
+                float side = viewHalfWidth - w * 0.5f + 0.5f;
+                for (int dir = -1; dir <= 1; dir += 2)
+                {
+                    var strip = new Material(mat) { mainTextureScale = new Vector2(edge, 1f), mainTextureOffset = new Vector2(dir < 0 ? 0f : 1f - edge, 0f) };
+                    var q = GameObject.CreatePrimitive(PrimitiveType.Quad);
+                    Strip(q);
+                    q.name = "Painting edge " + dir;
+                    q.transform.SetParent(root, false);
+                    q.transform.localPosition = new Vector3(dir * (w * 0.5f + side * 0.5f), paintedHeight * 0.5f, 0.05f);
+                    q.transform.localScale = new Vector3(side, paintedHeight, 1f);
+                    q.GetComponent<Renderer>().sharedMaterial = strip;
+                }
             }
 
             // The wall keeps going above the painting (no roof): a box in the painting's own brick colour.
