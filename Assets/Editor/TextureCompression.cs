@@ -12,7 +12,7 @@ namespace Sheytoonak.EditorTools
     /// </summary>
     public class TextureCompression : AssetPostprocessor
     {
-        const uint Version = 1;
+        const uint Version = 2;
         public override uint GetVersion() => Version;
 
         void OnPreprocessTexture()
@@ -21,7 +21,12 @@ namespace Sheytoonak.EditorTools
             var imp = (TextureImporter)assetImporter;
             var s = imp.GetPlatformTextureSettings("Android");
             s.overridden = true;
-            s.maxTextureSize = 2048;
+            // ⚠️ runs 81-83: the batch editor on CI never ran the ASTC compressor (each import 0.07 s, RGBA32 even with the
+            // override and Compress on Import on). Size is honoured anyway, so pictures are capped at what the phone shows:
+            // a hero stands ~300 px tall on screen (sheet 1024x1492 -> 512), props/UI 1024, house paintings stay 2048.
+            bool hero = assetPath.Contains("/Heroes/") && !assetPath.EndsWith("_face.png");
+            bool house = assetPath.Contains("/Art/house_") || assetPath.Contains("/Art/ground_");
+            s.maxTextureSize = hero ? 512 : house ? 2048 : 1024;
             // the house paintings are seen large and fill the screen: a finer block keeps their lines clean
             bool painting = assetPath.Contains("/Art/house_") || assetPath.Contains("/Art/wall_") || assetPath.Contains("/Art/ground_");
             s.format = painting ? TextureImporterFormat.ASTC_5x5 : TextureImporterFormat.ASTC_6x6;
