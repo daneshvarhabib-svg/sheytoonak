@@ -109,6 +109,11 @@ namespace Sheytoonak.Core
         /// <param name="maxTargetHeight">Facade height at Strength01 = 1 (a little above the top windows).</param>
         public static KickResult SolveAtWall(KickGesture g, float contactOffset, float quality, KickTuning t, float noiseA, float noiseB,
                                              float wallDistance, float startHeight, float maxTargetHeight)
+            => SolveAtWall(g, contactOffset, quality, t, noiseA, noiseB, wallDistance, startHeight, maxTargetHeight, t.MinTargetHeight);
+
+        /// <param name="minTargetHeight">Facade height at Strength01 = 0; the house decides it (below its lowest window).</param>
+        public static KickResult SolveAtWall(KickGesture g, float contactOffset, float quality, KickTuning t, float noiseA, float noiseB,
+                                             float wallDistance, float startHeight, float maxTargetHeight, float minTargetHeight)
         {
             float s = (float)Math.Pow(Clamp01(g.Strength01), Math.Max(0.1f, t.StrengthCurve));
             float bad = 1f - Clamp01(quality);
@@ -118,7 +123,7 @@ namespace Sheytoonak.Core
                          + Clamp(contactOffset, -1f, 1f) * t.ContactYawDeg
                          + bad * t.MaxErrorDeg * Clamp(noiseA, -1f, 1f)) * Deg;
             float x = d * (float)Math.Tan(yaw);
-            float y = Lerp(t.MinTargetHeight, Math.Max(t.MinTargetHeight + 0.1f, maxTargetHeight), s)
+            float y = Lerp(minTargetHeight, Math.Max(minTargetHeight + 0.1f, maxTargetHeight), s)
                       + d * (float)Math.Tan(bad * t.MaxErrorDeg * 0.5f * Clamp(noiseB, -1f, 1f) * Deg);
             float flight = Math.Max(0.2f, t.WallFlightTime) * (1f - bad * t.SpeedErrorFraction * Clamp(noiseB, -1f, 1f));
 

@@ -606,7 +606,15 @@ namespace Sheytoonak.Prototype
                 float u0 = r.xMin / w + 0.5f, u1 = r.xMax / w + 0.5f, v0 = r.yMin / paintedHeight, v1 = r.yMax / paintedHeight;
                 m.mainTextureScale = new Vector2(u1 - u0, v1 - v0);
                 m.mainTextureOffset = new Vector2(u0, v0);
-                var pane = Box(root, new Vector3(r.center.x, r.center.y, -0.01f), new Vector3(r.width, r.height, 0.005f), m);
+                // ⚠️ run 83 (user): «وقتی شیشه می‌شکنه عکس پنجره ۱۸۰ درجه می‌چرخه و گلدون می‌ره بالا». A cube's face toward the
+                // camera (-Z) maps its texture mirrored, so the smashed pane came out upside down. A quad facing the camera
+                // maps it like the painting itself does.
+                var pane = GameObject.CreatePrimitive(PrimitiveType.Quad);
+                Strip(pane);
+                pane.transform.SetParent(root, false);
+                pane.transform.localPosition = new Vector3(r.center.x, r.center.y, -0.01f);
+                pane.transform.localScale = new Vector3(r.width, r.height, 1f);
+                pane.GetComponent<Renderer>().sharedMaterial = m;
                 pane.name = "Broken pane " + i;
                 windowRenderers[i] = pane.GetComponent<Renderer>();
                 windowRenderers[i].enabled = false;

@@ -72,6 +72,10 @@ namespace Sheytoonak
         public bool RallyActive => kickActive;
         public Side Kicker => kicker;
         public event Action<Side> Rekicked;
+        /// <summary>A pigeon knocked the ball down at this point (user 2026-11-05: the bird must fall too, not fly on).</summary>
+        public event Action<Vector3> PigeonHit;
+        /// <summary>The action is over and the ball is dead where it lies; the stage settles it and brings it back (user: no vanishing).</summary>
+        public event Action<Vector3> BallDead;
         Side kicker;
         float kickStarted;
         const string PrefCurse = "sheytoonak.curses", PrefShards = "sheytoonak.shards";
@@ -339,7 +343,7 @@ namespace Sheytoonak
             {
                 // the resting ball moves with the kicker (my finger walks the kicker along the pavement); before, it stayed
                 // where the last kick left it and jumped to the foot only at the kick
-                if (!kickActive && ball.gameObject.activeSelf && ball.Body != null && ball.Body.isKinematic)
+                if (!kickActive && BallSettled && ball.gameObject.activeSelf && ball.Body != null && ball.Body.isKinematic)
                     ball.transform.position = foot.StrikeSpot + Vector3.up * ball.Radius;
                 TurnTimeLeft -= Time.deltaTime;
                 if (TurnTimeLeft <= 0f)
@@ -494,6 +498,7 @@ namespace Sheytoonak
             var why = Rules.CanAct(Me);
             if (why != ActionReject.None) { return; }
             if (!KickArmed) { Pop?.Invoke("pick", Me, PopKind.Info); return; } // first a hero, then its kick button
+            if (!BallSettled) return; // the ball is still rolling back from the last action
             Kick(Me, g, -1);
         }
 
@@ -508,7 +513,7 @@ namespace Sheytoonak
             Vector3 b = PlaceBallAtCentre();
             float quality = 1f;
             var res = KickSolver.SolveAtWall(g, 0f, quality, config.kick, Random.Range(-1f, 1f), Random.Range(-1f, 1f),
-                                             mapper.FacadeZ - b.z, b.y, mapper.MaxTargetHeight);
+                                             mapper.FacadeZ - b.z, b.y, mapper.MaxTargetHeight, mapper.MinTargetHeight(config.kick.MinTargetHeight));
             var v = new Vector3(res.Velocity.X, res.Velocity.Y, res.Velocity.Z);
             ball.Launch(v, res.SpinY, 0f);
             kicker = s; kickActive = true; hitWindow = -1; groundBounces = 0; kickStarted = Time.time;
@@ -529,7 +534,7 @@ namespace Sheytoonak
             float offset = s == Me ? foot.ContactOffset(b) : 0f;
             float quality = s == Me ? KickSolver.ContactQuality(b.y, offset, config.kick) : 1f;
             var res = KickSolver.SolveAtWall(g, offset, quality, config.kick, Random.Range(-1f, 1f), Random.Range(-1f, 1f),
-                                             mapper.FacadeZ - b.z, b.y, mapper.MaxTargetHeight);
+                                             mapper.FacadeZ - b.z, b.y, mapper.MaxTargetHeight, mapper.MinTargetHeight(config.kick.MinTargetHeight));
             var v = new Vector3(res.Velocity.X, res.Velocity.Y, res.Velocity.Z);
             ball.Launch(v, res.SpinY, 0f);
             if (resolveRoutine != null) { StopCoroutine(resolveRoutine); resolveRoutine = null; }
@@ -560,8 +565,14 @@ namespace Sheytoonak
             if (!kickActive || !ball.InPlay) yield break;
             Pop?.Invoke("pigeon", kicker, PopKind.Poison);
             GameEvents.RaiseWallHit(ball.transform.position); // a thud and a shake
+            PigeonHit?.Invoke(ball.transform.position);       // the stage drops the bird where the ball met it
             ball.SetVelocity(new Vector3(Random.Range(-1f, 1f), 1.5f, -2.5f));
         }
+
+        /// <summary>False while the dead ball is still being brought back to the foot (no kick can start).</summary>
+        public bool BallSettled { get; private set; } = true;
+        /// <summary>The stage finished bringing the ball back: rest it at the foot.</summary>
+        public void BallReturned() { PlaceBallAtCentre(); BallSettled = true; }
 
         Vector3 PlaceBallAtCentre()
         {
@@ -577,7 +588,7 @@ namespace Sheytoonak
             float d = mapper.FacadeZ - foot.StrikeSpot.z;
             float yaw = Mathf.Atan2(r.center.x, d) * Mathf.Rad2Deg;
             float aim = yaw / Mathf.Max(1f, config.kick.MaxAimYawDeg);
-            float s = Mathf.InverseLerp(config.kick.MinTargetHeight, mapper.MaxTargetHeight, r.center.y);
+            float s = Mathf.InverseLerp(mapper.MinTargetHeight(config.kick.MinTargetHeight), mapper.MaxTargetHeight, r.center.y);
             float strength = Mathf.Pow(Mathf.Clamp01(s), 1f / Mathf.Max(0.1f, config.kick.StrengthCurve));
             aim += Random.Range(-1f, 1f) * error * 0.25f;
             strength += Random.Range(-1f, 1f) * error * 0.12f;
@@ -608,6 +619,7 @@ namespace Sheytoonak
                             while (!kickerReady[(int)bot] && Time.time < wait) yield return null;
                             yield return new WaitForSeconds(0.3f);
                         }
+                        while (!BallSettled) yield return null;
                         Kick(bot, GestureFor(move.Window, 1f - botAccuracy), move.Window);
                         while (Rules.KickInFlight) yield return null;
                         break;
@@ -623,7 +635,12 @@ namespace Sheytoonak
             kickActive = false;
             var outcome = Rules.EndKick(kicker, hitWindow);
             LastHitWindow = hitWindow;
-            if (!Rules.Finished) PlaceBallAtCentre();
+            if (Rules.Finished) return;
+            // User (2026-11-05): «توپ یهویی غیب می‌شه و ضربه برنمی‌گرده … توپ برگرده ولی دوبار بخوره زمین و بادش کم شه انگار».
+            // The ball is no longer teleported to the foot: where it died it goes limp (BallDead), the stage rolls it back
+            // to the kicker; until it is there no kick can start (BallSettled false).
+            if (ball.InPlay && BallDead != null) { BallSettled = false; BallDead.Invoke(ball.transform.position); }
+            else PlaceBallAtCentre();
         }
 
         IEnumerator ResolveAfter(float seconds)

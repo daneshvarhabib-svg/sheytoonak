@@ -157,6 +157,18 @@ namespace Sheytoonak
         /// Logs which windows a straight kick can reach at all with the current kick tuning.
         /// Run it (context menu) after authoring a house: an unreachable window makes the medal impossible.
         /// </summary>
+        /// <summary>
+        /// Facade height the softest kick aims at: a little below the lowest window's centre, so the shop window and its row
+        /// can be hit. User (2026-11-05): «شیشه ویترین مغازه و پنجره‌های هم‌ردیفِ اون هیچ‌وقت توپ بهش نمی‌خوره»: the fixed
+        /// 1.4 m of the tuning sat above the ground-floor glass of the painted houses.
+        /// </summary>
+        public float MinTargetHeight(float tuned)
+        {
+            float low = float.MaxValue;
+            foreach (var r in WindowRects) low = Mathf.Min(low, r.center.y);
+            return low < float.MaxValue ? Mathf.Min(tuned, Mathf.Max(0.3f, low - 0.35f)) : tuned;
+        }
+
         /// <summary>Facade height a full-strength kick aims at: a little above the highest window.</summary>
         public float MaxTargetHeight
         {

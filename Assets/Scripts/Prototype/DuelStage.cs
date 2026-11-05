@@ -43,6 +43,8 @@ namespace Sheytoonak.Prototype
             duel.KickLaunched += OnKick;
             duel.Rekicked += OnRekick;
             duel.KickerChosen += OnKickerChosen;
+            duel.PigeonHit += OnPigeonHit;
+            duel.BallDead += OnBallDead;
             duel.KickerReleased += SendHome;
             duel.Finished += OnFinished;
         }
@@ -54,6 +56,8 @@ namespace Sheytoonak.Prototype
             duel.KickLaunched -= OnKick;
             duel.Rekicked -= OnRekick;
             duel.KickerChosen -= OnKickerChosen;
+            duel.PigeonHit -= OnPigeonHit;
+            duel.BallDead -= OnBallDead;
             duel.KickerReleased -= SendHome;
             duel.Finished -= OnFinished;
         }
@@ -393,17 +397,99 @@ namespace Sheytoonak.Prototype
             striking[(int)side] = StartCoroutine(Strike(hero, side));
         }
 
+        bool pigeonDown;
         IEnumerator PigeonCrossing()
         {
             if (pigeon == null) pigeon = PoisonProps.Pigeon();
             pigeon.SetActive(true);
+            pigeonDown = false;
             float z = mapper.FacadeZ - 4f, y = 2.8f;
-            for (float t = 0f; t < 1f; t += Time.deltaTime / 1.1f)
+            for (float t = 0f; t < 1f && !pigeonDown; t += Time.deltaTime / 1.1f)
             {
                 pigeon.transform.position = new Vector3(Mathf.Lerp(-7f, 7f, t), y + Mathf.Sin(t * 20f) * 0.15f, z);
                 yield return null;
             }
+            // User (2026-11-05): «توپ وقتی می‌خوره به کبوتر، کبوتر نمی‌خوره زمین و به راهش ادامه می‌ده … باید بخوره زمین».
+            // Hit: it tumbles to the road where the ball met it, lies there a moment, then walks off.
+            if (pigeonDown)
+            {
+                Vector3 from = pigeon.transform.position; float ground = 0.12f;
+                for (float t = 0f; t < 1f; t += Time.deltaTime / 0.55f)
+                {
+                    pigeon.transform.position = new Vector3(from.x + t * 0.6f, Mathf.Lerp(from.y, ground, t * t), from.z);
+                    pigeon.transform.rotation = Quaternion.Euler(0f, 0f, t * 540f);
+                    yield return null;
+                }
+                pigeon.transform.rotation = Quaternion.Euler(0f, 0f, 90f); // on its side
+                yield return new WaitForSeconds(0.9f);
+                pigeon.transform.rotation = Quaternion.identity;
+                Vector3 up = pigeon.transform.position;
+                for (float t = 0f; t < 1f; t += Time.deltaTime / 1.2f)
+                {
+                    pigeon.transform.position = up + new Vector3(t * 2.5f, Mathf.Abs(Mathf.Sin(t * 25f)) * 0.04f, 0f);
+                    yield return null;
+                }
+            }
             pigeon.SetActive(false);
+            pigeonDown = false;
+        }
+
+        void OnPigeonHit(Vector3 at)
+        {
+            if (pigeon == null || !pigeon.activeSelf) return;
+            pigeon.transform.position = new Vector3(at.x, Mathf.Max(0.5f, at.y), pigeon.transform.position.z);
+            pigeonDown = true;
+        }
+
+        /// <summary>
+        /// The action is over: the ball goes limp where it lies (two soft bounces, a little squashed, as if it lost some
+        /// air), then rolls back to the kicker's foot; only then can the next kick start.
+        /// </summary>
+        void OnBallDead(Vector3 at)
+        {
+            if (settling != null) StopCoroutine(settling);
+            settling = StartCoroutine(SettleBall(at));
+        }
+        Coroutine settling;
+        IEnumerator SettleBall(Vector3 at)
+        {
+            var ball = duel.ball;
+            var t = ball.transform;
+            ball.PlaceAtRest(new Vector3(at.x, ball.Radius, at.z));
+            Vector3 home = foot.StrikeSpot + Vector3.up * ball.Radius;
+            float hop = 0.35f, dur = 0.35f;
+            Vector3 p = t.position;
+            for (int bounce = 0; bounce < 2; bounce++)
+            {
+                Vector3 to = Vector3.Lerp(p, home, 0.25f);
+                for (float k = 0f; k < 1f; k += Time.deltaTime / dur)
+                {
+                    float h = hop * 4f * k * (1f - k);
+                    t.position = new Vector3(Mathf.Lerp(p.x, to.x, k), ball.Radius + h, Mathf.Lerp(p.z, to.z, k));
+                    t.localScale = Vector3.one; yield return null;
+                }
+                // squash on landing: the "air going out" look
+                for (float k = 0f; k < 1f; k += Time.deltaTime / 0.12f)
+                {
+                    float sq = 1f - 0.22f * Mathf.Sin(k * Mathf.PI);
+                    t.localScale = new Vector3(1f + (1f - sq) * 0.6f, sq, 1f + (1f - sq) * 0.6f);
+                    t.position = new Vector3(to.x, ball.Radius * sq, to.z); yield return null;
+                }
+                t.localScale = Vector3.one;
+                p = to; hop *= 0.45f; dur *= 0.8f;
+            }
+            // roll the rest of the way, slowing down
+            Vector3 start = p; float dist = Vector3.Distance(start, home);
+            for (float k = 0f; k < 1f; k += Time.deltaTime / Mathf.Max(0.6f, dist * 0.35f))
+            {
+                float e = 1f - (1f - k) * (1f - k);
+                t.position = Vector3.Lerp(start, home, e);
+                t.Rotate(Vector3.right, dist * e * 40f * Time.deltaTime, Space.World);
+                yield return null;
+            }
+            t.rotation = Quaternion.identity;
+            settling = null;
+            duel.BallReturned();
         }
 
         void OnPoison(Side by, ActivePoison p)

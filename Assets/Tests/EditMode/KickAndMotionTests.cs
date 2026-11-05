@@ -88,12 +88,22 @@ namespace Sheytoonak.Tests
         }
 
         [Test]
+        public void A_house_with_ground_floor_glass_lowers_the_softest_kick()
+        {
+            // user 2026-11-05: the shop window and its row could never be hit
+            var t = new KickTuning();
+            var r = KickSolver.SolveAtWall(new KickGesture(0f, 0f, 0f), 0f, 1f, t, 0f, 0f, 13f, 0.11f, 6.6f, 0.75f);
+            float h = KickSolver.HeightAtDistance(r.Velocity, 0.11f, 13f, t.Gravity);
+            Assert.AreEqual(0.75f, h, 0.05f);
+        }
+
+        [Test]
         public void Bottom_tap_hits_low_and_top_tap_hits_high()
         {
             float low = HeightAtWall(0f, 0f, 13f, out _);
             float mid = HeightAtWall(0.5f, 0f, 13f, out _);
             float high = HeightAtWall(1f, 0f, 13f, out _);
-            Assert.AreEqual(1.4f, low, 0.05f);   // MinTargetHeight: below the lowest window row (2.6 m centre)
+            Assert.AreEqual(1.4f, low, 0.05f);   // the tuning's MinTargetHeight (the mapper lowers it for a house with low windows)
             Assert.AreEqual(6.6f, high, 0.05f);  // the maxTargetHeight passed in
             Assert.Greater(mid, low); Assert.Less(mid, high);
         }
