@@ -219,7 +219,10 @@ namespace Sheytoonak.Prototype
         void BuildGameObjects()
         {
             var config = ScriptableObject.CreateInstance<GameConfig>();
-            var houses = new[] { House1(), House2(), House3(), House4(), House5(), House6(), House7() };
+            // User (2026-11-05): «پس زمینه خونه ها رو عوض کن و فعلا فقط از این ۶ تا استفاده کن تا تصویر جدید بیاد … اون اولیه که
+            // تصویر شیشه شکسته‌ش رو نداریم رو بی‌خیال شو». Only houses painted twice (intact + every pane smashed) are dealt;
+            // House1..House6 stay in the code but out of the pool.
+            var houses = new[] { House7(), House8(), House9(), House10(), House11(), House12() };
 
             // Player: foot position + window mapping. No body: the game is first-person (POV).
             var player = new GameObject("Player");
@@ -265,11 +268,11 @@ namespace Sheytoonak.Prototype
             {
                 duelGame = gameGo.AddComponent<DuelManager>();
                 duelGame.config = config;
-                duelGame.house = houses[1]; // 3x3 windows: a clear 1 / 2 split
+                duelGame.house = houses[0];
                 duelGame.housePool = houses; // a different house every duel
                 // CI screenshots always show the newest house, so each new painting is actually seen before the user plays it.
                 if (!string.IsNullOrEmpty(System.Environment.GetEnvironmentVariable("SHEYTOONAK_SHOTS")))
-                    duelGame.housePool = new[] { houses[houses.Length - 1] };
+                    duelGame.housePool = new[] { houses[houses.Length - 2], houses[houses.Length - 1] };
                 duelGame.ball = ballCtl;
                 duelGame.foot = foot;
                 duelGame.mapper = mapper;
@@ -373,6 +376,60 @@ namespace Sheytoonak.Prototype
                 R(244f, 449f, 383f, 645f), R(545f, 449f, 683f, 645f), R(863f, 449f, 1003f, 645f), R(1161f, 449f, 1299f, 645f),
             },
             0.25f, 1.95f, 0f, 1.1f, null, "Art/house_07_broken");
+
+        // The five pairs of 2026-11-05 (user): each broken window shows its own rectangle of the *_broken painting.
+        // Beirut, green shutters, 4 x 3 and the barred ground-floor window.
+        HouseDefinition House8() => MakePaintedHouse("البيت ٨", "Art/house_08", 1536f, 1024f, 13f,
+            new[]
+            {
+                R(232f, 80f, 360f, 222f), R(537f, 80f, 677f, 222f), R(853f, 80f, 997f, 222f), R(1175f, 80f, 1310f, 222f),
+                R(232f, 322f, 360f, 468f), R(537f, 322f, 677f, 468f), R(853f, 322f, 997f, 415f), R(1175f, 322f, 1310f, 468f),
+                R(232f, 563f, 360f, 705f), R(537f, 563f, 677f, 705f), R(853f, 563f, 997f, 705f), R(1175f, 563f, 1310f, 705f),
+                R(1140f, 800f, 1272f, 925f),
+            },
+            0.25f, 1.95f, 0f, 1.1f, null, "Art/house_08_broken");
+
+        // Damascus, carved wooden frames, 3 x 2 and the shop window; the green screen around it was cut away (crop x 250..1250,
+        // so the quad is 1000/1536 of the usual width and the windows keep their size).
+        HouseDefinition House9() => MakePaintedHouse("البيت ٩", "Art/house_09", 1000f, 1024f, 13f * 1000f / 1536f,
+            new[]
+            {
+                R(195f, 135f, 325f, 258f), R(457f, 135f, 587f, 258f), R(722f, 135f, 850f, 258f),
+                R(195f, 412f, 325f, 540f), R(457f, 412f, 587f, 540f), R(722f, 412f, 850f, 540f),
+                R(242f, 750f, 560f, 895f),
+            },
+            0.25f, 1.95f, 0f, 1.15f, null, "Art/house_09_broken");
+
+        // Pink plaster, 4 x 3.
+        HouseDefinition House10() => MakePaintedHouse("البيت ١٠", "Art/house_10", 1536f, 1024f, 13f,
+            new[]
+            {
+                R(250f, 152f, 405f, 265f), R(552f, 152f, 712f, 265f), R(843f, 152f, 1000f, 265f), R(1138f, 152f, 1295f, 265f),
+                R(250f, 357f, 410f, 468f), R(560f, 357f, 705f, 468f), R(843f, 357f, 1000f, 468f), R(1138f, 357f, 1295f, 468f),
+                R(250f, 553f, 408f, 670f), R(550f, 553f, 712f, 670f), R(843f, 553f, 1003f, 670f), R(1138f, 553f, 1298f, 670f),
+            },
+            0.25f, 1.95f, 0f, 1.1f, null, "Art/house_10_broken");
+
+        // Turquoise tiles and brick, 3 x 3 big windows.
+        HouseDefinition House11() => MakePaintedHouse("البيت ١١", "Art/house_11", 1536f, 1024f, 13f,
+            new[]
+            {
+                R(318f, 78f, 532f, 225f), R(662f, 78f, 877f, 225f), R(1007f, 78f, 1222f, 225f),
+                R(318f, 303f, 532f, 448f), R(662f, 303f, 877f, 448f), R(1007f, 303f, 1222f, 448f),
+                R(318f, 528f, 532f, 675f), R(662f, 528f, 877f, 675f), R(1007f, 528f, 1222f, 675f),
+            },
+            0.3f, 1.9f, 0f, 1.0f, null, "Art/house_11_broken");
+
+        // Tunis, white and blue, 3 x 4 narrow windows (bigger hit boxes: the glass is small).
+        HouseDefinition House12() => MakePaintedHouse("البيت ١٢", "Art/house_12", 1536f, 1024f, 13f,
+            new[]
+            {
+                R(450f, 100f, 537f, 200f), R(727f, 100f, 812f, 200f), R(1002f, 100f, 1087f, 200f),
+                R(448f, 275f, 537f, 380f), R(723f, 275f, 812f, 380f), R(998f, 275f, 1087f, 380f),
+                R(445f, 455f, 537f, 560f), R(722f, 455f, 812f, 560f), R(998f, 455f, 1087f, 560f),
+                R(445f, 630f, 535f, 735f), R(722f, 630f, 812f, 735f), R(1000f, 630f, 1088f, 735f),
+            },
+            0.25f, 1.95f, 0f, 1.2f, null, "Art/house_12_broken");
 
         static Rect R(float x0, float y0, float x1, float y1) => Rect.MinMaxRect(x0, y0, x1, y1);
         static WindowDetail Pot(int w, float x0, float y0, float x1, float y1) => new WindowDetail(w, DetailKind.Pot) { pixel = R(x0, y0, x1, y1) };
