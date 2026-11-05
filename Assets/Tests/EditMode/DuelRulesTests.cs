@@ -102,6 +102,18 @@ namespace Sheytoonak.Tests
         }
 
         [Test]
+        public void A_cover_poison_with_nothing_to_hide_is_refused()
+        {
+            // user 2026-11-05: the bus grew huge to cover a higher row; now it only reaches the bottom row, and with
+            // nothing left there it must be refused, not placed over no window at all
+            var r = Make(seed: 3, rows: new[] { 2, 1 });
+            r.Start(Side.Left); r.BeginKick(Side.Left); r.EndKick(Side.Left, -1);
+            var bus = StarterHeroes.Get("zaatar").Poison;
+            Assert.AreEqual(ActionReject.NoTarget, r.CanPoison(Side.Right, bus, new int[0]));
+            Assert.AreEqual(ActionReject.None, r.CanPoison(Side.Right, bus, new[] { 0 }));
+        }
+
+        [Test]
         public void Poison_cannot_close_every_window_and_expires_by_turns()
         {
             var r = Make(seed: 3, rows: new[] { 2, 1 });

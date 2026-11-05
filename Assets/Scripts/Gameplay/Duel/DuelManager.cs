@@ -305,6 +305,9 @@ namespace Sheytoonak
         }
 
         /// <summary>Window index to row index (bottom = 0), for the value table and the HUD.</summary>
+        /// <summary>How wide a run of windows a painted vehicle hides (metres of facade); 0 = not a vehicle.</summary>
+        public static float VehicleReach(string id) => id == "bus" ? 8.5f : id == "truck" ? 7.5f : id == "cart" ? 3.2f : 0f;
+
         public int RowOf(int window)
         {
             var ys = new System.Collections.Generic.List<float>();
@@ -444,6 +447,26 @@ namespace Sheytoonak
             if (poison.Effect != Effect.Cover && poison.Effect != Effect.Close) return new int[0];
             var list = new System.Collections.Generic.List<int>();
             for (int w = 0; w < Rules.WindowCount; w++) if (Rules.IsBreakable(w)) list.Add(w);
+            if (poison.Effect == Effect.Cover && VehicleReach(poison.Id) > 0f)
+            {
+                // User (2026-11-05): «گاری گاهی سایزش خیلی بزرگه … اتوبوس هم گاهی خیلی بزرگ می‌شه». The vehicle used to grow to
+                // whatever it had to hide: once the bottom row was broken it covered the next row up and became a giant.
+                // A vehicle has its real size now, so it can only hide the house's lowest row, and only as many windows
+                // as its length reaches; with that row broken it has no target.
+                const int bottom = 0; // RowOf counts upward from the lowest row of the house, broken or not
+                var low = list.FindAll(w => RowOf(w) == bottom);
+                low.Sort((a, b) => mapper.WindowRects[a].x.CompareTo(mapper.WindowRects[b].x));
+                float reach = VehicleReach(poison.Id);
+                System.Collections.Generic.List<int> best = new System.Collections.Generic.List<int>();
+                for (int i = 0; i < low.Count; i++)
+                {
+                    var run = new System.Collections.Generic.List<int>();
+                    for (int j = i; j < low.Count && mapper.WindowRects[low[j]].xMax - mapper.WindowRects[low[i]].xMin <= reach; j++) run.Add(low[j]);
+                    if (run.Count > best.Count) best = run;
+                }
+                int keep = Mathf.Min(best.Count, list.Count - 1);
+                return best.GetRange(0, Mathf.Max(0, keep)).ToArray();
+            }
             if (poison.Effect == Effect.Cover)
             {
                 // a bus can only hide what is behind it: the lowest breakable windows, never all of them
@@ -573,7 +596,10 @@ namespace Sheytoonak
                 switch (move.What)
                 {
                     case BotMove.Kind.Antidote: Act(bot, move.Hero, false); break;
-                    case BotMove.Kind.Poison: Act(bot, move.Hero, true); break;
+                    case BotMove.Kind.Poison:
+                        // its own target guess may differ from TargetsFor (a vehicle with nothing left to hide): pass, never loop
+                        if (Act(bot, move.Hero, true) != ActionReject.None) Rules.Pass(bot);
+                        break;
                     case BotMove.Kind.Kick:
                         if (!kickerReady[(int)bot])
                         {

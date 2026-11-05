@@ -110,11 +110,15 @@ namespace Sheytoonak.Prototype
             if (busArt != null)
             {
                 // painted side views: the bus faces left in its picture, the lorry right; all drive in from the left
-                if (id == "cart") h = Mathf.Min(h, 2.6f); // a hand cart is not as tall as a bus: it hides the lower row only
+                // ⚠️ until 2026-11-05 the picture was scaled up until it covered every target window (and its height came
+                // from the row it had to hide): with the bottom row broken a cart grew into a two-storey cart. User:
+                // «گاری گاهی سایزش خیلی بزرگه … اتوبوس هم گاهی خیلی بزرگ می‌شه … نمی‌دونم قوانین سایز چیه». Rule now: every
+                // vehicle has its real height (bus 3.4 m, lorry 3.6 m, cart 2.4 m), allowed to stretch at most 20 % so it
+                // hides the house's lowest row; DuelManager.TargetsFor only gives it windows its length reaches.
+                float real = id == "cart" ? 2.4f : id == "truck" ? 3.6f : 3.4f;
+                h = Mathf.Clamp(h, real, real * 1.2f);
                 var r = Spr(busArt, root, new Vector3(0f, 0f, -w * 0.5f), h);
                 r.flipX = busArt.name.StartsWith("bus");
-                float paintedLen = r.bounds.size.x;
-                if (paintedLen < xMax - xMin + 0.6f) r.transform.localScale *= (xMax - xMin + 0.6f) / paintedLen; // must cover every covered window
                 Vector3 at = new Vector3((xMin + xMax) * 0.5f, 0f, facadeZ - w * 0.5f - 0.6f);
                 root.position = at + Vector3.left * 30f;
                 host.StartCoroutine(Slide(root, at, 1.1f));

@@ -184,6 +184,9 @@ namespace Sheytoonak.Prototype
             camGo.transform.SetPositionAndRotation(cameraOffset, Quaternion.Euler(cameraPitchDeg, 0f, 0f));
             camGo.AddComponent<AudioListener>();
             shake = camGo.AddComponent<CameraShake>();
+            // the duel camera stands further back: 1.2 cm read as no shake at all (user 2026-11-05: «لرزش ریز برخورد توپ با
+            // دیوار … حذف شده»); still well under the 7 cm "earthquake" of 2026-10-28.
+            if (duel) { shake.wallAmplitude = 0.03f; shake.wallSeconds = 0.2f; }
 
             var sun = new GameObject("Sun").AddComponent<Light>();
             sun.type = LightType.Directional;
@@ -1198,7 +1201,14 @@ namespace Sheytoonak.Prototype
         void LateUpdate()
         {
             ApplyFov(); // the aspect is only known once the screen exists, and changes with rotation
-            if (!cameraFollowsPlayer || cam == null || foot == null) return;
+            if (cam == null) return;
+            // ⚠️ the duel camera does not follow the player, and this early return used to skip the shake too: the small
+            // flinch on a wall hit was gone (user 2026-11-05: «لرزش ریز برخورد توپ با دیوار هم به اشتباه حذف شده»).
+            if (!cameraFollowsPlayer || foot == null)
+            {
+                cam.transform.position = cameraOffset + (shake != null ? shake.Offset : Vector3.zero);
+                return;
+            }
             var p = cam.transform.position;
             // POV: the eyes are over the feet, so follow the strike spot fully (smoothed).
             float x = Mathf.Lerp(p.x, foot.X, 1f - Mathf.Exp(-10f * Time.unscaledDeltaTime));

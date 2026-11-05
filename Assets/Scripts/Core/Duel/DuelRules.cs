@@ -15,7 +15,7 @@ namespace Sheytoonak.Core.Duel
         Missed
     }
 
-    public enum ActionReject { None, NotYourTurn, NoActionsLeft, BallInFlight, PoisonWouldCloseEverything, Finished, NoRage }
+    public enum ActionReject { None, NotYourTurn, NoActionsLeft, BallInFlight, PoisonWouldCloseEverything, Finished, NoRage, NoTarget }
 
     /// <summary>A poison sitting on the shared stage.</summary>
     public sealed class ActivePoison
@@ -244,6 +244,8 @@ namespace Sheytoonak.Core.Duel
             if (r != ActionReject.None) return r;
             if (poison.Effect == Effect.Cover || poison.Effect == Effect.Close)
             {
+                // nothing to hide (a bus only reaches the lowest row; once that row is broken it has no target)
+                if (windows == null || windows.Length == 0) return ActionReject.NoTarget;
                 // never zero: at least one breakable window must survive the poison (SCENARIO §5)
                 int left = 0;
                 for (int i = 0; i < WindowCount; i++)
