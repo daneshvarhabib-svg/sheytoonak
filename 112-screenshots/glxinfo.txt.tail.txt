@@ -6,7 +6,7 @@ Extended renderer info (GLX_MESA_query_renderer):
     Device: llvmpipe (LLVM 21.1.8, 256 bits) (0xffffffff)
     Version: 26.0.8
     Accelerated: no
-    Video memory: 15983MB
+    Video memory: 15982MB
     Unified memory: yes
     Preferred profile: core (0x1)
     Max core profile version: 4.5
@@ -15,14 +15,14 @@ Extended renderer info (GLX_MESA_query_renderer):
     Max GLES[23] profile version: 3.2
 Memory info (GL_ATI_meminfo):
     VBO free memory - total: 29 MB, largest block: 29 MB
-    VBO free aux. memory - total: 14897 MB, largest block: 14897 MB
+    VBO free aux. memory - total: 14800 MB, largest block: 14800 MB
     Texture free memory - total: 29 MB, largest block: 29 MB
-    Texture free aux. memory - total: 14897 MB, largest block: 14897 MB
+    Texture free aux. memory - total: 14800 MB, largest block: 14800 MB
     Renderbuffer free memory - total: 29 MB, largest block: 29 MB
-    Renderbuffer free aux. memory - total: 14897 MB, largest block: 14897 MB
+    Renderbuffer free aux. memory - total: 14800 MB, largest block: 14800 MB
 Memory info (GL_NVX_gpu_memory_info):
-    Dedicated video memory: 2089178 MB
-    Total available memory: 4292878154 MB
+    Dedicated video memory: 590050 MB
+    Total available memory: 606032 MB
     Currently available dedicated video memory: 29 MB
 OpenGL vendor string: Mesa
 OpenGL renderer string: llvmpipe (LLVM 21.1.8, 256 bits)
