@@ -1,0 +1,400 @@
+Start importing Packages/com.unity.ugui/Editor Resources/Textures/btn_AlignMiddle_Light.psd using Guid(066619c9c9c84f89acb1b48c11a7efe2) (TextureImporter) -> (artifact id: '5bf92f1cfbe49fdd98956847fda4752e') in 0.001862869 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/d_ChevronDown.png using Guid(06ad495fb07444736b59782982d96250) (TextureImporter) -> (artifact id: 'fb3d6f8c24a80884781147a0d4fc13a4') in 0.00110752 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/d_Mouse.png using Guid(264ffc05d7d2841d5a6065854b6282ca) (TextureImporter) -> (artifact id: 'bb4ab7ada434ada9b8a9db2d15bc3d16') in 0.00108756 seconds
+Start importing Assets/Resources/Art/Heroes/fulla_r6.png using Guid(46191a31bc0141a2ba1efe8dc6289567) (TextureImporter) -> (artifact id: '8a6a324f2fd1ca3d0f45c5b4b9becba2') in 0.018568577 seconds
+Start importing Assets/Resources/Art/Heroes/bubakr_r1.png using Guid(56a06e3510f94019bd225f0146c6eaea) (TextureImporter) -> (artifact id: 'd7a7f1f658f2b0fd9a0c00c6d70109e8') in 0.020869304 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/Position.png using Guid(5684eb521fa99491e9061de682d1622e) (TextureImporter) -> (artifact id: '8369b94554c72d1208d49dd4db4b64e9') in 0.001517277 seconds
+Start importing Assets/Resources/Art/Heroes/abu_shahata_r1.png using Guid(6603a10478a147b7827819a1e40c4274) (TextureImporter) -> (artifact id: 'db843b600d9caa7910c2c0acaa8257ce') in 0.019050901 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/d_Gamepad.png using Guid(76dc61ff6c2d84b24b0a2ce01dc2842d) (TextureImporter) -> (artifact id: '4f0ed55adac51ed39f065ab42b255756') in 0.001268499 seconds
+Start importing Assets/Resources/Art/Heroes/fulla_r1.png using Guid(86a693f5210a4be9a6438fcede2a7edd) (TextureImporter) -> (artifact id: '9e147856a5bc4a30b4b5fdf1af4bd6db') in 0.018244997 seconds
+Start importing Assets/Resources/Art/Icons/complaint.png using Guid(866b0ac175584aa78090aac76666f7ae) (TextureImporter) -> (artifact id: 'da3392555e35040a945beb603dedd58d') in 0.009186384 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/Add Binding@4x.png using Guid(862c5ca31844d4a6d9aa804af982ce65) (TextureImporter) -> (artifact id: '91c0c4e2cf067b01ad2db953f37c554a') in 0.001704404 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/d_Pen@2x.png using Guid(96f7582a52a6843c09e0c71617e94f2d) (TextureImporter) -> (artifact id: '487755000be71439ca45d5fe00aa0f8f') in 0.001252685 seconds
+Start importing Assets/Resources/Art/Heroes/toni_k2.png using Guid(96c8919350934426b758b9c530fcfae9) (TextureImporter) -> (artifact id: 'c3531a6840f9647185b2a22808742481') in 0.023477206 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/d_Dpad.png using Guid(b60b9eb0384c345c89435d0982a6e4fd) (TextureImporter) -> (artifact id: '86a2549d9f85796a523b865f35855a44') in 0.001491498 seconds
+Start importing Assets/Resources/Art/Heroes/rima_r6.png using Guid(c6b7f70456f64d3c9643d03cae64340f) (TextureImporter) -> (artifact id: '4ed17f78c5b97000377d009365e2cd9f') in 0.02094807 seconds
+Start importing Assets/Resources/Art/Heroes/um_arabiyat_k3.png using Guid(d66ec8601db2446b8579c0d32d206bc1) (TextureImporter) -> (artifact id: '1e75a330f77dde632a091367af513ea5') in 0.021849315 seconds
+Start importing Assets/Resources/Art/house_08.png using Guid(e6769bec23b34ee39b3eb70261a2ccab) (TextureImporter) -> (artifact id: '7fde0cfbfbc885235d71f05be0bac71d') in 0.094916305 seconds
+Start importing Assets/Resources/Art/Props/ped_01_tarboush_b.png using Guid(f6d7028469054d3794438e91fc36e474) (TextureImporter) -> (artifact id: '43676e5fcdefe15ea41bfd831927d291') in 0.045767233 seconds
+Start importing Assets/Resources/Art/Heroes/um_arabiyat_r3.png using Guid(f66df2099f134d589b4e88c61c0e68b8) (TextureImporter) -> (artifact id: '3662df188fae1aefc878687a3264b76d') in 0.018081987 seconds
+Start importing Assets/Resources/Art/Heroes/rima_r1.png using Guid(07e39f61560e495bbaeec69e73522001) (TextureImporter) -> (artifact id: '358c10c307fa55689ae3901add0c903f') in 0.020447789 seconds
+Start importing Assets/Resources/Art/Fx/fx_pot.png using Guid(078c6b52aeb34f799eaa55ab2421d92a) (TextureImporter) -> (artifact id: '8c0cb33c6d2947d8f878a35a74f84f80') in 0.016502157 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/d_Pen@3x.png using Guid(17b3fef87d666459d860ad88452862da) (TextureImporter) -> (artifact id: '01831a99cd0714e659b1dd947ec69765') in 0.001605327 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/Gamepad.png using Guid(17c8753d0e5e24194b06404851be7f13) (TextureImporter) -> (artifact id: '3b5ec6fed2e71b85a3e547c64f7298d0') in 0.001144515 seconds
+Start importing Assets/Resources/Art/Poison/complaint.png using Guid(2784fdf1127d429496e38704f910e670) (TextureImporter) -> (artifact id: '97b07c0b648d945640b7d7385f7c7199') in 0.015172217 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/d_Axis@2x.png using Guid(27163f3cda5b9431d928f2b33eeb5cf1) (TextureImporter) -> (artifact id: '9a5cde6f0218455f3797019bf088eb8c') in 0.001428325 seconds
+Start importing Assets/Resources/Art/house_11.png using Guid(27d90c1b75164b1996c3e45bcffa0d2e) (TextureImporter) -> (artifact id: '8cd2b3598ab8e8e805efde5bc7b0b86c') in 0.093410044 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/d_Joystick@2x.png using Guid(27fa98be5deb54cbf9c11ffc540272b2) (TextureImporter) -> (artifact id: '9c1611073cd005b53f36995eca4f2812') in 0.001684725 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/AssetEditor/PackageResources/yellow.png using Guid(47cf506b4219343519083fe1c0b8fc9c) (TextureImporter) -> (artifact id: '28c84c365105c31eeca73e6a8b045761') in 0.001070104 seconds
+Start importing Assets/Resources/Art/Heroes/abu_shahata_r4.png using Guid(575b47be17c24217926f9bc9e01a8e58) (TextureImporter) -> (artifact id: 'daa2314ecf1d1cb534a716c0e300b33f') in 0.017599332 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/ChevronUp@2x.png using Guid(57dfdce0eaf2f48a9bd9e60e920e446b) (TextureImporter) -> (artifact id: 'fe1fca9dc1472fb1775474373df43f0e') in 0.001491719 seconds
+Start importing Assets/Resources/Art/Cars/car_1_taxi.png using Guid(775dc67daf514e4ca1ace0ebf771513f) (TextureImporter) -> (artifact id: 'b4eda48a2c87a033d0fa06bb86aaf10d') in 0.011660567 seconds
+Start importing Assets/Resources/Art/Icons/ban.png using Guid(776d62ef050942ce869dfb8c174262c5) (TextureImporter) -> (artifact id: '6b2959c0965ebe4879b6634825e78a60') in 0.008467549 seconds
+Start importing Assets/Resources/Art/Heroes/um_arabiyat_k4.png using Guid(775eebbe90f34a7dbc23ba16d8f42153) (TextureImporter) -> (artifact id: '1a2b45e42739eb0b1bb2aa701d326356') in 0.022742428 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/Keyboard@2x.png using Guid(87ae93efe5d3b4262995b0acdc987d88) (TextureImporter) -> (artifact id: '7d8def716c202112a24d303462281e81') in 0.001489135 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/Mouse@2x.png using Guid(9721efa02e520488d96c36460fe7e4a6) (TextureImporter) -> (artifact id: '9bd8aca2a37b1ebaaa31444b316a91bf') in 0.001109142 seconds
+Start importing Assets/Resources/Art/Heroes/zaatar_r3.png using Guid(9739368eba254bccaf58da7e2e9a9754) (TextureImporter) -> (artifact id: 'a7022875d025b77cc64ac814f32d8703') in 0.021113065 seconds
+Start importing Packages/com.unity.ugui/Editor Resources/Gizmos/TMP - Dropdown Icon.psd using Guid(a7ec9e7ad8b847b7ae4510af83c5d868) (TextureImporter) -> (artifact id: 'f3255d597e03cd9fe4695b55dbe323b1') in 0.015838984 seconds
+Start importing Assets/Resources/Art/Heroes/rima_r5.png using Guid(b7bc3a0ee13d45baa7ad5424730e718d) (TextureImporter) -> (artifact id: 'fe762617aa1bcd799053b36b69ba72a3') in 0.017254741 seconds
+Start importing Assets/Resources/Art/Icons/kick.png using Guid(c7574db10a084b4782c97f6649e821d3) (TextureImporter) -> (artifact id: 'ba13c3a68e054ac7489b189a090c8d57') in 0.005991703 seconds
+Start importing Packages/com.unity.ugui/Editor Resources/Textures/btn_AlignCenterGeo.psd using Guid(c76700ea0062413d9f69409b4e9e151b) (TextureImporter) -> (artifact id: '7bdd13082beb41173eb7e6758bd5e6d9') in 0.001765455 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/AssetEditor/PackageResources/pink.png using Guid(d7b144323984d4298924c65ed071dea1) (TextureImporter) -> (artifact id: '3e3ef961e20274482fbab66f23079416') in 0.000948644 seconds
+Start importing Assets/Resources/Art/Poison/rain.png using Guid(d7a42cf4bc2840e8b5bd43c36bedaf8e) (TextureImporter) -> (artifact id: '2c7cb7526c28aa53221ced254051f64e') in 0.020510122 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/Dpad@4x.png using Guid(d7073cfe15a1a48bfb7ff59225052484) (TextureImporter) -> (artifact id: '97d302f38f07ae4c162565894f62bd78') in 0.0016342 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/d_Touch@3x.png using Guid(e77ee65b5139048949dc0ac5614efeec) (TextureImporter) -> (artifact id: '65ee91a13c02f33152672b48dd9b26d9') in 0.001257572 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/Dpad.png using Guid(e76f0489d4db34a2fbc3532e07f2848a) (TextureImporter) -> (artifact id: '549c389036452111655c4641d318c33f') in 0.001098477 seconds
+Start importing Assets/Resources/Art/Heroes/um_arabiyat_idle.png using Guid(085359ce7d8a4d4aad2331398ebfb8ec) (TextureImporter) -> (artifact id: '8a3c0652f7e4577433570390cee47501') in 0.067457523 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/InputControl@4x.png using Guid(08c99f7c2a7fa410d8567323e32ad5f5) (TextureImporter) -> (artifact id: 'd5f6da197f3c8a6309c1f0f3ce41cf9d') in 0.001886925 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/Joystick@2x.png using Guid(18e45e1f11fae429c80c200cca8e0b4c) (TextureImporter) -> (artifact id: '6ea2ae773f19bd347c784ee18cb532bd') in 0.001198445 seconds
+Start importing Packages/com.unity.ugui/Editor Resources/Textures/btn_AlignBaseLine_Light.psd using Guid(18775b51e3bd42299fd30bd036ea982f) (TextureImporter) -> (artifact id: '8e3ec50ef7cc767b30f039b903f84076') in 0.003134782 seconds
+Start importing Assets/Resources/Art/Heroes/abu_shahata_r5.png using Guid(3892e4310e264e68af12ccc21df6881e) (TextureImporter) -> (artifact id: '5c4a46c27cc12449b44a6f3058c2e88c') in 0.018212589 seconds
+Start importing Packages/com.unity.ugui/Editor Resources/Textures/btn_AlignTop.psd using Guid(48d034c499ee4697af9dd6e327110249) (TextureImporter) -> (artifact id: '021e67315b6b9e3bbc839b341e144692') in 0.001994223 seconds
+Start importing Assets/Resources/Art/Heroes/bubakr_k3.png using Guid(4877a2fea42649819a635ba87814307e) (TextureImporter) -> (artifact id: '9654aa42c0cf12b19c4ac7f610c2f565') in 0.021182237 seconds
+Start importing Assets/Resources/Art/Heroes/fulla_k1.png using Guid(58008b89d6194d0aa9d94dc0458cf127) (TextureImporter) -> (artifact id: '8eb16948b7965ee65b2c0640b8e4f7ca') in 0.022995532 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/Touch.png using Guid(588041e6f0efb43489b38677e0aac58f) (TextureImporter) -> (artifact id: '586f637d0cb1b6f1f3a99f3906c6d1ba') in 0.001400764 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/Stick@2x.png using Guid(5881d226463a047cb8db57c9cb0ebc0f) (TextureImporter) -> (artifact id: '7bfd50341941fe1653a5e6c8d5ecd652') in 0.001212786 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/Dpad@2x.png using Guid(5806833d077654e5784b7cbf3e722f58) (TextureImporter) -> (artifact id: '6c43ac4d98d1a07b14a88dbace357862') in 0.00120876 seconds
+Start importing Packages/com.unity.ugui/Editor Resources/Textures/btn_AlignBottom_Light.psd using Guid(585b70cb75dd43efbfead809c30a1731) (TextureImporter) -> (artifact id: '1527a95255e3b3482836b991ac614490') in 0.001841647 seconds
+Start importing Assets/Resources/Art/Icons/pass.png using Guid(884940742b7b49d2938ee0f298855f2b) (TextureImporter) -> (artifact id: '4c7570310a579ba4878f03f32b34fb10') in 0.004876792 seconds
+Start importing Assets/Resources/Art/Icons/surrender.png using Guid(98f41371b55a41c1a2d67a644588ccb7) (TextureImporter) -> (artifact id: '159b528ea9a778d3207d43586c8e7c0b') in 0.006578532 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/ChevronDown@3x.png using Guid(985cbca1705a64c80b370afdb30b3ee7) (TextureImporter) -> (artifact id: '0a5a50152a67a20b4aaa1057ee380ac2') in 0.001348647 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/d_ChevronUp@2x.png using Guid(a89bfcdeffde84e7ebf930d44b695435) (TextureImporter) -> (artifact id: 'e967c55582adcffd53bfb004e184af44') in 0.001205035 seconds
+Start importing Assets/Resources/Art/house_10_broken.png using Guid(b895a1aa2d384d6d95a0f661ae9fc008) (TextureImporter) -> (artifact id: '3c372c73891ef24066f9dcf3395ee8cd') in 0.095595099 seconds
+Start importing Assets/Resources/Art/Poison/bus.png using Guid(c8f36fac23734eff8c9921d64ffafcc3) (TextureImporter) -> (artifact id: 'e2eb9d9a205131db05adf3b2d5809f6e') in 0.08306169 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/d_Joystick@4x.png using Guid(d88596134c72c47b99d7d55583f4c6bf) (TextureImporter) -> (artifact id: '96d863d48401aab7da7891c66fe4189d') in 0.001911351 seconds
+Start importing Assets/Resources/Art/Poison/pigeon_1.png using Guid(e8bf6156b54941ee8407cfe988d3c4d1) (TextureImporter) -> (artifact id: '7216756a32913cb5cad80179fe0b6298') in 0.020378907 seconds
+Start importing Assets/Resources/Art/Heroes/bubakr_k4.png using Guid(f8481b293dd9430faf100c485488d659) (TextureImporter) -> (artifact id: '72e3635304ecc438340ddef7781262b1') in 0.022058125 seconds
+Start importing Assets/Resources/Art/Props/rider_01_a.png using Guid(f8ece2625ecd4dd3a9ea32ddefb448bb) (TextureImporter) -> (artifact id: 'c6f103f2d1fc5101cae8b5434fea43a3') in 0.015360977 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/d_Button@2x.png using Guid(0962795d1cafc460b9027de55b1c0a80) (TextureImporter) -> (artifact id: '1eabda60ece2e2c251c5ab6e420f52eb') in 0.001274398 seconds
+Start importing Assets/Resources/Art/Poison/pebble.png using Guid(09de023f28eb48a486361459aa3fda7c) (TextureImporter) -> (artifact id: '624e5ed9c10c74d78998526458afe62a') in 0.008545505 seconds
+Start importing Assets/Resources/Art/UI/panel.png using Guid(19e720975b8440d4ab36510683bd8dda) (TextureImporter) -> (artifact id: 'bf351fce022e190a749640e76d9013fb') in 0.035111364 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/d_Mouse@4x.png using Guid(1918e7bff8ff44878a0003977ca03971) (TextureImporter) -> (artifact id: 'c14b84a7e0cb5620bebe1c65710ed899') in 0.002071698 seconds
+Start importing Assets/Resources/Art/Heroes/hamada_k5.png using Guid(2991e1a654034e1880a449ba9e85f4a3) (TextureImporter) -> (artifact id: '73a8965b8a72889b23dead657be78104') in 0.021802175 seconds
+Start importing Assets/Resources/Art/Heroes/rima_r3.png using Guid(39c0e89e3a6d40d2a46d72c230dbca96) (TextureImporter) -> (artifact id: 'cc6f388492aaa0effa9f5c96478778d2') in 0.019686172 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/d_InputControl.png using Guid(399cd90f4e31041e692a7d3a8b1aa4d0) (TextureImporter) -> (artifact id: '0150a21914352ae0820e7ae10e9cb7c2') in 0.001240647 seconds
+Start importing Assets/Resources/Art/Heroes/fulla_k2.png using Guid(491465f9d67e483089263356ff79d9ec) (TextureImporter) -> (artifact id: '0852e827bd20c0ba8834c4366f0939a2') in 0.021703069 seconds
+Start importing Packages/com.unity.ugui/Editor Resources/Textures/btn_AlignCapLine_Light.psd using Guid(49679f302ac6408697f6b9314a38985c) (TextureImporter) -> (artifact id: '10e8979e46b65b27ac46ba67b294ecd9') in 0.001987954 seconds
+Start importing Assets/Resources/Art/Heroes/hamada_k3.png using Guid(595dc8cba6974a48865905863865c273) (TextureImporter) -> (artifact id: 'e12bc1db62f4ac28c10f5e702b7ea808') in 0.028177787 seconds
+Start importing Packages/com.unity.ugui/Editor Resources/Textures/btn_AlignFlush.psd using Guid(691475c57a824010be0c6f474caeb7e1) (TextureImporter) -> (artifact id: 'daa09fe6017f220fd204037c08a18323') in 0.001947444 seconds
+Start importing Assets/Resources/Art/Props/ped_01_tarboush_a.png using Guid(798c473a0c814e99bbcc49fa25f2eba3) (TextureImporter) -> (artifact id: '3643bab64d8414a3e442487edaf6735e') in 0.037981324 seconds
+Start importing Assets/Resources/Art/UI/btn_red.png using Guid(89152d1cf6e04062a62ea2614a2a941d) (TextureImporter) -> (artifact id: '059c703de453240e7f1d744ba958b0fa') in 0.007298237 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/Axis@4x.png using Guid(a940917cc397643afb071010cb2143d9) (TextureImporter) -> (artifact id: 'a653930bbd77c598feadb27a9d2fe337') in 0.001541503 seconds
+Start importing Assets/Resources/Art/Heroes/bubakr_k1.png using Guid(a9e0d21f6a5b4559b0e1470e2af80784) (TextureImporter) -> (artifact id: '27b3bb01a0a9d816efbecbba06126713') in 0.020683258 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/ChevronUp.png using Guid(a9fe7c3d19af4432b9ae2a5172f4ea72) (TextureImporter) -> (artifact id: '50e34206e2c2b853db05d5625c2639eb') in 0.001432041 seconds
+Start importing Assets/Resources/Art/Heroes/zaatar_r5.png using Guid(a92f426f88c64df185c52cb4436afea3) (TextureImporter) -> (artifact id: '5f4a9607cf468f3ffb951c93e4d31149') in 0.021890747 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/d_Orientation.png using Guid(c933c2bcad7ef46309fde7c1cf11b39a) (TextureImporter) -> (artifact id: '7ac0e56f1919ef679b12efe231054a40') in 0.001369378 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/Position@4x.png using Guid(c998b283038914e699477f514ecb31ac) (TextureImporter) -> (artifact id: 'e57e5f9dcffe810a9a3a3fc79a2ee89b') in 0.001422747 seconds
+Start importing Assets/Resources/Art/UI/bar.png using Guid(d9ed57a38cd04f7688bb0337e1b904b7) (TextureImporter) -> (artifact id: 'ab67da5053c7d45f1c4e4cd8f7efa9a7') in 0.008201666 seconds
+Start importing Assets/Resources/Art/Heroes/hamada_k1.png using Guid(f9f30241a38f45b19265e44ab44515d1) (TextureImporter) -> (artifact id: 'a06d08f26d6dee2331f0969b5bbee559') in 0.024439891 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/d_Pen@4x.png using Guid(0aec7c7bf99354f66bc2a1d18bd0b4d2) (TextureImporter) -> (artifact id: '33af935c5186fefdeff3fb15ce7ae408') in 0.001622002 seconds
+Start importing Assets/Resources/Art/Heroes/rima_idle.png using Guid(0abee99605134f63b060ea0402bee1f9) (TextureImporter) -> (artifact id: 'f0320ead07319e6d0da74dc6c1bdc472') in 0.136166459 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/Button.png using Guid(2a5d0a7febdc741039abf135883517e5) (TextureImporter) -> (artifact id: 'cbfefe8bcf00f1d968b50f60a0d768eb') in 0.001583355 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/Gamepad@3x.png using Guid(4ae0b2f68c2464272b1b10105262b09b) (TextureImporter) -> (artifact id: '696b9c541f0ebc64ab403f3b657369c0') in 0.001327045 seconds
+Start importing Assets/Resources/Art/Heroes/um_arabiyat_r5.png using Guid(4a4a8f39ea974cc18074015b0252a27a) (TextureImporter) -> (artifact id: 'fa822550e522216eef086a993d824fd6') in 0.018326359 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/d_Add Binding@4x.png using Guid(4a0ce0eda6ee74c669b13104649e1313) (TextureImporter) -> (artifact id: 'a083d72e0a7fcde42c4825f463d0354f') in 0.001673247 seconds
+Start importing Assets/Resources/Art/Icons/puddle.png using Guid(5a33a768de974e2ba3cc287a172251a6) (TextureImporter) -> (artifact id: '416b13e93351a7f5d851d0c3e178a64b') in 0.004626722 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/AssetEditor/PackageResources/personal/foldoutBackground.png using Guid(5ab69704aa4984b49bc426da72fabbed) (TextureImporter) -> (artifact id: '98c1147453bdfe033bb969a14c3c17f4') in 0.001111957 seconds
+Start importing Assets/Resources/Art/UI/btn_blue.png using Guid(5ab8f9731522486ba2db913975a3361a) (TextureImporter) -> (artifact id: '32421fe31c4c1304c0a0b54fa9203545') in 0.005067204 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/Keyboard.png using Guid(5a5b9538c3aaa4587856e68a93a92a51) (TextureImporter) -> (artifact id: '325f72a5beed467ca6aefbb5ab9ca350') in 0.00118835 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/MultiplayerEventSystem@64.png using Guid(6a237171e2346e3458db37eb0f90d42b) (TextureImporter) -> (artifact id: '08ebd19dcd4e0416754c4bef5fdab26d') in 0.001395847 seconds
+Start importing Assets/Resources/Art/house_08_broken.png using Guid(6a5a979c0d6845ce8e97fc7a5c26eaa1) (TextureImporter) -> (artifact id: '296d23290c95ef9ecda6abe4a34dae89') in 0.095839783 seconds
+Start importing Assets/Resources/Art/Heroes/abu_shahata_r2.png using Guid(6a8e423ca3d442e485e3d1a1f903ab90) (TextureImporter) -> (artifact id: 'd18ffb9026d5a7645ee15b222fac9619') in 0.018501427 seconds
+Start importing Packages/com.unity.ugui/Editor Resources/Textures/btn_AlignCenter_Light.psd using Guid(6ace62d30f494c948b71d5594afce11d) (TextureImporter) -> (artifact id: 'd104e343c37847aee6bca1a2e5eb39ef') in 0.002165267 seconds
+Start importing Assets/Resources/Art/Heroes/toni_k3.png using Guid(8ac2d5a071fb46ca96d9f7f2da14d534) (TextureImporter) -> (artifact id: '35dd33db3d20ae6dec7e6448a61fe27d') in 0.02034665 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/Touch@3x.png using Guid(9ad5d5b6a25b749e78b4950eae0a8ec2) (TextureImporter) -> (artifact id: 'c30b65cd5757ce23764cfc3269cd60a4') in 0.001644856 seconds
+Start importing Assets/Resources/Art/Heroes/zaatar_r2.png using Guid(9a2ca1e94ac74158a85b716db2fbe893) (TextureImporter) -> (artifact id: '9dad0603a0a847e108ec59279cd42b00') in 0.020945096 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/Button@4x.png using Guid(aa356632480554016ab8f4200032981b) (TextureImporter) -> (artifact id: '598e05b8ee97a7aeada38a4e207367f4') in 0.001714048 seconds
+Start importing Assets/Resources/Art/Heroes/fulla_r4.png using Guid(aaa66e49164f4ac08172abaf69fc12b5) (TextureImporter) -> (artifact id: 'aaa03f3b93e595773134de1f31853dd0') in 0.018042277 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/AssetEditor/PackageResources/personal/propertiesBackground.png using Guid(aa4c2360f910d46f497f75b4b6677358) (TextureImporter) -> (artifact id: '20e7805d18c68e0e4579f5efda6ed7e0') in 0.001255369 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/ChevronDown.png using Guid(ba304f5556a3a4fac98d126883083e7e) (TextureImporter) -> (artifact id: 'e432c857d5dd2068f66e3311a342bc40') in 0.00117555 seconds
+Start importing Assets/Resources/Art/Icons/pigeon.png using Guid(ba81f0179de843f88e5fb8210f0284fd) (TextureImporter) -> (artifact id: 'cf419431fa14f193907f43afd591b2ff') in 0.007055398 seconds
+Start importing Packages/com.unity.ugui/Editor Resources/Textures/btn_AlignBottom.psd using Guid(ca51b19024094d1b87f3e07edb0a75fb) (TextureImporter) -> (artifact id: '86495cea28dd516669ef343b4f3e6738') in 0.001899042 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/d_Add Binding@3x.png using Guid(ca933a91c81734ddd88b17c8481ec1e9) (TextureImporter) -> (artifact id: '4359089e1b527e742da24effda802a98') in 0.001347806 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/Interactive Binding@3x.png using Guid(cac8742b1b72b44699fd1663287ca47d) (TextureImporter) -> (artifact id: 'f350f5a3cefe975ba71a8d686769a157') in 0.0013035 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/d_Orientation@2x.png using Guid(cae83450c8b18499c8c0239edf8bcc31) (TextureImporter) -> (artifact id: '170f33c5beea3d86bc19bcb46a1ee804') in 0.001143173 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/d_Mouse@2x.png using Guid(daa9ba527d8a34b218224b8287ce11d3) (TextureImporter) -> (artifact id: 'ce27564073f367ca4279af5494677b6a') in 0.001155842 seconds
+Start importing Assets/Resources/Art/Heroes/zaatar_k2.png using Guid(ea99116c341b41aa898c8e711b56388c) (TextureImporter) -> (artifact id: '94a5b38f52801277ed3edeb99aae0da3') in 0.024915866 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/Pen.png using Guid(ea8b7319643924985a9ee4ca18b8db59) (TextureImporter) -> (artifact id: '9ad6823da88055b5cbbe1677cfe5ef65') in 0.001429467 seconds
+Start importing Assets/Resources/Art/Heroes/abu_shahata_kick.png using Guid(ea9f1a7da4ae451babd3a54861e12b83) (TextureImporter) -> (artifact id: '5a072a40f6a7a0e95dcad4a039818ced') in 0.121285522 seconds
+Start importing Assets/Resources/Art/Icons/rage.png using Guid(fa2b5aca511741f3816e959416e84d53) (TextureImporter) -> (artifact id: '5f7506c093e2a288c1b77b6f0301f7f5') in 0.005759329 seconds
+Start importing Packages/com.unity.ugui/Editor Resources/Textures/btn_AlignJustified_Light.psd using Guid(fa6bd40a216346b783a4cce741d277a5) (TextureImporter) -> (artifact id: 'dcbac6348235f2053fa59d552cc149ed') in 0.001894025 seconds
+Start importing Assets/Resources/Art/Heroes/zaatar_kick.png using Guid(fa9cfeda2c814005bbc677f9b7a2f5eb) (TextureImporter) -> (artifact id: 'e9bded4965f7a4120a94adaed074358a') in 0.120762768 seconds
+Start importing Assets/Resources/Art/house_09_broken.png using Guid(1bd240d6941741cea2d827c63f547106) (TextureImporter) -> (artifact id: '1569d04a9255aacf2348214643c69a67') in 0.054189536 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/Pen@3x.png using Guid(1bf9cdd4bc492489c8c7c6190785fc48) (TextureImporter) -> (artifact id: 'fb09bb6bffa0ea6cda5e92cc9a853ad8') in 0.001619919 seconds
+Start importing Assets/Resources/Art/Heroes/fulla_idle.png using Guid(3b424e004fef4cfba2d1a80e35799a77) (TextureImporter) -> (artifact id: '2f93b3c4c733a8936cfa7c9bdea81006') in 0.163562007 seconds
+Start importing Assets/Resources/Art/Props/bike_frame.png using Guid(3b439772a4b040ad8ae52695ba038a6e) (TextureImporter) -> (artifact id: '15611aed9f53fb1456a19c55a8c869d6') in 0.020926729 seconds
+Start importing Assets/Resources/Art/Icons/open_window.png using Guid(3bb5d8da4ae345429cba08adb86c0fa8) (TextureImporter) -> (artifact id: 'f37c0d430cb542ad4ff5ee728a01df55') in 0.007444534 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/d_Interactive Binding@2x.png using Guid(3b78dc1763429489c9a1c70faf4f9a0e) (TextureImporter) -> (artifact id: 'beb4e3dde3da7d15f7d8e33a07255bd1') in 0.001466101 seconds
+Start importing Assets/Resources/Art/Heroes/um_arabiyat_face.png using Guid(6b83c1a00b284ee5bf22034bd7c14e68) (TextureImporter) -> (artifact id: 'e5261e46d6131ee4a01e030eb25f3305') in 0.034032256 seconds
+Start importing Assets/Resources/Art/Poison/fart.png using Guid(7b00a4f4e9a54e67bd70ae26e49f5bb5) (TextureImporter) -> (artifact id: '45c614163f1deba23c305bcc60a59a3e') in 0.017049698 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/TrackedPoseDriver@4x.png using Guid(7b8bfaee8f8631c4789ac62373cbc2d4) (TextureImporter) -> (artifact id: '28b2d88ce190d2ca78ff3a100383d9df') in 0.001888056 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/Add Binding@3x.png using Guid(8be1fbf4b24de44c99840805bdae9e40) (TextureImporter) -> (artifact id: 'eab18d31ccc98688d7ea9e59826f2946') in 0.001358842 seconds
+Start importing Packages/com.unity.ugui/Editor Resources/Textures/btn_AlignBaseLine.psd using Guid(8bc445bb79654bf496c92d0407840a92) (TextureImporter) -> (artifact id: '00fcc535eec4e19071d24b0086b6e77b') in 0.001759165 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/d_Dpad@2x.png using Guid(ab9b5824ece1d443aa1f3a5672d9da86) (TextureImporter) -> (artifact id: 'f76e89ee606229a404281b8516f5102d') in 0.0011883 seconds
+Start importing Packages/com.unity.ugui/Editor Resources/Textures/btn_AlignMidline_Light.psd using Guid(bb42b2d967d6427983c901a4ffc8ecd9) (TextureImporter) -> (artifact id: 'd2e22a200bbb5c03269f4f95abe9bd3f') in 0.0017557 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/d_Pen.png using Guid(bb42fb9342e9d4e68b6cf39a2e071d9b) (TextureImporter) -> (artifact id: 'c224d12b86d2c3566b502fa950049ff8') in 0.001015764 seconds
+Start importing Assets/Resources/Art/Cars/wheel_3.png using Guid(bb6e1bcc57404543a32fee5a570da0f2) (TextureImporter) -> (artifact id: '632f9e5a2622d152b81e0d273b461539') in 0.020703899 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/Add Binding@2x.png using Guid(bb5fa99d6e9434c9ebf101c956021ee1) (TextureImporter) -> (artifact id: '51df8931066bb61ee3a84d6b3c316240') in 0.00146552 seconds
+Start importing Assets/Resources/Art/Heroes/bubakr_k2.png using Guid(db3b5f90f99647f7b40c511086fe6f5b) (TextureImporter) -> (artifact id: '595582caa230d65b87c2fd0b7bedb40a') in 0.021006837 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/d_Button@4x.png using Guid(db3dc7a02ac6d4e90bbe905a44ac265b) (TextureImporter) -> (artifact id: '054eb90c436c42ed4f3619b7185446c7') in 0.001725515 seconds
+Start importing Assets/Resources/Art/Broken/pane_0.png using Guid(ebe156b0263d4c5485bc6c5b99038ec4) (TextureImporter) -> (artifact id: 'b2347b5866564824ae1830573a298af8') in 0.011912981 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/d_Interactive Binding.png using Guid(eb28fd64eacfa495c97193108f1cdf03) (TextureImporter) -> (artifact id: '4724bda0a3a659d02dc78bbc489a604e') in 0.001198314 seconds
+Start importing Assets/Resources/Art/house_12.png using Guid(ebcf1e9d622c4bee976ee1eb616325e7) (TextureImporter) -> (artifact id: '60e6fbc5b60907a89859f9280aa2dc9b') in 0.086299935 seconds
+Start importing Packages/com.unity.ugui/Editor Resources/Textures/SectionHeader_Dark.psd using Guid(fb5730e24283d0c489e5c7d0bee023d9) (TextureImporter) -> (artifact id: '3f607b2314a4c977e6e09847bdf61cae') in 0.004938854 seconds
+Start importing Assets/Resources/Art/house_10.png using Guid(fb2ae34ac01648b8ab85b1061fccb3ba) (TextureImporter) -> (artifact id: '5579ad2787af183d6ce60a02b811f12f') in 0.090769453 seconds
+Start importing Assets/Resources/Art/Heroes/toni_r3.png using Guid(0cb8f95422ad47c2a1db7a5ffa4fcae9) (TextureImporter) -> (artifact id: '4305cb91e500efbf47691a47569d63d7') in 0.020428712 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/Orientation@4x.png using Guid(1c751eb104ad5407992e614361d5f81e) (TextureImporter) -> (artifact id: '2c0b79277a445f77560a6e87bf085db7') in 0.001690102 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/Button@2x.png using Guid(1c37f00575bd6494ea726be5afee89b9) (TextureImporter) -> (artifact id: 'b38e16d1be2ac2fcd9b1addbfa915224') in 0.001247146 seconds
+Start importing Assets/Resources/Art/Heroes/bubakr_r4.png using Guid(2c507b6be33546e1961b7dc8f81a25ea) (TextureImporter) -> (artifact id: '36450c63fee7647e5c60ce3bf8ebdf28') in 0.01951592 seconds
+Start importing Assets/Resources/Art/Heroes/zaatar_k5.png using Guid(2cad2f4ac45245d0bd185d688ca70f52) (TextureImporter) -> (artifact id: '9eacb8ca1eb73ce6b1c080ae80c2c5b5') in 0.024767406 seconds
+Start importing Assets/Resources/Art/house_07_broken.png using Guid(3c21f450d3bd4fcc914fcbe099078f74) (TextureImporter) -> (artifact id: '19ab547c213d17ae0ab575fe157c0032') in 0.097190923 seconds
+Start importing Assets/Resources/Art/Cars/wheel_2.png using Guid(3c78a38077fb45279de81bc2b31fb15f) (TextureImporter) -> (artifact id: '8e9945b75edf7a78960b41082df5ccc1') in 0.021228396 seconds
+Start importing Assets/Resources/Art/Icons/nails.png using Guid(4c029ed1ffe64437a27d469b9472d015) (TextureImporter) -> (artifact id: '5507bdea1d654e79dc682cccd05fd7c1') in 0.006438254 seconds
+Start importing Assets/Resources/Art/Heroes/fulla_k3.png using Guid(4cbb3f55d5d44644bacf053598f71197) (TextureImporter) -> (artifact id: '15378b4b9bdfa3660e3ebb9cc4b55b4b') in 0.021924166 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/Dpad@3x.png using Guid(6c1147159d9dc42948601b29dfc9a40c) (TextureImporter) -> (artifact id: 'a6f8104c81b563948b4a09f89023d5f9') in 0.001636553 seconds
+Start importing Assets/Resources/Art/Heroes/fulla_k5.png using Guid(6c3731f32f774adcb00d92cc52de5811) (TextureImporter) -> (artifact id: '6c7dd251193e990b6113e69ce3681731') in 0.022679765 seconds
+Start importing Assets/Resources/Art/ground_asphalt.png using Guid(7c1d4a0e9b5f4e2a8a3c6d1f2b4e5a11) (TextureImporter) -> (artifact id: '354585444e4d73cf184bd61b420c57cc') in 0.117607246 seconds
+Start importing Assets/Resources/Art/wall_right.png using Guid(7c1d4a0e9b5f4e2a8a3c6d1f2b4e5a21) (TextureImporter) -> (artifact id: '343890cf00353132267383d9a27c1a9a') in 0.095659255 seconds
+Start importing Assets/Resources/Art/ground_sidewalk.png using Guid(7c1d4a0e9b5f4e2a8a3c6d1f2b4e5a12) (TextureImporter) -> (artifact id: '0ef0352a107a04ba0f08e748818e6181') in 0.173017109 seconds
+Start importing Assets/Resources/Art/wall_left.png using Guid(7c1d4a0e9b5f4e2a8a3c6d1f2b4e5a22) (TextureImporter) -> (artifact id: '3366b44226bdf4f98ab7178c752d8d14') in 0.102363143 seconds
+Start importing Assets/Resources/Art/Props/tree_01.png using Guid(7c1d4a0e9b5f4e2a8a3c6d1f2b4e5a35) (TextureImporter) -> (artifact id: '8c7d4fabaaed834f755727c23174f752') in 0.114230476 seconds
+Start importing Assets/Resources/Art/Poison/nails.png using Guid(8c2a2819ffc84114badd06f0c13de2c9) (TextureImporter) -> (artifact id: '2f0653f1008bc7e18136f306a109e961') in 0.015537087 seconds
+Start importing Assets/Resources/Art/Heroes/hamada_k2.png using Guid(9cf15f4e5d3444f19a410c4f7549d333) (TextureImporter) -> (artifact id: '2a87b8e3d7cc1f42e980102a8f2c15ce') in 0.018287661 seconds
+Start importing Assets/Resources/Art/UI/btn_green.png using Guid(9c04777da4924f2f82ba33a8244fd687) (TextureImporter) -> (artifact id: 'd1ce5dd86b27761b06659daf1d83a5fa') in 0.005816132 seconds
+Start importing Assets/Resources/Art/Heroes/bubakr_idle.png using Guid(9c56ec13e3dc43f2a0d3ce4a88ab8744) (TextureImporter) -> (artifact id: '1ebe112aa1b751b28a0066c9ea0cb7d3') in 0.061727148 seconds
+Start importing Assets/Resources/Art/Icons/fart.png using Guid(9cecb9b0219f4840a6cda8c143d31f07) (TextureImporter) -> (artifact id: '8a1ac19c22f5a1e190a7d21cf3984023') in 0.007158761 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/Pen@4x.png using Guid(acf10446fff184bb98db6350c2c43148) (TextureImporter) -> (artifact id: '084de9304b55fcc370fb191dfb6d099f') in 0.001747067 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/d_Position@4x.png using Guid(ac4c5ccb2785f4460b2dcfe47010c688) (TextureImporter) -> (artifact id: 'b5498079cc9fefaff0cfcd3a51914575') in 0.001539379 seconds
+Start importing Assets/Resources/Art/Poison/flashlight.png using Guid(bca9eb310dd24adbbc9af4c9c876b50a) (TextureImporter) -> (artifact id: 'ceaab824210fbe6e2cae9412cb9e44c6') in 0.012523335 seconds
+Start importing Assets/Resources/Art/Heroes/toni_kick.png using Guid(cc1515baa7be4ccaad6aa6a064e49f2d) (TextureImporter) -> (artifact id: '21040e1368e16b55f9777edc79091469') in 0.13879414 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/InputControl.png using Guid(ec85de66fa5b64dd984fdcc82f8f92b3) (TextureImporter) -> (artifact id: '108813f454cab7ccf5befa01beae6bee') in 0.001645897 seconds
+Start importing Packages/com.unity.ugui/Editor Resources/Gizmos/TMP - Sprite Asset Icon.psd using Guid(ec7c645d93308c04d8840982af12101e) (TextureImporter) -> (artifact id: '47999dcfb19eb45f96cbbc9b934910b3') in 0.00455151 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/d_Joystick@3x.png using Guid(fcaa0d99df7c74f52afaa17a375dd393) (TextureImporter) -> (artifact id: '3f94821d90a7d07d21703ab5128d9d89') in 0.001388106 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/d_ChevronDown@4x.png using Guid(0de917098a5b848b1a371e570928ce10) (TextureImporter) -> (artifact id: '3383ea1b0929aa694d7066109236f24d') in 0.001186487 seconds
+Start importing Packages/com.unity.ugui/Editor Resources/Textures/btn_AlignCapLine.psd using Guid(0d9a36012a224080966c7b55896aa0f9) (TextureImporter) -> (artifact id: 'ba614290f028fa6c66778cb485f9f169') in 0.001890279 seconds
+Start importing Assets/Resources/Art/Heroes/rima_k2.png using Guid(2de96e247d8c405e918d3af945f5fb57) (TextureImporter) -> (artifact id: 'b8bc8711d80d4b24183dc784f024299e') in 0.026624266 seconds
+Start importing Assets/Resources/Art/Broken/pane_2.png using Guid(3d360560007f40b4920c399bf55b1347) (TextureImporter) -> (artifact id: '13ae96e67448091295cd89bde03eb9ff') in 0.013772625 seconds
+Start importing Assets/Resources/Art/Heroes/toni_r2.png using Guid(3d0ddb6a6a7449fd99679e7ae2efd175) (TextureImporter) -> (artifact id: 'f42daaf4801d59560b603ec8199b9ebc') in 0.020658471 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/d_Add Binding@2x.png using Guid(3d7dc8d6b9a96490b9aa433645712fdf) (TextureImporter) -> (artifact id: 'd5d519e9dd28797855e663c80cd3b4ef') in 0.001530426 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/Gamepad@2x.png using Guid(4defb5292901c41f29313d9c9c87a7eb) (TextureImporter) -> (artifact id: '3017c571653fbbfa19d70a8981633511') in 0.001218935 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/d_ChevronDown@3x.png using Guid(5d96795fd770f47d69d997b053532730) (TextureImporter) -> (artifact id: '4777600abc688f39fff56494fd9c02d3') in 0.001191073 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/d_Stick@2x.png using Guid(5d0b11389336d4b16b96f147c9f912e2) (TextureImporter) -> (artifact id: 'd555d8634ac4670e300579431e16b20b') in 0.003003487 seconds
+Start importing Assets/Resources/Art/Icons/bag.png using Guid(6d30c97971c34a0099e269751367b039) (TextureImporter) -> (artifact id: 'b611ec7e922d4b6a7d44494c2395d69e') in 0.011607229 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/d_Touch@4x.png using Guid(6db042035460c4167a6ab8d1ac3c2681) (TextureImporter) -> (artifact id: '8d9498377e3d7285b8c409f38eca1eb4') in 0.001761399 seconds
+Start importing Assets/Resources/Art/Icons/duel.png using Guid(6daa9b87148940fd8c420a16d81ab77c) (TextureImporter) -> (artifact id: 'eea95ab0ec897d5f0783a2d2aff18d25') in 0.007474499 seconds
+Start importing Assets/Resources/Art/Heroes/hamada_r1.png using Guid(7d2298b0462440e69194b1cd1b5e1aad) (TextureImporter) -> (artifact id: 'd2b780268f8c7a60e442ca66989a9222') in 0.020843866 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/d_Joystick.png using Guid(7d4638131127c4f4382fb36cf16c52fe) (TextureImporter) -> (artifact id: 'c9b96446dc6e8bd22b2cba67cc8d36d4') in 0.001501784 seconds
+Start importing Assets/Resources/Art/Heroes/abu_shahata_r3.png using Guid(7d5eb5d1fcd74e3e9fff7b11260adb92) (TextureImporter) -> (artifact id: '918eff4a401bd5404f023d318d33ec17') in 0.017897092 seconds
+Start importing Assets/Resources/Art/Heroes/rima_face.png using Guid(8de9ac8ba7854cf9ba4780a33f6231b4) (TextureImporter) -> (artifact id: '271770369527c10b643e0683869cb0a4') in 0.014103906 seconds
+Start importing Assets/Resources/Art/UI/portrait.png using Guid(9dc07c7478734f0997fdcf4abba9fb03) (TextureImporter) -> (artifact id: 'e0404681c14f6f6d4b949d8c5e99be67') in 0.007994549 seconds
+Start importing Assets/Resources/Art/Poison/pigeon_0.png using Guid(cdcdaf64d7ea44a5a92cda928fe4061f) (TextureImporter) -> (artifact id: '6386e81964ed7b33f980fffd0b4f9293') in 0.030046994 seconds
+Start importing Packages/com.unity.ugui/Editor Resources/Textures/btn_AlignTop_Light.psd using Guid(ed041e68439749a69d0efa0e3d896c2e) (TextureImporter) -> (artifact id: 'd4d00ba5d02c3bcd49ce5d31afb21bb0') in 0.00224837 seconds
+Start importing Assets/Resources/Art/Icons/pebble.png using Guid(fd31b539a030418f997cb47278109aec) (TextureImporter) -> (artifact id: '6ca0190c19f63d259cd57d5ba221ba37') in 0.00711749 seconds
+Start importing Assets/Resources/Art/Heroes/fulla_r3.png using Guid(fd0267b6e7a641d797e0577c002c5fe7) (TextureImporter) -> (artifact id: '719dd2767d9ca172c92c36f7d1523718') in 0.018419606 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/d_ChevronUp@3x.png using Guid(0efecba65ae4341a385cd5d39a2af765) (TextureImporter) -> (artifact id: 'd46a01410cedd9061c3698d905871a66') in 0.00151997 seconds
+Start importing Assets/Resources/Art/Heroes/rima_k1.png using Guid(1e3722c97cde483da61a6f5be5e719f1) (TextureImporter) -> (artifact id: 'cede88bf1641ebe67306d800ad597d89') in 0.026450919 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/Axis@3x.png using Guid(2e27a82b5cc4e4ef98cbef2d0b324aed) (TextureImporter) -> (artifact id: '2fece364e26c1dc129a10898118591a9') in 0.001623204 seconds
+Start importing Packages/com.unity.ugui/Editor Resources/Gizmos/TMP - Input Field Icon.psd using Guid(3ee40aa79cd242a5b53b0b0ca4f13f0f) (TextureImporter) -> (artifact id: 'd95d6736a32c36267e9e24855510d105') in 0.003348188 seconds
+Start importing Assets/Resources/Art/Icons/flashlight.png using Guid(3eb68b2f79154e75b9916900478ba940) (TextureImporter) -> (artifact id: '109392078cb530293b60a9f448c6105e') in 0.00786037 seconds
+Start importing Assets/Resources/Art/Poison/truck.png using Guid(4ec9a92a940746999af48cef9b0dce45) (TextureImporter) -> (artifact id: 'f02d40af284ef58641c9cb51a3808314') in 0.019953658 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/Touch@4x.png using Guid(6e9283a12f5b74afbba696cbb82f5e7f) (TextureImporter) -> (artifact id: '8305fb3d13ab7d3860978b06d571b2a3') in 0.001740287 seconds
+Start importing Assets/Resources/Art/Heroes/hamada_r2.png using Guid(6e2b446d4fec4e628c405468f4633736) (TextureImporter) -> (artifact id: '8467e1bfb105ea74115e23d6ffe3d44c') in 0.016922198 seconds
+Start importing Assets/Resources/Art/Heroes/toni_k1.png using Guid(6edefe36d7a34c8a9f4fa5d588a6dad5) (TextureImporter) -> (artifact id: 'b39947d2d1408b28a9fa6af057cc5487') in 0.018547035 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/Axis.png using Guid(7e853779c8fed4ebf917a0de21c79602) (TextureImporter) -> (artifact id: '1077196b4d0a5ccba97b6f343e84dbf8') in 0.001369868 seconds
+Start importing Assets/Resources/Art/Heroes/hamada_r5.png using Guid(7e28e07c8d2a4fff838307426bca9ed0) (TextureImporter) -> (artifact id: '66afb134b611f942dd9fb92cbb2c4a15') in 0.015749682 seconds
+Start importing Assets/Resources/Art/Cars/wheel_1.png using Guid(8e95c6aaa65546c5af8bd6b3aada2ce3) (TextureImporter) -> (artifact id: '8aeb7bd322bf6ad63cef2dee194e81a6') in 0.018294842 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/Mouse.png using Guid(9eb2b64988cb1443cab6da5dc5300d1c) (TextureImporter) -> (artifact id: '0c8877c1ed944e6f79d589baae23c5b9') in 0.001478309 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/d_Keyboard@3x.png using Guid(9ec4e316700da46b88741a8153b33963) (TextureImporter) -> (artifact id: 'dfc1d9015cf0cca3c7f3c0fbc7257814') in 0.001380655 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/d_Gamepad@3x.png using Guid(9e882b58df0964f5b90ff99cb481ee79) (TextureImporter) -> (artifact id: '9c6c7c51cdfc4d914d1504c2ad965b89') in 0.001324641 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/Interactive Binding@4x.png using Guid(9e6c9e992a2ee4327bce1d6a8189cedb) (TextureImporter) -> (artifact id: '59aaae0b49032c874820b8e2c0472c1d') in 0.001417028 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/d_Gamepad@2x.png using Guid(bed935caee9524e6780614c2055bfd35) (TextureImporter) -> (artifact id: '4630e08a2af194c66445b67f055ea9ed') in 0.001116053 seconds
+Start importing Assets/Resources/Art/Fx/fx_cat.png using Guid(befa35b50fc7434c8bd60dc15269b372) (TextureImporter) -> (artifact id: '3ade0b0da9bce9d44d714132d36ce791') in 0.015795651 seconds
+Start importing Assets/Resources/Art/UI/card_red.png using Guid(becdc2d0cd0248b2abbff2c1bcbafa6e) (TextureImporter) -> (artifact id: '9261be752236d9a15ea5bed6e5c91ce0') in 0.028385074 seconds
+Start importing Assets/Resources/Art/Poison/window_open_0.png using Guid(ceb01e3d9aed4cc8984b0a27e89606a6) (TextureImporter) -> (artifact id: 'fb86f9132c18c6edd9bd4b4a27dbe391') in 0.036315357 seconds
+Start importing Assets/Resources/Art/house_11_broken.png using Guid(ce45bc7db46440f69f39161e10f023e9) (TextureImporter) -> (artifact id: '2c86733810414a3035622df22ad2d921') in 0.092720533 seconds
+Start importing Assets/Resources/Art/Heroes/zaatar_k1.png using Guid(ce8830540c774d95a1000c45a497f680) (TextureImporter) -> (artifact id: '165a354f5675c66e2d2da0d3f6ffd88a') in 0.021303878 seconds
+Start importing Assets/Resources/Art/Heroes/fulla_r5.png using Guid(ce3a50c33d504e20b3932a1a8c4b94e4) (TextureImporter) -> (artifact id: '20b1519dc82a66adac8b98f5a07c0824') in 0.015334708 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/d_Touch@2x.png using Guid(ceaa885da02f84da195f87de12535da6) (TextureImporter) -> (artifact id: 'c090bdf47067f0facce7acff7b956110') in 0.001562324 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/AssetEditor/PackageResources/personal/actionTreeBackground.png using Guid(ce5f11cd993284c4f9c54f854bdc8c9c) (TextureImporter) -> (artifact id: 'e20c567cb19ed9fd96cded5bb8de41d5') in 0.001150143 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/d_Orientation@4x.png using Guid(de98baf415a2c4d7dbe0de74cb6e171c) (TextureImporter) -> (artifact id: '550f12dca834d2cd6267125547d878eb') in 0.001477007 seconds
+Start importing Packages/com.unity.ugui/Editor Resources/Gizmos/TMP - Font Asset Icon.psd using Guid(ee148e281f3c41c5b4ff5f8a5afe5a6c) (TextureImporter) -> (artifact id: '2ee85eb122f0ee5f67f6a46a83ae253a') in 0.00339724 seconds
+Start importing Assets/Resources/Art/Heroes/zaatar_face.png using Guid(ee2c02f9e8704d879d98e71fbf3551e1) (TextureImporter) -> (artifact id: '25593e524728cfb1710c9fa5b24c3643') in 0.014949989 seconds
+Start importing Assets/Resources/Art/Icons/replay.png using Guid(0f775e1f420d47a685f0b92a0601eab3) (TextureImporter) -> (artifact id: '8c56c80cb93b442698b95cabde0a9987') in 0.006397664 seconds
+Start importing Assets/Resources/Art/UI/badge.png using Guid(0f189e68b6db4407987b2c9e186d2765) (TextureImporter) -> (artifact id: '4a2ed1c3fdeafa4fb3e29f99bbbbbaf4') in 0.00638784 seconds
+Start importing Assets/Resources/Art/Icons/pick.png using Guid(1fa79cad3143476fb0fa6cd661f82792) (TextureImporter) -> (artifact id: 'f69709ec1f3ccaaef3f7dd42ae460f8c') in 0.008247823 seconds
+Start importing Assets/Resources/Art/Cars/wheel_4.png using Guid(2fe16e182c1c45d7a1e59685d52d0e9b) (TextureImporter) -> (artifact id: 'deaea17583496527bf485b198d8e01ca') in 0.021613035 seconds
+Start importing Packages/com.unity.ugui/Editor Resources/Gizmos/TMP - Text Component Icon.psd using Guid(2fd6421f253b4ef1a19526541f9ffc0c) (TextureImporter) -> (artifact id: '0ee0e088e856d85c81700d8b7f45cd7f') in 0.003515827 seconds
+Start importing Assets/Resources/Art/Heroes/toni_idle.png using Guid(3f8f6ef071e64aaca416a546a08f1791) (TextureImporter) -> (artifact id: '5119a38cc78226a34c066b7feffda227') in 0.133152205 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/Orientation@3x.png using Guid(5f09d534eb1414449a2758696bd4dd11) (TextureImporter) -> (artifact id: '06bce8322f199b70c915c6d698468257') in 0.00166794 seconds
+Start importing Assets/Resources/Art/Icons/heart.png using Guid(5f8ff41da6684fa8ab85c8d13c6c9a8b) (TextureImporter) -> (artifact id: '217236ef745479c4e94a0623af4acb7e') in 0.005827579 seconds
+Start importing Assets/Resources/Art/Icons/cart.png using Guid(6f55b4da92e84684bda1057a49ef1dc9) (TextureImporter) -> (artifact id: '736f11791dc166eb40b30b35f61c2970') in 0.00756975 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/Keyboard@4x.png using Guid(7fc0926499f7a4500b152d45397c44a4) (TextureImporter) -> (artifact id: '221ad9252525d434c7f91c852a500d27') in 0.001510597 seconds
+Start importing Assets/Resources/Art/Bags/bag_3.png using Guid(7ff24ffc285f45748bda6b74b949361a) (TextureImporter) -> (artifact id: '628d9d2a87335316b24f7e4b83c9cd90') in 0.028180921 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/Orientation.png using Guid(7fb7b46a8c63948d2b28dc394281bf5a) (TextureImporter) -> (artifact id: 'd8837df6b032d79c1a043334c3b15a5f') in 0.001370159 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/d_ChevronUp.png using Guid(7fad89501bb5c408e956934bf2eb8ae3) (TextureImporter) -> (artifact id: '7e4b19cfd5a86cb6e00c19c7d4b77b0d') in 0.00105996 seconds
+Start importing Assets/Resources/Art/Heroes/hamada_r6.png using Guid(8fa6f626f374467ebdb8ec64f76c5c8a) (TextureImporter) -> (artifact id: '6f8c323e14e26eeceb12eab3dcb7449c') in 0.016312136 seconds
+Start importing Assets/Resources/Art/Heroes/abu_shahata_k3.png using Guid(8f9b636c81644377aaf7c91d0380f7f5) (TextureImporter) -> (artifact id: '3ae60f19929dd0d0bb9b0be56b4dcee2') in 0.020605523 seconds
+Start importing Assets/Resources/Art/Icons/wind.png using Guid(8fbffd7230ab465ebfe2a525bb2386a7) (TextureImporter) -> (artifact id: 'cdb102c0b0d44ae49caf15e63c0e5191') in 0.007530872 seconds
+Start importing Assets/Resources/Art/Poison/cart.png using Guid(bfd0e0b3d3ea4358923927493baf5131) (TextureImporter) -> (artifact id: 'de4e3842f6e0c0c4752233d28bfa4fe6') in 0.017850033 seconds
+Start importing Assets/Resources/Art/Heroes/um_arabiyat_k5.png using Guid(bf55e31b432a4bd6a5d2e4e1cc5488b7) (TextureImporter) -> (artifact id: '570c076e144fa4f0595ee003fabbeaff') in 0.02148788 seconds
+Start importing Assets/Resources/Art/UI/btn_orange.png using Guid(bf1ae68838ef499d84624205854aa0b3) (TextureImporter) -> (artifact id: '0ac23edaf9653def733e6c29dc1c44b3') in 0.005743746 seconds
+Start importing Assets/Resources/Art/Heroes/zaatar_r4.png using Guid(bf0eb334a82a40d3842fc36945096e0c) (TextureImporter) -> (artifact id: '237ac6b79931d705645ff8a7825aa2dc') in 0.021147135 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/AssetEditor/PackageResources/personal/actionTreeBackgroundWithoutBorder.png using Guid(cf632ed80bf1f46c980de6b1b8b903ef) (TextureImporter) -> (artifact id: 'd4ffbd70f0886f83715224cd2ec09eee') in 0.001399853 seconds
+Start importing Assets/Resources/Art/Heroes/um_arabiyat_r2.png using Guid(cfa355ecca6c43cca33e0c88f7a7bae3) (TextureImporter) -> (artifact id: '2b9f6f2d8d6fe520d4cefdc620efc4b5') in 0.017857845 seconds
+Start importing Assets/Resources/Art/Heroes/fulla_kick.png using Guid(cfb4b9ab20d64500a582e2a66b53ceaf) (TextureImporter) -> (artifact id: '7a7757a97b63126c09bd72b9dde85a6f') in 0.128947849 seconds
+Start importing Assets/Resources/Art/UI/card_green.png using Guid(cf972683a5d54ef58e004f55764e60db) (TextureImporter) -> (artifact id: 'f10365cf33c84d73c3b59a6fd5bf4e78') in 0.032019055 seconds
+Start importing Assets/Resources/Art/UI/ribbon.png using Guid(cf8dce5e7dd241cb95c9cbda4292ad13) (TextureImporter) -> (artifact id: 'db7463f58b843db20dea70d6c87f0533') in 0.022694006 seconds
+Start importing Assets/Resources/Art/Poison/plank.png using Guid(ef75577e6d114202a511a0e872756281) (TextureImporter) -> (artifact id: 'ba93bc3168fc5e8e936cc4c153904678') in 0.019279389 seconds
+Start importing Assets/Resources/Art/Heroes/toni_face.png using Guid(ef3f728d45064bf28e9415a690e9614a) (TextureImporter) -> (artifact id: '77b0541f13791eb131cdcefec4dbb0d5') in 0.015305274 seconds
+Start importing Assets/Resources/Art/Heroes/toni_r4.png using Guid(efff97e788fd48288086fd652487ea87) (TextureImporter) -> (artifact id: 'e42f307914c784fa316fc372acbc8b55') in 0.021029902 seconds
+Start importing Assets/Resources/Art/Heroes/hamada_r3.png using Guid(ff212dd5f3a34d90ab4a5841cdd083d4) (TextureImporter) -> (artifact id: '9bbbb06ecc5bb0e9c4aae5ef47cbad08') in 0.029958944 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/TrackedPoseDriver@2x.png using Guid(ff8479815905ce84e9ef610d926f28c8) (TextureImporter) -> (artifact id: '4baf53232f8ffac53c8b67436e28ef8f') in 0.001781808 seconds
+Start importing Assets/Resources/Art/Icons/truck.png using Guid(ff35c7573f1b4212a8fa4fd7a82d9374) (TextureImporter) -> (artifact id: 'c8b1e1ac1b4e09cf41c4573d72ebd353') in 0.010327032 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/AssetEditor/PackageResources/green.png using Guid(ffeba93637e654de6a5906b48520dc94) (TextureImporter) -> (artifact id: '9eb08ca1a43165ac3657b1676c63c4b2') in 0.001530657 seconds
+Start importing Assets/Resources/Fonts/Vazirmatn-Regular.ttf using Guid(a063c18040b2531f59a181b2a13ac209) (TrueTypeFontImporter) -> (artifact id: 'a1e9e6c978bdc167c0ffad7fb386e11d') in 0.010167797 seconds
+Start importing Assets/Resources/Art/Cars/cars.txt using Guid(058e36451cc64ed885a970f455a1a20a) (TextScriptImporter) -> (artifact id: 'a466d92e061120ab220341dfd38dabc0') in 0.00128296 seconds
+Start importing Assets/Resources/Fonts/OFL.txt using Guid(49b9a19d1c4c6ff4fa0a2ff4f1bc7d50) (TextScriptImporter) -> (artifact id: '74a20e0437d3f0d4977067819fb9c10e') in 0.001615893 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/UITKAssetEditor/PackageResources/BindingPanelRowTemplate.uxml using Guid(449c8e5ca27af8e4a9db710c8be5e4df) (ScriptedImporter) -> (artifact id: 'd22b0703ce38f43fb8eacec751b84292') in 0.083643642 seconds
+Refreshing native plugins compatible for Editor in 0.20 ms, found 0 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Asset Pipeline Refresh (id=895db3c1fe0b6b6a1bc8827f40831856): Total: 18.631 seconds - Initiated by InitialRefreshV2(ForceSynchronousImport)
+	Summary:
+		Imports: total=428 (actual=428, local cache=0, cache server=0)
+		Asset DB Process Time: managed=109 ms, native=10235 ms
+		Asset DB Callback time: managed=218 ms, native=284 ms
+		Scripting: domain reloads=1, domain reload time=922 ms, compile time=6824 ms, other=32 ms
+		Project Asset Count: scripts=317, non-scripts=468
+		Asset File Changes: new=237, changed=291, moved=0, deleted=9
+		Scan Filter Count: 1
+	InvokeCustomDependenciesCallbacks: 0.005ms
+	InvokePackagesCallback: 272.958ms
+	ApplyChangesToAssetFolders: 0.223ms
+	Scan: 2008.544ms
+	OnSourceAssetsModified: 1.516ms
+	CategorizeAssetsWithTransientArtifact: 10.587ms
+	ProcessAssetsWithTransientArtifactChanges: 24.739ms
+	UnregisterDeletedAssets: 0.013ms
+	CategorizeAssets: 17.173ms
+	ImportOutOfDateAssets: 8181.362ms (-6007.017ms without children)
+		ImportManagerImport: 7362.770ms (36.591ms without children)
+			ImportInProcess: 7324.212ms
+			UpdateCategorizedAssets: 1.967ms
+		CompileScripts: 6824.149ms
+		ReloadNativeAssets: 0.001ms
+		UnloadImportedAssets: 0.424ms
+		ReloadImportedAssets: 0.068ms
+		EnsureUptoDateAssetsAreRegisteredWithGuidPM: 0.157ms
+		InitializingProgressBar: 0.009ms
+		PostProcessAllAssetNotificationsAddChangedAssets: 0.000ms
+		OnDemandSchedulerStart: 0.800ms
+	PostProcessAllAssets: 227.844ms
+	Hotreload: 2.578ms
+	GatherAllCurrentPrimaryArtifactRevisions: 0.001ms
+	UnloadStreamsBegin: 3.534ms
+	PersistCurrentRevisions: 0.888ms
+	UnloadStreamsEnd: 0.001ms
+	GenerateScriptTypeHashes: 3.979ms
+	Untracked: 7879.213ms
+
+Application.AssetDatabase Initial Refresh End
+Scanning for USB devices : 0.153ms
+Initializing Unity extensions:
+UpdateMenuTitleForLanguage: 10
+[MODES] ModeService[none].Initialize
+[MODES] ModeService[none].LoadModes
+[MODES] Loading mode Default (0) for mode-current-id-مدينة فاجعة
+Unloading 6 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 1250 unused Assets / (0.9 MB). Loaded Objects now: 1785.
+Memory consumption went from 86.6 MB to 85.7 MB.
+Total: 12.425700 ms (FindLiveObjects: 0.397919 ms CreateObjectMapping: 0.075141 ms MarkObjects: 9.936715 ms  DeleteObjects: 2.014613 ms)
+
+
+(Unity:1533): GLib-GObject-CRITICAL **: 15:46:10.630: g_object_unref: assertion 'G_IS_OBJECT (object)' failed
+
+(Unity:1533): GLib-GObject-CRITICAL **: 15:46:10.630: g_object_unref: assertion 'G_IS_OBJECT (object)' failed
+
+(Unity:1533): GLib-GObject-CRITICAL **: 15:46:10.630: g_object_unref: assertion 'G_IS_OBJECT (object)' failed
+[Project] Loading completed in 25.578 seconds
+	Project init time: 				25.193 seconds
+		Template init time: 		0.000 seconds
+		Package Manager init time: 		0.476 seconds
+		Asset Database init time: 		0.379 seconds
+		Global illumination init time: 	0.009 seconds
+		Assemblies load time: 			5.205 seconds
+		Unity extensions init time: 	0.003 seconds
+		Asset Database refresh time: 	18.631 seconds
+	Scene opening time: 			0.134 seconds
+##utp:{"type":"ProjectInfo","version":2,"phase":"Immediate","time":1793893570633,"processId":1533,"projectLoad":25.577608956,"projectInit":25.193370375,"templateInit":0.0,"packageManagerInit":0.475973174,"assetDatabaseInit":0.37892295,"globalIlluminationInit":0.009220434,"assembliesLoad":5.20503079,"unityExtensionsInit":0.0026133,"assetDatabaseRefresh":18.631282287,"sceneOpening":0.134221308}
+##utp:{"type":"EditorInfo","version":2,"phase":"Immediate","time":1793893570633,"processId":1533,"editorVersion":"6000.0.84f1 (78ab6fc243d5)","branch":"6000.0/staging","buildType":"Release","platform":"Linux"}
+Asset Pipeline Refresh (id=c90d6bef76ce2b977b86062e8edd4dde): Total: 0.110 seconds - Initiated by RefreshV2(ForceSynchronousImport)
+Asset Pipeline Refresh (id=cff579a6940bb73e58092f6c1fb04277): Total: 0.046 seconds - Initiated by RefreshV2(NoUpdateAssetOptions)
+Launched and connected shader compiler UnityShaderCompiler after 0.04 seconds
+Running tests for ExecutionSettings with details:
+targetPlatform = 
+playerHeartbeatTimeout = 600
+filters[0] = 
+   Filter with settings:
+   testMode = EditMode
+   targetPlatform = 
+   testNames = null
+   groupNames = null
+   categoryNames = null
+   assemblyNames = null
+ignoreTests = {}
+featureFlags = null
+
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /home/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:35)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+UnityEditor.TestTools.TestRunner.CommandLineTest.Executer:InitializeAndExecuteRun (string[]) (at ./Library/PackageCache/com.unity.test-framework@bd52b1c23814/UnityEditor.TestRunner/CommandLineTest/Executer.cs:53)
+UnityEditor.TestTools.TestRunner.CommandLineTest.TestStarter:InitializeAndExecuteRun () (at ./Library/PackageCache/com.unity.test-framework@bd52b1c23814/UnityEditor.TestRunner/CommandLineTest/TestStarter.cs:64)
+UnityEditor.EditorApplication:Internal_CallUpdateFunctions () (at /home/bokken/build/output/unity/unity/Editor/Mono/EditorApplication.cs:384)
+
+(Filename: ./Library/PackageCache/com.unity.test-framework@bd52b1c23814/UnityEditor.TestRunner/CommandLineTest/Executer.cs Line: 53)
+
+[UnityConnectServicesConfig] config is NOT valid, switching to default
+Created GICache directory at /root/.cache/unity3d/GiCache. Took: 0.154s, timestamps: [25.598 - 25.752]
+Unloading 1 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 2 unused Assets / (1.3 KB). Loaded Objects now: 1828.
+Memory consumption went from 79.1 MB to 79.1 MB.
+Total: 8.529861 ms (FindLiveObjects: 0.093519 ms CreateObjectMapping: 0.021201 ms MarkObjects: 8.372227 ms  DeleteObjects: 0.041801 ms)
+
+Saving results to: /github/workspace/artifacts/editmode-results.xml
+Unloading 0 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 0 unused Assets / (0 B). Loaded Objects now: 1828.
+Memory consumption went from 78.9 MB to 78.9 MB.
+Total: 8.722055 ms (FindLiveObjects: 0.092066 ms CreateObjectMapping: 0.020411 ms MarkObjects: 8.601246 ms  DeleteObjects: 0.007060 ms)
+
+DisplayProgressbar: Undo
+Test run completed. Exiting with code 0 (Ok). Run completed.
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /home/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:35)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+UnityEditor.TestTools.TestRunner.CommandLineTest.Executer:ExitApplication (UnityEditor.TestTools.TestRunner.CommandLineTest.Executer/ReturnCodes,string) (at ./Library/PackageCache/com.unity.test-framework@bd52b1c23814/UnityEditor.TestRunner/CommandLineTest/Executer.cs:81)
+UnityEditor.TestTools.TestRunner.CommandLineTest.Executer:ExitIfRunIsCompleted () (at ./Library/PackageCache/com.unity.test-framework@bd52b1c23814/UnityEditor.TestRunner/CommandLineTest/Executer.cs:74)
+UnityEditor.EditorApplication:Internal_CallUpdateFunctions () (at /home/bokken/build/output/unity/unity/Editor/Mono/EditorApplication.cs:384)
+
+(Filename: ./Library/PackageCache/com.unity.test-framework@bd52b1c23814/UnityEditor.TestRunner/CommandLineTest/Executer.cs Line: 81)
+
+[Physics::Module] Cleanup current backned.
+[Physics::Module] Id: 0xf2b8ea05
+Input System module state changed to: ShutdownInProgress.
+Input System polling thread exited.
+Input System module state changed to: Shutdown.
+[Licensing::IpcConnector] LicenseClient-root-notifications channel disconnected successfully.
+[Licensing::IpcConnector] LicenseClient-root channel disconnected successfully.
+AcceleratorClientConnectionCallback - disconnected - :0
+[40m[32minfo[39m[22m[49m: Microsoft.Hosting.Lifetime[0]
+      Application is shutting down...
+Cleanup mono
+debugger-agent: Unable to listen on 39
+[Package Manager] Server process was shutdown
+Checking for leaked weakptr:
+  Found no leaked weakptrs.
+##utp:{"type":"MemoryLeaks","version":2,"phase":"Immediate","time":1793893574226,"processId":1533,"allocatedMemory":7772996,"memoryLabels":[{"Default":13965},{"Permanent":16080},{"Thread":1084616},{"Manager":17038},{"VertexData":8},{"Geometry":408},{"VFX":-104},{"Texture":296},{"Shader":79227},{"Material":24},{"GfxDevice":35976},{"Animation":456},{"Audio":4032},{"Font":122797},{"FreeType":5918},{"FontEngine":320},{"Physics":2081},{"Serialization":368},{"Input":26752},{"JobScheduler":33024},{"TextLib":160},{"Mono":32},{"ScriptingNativeRuntime":155096},{"BaseObject":1622936},{"Resource":1032},{"Renderer":2928},{"Transform":4678},{"File":832},{"WebCam":80},{"Culling":32},{"Terrain":11298},{"Wind":24},{"String":10167},{"DynamicArray":87790},{"HashMap":74204},{"Utility":2657904},{"PoolAlloc":1568},{"AI":72},{"TypeTree":5005},{"ScriptManager":512},{"RuntimeInitializeOnLoadManager":64},{"SpriteAtlas":112},{"GI":7448},{"Director":8208},{"WebRequest":552},{"VR":45689},{"SceneManager":528},{"Video":64},{"LazyScriptCache":32},{"NativeArray":540},{"Camera":17},{"Secure":265},{"SerializationCache":1576},{"APIUpdating":10320},{"Subsystems":336},{"VirtualTexturing":57552},{"StaticSafetyDebugInfo":278528},{"Analytics":336},{"Hierarchy":832},{"CoreStats":12536},{"Identifiers":6192},{"Gui":112},{"EditorUtility":27684},{"VersionControl":4},{"Undo":979},{"AssetDatabase":1192326},{"EditorGi":328},{"UnityConnect":24816},{"Upm":1852},{"DrivenProperties":72},{"LocalIPC":147},{"ProfilerEditor":9746},{"CoreBusinessMetrics":2379},{"Licensing":1128},{"AssetReference":32},{"IPCStream":32}]}
