@@ -226,7 +226,7 @@ namespace Sheytoonak.Prototype
             // User (2026-11-05): «پس زمینه خونه ها رو عوض کن و فعلا فقط از این ۶ تا استفاده کن تا تصویر جدید بیاد … اون اولیه که
             // تصویر شیشه شکسته‌ش رو نداریم رو بی‌خیال شو». Only houses painted twice (intact + every pane smashed) are dealt;
             // House1..House6 stay in the code but out of the pool.
-            var houses = new[] { House7(), House8(), House9(), House10(), House11(), House12() };
+            var houses = new[] { House7(), House8(), House9(), House10(), House11(), House12(), House13() };
 
             // Player: foot position + window mapping. No body: the game is first-person (POV).
             var player = new GameObject("Player");
@@ -435,6 +435,17 @@ namespace Sheytoonak.Prototype
                 R(445f, 630f, 535f, 735f), R(722f, 630f, 812f, 735f), R(1000f, 630f, 1088f, 735f),
             },
             0.25f, 1.95f, 0f, 1.2f, new[] { new WindowDetail(-1, DetailKind.Tree) { pixel = R(0f, 520f, 185f, 1024f) }, new WindowDetail(-1, DetailKind.Tree) { pixel = R(1375f, 590f, 1536f, 1024f) } }, "Art/house_12_broken");
+
+        // House 13 (user 2026-11-05): the first wide painting (1916x821, ~2.3:1, Mediterranean stone house with a shop), so
+        // it fills a phone screen without stretching; width kept at the same pixel scale as the 1536-wide ones.
+        HouseDefinition House13() => MakePaintedHouse("البيت ١٣", "Art/house_13", 1916f, 821f, 13f * 1916f / 1536f,
+            new[]
+            {
+                R(118f, 40f, 290f, 230f), R(500f, 40f, 605f, 215f), R(748f, 35f, 893f, 215f), R(1045f, 40f, 1148f, 290f),
+                R(1352f, 45f, 1456f, 215f), R(1707f, 50f, 1808f, 235f),
+                R(170f, 440f, 280f, 655f), R(508f, 440f, 635f, 655f), R(1305f, 480f, 1700f, 690f),
+            },
+            0.25f, 1.95f, 0f, 1.2f, null, "Art/house_13_broken");
 
         static Rect R(float x0, float y0, float x1, float y1) => Rect.MinMaxRect(x0, y0, x1, y1);
         static WindowDetail Pot(int w, float x0, float y0, float x1, float y1) => new WindowDetail(w, DetailKind.Pot) { pixel = R(x0, y0, x1, y1) };
