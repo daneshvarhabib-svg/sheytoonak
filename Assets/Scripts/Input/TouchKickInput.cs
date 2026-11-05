@@ -37,13 +37,21 @@ namespace Sheytoonak
         /// <summary>A UI button was just tapped: do not read that same press/release as a kick.</summary>
         public void IgnoreFor(float seconds) { ignoreUntil = Time.unscaledTime + seconds; pressing = false; }
 
+        /// <summary>
+        /// Height of the strip along the bottom of the screen that is UI, in pixels: a press that starts there is never a
+        /// kick. User (2026-11-05): «وقتی می‌خوای یک قهرمان دیگه رو انتخاب کنی اتوماتیک همونی انتخاب می‌شه که پشت توپه و یه
+        /// ضربه می‌زنه». A quick tap is press and release inside one Update, which runs before OnGUI: the kick fired before
+        /// the face button could say IgnoreFor. The HUD sets this every frame.
+        /// </summary>
+        public float DeadZoneHeight;
+
         void Update()
         {
             var ptr = Pointer.current;
             if (ptr != null)
             {
                 Vector2 pos = ptr.position.ReadValue();
-                if (ptr.press.wasPressedThisFrame && Time.unscaledTime >= ignoreUntil) { pressing = true; pressPos = pos; pressTime = Time.unscaledTime; }
+                if (ptr.press.wasPressedThisFrame && Time.unscaledTime >= ignoreUntil && pos.y > DeadZoneHeight) { pressing = true; pressPos = pos; pressTime = Time.unscaledTime; }
                 if (pressing && moveWithFinger) Lateral = Mathf.Clamp((pressPos.x / Mathf.Max(1, Screen.width)) * 2f - 1f, -1f, 1f);
                 if (pressing && ptr.press.wasReleasedThisFrame)
                 {

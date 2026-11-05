@@ -131,10 +131,13 @@ namespace Sheytoonak.Prototype
             // my actions: icons, not words. User (2026-11-02): «سم و زهر نباید نوشته بشه … باید تصویر و آیکون باشه،
             // کلا هم تو بازی نوشته زیاده». Poisons sit on red badges (top row), antidotes on green (bottom row),
             // one column per hero; rage / pass / surrender on dark badges on the right.
+            if (touch != null) touch.DeadZoneHeight = 0f;
             if (!ended && mine && !rules.KickInFlight)
             {
-                float sz = 62 * u, gap = 8 * u;
+                // User (2026-11-05): «کارت انتخاب قهرمان توی بازی و انتخاب قدرت‌هاشون بزرگتر بشه». 62 -> 84 px at 900p.
+                float sz = 84 * u, gap = 10 * u;
                 float stripH = sz * 2 + gap * 3;
+                if (touch != null) touch.DeadZoneHeight = stripH; // taps on the strip are never kicks
                 var old = GUI.color; GUI.color = new Color(0f, 0f, 0f, 0.4f);
                 GUI.DrawTexture(new Rect(0, Screen.height - stripH, Screen.width, stripH), Texture2D.whiteTexture); GUI.color = old;
                 float x0 = pad, yb = Screen.height - stripH + gap;
