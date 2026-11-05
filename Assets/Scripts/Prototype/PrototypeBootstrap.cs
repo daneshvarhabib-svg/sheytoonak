@@ -482,6 +482,19 @@ namespace Sheytoonak.Prototype
             return Mathf.Max(PaintedFacadeWidth, 2f * dist * Mathf.Tan(hFov * 0.5f * Mathf.Deg2Rad) * 1.04f);
         }
 
+        /// <summary>
+        /// World height at the facade that sits at the given screen fraction (0 = bottom edge, 1 = top edge), from the
+        /// camera's pitch and its real vertical field of view.
+        /// </summary>
+        float HeightAtScreenFraction(float facadeZ, float fraction)
+        {
+            if (cam == null) return 1e9f;
+            float dist = facadeZ - cam.transform.position.z;
+            float vFov = Mathf.Max(cameraMinVerticalFov, Camera.HorizontalToVerticalFieldOfView(cameraHorizontalFov, Mathf.Max(0.5f, cam.aspect)));
+            float up = -cameraPitchDeg + (fraction - 0.5f) * vFov; // Euler X is positive when the camera looks down
+            return cam.transform.position.y + dist * Mathf.Tan(up * Mathf.Deg2Rad);
+        }
+
         static HouseDefinition MakePaintedHouse(string name, string texture, float imgW, float imgH, float w, Rect[] pixelWindows,
                                                 float wind, float returnTime, float spread, float hitScale, WindowDetail[] details = null,
                                                 string broken = null)
@@ -558,6 +571,14 @@ namespace Sheytoonak.Prototype
             if (!string.IsNullOrEmpty(h.paintedTexture))
             {
                 float want = FacadeWidthForCamera(z);
+                // ⚠️ run 89: filling the width alone pushed the upper window row off the top of the screen (a 2.2:1 phone
+                // shows ~0.45 of a 3:2 painting's height above the road). The house grows only as far as its highest
+                // window still sits under 90 % of the screen; what is left beside it is filled with the painting mirrored
+                // (same street, same style, no grey neighbour walls), so the frame is still nothing but the painting.
+                float topLimit = HeightAtScreenFraction(z, 0.9f), topWindow = 0f;
+                foreach (var r0 in h.worldWindows) topWindow = Mathf.Max(topWindow, r0.yMax);
+                if (topWindow > 0.01f) want = Mathf.Min(want, Mathf.Max(w, w * topLimit / topWindow));
+                viewHalfWidth = FacadeWidthForCamera(z) * 0.5f;
                 if (Mathf.Abs(want - w) > 0.01f)
                 {
                     // the definition is scaled in place (windows are world rects derived from pixels at the old width) and
@@ -601,6 +622,8 @@ namespace Sheytoonak.Prototype
         }
 
         /// <summary>The painting on a quad, plain brick above it to the sky, and an invisible dark pane per window that shows once broken.</summary>
+        float viewHalfWidth; // half of what the camera sees at the facade, set in BuildFacade
+
         Transform BuildPaintedFacade(HouseDefinition h, Transform root, float w, float paintedHeight)
         {
             var tex = Resources.Load<Texture2D>(h.paintedTexture);
@@ -619,7 +642,23 @@ namespace Sheytoonak.Prototype
             quad.transform.localScale = new Vector3(w, paintedHeight, 1f);
             quad.GetComponent<Renderer>().sharedMaterial = mat;
             // User (2026-11-05): «عکس خونه باید ابعادش بزرگتر شه و کل تصویر رو بگیره … کلا ما تو قاب فقط همون خونه رو ببینیم».
-            // The painting is sized in MakePaintedHouse to the camera's view at the facade, so there is nothing beside it.
+            // The painting is sized in BuildFacade as large as its windows allow; the rest of the view on each side is the
+            // same painting mirrored (then straight again), so the street continues in the painter's own strokes.
+            if (viewHalfWidth > w * 0.5f + 0.05f)
+            {
+                var mirror = new Material(mat) { mainTextureScale = new Vector2(-1f, 1f), mainTextureOffset = new Vector2(1f, 0f) };
+                for (int side = -1; side <= 1; side += 2)
+                    for (int n = 1; n * w - w * 0.5f < viewHalfWidth + 0.5f && n <= 3; n++)
+                    {
+                        var copy = GameObject.CreatePrimitive(PrimitiveType.Quad);
+                        Strip(copy);
+                        copy.name = "Painting side " + side * n;
+                        copy.transform.SetParent(root, false);
+                        copy.transform.localPosition = new Vector3(side * n * w, paintedHeight * 0.5f, 0.05f);
+                        copy.transform.localScale = new Vector3(w, paintedHeight, 1f);
+                        copy.GetComponent<Renderer>().sharedMaterial = (n % 2 == 1) ? mirror : mat;
+                    }
+            }
 
             // The wall keeps going above the painting (no roof): a box in the painting's own brick colour.
             Color top = AverageColour(tex, 0.02f, 0.06f);
@@ -627,7 +666,7 @@ namespace Sheytoonak.Prototype
             // The painting's own top rows stretched upward continue its sky (or wall) instead.
             var wallMat = TopRows(mat, tex);
             float above = 60f - paintedHeight;
-            Box(root, new Vector3(0f, paintedHeight + above * 0.5f, 0.3f), new Vector3(w, above, 0.5f), wallMat);
+            Box(root, new Vector3(0f, paintedHeight + above * 0.5f, 0.3f), new Vector3(Mathf.Max(w, viewHalfWidth * 2f + 1f), above, 0.5f), wallMat);
             // Neighbours: painted blank walls (Art/wall_left, Art/wall_right: houses without visible windows,
             // user 2026-10-27) when they exist, otherwise a darker shade of this painting's brick.
             // the neighbour walls (Art/wall_left/right) are gone with the full-frame painting (user, 2026-11-05)

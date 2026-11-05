@@ -455,6 +455,9 @@ namespace Sheytoonak.Prototype
         {
             var ball = duel.ball;
             var t = ball.transform;
+            // ⚠️ run 89: the ball is a sphere scaled to its diameter, so "localScale = one" blew it up to a metre wide
+            // after every action; the squash is a factor on the real scale, not an absolute scale.
+            Vector3 baseScale = Vector3.one * (ball.Radius * 2f);
             ball.PlaceAtRest(new Vector3(at.x, ball.Radius, at.z));
             Vector3 home = foot.StrikeSpot + Vector3.up * ball.Radius;
             float hop = 0.35f, dur = 0.35f;
@@ -466,16 +469,16 @@ namespace Sheytoonak.Prototype
                 {
                     float h = hop * 4f * k * (1f - k);
                     t.position = new Vector3(Mathf.Lerp(p.x, to.x, k), ball.Radius + h, Mathf.Lerp(p.z, to.z, k));
-                    t.localScale = Vector3.one; yield return null;
+                    t.localScale = baseScale; yield return null;
                 }
                 // squash on landing: the "air going out" look
                 for (float k = 0f; k < 1f; k += Time.deltaTime / 0.12f)
                 {
                     float sq = 1f - 0.22f * Mathf.Sin(k * Mathf.PI);
-                    t.localScale = new Vector3(1f + (1f - sq) * 0.6f, sq, 1f + (1f - sq) * 0.6f);
+                    t.localScale = Vector3.Scale(baseScale, new Vector3(1f + (1f - sq) * 0.6f, sq, 1f + (1f - sq) * 0.6f));
                     t.position = new Vector3(to.x, ball.Radius * sq, to.z); yield return null;
                 }
-                t.localScale = Vector3.one;
+                t.localScale = baseScale;
                 p = to; hop *= 0.45f; dur *= 0.8f;
             }
             // roll the rest of the way, slowing down
