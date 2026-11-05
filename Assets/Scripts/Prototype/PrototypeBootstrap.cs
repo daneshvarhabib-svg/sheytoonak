@@ -69,6 +69,7 @@ namespace Sheytoonak.Prototype
         Transform facadeRoot, oldFacadeRoot;
         Renderer[] windowRenderers = new Renderer[0];
         float wind;
+        BackdropWindowMapper windowMapper;
         string toast = "";
         int lootShards, lootCards; float lootUntil; // the last opened bag, shown over the home screen
         float toastUntil;
@@ -231,6 +232,7 @@ namespace Sheytoonak.Prototype
             var player = new GameObject("Player");
             foot = player.AddComponent<PlayerFoot>();
             var mapper = player.AddComponent<BackdropWindowMapper>();
+            windowMapper = mapper;
             mapper.cam = cam;
 
             // Football: a sphere with a procedural black-and-white texture.
@@ -466,6 +468,20 @@ namespace Sheytoonak.Prototype
         /// </summary>
         const float PaintedFacadeWidth = 17.2f;
 
+        /// <summary>
+        /// ⚠️ run 88: 17.2 m still left sky on both sides. The horizontal field of view is not fixed: with the minimum vertical
+        /// FOV of 48 degrees a 2.2:1 phone sees ~25 m at the facade. So the painting is stretched to the camera's real view
+        /// at build time, and the window rectangles (stored for a PaintedFacadeWidth-wide quad) are scaled with it.
+        /// </summary>
+        float FacadeWidthForCamera(float facadeZ)
+        {
+            if (cam == null) return PaintedFacadeWidth;
+            float dist = facadeZ - cam.transform.position.z;
+            float vFov = Mathf.Max(cameraMinVerticalFov, Camera.HorizontalToVerticalFieldOfView(cameraHorizontalFov, Mathf.Max(0.5f, cam.aspect)));
+            float hFov = Camera.VerticalToHorizontalFieldOfView(vFov, Mathf.Max(0.5f, cam.aspect));
+            return Mathf.Max(PaintedFacadeWidth, 2f * dist * Mathf.Tan(hFov * 0.5f * Mathf.Deg2Rad) * 1.04f);
+        }
+
         static HouseDefinition MakePaintedHouse(string name, string texture, float imgW, float imgH, float w, Rect[] pixelWindows,
                                                 float wind, float returnTime, float spread, float hitScale, WindowDetail[] details = null,
                                                 string broken = null)
@@ -539,7 +555,24 @@ namespace Sheytoonak.Prototype
             var root = new GameObject("Facade " + h.displayName).transform;
             root.position = new Vector3(0f, 0f, z);
             float w = h.worldFacadeWidth, roof = h.worldRoofHeight;
-            if (!string.IsNullOrEmpty(h.paintedTexture)) return BuildPaintedFacade(h, root, w, roof);
+            if (!string.IsNullOrEmpty(h.paintedTexture))
+            {
+                float want = FacadeWidthForCamera(z);
+                if (Mathf.Abs(want - w) > 0.01f)
+                {
+                    // the definition is scaled in place (windows are world rects derived from pixels at the old width) and
+                    // mapped again, so the rules, the hit test and the drawing all agree on the new width
+                    float k = want / w;
+                    var wr = h.worldWindows;
+                    for (int i = 0; i < wr.Length; i++)
+                        wr[i] = Rect.MinMaxRect(wr[i].xMin * k, wr[i].yMin * k, wr[i].xMax * k, wr[i].yMax * k);
+                    h.worldWindows = wr;
+                    h.worldFacadeWidth = want; h.worldRoofHeight = roof * k;
+                    w = want; roof = roof * k;
+                    if (windowMapper != null) windowMapper.Map(h);
+                }
+                return BuildPaintedFacade(h, root, w, roof);
+            }
 
             // Roofless (user, 2026-10-25): the brick runs up past the top of the screen, so no ball is ever "over the roof".
             float wallH = h.hasRoof ? roof : 60f;
