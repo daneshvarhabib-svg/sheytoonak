@@ -224,6 +224,14 @@ namespace Sheytoonak.EditorTools
 
         const string ParkedFolder = "Assets/CIParkedOriginals"; // outside Resources: the PNGs wait here during the build
 
+        static void EnsureAssetFolder(string folder)
+        {
+            if (string.IsNullOrEmpty(folder) || AssetDatabase.IsValidFolder(folder)) return;
+            string parent = Path.GetDirectoryName(folder).Replace('\\', '/');
+            EnsureAssetFolder(parent);
+            AssetDatabase.CreateFolder(parent, Path.GetFileName(folder));
+        }
+
         static void PrecompressResources()
         {
             var sw = System.Diagnostics.Stopwatch.StartNew();
@@ -254,7 +262,9 @@ namespace Sheytoonak.EditorTools
                     copy.wrapMode = src.wrapMode; copy.filterMode = src.filterMode; copy.anisoLevel = src.anisoLevel;
                     copy.name = src.name;
                     string parked = ParkedFolder + "/" + path.Substring("Assets/Resources/".Length);
-                    Directory.CreateDirectory(Path.GetDirectoryName(parked));
+                    // ⚠️ run 109: a folder made with Directory.CreateDirectory has no GUID yet and MoveAsset refuses it
+                    // («Could not find parent directory GUID»); the asset database must create the folders itself.
+                    EnsureAssetFolder(Path.GetDirectoryName(parked).Replace('\\', '/'));
                     string err = AssetDatabase.MoveAsset(path, parked);
                     if (!string.IsNullOrEmpty(err)) { Debug.LogWarning("SHEYTOONAK PRECOMPRESS move failed " + path + ": " + err); failed++; continue; }
                     string assetPath = Path.ChangeExtension(path, ".asset");
