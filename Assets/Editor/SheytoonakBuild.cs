@@ -241,6 +241,24 @@ namespace Sheytoonak.EditorTools
             EditorUserBuildSettings.buildAppBundle = false; // an .apk you can install directly on the phone
             // ASTC for every texture without its own override (2026-11-05: the textures went in raw, see TextureCompression)
             EditorUserBuildSettings.androidBuildSubtarget = MobileTextureSubtarget.ASTC;
+            // ⚠️ run 82: target Android, override ASTC_5x5 written in the meta, and still RGBA32, each import 0.09 s (no
+            // compression ran at all). The editor preference "Compress Textures on Import" is off in the batch editor, so
+            // it is switched on here and every texture under Resources is imported again before the build.
+            Debug.Log("SHEYTOONAK TEXTURE compress-on-import was " + EditorPrefs.GetBool("kCompressTexturesOnImport", true));
+            EditorPrefs.SetBool("kCompressTexturesOnImport", true);
+            var sw = System.Diagnostics.Stopwatch.StartNew();
+            int reimported = 0;
+            AssetDatabase.StartAssetEditing();
+            try
+            {
+                foreach (var guid in AssetDatabase.FindAssets("t:Texture2D", new[] { "Assets/Resources" }))
+                {
+                    AssetDatabase.ImportAsset(AssetDatabase.GUIDToAssetPath(guid), ImportAssetOptions.ForceUpdate);
+                    reimported++;
+                }
+            }
+            finally { AssetDatabase.StopAssetEditing(); }
+            Debug.Log("SHEYTOONAK TEXTURE reimported " + reimported + " in " + sw.Elapsed.TotalSeconds.ToString("0") + " s");
             foreach (var probe in new[] { "Assets/Resources/Art/house_11.png", "Assets/Resources/Art/Heroes/zaatar_idle.png" })
             {
                 var t = AssetDatabase.LoadAssetAtPath<Texture2D>(probe);
