@@ -137,10 +137,24 @@ namespace Sheytoonak.Prototype
 
         /// <summary>The 6-frame run cycle (r1..r6, 2026-11-04: «حرکت بازیکن‌ها هنوز طبیعی نیست») when painted; otherwise the
         /// two first kick frames as before. <paramref name="cycles"/> counts strides: one stride = the six frames.</summary>
+        // Toni has 4 run frames: user (2026-11-05) «طونی عکس اول و سومی از چپ درست نیست، باقی درسته» -- those two were dropped.
+        readonly System.Collections.Generic.Dictionary<string, int> runFrames = new System.Collections.Generic.Dictionary<string, int>();
+        int RunFrames(string id)
+        {
+            if (runFrames.TryGetValue(id, out int n)) return n;
+            n = 0;
+            while (n < 6 && HeroSprite(id, "r" + (n + 1)) != null) n++;
+            return runFrames[id] = Mathf.Max(1, n);
+        }
         bool HasRun(Side side, int slot) => painted[(int)side][slot] != null && HeroSprite(lookIds[(int)side][slot], "r1") != null;
         void RunPose(Side side, int slot, float cycles, bool kickFrames)
         {
-            if (HasRun(side, slot)) { SetPose(side, slot, "r" + (1 + (int)(cycles * 6f) % 6)); return; }
+            if (HasRun(side, slot))
+            {
+                int n = RunFrames(lookIds[(int)side][slot]);
+                SetPose(side, slot, "r" + (1 + (int)(cycles * n) % n));
+                return;
+            }
             if (kickFrames) SetPose(side, slot, (int)(cycles * 4f) % 2 == 0 ? "k1" : "k2");
         }
 
