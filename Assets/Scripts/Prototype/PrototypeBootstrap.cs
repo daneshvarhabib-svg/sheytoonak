@@ -228,7 +228,9 @@ namespace Sheytoonak.Prototype
             // House1..House6 stay in the code but out of the pool.
             // User (2026-11-05): «به نظرم دوباره تصویر خونه رو بگیریم بهتره» — the pool is the wide (2.3:1) paintings only; the 3:2
             // houses 7–12 stay in code until their wide versions arrive.
-            var houses = new[] { House13(), House14(), House15(), House16(), House17(), House18(), House19(), House20(), House21(), House22() };
+            // User (2026-11-05): the 3:1 paintings (2172x724) replace the 2.3:1 ones; houses 13–22 stay in code until their 3:1
+            // versions arrive («فعلا این سه تا رو داشته باش تا باقی برسن»).
+            var houses = new[] { House23(), House24(), House25() };
             allHouses = houses;
 
             // Player: foot position + window mapping. No body: the game is first-person (POV).
@@ -519,6 +521,29 @@ namespace Sheytoonak.Prototype
                 R(275f, 545f, 420f, 720f), R(1540f, 545f, 1685f, 720f), R(600f, 575f, 945f, 790f),
             },
             0.25f, 1.95f, 0f, 1.2f, new[] { new WindowDetail(-1, DetailKind.Laundry) { pixel = R(640f, 330f, 1400f, 440f) } }, "Art/house_22_broken", R(990f, 600f, 1150f, 780f));
+
+        const float Wide3W = 13f * 2172f / 1536f;
+        HouseDefinition House23() => MakePaintedHouse("البيت ٢٣", "Art/house_23", 2172f, 724f, Wide3W, // Damascus ablaq 3:1, spice shop
+            new[]
+            {
+                R(165f, 40f, 380f, 240f), R(640f, 40f, 860f, 240f), R(1080f, 40f, 1300f, 240f), R(1550f, 40f, 1770f, 240f),
+                R(160f, 400f, 385f, 610f), R(660f, 400f, 890f, 610f), R(1120f, 400f, 1300f, 610f), R(1360f, 420f, 1830f, 700f),
+            },
+            0.25f, 1.95f, 0f, 1.2f, null, "Art/house_23_broken", R(900f, 30f, 1050f, 230f));
+        HouseDefinition House24() => MakePaintedHouse("البيت ٢٤", "Art/house_24", 2172f, 724f, Wide3W, // Beirut bakery 3:1, laundry
+            new[]
+            {
+                R(300f, 60f, 440f, 280f), R(620f, 60f, 720f, 260f), R(960f, 60f, 1130f, 290f), R(1460f, 60f, 1560f, 250f), R(1780f, 60f, 1930f, 280f),
+                R(270f, 440f, 430f, 620f), R(630f, 400f, 720f, 600f), R(870f, 440f, 1420f, 700f), R(1770f, 440f, 1930f, 620f),
+            },
+            0.25f, 1.95f, 0f, 1.2f, new[] { new WindowDetail(-1, DetailKind.Laundry) { pixel = R(820f, 130f, 1460f, 290f) } }, "Art/house_24_broken", R(1600f, 40f, 1740f, 180f));
+        HouseDefinition House25() => MakePaintedHouse("البيت ٢٥", "Art/house_25", 2172f, 724f, Wide3W, // Alexandria 3:1, kiosk
+            new[]
+            {
+                R(215f, 60f, 335f, 230f), R(480f, 60f, 600f, 230f), R(755f, 60f, 870f, 230f), R(1010f, 60f, 1130f, 230f), R(1265f, 60f, 1390f, 230f), R(1530f, 60f, 1645f, 230f), R(1790f, 60f, 1905f, 230f),
+                R(240f, 420f, 340f, 580f), R(970f, 420f, 1090f, 580f), R(1430f, 480f, 1800f, 650f), R(1845f, 420f, 1935f, 580f),
+            },
+            0.25f, 1.95f, 0f, 1.2f, null, "Art/house_25_broken", R(1140f, 420f, 1250f, 580f));
 
         static Rect R(float x0, float y0, float x1, float y1) => Rect.MinMaxRect(x0, y0, x1, y1);
         static WindowDetail Pot(int w, float x0, float y0, float x1, float y1) => new WindowDetail(w, DetailKind.Pot) { pixel = R(x0, y0, x1, y1) };

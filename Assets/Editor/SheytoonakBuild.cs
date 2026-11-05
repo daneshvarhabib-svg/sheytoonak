@@ -289,7 +289,7 @@ namespace Sheytoonak.EditorTools
                     var sw2 = System.Diagnostics.Stopwatch.StartNew();
                     EditorUtility.CompressTexture(copy, TextureFormat.ASTC_6x6, 50);
                     Debug.Log("SHEYTOONAK TEXTURE CompressTexture(ASTC_6x6) -> " + copy.format + " in " + sw2.Elapsed.TotalSeconds.ToString("0.00") + " s");
-                    Object.DestroyImmediate(copy);
+                    UnityEngine.Object.DestroyImmediate(copy);
                 }
             }
             catch (System.Exception e) { Debug.Log("SHEYTOONAK TEXTURE probe failed: " + e.GetType().Name + " " + e.Message); }
