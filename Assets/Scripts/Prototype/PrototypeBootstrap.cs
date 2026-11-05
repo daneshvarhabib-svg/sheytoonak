@@ -947,7 +947,10 @@ namespace Sheytoonak.Prototype
             try
             {
                 int bw = Mathf.Max(8, tex.width * 6 / 100);
-                int x0 = dir < 0 ? 0 : tex.width - bw;
+                // ⚠️ user (run 98): «چرا باز درختا و اینطوری شده؟» — the very edge often holds a tree or a vine, and a tiled
+                // tree is as bad as a smeared one. So the band is the calmest stretch of wall in the outer third on that
+                // side: the columns whose colour changes least from row to row (plain stone or plaster, no glass, no leaves).
+                int x0 = CalmestBand(tex, dir, bw);
                 var px = tex.GetPixels(x0, 0, bw, tex.height);
                 var t = new Texture2D(bw, tex.height, TextureFormat.RGBA32, false) { wrapMode = TextureWrapMode.Mirror, filterMode = FilterMode.Bilinear };
                 t.SetPixels(px); t.Apply();
@@ -963,6 +966,35 @@ namespace Sheytoonak.Prototype
                 m.mainTextureScale = new Vector2(0.03f, 1f); m.mainTextureOffset = new Vector2(dir < 0 ? 0f : 0.97f, 0f);
             }
             return m;
+        }
+
+        /// <summary>Start column of the `bw`-wide band in the painting's outer third (left for dir &lt; 0) whose pixels vary
+        /// least down each column; sampled every fourth pixel.</summary>
+        static int CalmestBand(Texture2D tex, int dir, int bw)
+        {
+            int w = tex.width, h = tex.height, third = Mathf.Max(bw, w / 3);
+            int from = dir < 0 ? 0 : w - third, to = dir < 0 ? third - bw : w - bw;
+            var all = tex.GetPixels32();
+            var colVar = new float[w];
+            for (int x = from; x < to + bw; x += 1)
+            {
+                float v = 0f; int n = 0; Color32 prev = all[x];
+                for (int y = 4; y < h; y += 4)
+                {
+                    Color32 c = all[y * w + x];
+                    v += Mathf.Abs(c.r - prev.r) + Mathf.Abs(c.g - prev.g) + Mathf.Abs(c.b - prev.b);
+                    prev = c; n++;
+                }
+                colVar[x] = v / Mathf.Max(1, n);
+            }
+            int best = dir < 0 ? 0 : w - bw; float bestV = float.MaxValue;
+            for (int x = from; x <= to; x += 4)
+            {
+                float sum = 0f;
+                for (int i = 0; i < bw; i++) sum += colVar[x + i];
+                if (sum < bestV) { bestV = sum; best = x; }
+            }
+            return best;
         }
 
         static Material TopRows(Material painting, Texture2D tex)
