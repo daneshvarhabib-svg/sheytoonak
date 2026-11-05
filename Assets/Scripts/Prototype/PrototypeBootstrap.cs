@@ -695,9 +695,8 @@ namespace Sheytoonak.Prototype
                 // shows ~0.45 of a 3:2 painting's height above the road). The house grows only as far as its highest
                 // window still sits under 80 % of the screen; what is left beside it is filled with the painting mirrored
                 // (same street, same style, no grey neighbour walls), so the frame is still nothing but the painting.
-                float topLimit = HeightAtScreenFraction(z, 0.86f), topWindow = 0f; // run 90 (user): at 0.9 the top row was still clipped under the HUD («باید کامل معلوم باشه»)
-                foreach (var r0 in h.worldWindows) topWindow = Mathf.Max(topWindow, r0.yMax);
-                if (topWindow > 0.01f) want = Mathf.Min(want, Mathf.Max(w, w * topLimit / topWindow));
+                // User (2026-11-05): «اگر نشد از بالا آسمون بده به جای این که بکشی» — the painting always fills the camera's
+                // width; whatever the painting's aspect leaves above it is sky, never a stretched wall and never a capped house.
                 viewHalfWidth = FacadeWidthForCamera(z) * 0.5f;
                 if (Mathf.Abs(want - w) > 0.01f)
                 {
@@ -816,9 +815,15 @@ namespace Sheytoonak.Prototype
             Color top = AverageColour(tex, 0.02f, 0.06f);
             // ⚠️ run 73/75: a flat average colour above the painting read as a grey/olive bar across the top of the screen.
             // The painting's own top rows stretched upward continue its sky (or wall) instead.
-            var wallMat = TopRows(mat, tex);
+            // User (2026-11-05): sky above the painting instead of its stretched top rows.
+            var skyMat = SkyGradient(mat);
             float above = 60f - paintedHeight;
-            Box(root, new Vector3(0f, paintedHeight + above * 0.5f, 0.3f), new Vector3(Mathf.Max(w, viewHalfWidth * 2f + 1f), above, 0.5f), wallMat);
+            var sky = GameObject.CreatePrimitive(PrimitiveType.Quad);
+            Strip(sky); sky.name = "Sky";
+            sky.transform.SetParent(root, false);
+            sky.transform.localPosition = new Vector3(0f, paintedHeight + above * 0.5f, 0.6f);
+            sky.transform.localScale = new Vector3(Mathf.Max(w, viewHalfWidth * 2f + 1f) * 2f, above, 1f);
+            sky.GetComponent<Renderer>().sharedMaterial = skyMat;
             // Neighbours: painted blank walls (Art/wall_left, Art/wall_right: houses without visible windows,
             // user 2026-10-27) when they exist, otherwise a darker shade of this painting's brick.
             // the neighbour walls (Art/wall_left/right) are gone with the full-frame painting (user, 2026-11-05)
@@ -1025,6 +1030,19 @@ namespace Sheytoonak.Prototype
             {
                 m.mainTextureScale = new Vector2(0.001f, 1f); m.mainTextureOffset = new Vector2(0.5f, 0f);
             }
+            return m;
+        }
+
+        /// <summary>A warm late-afternoon sky: pale haze at the roof line, deeper blue higher up (1x64 gradient).</summary>
+        static Material SkyGradient(Material painting)
+        {
+            var m = new Material(painting) { color = Color.white };
+            var g = new Texture2D(1, 64, TextureFormat.RGBA32, false) { wrapMode = TextureWrapMode.Clamp, filterMode = FilterMode.Bilinear };
+            var low = new Color(0.93f, 0.86f, 0.74f); var high = new Color(0.47f, 0.68f, 0.90f);
+            for (int y = 0; y < 64; y++) g.SetPixel(0, y, Color.Lerp(low, high, Mathf.Pow(y / 63f, 0.6f)));
+            g.Apply();
+            m.mainTexture = g; m.mainTextureScale = new Vector2(1f, 0.2f); m.mainTextureOffset = Vector2.zero; // the 60 m wall shows the lowest fifth
+            m.SetFloat("_Glossiness", 0f);
             return m;
         }
 
