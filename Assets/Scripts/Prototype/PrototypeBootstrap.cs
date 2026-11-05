@@ -219,7 +219,7 @@ namespace Sheytoonak.Prototype
         void BuildGameObjects()
         {
             var config = ScriptableObject.CreateInstance<GameConfig>();
-            var houses = new[] { House1(), House2(), House3(), House4(), House5() };
+            var houses = new[] { House1(), House2(), House3(), House4(), House5(), House6() };
 
             // Player: foot position + window mapping. No body: the game is first-person (POV).
             var player = new GameObject("Player");
@@ -267,6 +267,9 @@ namespace Sheytoonak.Prototype
                 duelGame.config = config;
                 duelGame.house = houses[1]; // 3x3 windows: a clear 1 / 2 split
                 duelGame.housePool = houses; // a different house every duel
+                // CI screenshots always show the newest house, so each new painting is actually seen before the user plays it.
+                if (!string.IsNullOrEmpty(System.Environment.GetEnvironmentVariable("SHEYTOONAK_SHOTS")))
+                    duelGame.housePool = new[] { houses[houses.Length - 1] };
                 duelGame.ball = ballCtl;
                 duelGame.foot = foot;
                 duelGame.mapper = mapper;
@@ -340,6 +343,28 @@ namespace Sheytoonak.Prototype
             Grid(new[] { (300f, 395f), (555f, 650f), (810f, 905f), (1065f, 1160f) }, new[] { (45f, 195f), (255f, 405f), (455f, 610f), (650f, 805f) }),
             0.7f, 1.6f, 0f, 1.0f,
             Details(curtains: 16));
+
+        // Beirut sandstone, green shutters, 4 x 3 windows (user, 2026-11-05). Every pot is cut out of the painting with its
+        // real pixel rect, so the pot the ball shook loose is the very pot of that window (user: «گلدون جلوی پنجره جدا شه
+        // از قاب و بیفته و برسه زمین بشکنه»). Glass rects are between the shutters.
+        HouseDefinition House6() => MakePaintedHouse("البيت ٦", "Art/house_06", 1536f, 1024f, 13f,
+            new[]
+            {
+                R(235f, 90f, 355f, 230f), R(538f, 90f, 675f, 230f), R(855f, 90f, 993f, 230f), R(1177f, 90f, 1306f, 230f),
+                R(235f, 333f, 357f, 470f), R(540f, 333f, 675f, 470f), R(855f, 333f, 995f, 470f), R(1180f, 333f, 1310f, 470f),
+                R(233f, 565f, 360f, 705f), R(538f, 565f, 675f, 705f), R(855f, 565f, 990f, 705f), R(1180f, 565f, 1310f, 705f),
+            },
+            0.25f, 1.95f, 0f, 1.1f,
+            new[]
+            {
+                Pot(0, 240f, 175f, 345f, 272f), Pot(1, 618f, 168f, 678f, 232f), Pot(2, 850f, 145f, 922f, 232f), Pot(3, 1238f, 158f, 1310f, 232f),
+                Pot(4, 272f, 398f, 342f, 474f), Pot(5, 573f, 386f, 672f, 474f), Pot(7, 1228f, 403f, 1316f, 474f),
+                Pot(8, 233f, 646f, 300f, 710f), Pot(9, 553f, 643f, 647f, 772f), Pot(10, 896f, 638f, 992f, 710f), Pot(11, 1236f, 633f, 1312f, 710f),
+                new WindowDetail(6, DetailKind.Laundry) { pixel = R(820f, 413f, 1032f, 502f) },
+            });
+
+        static Rect R(float x0, float y0, float x1, float y1) => Rect.MinMaxRect(x0, y0, x1, y1);
+        static WindowDetail Pot(int w, float x0, float y0, float x1, float y1) => new WindowDetail(w, DetailKind.Pot) { pixel = R(x0, y0, x1, y1) };
 
         static WindowDetail[] Details(int curtains, int[] pots = null, int[] laundry = null, int[] cats = null)
         {
@@ -811,6 +836,17 @@ namespace Sheytoonak.Prototype
             if (house != null && house.details != null)
                 foreach (var d in house.details)
                     if (d.window == window) { if (d.kind == DetailKind.Cat) cat = true; if (d.kind == DetailKind.Pot) pot = true; }
+            // a pot cut out of the painting itself (house 6 onwards): that exact pot falls
+            if (house != null && house.details != null)
+                foreach (var d in house.details)
+                    if (d.window == window && d.kind == DetailKind.Pot && d.pixel.width > 0f && paintedTex != null)
+                    {
+                        var sr = Cutout(d, -0.08f, out Rect pix);
+                        PatchBehind(pix);
+                        StartCoroutine(PotFalls(at, size, sr.transform));
+                        StartCoroutine(CurtainOut(at, size));
+                        return;
+                    }
             if (cat) StartCoroutine(CatLeap(at, size));
             else if (pot && Random.value < 0.6f) StartCoroutine(PotFalls(at, size));
             else StartCoroutine(CurtainOut(at, size));
@@ -910,9 +946,35 @@ namespace Sheytoonak.Prototype
             if (t != null) Destroy(t.gameObject);
         }
 
-        IEnumerator PotFalls(Vector3 at, Vector3 size)
+        /// <summary>
+        /// Where a pot was cut out of the painting, the painting still shows it: cover that spot with each row's colour
+        /// taken just left and right of the pot (the sill and the wall are flat there), blended across. The upper part,
+        /// over the glass, is hidden by the broken pane anyway.
+        /// </summary>
+        void PatchBehind(Rect pix)
         {
-            var t = FxSprite("fx_pot", 0.35f);
+            int x0 = Mathf.Clamp(Mathf.RoundToInt(pix.xMin), 3, paintedTex.width - 4), x1 = Mathf.Clamp(Mathf.RoundToInt(pix.xMax), x0 + 1, paintedTex.width - 4);
+            int yb = Mathf.Clamp(Mathf.RoundToInt(paintedTex.height - pix.yMax), 0, paintedTex.height - 2);
+            int h = Mathf.Clamp(Mathf.RoundToInt(pix.height), 1, paintedTex.height - yb), w = x1 - x0;
+            var tex = new Texture2D(w, h, TextureFormat.RGBA32, false) { filterMode = FilterMode.Bilinear, wrapMode = TextureWrapMode.Clamp };
+            var px = new Color[w * h];
+            for (int y = 0; y < h; y++)
+            {
+                Color l = paintedTex.GetPixel(x0 - 3, yb + y), r = paintedTex.GetPixel(x1 + 3, yb + y);
+                for (int x = 0; x < w; x++) px[y * w + x] = Color.Lerp(l, r, (x + 0.5f) / w);
+            }
+            tex.SetPixels(px); tex.Apply();
+            var go = new GameObject("Patch");
+            go.transform.SetParent(detailRoot, false);
+            float wx = (pix.center.x / paintedTex.width - 0.5f) * paintedW, wy = (1f - pix.center.y / paintedTex.height) * paintedH;
+            go.transform.localPosition = new Vector3(wx, wy, -0.005f);
+            var sr = go.AddComponent<SpriteRenderer>();
+            sr.sprite = Sprite.Create(tex, new Rect(0, 0, w, h), new Vector2(0.5f, 0.5f), paintedTex.width / paintedW);
+        }
+
+        IEnumerator PotFalls(Vector3 at, Vector3 size, Transform painted = null)
+        {
+            var t = painted != null ? painted : FxSprite("fx_pot", 0.35f);
             if (t == null)
             {
                 t = new GameObject("Pot").transform;
@@ -923,7 +985,7 @@ namespace Sheytoonak.Prototype
             }
             // it sits on the sill, wobbles from the blow, tips over the edge and falls with a spin
             float side = Random.value < 0.5f ? -1f : 1f;
-            Vector3 p = at + new Vector3(side * size.x * 0.22f, -size.y * 0.5f + 0.17f, -0.12f);
+            Vector3 p = painted != null ? painted.position : at + new Vector3(side * size.x * 0.22f, -size.y * 0.5f + 0.17f, -0.12f);
             t.position = p;
             for (float k = 0f; k < 1f && t != null; k += Time.deltaTime / 0.7f)
             {
