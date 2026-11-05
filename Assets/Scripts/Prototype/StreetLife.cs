@@ -246,9 +246,6 @@ namespace Sheytoonak
         /// poses). Numbers are pixels of the frame picture (600 x 395): the fork tips where the axles go, the wheel radius that
         /// fits the mudguards, and where the rider's picture sits so his hips are on the saddle (measured in a preview).
         /// </summary>
-        const float BikeWheelPx = 118f;
-        static readonly Vector2[] BikeAxlesPx = { new Vector2(199f, 332f), new Vector2(554f, 342f) };
-        const float RiderScale = 0.80f; static readonly Vector2 RiderTopLeftPx = new Vector2(156f, 53f);
 
         /// <summary>
         /// The man in the wheelchair (user 2026-11-05): two painted poses of man-and-chair (hand forward, hand back) and
@@ -287,38 +284,26 @@ namespace Sheytoonak
             return true;
         }
 
-        void SpawnCyclist(List<Sprite> fallbackRider)
+        /// <summary>
+        /// The cyclist (user 2026-11-05, second sheet): man and bicycle painted together in two pedalling poses, the wheels
+        /// drawn as plain black discs; a separate spoked wheel is laid over each disc and rolls with the distance (the same
+        /// trick as the wheelchair). Measured on the 789x717 frame: rear disc centre (138, 652) r 123, front (582, 648) r 121,
+        /// tyre bottom at y 774.
+        /// </summary>
+        void SpawnCyclist(List<Sprite> unused)
         {
-            var frameT = Resources.Load<Texture2D>("Art/Props/bike_frame");
-            var wheelT = Resources.Load<Texture2D>("Art/Props/bike_wheel");
-            var r0 = Resources.Load<Texture2D>("Art/Props/rider_01_a"); var r1 = Resources.Load<Texture2D>("Art/Props/rider_01_b");
-            if (frameT == null || wheelT == null || r0 == null || r1 == null) return; // the painted set is the only cyclist now
+            var r0 = Resources.Load<Texture2D>("Art/Props/cyclist_a"); var r1 = Resources.Load<Texture2D>("Art/Props/cyclist_b");
+            var wheelT = Resources.Load<Texture2D>("Art/Props/cyclist_wheel");
+            if (r0 == null || r1 == null || wheelT == null) return;
+            const float ppu = 100f, groundPx = 774f;
+            Vector2[] discs = { new Vector2(138f, 652f), new Vector2(582f, 648f) }; float[] radii = { 123f, 121f };
+            float k = 1.8f / (r0.width / ppu); // a city bike is about 1.8 m long
             bool toRight = Random.value < 0.5f;
             float z = roadZ + 1.6f; // the near edge of the far lane
-            float ppu = 100f;
-            // world scale: the bicycle is about 1.8 m long (frame picture 600 px -> 6 m at ppu 100), so 0.3
-            float k = 1.8f / (frameT.width / ppu);
-            float ground = (BikeAxlesPx[0].y + BikeWheelPx) / ppu * k; // the rear tyre's bottom is on the road
             var root = new GameObject("Cyclist").transform;
             root.SetParent(transform, false);
             root.position = new Vector3(toRight ? -18f : 18f, 0f, z);
             root.localScale = new Vector3(toRight ? 1f : -1f, 1f, 1f); // painted facing right
-            Vector3 Px(float x, float y, float zz) => new Vector3((x - frameT.width * 0.5f) / ppu * k, ground - y / ppu * k, zz);
-            var ws = new Transform[2];
-            for (int i = 0; i < 2; i++)
-            {
-                var sr = new GameObject("Wheel").AddComponent<SpriteRenderer>();
-                sr.sprite = Sprite.Create(wheelT, new Rect(0, 0, wheelT.width, wheelT.height), new Vector2(0.5f, 0.5f), ppu);
-                sr.transform.SetParent(root, false);
-                sr.transform.localPosition = Px(BikeAxlesPx[i].x, BikeAxlesPx[i].y, 0.02f);
-                sr.transform.localScale = Vector3.one * (2f * BikeWheelPx / wheelT.width) * k;
-                ws[i] = sr.transform;
-            }
-            var frame = new GameObject("Frame").AddComponent<SpriteRenderer>();
-            frame.sprite = Sprite.Create(frameT, new Rect(0, 0, frameT.width, frameT.height), new Vector2(0f, 1f), ppu);
-            frame.transform.SetParent(root, false);
-            frame.transform.localPosition = Px(0f, 0f, 0.01f);
-            frame.transform.localScale = Vector3.one * k;
             var body = new GameObject("Rider").AddComponent<SpriteRenderer>();
             var frames = new List<Sprite>
             {
@@ -326,29 +311,20 @@ namespace Sheytoonak
                 Sprite.Create(r1, new Rect(0, 0, r1.width, r1.height), new Vector2(0f, 1f), ppu),
             };
             body.sprite = frames[0]; body.transform.SetParent(root, false);
-            body.transform.localPosition = Px(RiderTopLeftPx.x, RiderTopLeftPx.y, 0f);
-            body.transform.localScale = Vector3.one * k * RiderScale;
+            body.transform.localPosition = new Vector3(-r0.width * 0.5f / ppu * k, groundPx / ppu * k, 0f);
+            body.transform.localScale = Vector3.one * k;
+            var ws = new Transform[2];
+            for (int i = 0; i < 2; i++)
+            {
+                var sr = new GameObject("Wheel").AddComponent<SpriteRenderer>();
+                sr.sprite = Sprite.Create(wheelT, new Rect(0, 0, wheelT.width, wheelT.height), new Vector2(0.5f, 0.5f), ppu);
+                sr.transform.SetParent(root, false);
+                sr.transform.localPosition = new Vector3((discs[i].x - r0.width * 0.5f) / ppu * k, (groundPx - discs[i].y) / ppu * k, -0.02f);
+                sr.transform.localScale = Vector3.one * (2f * radii[i] / wheelT.width) * k;
+                ws[i] = sr.transform;
+            }
             float speed = pedSpeed * 3.2f * Random.Range(0.9f, 1.1f);
-            movers.Add(new Mover { t = root, sr = body, frames = frames, speed = toRight ? speed : -speed, endX = 18f, wheels = ws, wheelRadius = BikeWheelPx / ppu * k, cyclist = true });
-        }
-
-        /// <summary>Who walks how: the old man with the cane (ped_03_oldman, user 2026-11-05) shuffles at ~0.6, a hurried
-        /// man rushes at ~1.8; everybody else keeps the base pace.</summary>
-        static float PedSpeedScale(List<Sprite> set)
-        {
-            string n = set.Count > 0 ? set[0].name : "";
-            if (n.Contains("oldman")) return 0.6f;
-            if (n.Contains("hurried")) return 1.8f;
-            if (n.Contains("crutches")) return 0.5f; // ped_05 (user 2026-11-05): a cast and two crutches
-            if (n.Contains("boy")) return 1.15f;    // ped_06: the boy with the ball
-            return 1f;
-        }
-        static float PedHeightScale(List<Sprite> set)
-        {
-            string n = set.Count > 0 ? set[0].name : "";
-            if (n.Contains("oldman")) return 0.93f; // stooped
-            if (n.Contains("boy")) return 0.78f;    // a child
-            return 1f;
+            movers.Add(new Mover { t = root, sr = body, frames = frames, speed = toRight ? speed : -speed, endX = 18f, wheels = ws, wheelRadius = radii[0] / ppu * k, cyclist = true });
         }
 
         bool SetIsOut(List<Sprite> set)
