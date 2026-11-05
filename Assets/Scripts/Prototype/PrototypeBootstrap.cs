@@ -443,7 +443,7 @@ namespace Sheytoonak.Prototype
         HouseDefinition House13() => MakePaintedHouse("البيت ١٣", "Art/house_13", 1916f, 821f, 13f * 1916f / 1536f,
             new[]
             {
-                R(118f, 40f, 290f, 230f), R(500f, 40f, 605f, 215f), R(748f, 35f, 893f, 215f), R(1045f, 40f, 1148f, 290f),
+                R(118f, 40f, 290f, 230f), R(500f, 40f, 605f, 215f), R(748f, 35f, 893f, 215f), R(1048f, 40f, 1150f, 232f),
                 R(1352f, 45f, 1456f, 215f), R(1707f, 50f, 1808f, 235f),
                 R(170f, 440f, 280f, 655f), R(508f, 440f, 635f, 655f), R(1305f, 480f, 1700f, 690f),
             },
