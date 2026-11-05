@@ -926,7 +926,15 @@ namespace Sheytoonak.Prototype
             if (i < 0 || i >= windowRenderers.Length) return;
             windowRenderers[i].enabled = true; // the pane shows the dark room with a web of cracks (its material is set at build time)
             if (duel && !paintedBroken) HoleWhereHit(i, point);
-            if (game != null) WakeDetails(i);
+            // User (2026-11-05): «با توجه به این که دیگه خود پنجره حالت شکسته‌ش هست اون پرده و گلدون افتادن و گربه و
+            // پیرزن حذف شه، فقط و فقط پنجره‌ای که دو امتیازی هست … پیرزن … سرش رو از پنجره بیاره بیرون فحش بده». A house
+            // painted twice shows the painter's own smashed window and nothing else moves; the 2-point window gets the granny.
+            if (paintedBroken)
+            {
+                if (duelGame != null && duelGame.Rules != null && duelGame.Rules.WindowValue[i] >= 2)
+                    StartCoroutine(GrannyCurses(windowRenderers[i].transform.position, windowRenderers[i].transform.lossyScale));
+            }
+            else if (game != null) WakeDetails(i);
             else WindowLife(i, windowRenderers[i].transform.position, windowRenderers[i].transform.lossyScale);
             for (int k = 0; k < 18; k++)
             {
@@ -986,6 +994,59 @@ namespace Sheytoonak.Prototype
             r.sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), pivot, 100f);
             go.transform.localScale = Vector3.one * (worldHeight / Mathf.Max(0.01f, r.sprite.bounds.size.y));
             return go.transform;
+        }
+
+        /// <summary>
+        /// The neighbour cut out of her painting (Art/Poison/granny: only the woman, no frame, so the window itself is not
+        /// changed) rises in the smashed window, shakes her fist, a curse bubble pops over her head, then she ducks back.
+        /// </summary>
+        IEnumerator GrannyCurses(Vector3 at, Vector3 size)
+        {
+            var tex = Resources.Load<Texture2D>("Art/Poison/granny");
+            if (tex == null) yield break;
+            yield return new WaitForSeconds(0.35f);
+            var go = new GameObject("Granny");
+            var sr = go.AddComponent<SpriteRenderer>();
+            sr.sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0f), 100f);
+            float h = size.y * 0.8f;
+            float k = h / sr.sprite.bounds.size.y;
+            if (sr.sprite.bounds.size.x * k > size.x * 0.9f) k = size.x * 0.9f / sr.sprite.bounds.size.x; // never wider than the window
+            Vector3 bottom = new Vector3(at.x, at.y - size.y * 0.5f, at.z - 0.03f);
+            go.transform.position = bottom;
+            Transform bubble = null;
+            var curse = Resources.Load<Texture2D>("Art/Icons/curse");
+            // rise: grows upward from the sill
+            for (float t = 0f; t < 1f; t += Time.deltaTime / 0.35f)
+            {
+                float e = 1f - (1f - t) * (1f - t);
+                go.transform.localScale = new Vector3(k, k * e, k);
+                yield return null;
+            }
+            go.transform.localScale = Vector3.one * k;
+            if (curse != null)
+            {
+                var b = new GameObject("Curse").AddComponent<SpriteRenderer>();
+                b.sprite = Sprite.Create(curse, new Rect(0, 0, curse.width, curse.height), new Vector2(0.5f, 0f), 100f);
+                bubble = b.transform;
+                float bh = size.y * 0.45f;
+                bubble.localScale = Vector3.one * (bh / b.sprite.bounds.size.y);
+                bubble.position = new Vector3(at.x + size.x * 0.35f, at.y + size.y * 0.35f, at.z - 0.05f);
+            }
+            // fist shaking and scolding: a quick wobble for two seconds
+            for (float t = 0f; t < 2.0f; t += Time.deltaTime)
+            {
+                go.transform.rotation = Quaternion.Euler(0f, 0f, Mathf.Sin(t * 18f) * 4f);
+                if (bubble != null) bubble.localScale *= 1f + Mathf.Sin(t * 12f) * 0.004f;
+                yield return null;
+            }
+            if (bubble != null) Destroy(bubble.gameObject);
+            go.transform.rotation = Quaternion.identity;
+            for (float t = 0f; t < 1f; t += Time.deltaTime / 0.3f)
+            {
+                go.transform.localScale = new Vector3(k, k * (1f - t), k);
+                yield return null;
+            }
+            Destroy(go);
         }
 
         IEnumerator CatLeap(Vector3 at, Vector3 size)
