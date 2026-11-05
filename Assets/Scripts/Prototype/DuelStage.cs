@@ -546,8 +546,27 @@ namespace Sheytoonak.Prototype
         void OnExpired(ActivePoison p)
         {
             if (!props.TryGetValue(p, out var list)) return;
-            foreach (var go in list) if (go != null) Destroy(go);
+            // User (2026-11-05): «اتوبوس و گاری … باید از چپ بیان از راست خارج شن؛ الآن غیب می‌شن». A vehicle drives off to
+            // the right before it is destroyed; everything else still vanishes.
+            foreach (var go in list)
+                if (go != null)
+                {
+                    if (go.name == "Poison bus") StartCoroutine(DriveOff(go)); // bus, lorry and cart all build under this name
+                    else Destroy(go);
+                }
             props.Remove(p);
+        }
+
+        IEnumerator DriveOff(GameObject go)
+        {
+            var t = go.transform; Vector3 from = t.position, to = from + Vector3.right * 34f;
+            for (float k = 0f; k < 1f && t != null; k += Time.deltaTime / 1.4f)
+            {
+                float e = k * k;
+                t.position = Vector3.Lerp(from, to, e);
+                yield return null;
+            }
+            if (go != null) Destroy(go);
         }
 
         /// <summary>A covered window that broke anyway (never happens) or expired props: nothing to do yet.</summary>

@@ -195,11 +195,12 @@ namespace Sheytoonak
         /// <summary>No draft: three heroes dealt at random from the shared pool to each side, equal tools (money does not help).</summary>
         void NewChallengeDuel()
         {
-            StopAllCoroutines(); botRoutine = resolveRoutine = null;
+            StopAllCoroutines(); botRoutine = resolveRoutine = null; hitsToCome = false; kickActive = false;
             Rules = null; Draft = null;
             ball.Hide();
             PickHouse();
             mapper.Map(house);
+            FitAimToHouse();
             GameEvents.RaiseHouseLoaded(house, 0);
             InChallenge = true;
             BeginDuel(Deal(), Deal(), Random.value < 0.5f ? Side.Left : Side.Right);
@@ -216,7 +217,7 @@ namespace Sheytoonak
         /// <summary>Back to the home screen: nothing on the stage, no HUD (it draws only while Rules exist).</summary>
         public void ToHome()
         {
-            StopAllCoroutines(); botRoutine = resolveRoutine = null;
+            StopAllCoroutines(); botRoutine = resolveRoutine = null; hitsToCome = false; kickActive = false;
             Rules = null; Draft = null; InChallenge = false;
             ball.Hide();
         }
@@ -225,11 +226,12 @@ namespace Sheytoonak
         public void NewDuel()
         {
             InChallenge = false;
-            StopAllCoroutines(); botRoutine = resolveRoutine = null;
+            StopAllCoroutines(); botRoutine = resolveRoutine = null; hitsToCome = false; kickActive = false;
             Rules = null;
             ball.Hide();
             PickHouse();
             mapper.Map(house);
+            FitAimToHouse();
             GameEvents.RaiseHouseLoaded(house, 0);
             draftRng = randomSeed != 0 ? new System.Random(randomSeed) : new System.Random();
             var mine = PoolIds();
@@ -492,7 +494,12 @@ namespace Sheytoonak
             if (kickActive)
             {
                 // the same action goes on: hit the ball that came back off the wall, if the foot reaches it
-                if (kicker == Me && returning && ball.InPlay && foot.BallInReach(ball.transform.position, ball.Radius)) Rekick(Me, g);
+                if (kicker == Me && returning && ball.InPlay && rallyHits + 1 < HitsPerBall && foot.BallInReach(ball.transform.position, ball.Radius)) Rekick(Me, g);
+                return;
+            }
+            if (hitsToCome && kicker == Me)
+            {
+                if (BallSettled) Kick(Me, g, -1); // the same action: another hit on the ball that came back
                 return;
             }
             var why = Rules.CanAct(Me);
@@ -504,7 +511,10 @@ namespace Sheytoonak
 
         void Kick(Side s, KickGesture g, int target)
         {
-            if (Rules.BeginKick(s) != ActionReject.None) return;
+            bool again = hitsToCome && s == kicker;
+            if (!again && Rules.BeginKick(s) != ActionReject.None) return;
+            int hitsSoFar = again ? rallyHits + 1 : 0;
+            hitsToCome = false;
             Rules.NoteActivity(s);
             var mods = Rules.ModifiersFor(s);
             // Poison physics: wind scatters the aim, a puddle takes the power out of the kick
@@ -517,7 +527,7 @@ namespace Sheytoonak
             var v = new Vector3(res.Velocity.X, res.Velocity.Y, res.Velocity.Z);
             ball.Launch(v, res.SpinY, 0f);
             kicker = s; kickActive = true; hitWindow = -1; groundBounces = 0; kickStarted = Time.time;
-            returning = false; bouncesSinceWall = 0; rallyHits = 0;
+            returning = false; bouncesSinceWall = 0; rallyHits = hitsSoFar;
             GameEvents.RaiseKicked(g, quality, v);
             KickLaunched?.Invoke(s, target);
             float intercept = KickModifiers.Intercept(mods.Chance);
@@ -581,6 +591,19 @@ namespace Sheytoonak
             return spot;
         }
 
+        /// <summary>
+        /// User (run 110): the far-left and far-right windows could never be hit and the duel never ended. The aim's full
+        /// swing used to be a fixed 25 degrees (about 6 m at the facade); a 3:1 painting is 30 m wide. The yaw at Aim = ±1
+        /// now reaches a little past the outermost window of this house.
+        /// </summary>
+        void FitAimToHouse()
+        {
+            float far = 0f;
+            foreach (var r in mapper.WindowRects) far = Mathf.Max(far, Mathf.Abs(r.center.x) + r.width * 0.5f);
+            float d = Mathf.Max(1f, mapper.FacadeZ - foot.StrikeSpot.z);
+            config.kick.MaxAimYawDeg = Mathf.Max(25f, Mathf.Atan2(far + 0.4f, d) * Mathf.Rad2Deg);
+        }
+
         /// <summary>Aim gesture that lands on a window's centre (inverse of KickSolver.SolveAtWall), with the bot's error.</summary>
         KickGesture GestureFor(int window, float error)
         {
@@ -621,7 +644,17 @@ namespace Sheytoonak
                         }
                         while (!BallSettled) yield return null;
                         Kick(bot, GestureFor(move.Window, 1f - botAccuracy), move.Window);
-                        while (Rules.KickInFlight) yield return null;
+                        while (Rules.KickInFlight)
+                        {
+                            if (hitsToCome && kicker == bot && BallSettled)
+                            {
+                                yield return new WaitForSeconds(0.5f);
+                                var again = Bot.Next(Rules, bot);
+                                int w = again.What == BotMove.Kind.Kick ? again.Window : move.Window;
+                                Kick(bot, GestureFor(w, 1f - botAccuracy), w);
+                            }
+                            yield return null;
+                        }
                         break;
                     default: Rules.Pass(bot); break;
                 }
@@ -629,10 +662,26 @@ namespace Sheytoonak
             botRoutine = null;
         }
 
+        /// <summary>Hits already made on this ball in the current action (first kick + rekicks).</summary>
+        public int HitsUsed => kickActive || hitsToCome ? rallyHits + 1 : 0;
+        public const int HitsPerBall = 3;
+        bool hitsToCome; // the ball is rolling back to the foot and the same action goes on with another hit
+
         void FinishKick()
         {
             if (!kickActive) return;
             kickActive = false;
+            // User (2026-11-05): «هر توپ رو جدا از اولش که میزنی تا سه ضربه باید بشه زد». A ball that did not break glass
+            // comes back to the foot and the same action continues, up to three hits in all; only then the action ends.
+            if (hitWindow < 0 && ball.InPlay && rallyHits + 1 < HitsPerBall && !Rules.Finished)
+            {
+                hitsToCome = true;
+                BallSettled = false;
+                if (BallDead != null) BallDead.Invoke(ball.transform.position); else PlaceBallAtCentre();
+                Toast?.Invoke(Ar.N(HitsPerBall - rallyHits - 1) + " " + Ar.HitsLeft, 1.2f);
+                return;
+            }
+            hitsToCome = false;
             var outcome = Rules.EndKick(kicker, hitWindow);
             LastHitWindow = hitWindow;
             if (Rules.Finished) return;
@@ -674,7 +723,7 @@ namespace Sheytoonak
         /// <summary>The bot "runs" to its rebound: hits it again now and then, aiming at the best window.</summary>
         bool BotRehits()
         {
-            if (rallyHits >= 3 || Random.value > botAccuracy * 0.8f) return false;
+            if (rallyHits + 1 >= HitsPerBall || Random.value > botAccuracy * 0.8f) return false;
             int best = -1;
             for (int w = 0; w < Rules.WindowCount; w++)
                 if (Rules.IsBreakable(w) && (best < 0 || Rules.ShownValue(w) > Rules.ShownValue(best))) best = w;

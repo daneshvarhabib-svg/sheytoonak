@@ -900,7 +900,23 @@ namespace Sheytoonak.Prototype
             int x = Mathf.Clamp(Mathf.RoundToInt(pix.xMin), 0, paintedTex.width - 2), y = Mathf.Clamp(Mathf.RoundToInt(paintedTex.height - pix.yMax), 0, paintedTex.height - 2);
             int cw = Mathf.Clamp(Mathf.RoundToInt(pix.width), 1, paintedTex.width - x), ch = Mathf.Clamp(Mathf.RoundToInt(pix.height), 1, paintedTex.height - y);
             var tex = new Texture2D(cw, ch, TextureFormat.RGBA32, false) { filterMode = FilterMode.Bilinear, wrapMode = TextureWrapMode.Clamp };
-            tex.SetPixels(paintedTex.GetPixels(x, y, cw, ch));
+            var px = paintedTex.GetPixels(x, y, cw, ch);
+            if (d.kind == DetailKind.Laundry && game != null)
+            {
+                // User (2026-11-05): «پنجره پشت لباس آویزان یه بخشی از کادر پنجره هم کراپ شده و با باد می‌لرزه». The clothes line
+                // crosses windows; those pixels (window rect plus a 10 px frame) are cleared from the cutout so only cloth sways.
+                var house = game.houses[Mathf.Clamp(game.Rules != null ? game.Rules.HouseIndex : 0, 0, game.houses.Length - 1)];
+                float sx = paintedTex.width / paintedW, sy = paintedTex.height / paintedH;
+                foreach (var wr in house.worldWindows)
+                {
+                    int wx0 = Mathf.RoundToInt((wr.xMin / paintedW + 0.5f) * paintedTex.width) - 10, wx1 = Mathf.RoundToInt((wr.xMax / paintedW + 0.5f) * paintedTex.width) + 10;
+                    int wy0 = Mathf.RoundToInt(wr.yMin * sy) - 10, wy1 = Mathf.RoundToInt(wr.yMax * sy) + 10; // bottom-up, like GetPixels
+                    for (int yy = Mathf.Max(0, wy0 - y); yy < Mathf.Min(ch, wy1 - y); yy++)
+                        for (int xx = Mathf.Max(0, wx0 - x); xx < Mathf.Min(cw, wx1 - x); xx++)
+                            px[yy * cw + xx].a = 0f;
+                }
+            }
+            tex.SetPixels(px);
             tex.Apply();
             float ppu = paintedTex.width / paintedW;
             var go = new GameObject(d.kind + " " + d.window);

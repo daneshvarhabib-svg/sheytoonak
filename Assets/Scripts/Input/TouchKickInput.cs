@@ -60,8 +60,11 @@ namespace Sheytoonak
                     {
                         // The release point is the shot: x = direction, y = power.
                         float nx = Mathf.Clamp(pos.x / Mathf.Max(1f, Screen.width) * 2f - 1f, -1f, 1f);
-                        float ny = Mathf.Clamp01(pos.y / Mathf.Max(1f, Screen.height));
-                        Kicked?.Invoke(new KickGesture(Mathf.Lerp(minTapStrength, 1f, ny), nx * edgeAim, 0f));
+                        // ⚠️ user (run 110): «نمی‌شه پنجره‌های پایین و منتهی‌الیه چپ و راست رو زد». Power is measured from the top of
+                        // the hero strip (the dead zone), not the screen bottom, and starts at 0, so the lowest row is a tap just
+                        // above the strip; the aim reaches ±1 at the screen edges, and DuelManager sizes the yaw to the house.
+                        float ny = Mathf.Clamp01((pos.y - DeadZoneHeight) / Mathf.Max(1f, Screen.height - DeadZoneHeight));
+                        Kicked?.Invoke(new KickGesture(ny, nx, 0f));
                     }
                 }
             }

@@ -26,6 +26,7 @@ namespace Sheytoonak
         public const string DraftPickYou = "اختار بطل";
         public const string DraftWait = "الخصم عم يختار...";
         public const string YouBan = "شلت:";
+        public const string HitsLeft = "ضربات باقية"; // hits left on this ball (user: three per ball)
         public const string TheyBan = "الخصم شال:";
         public const string Banned = "مشطوب";
         public const string Mine = "إلك";

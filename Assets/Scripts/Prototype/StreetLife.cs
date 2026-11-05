@@ -178,7 +178,10 @@ namespace Sheytoonak
                 else if (paintedCars.Count > 0 && walkers % 3 == 0) SpawnCyclist(peds[Random.Range(0, peds.Count)]);
                 else
                 {
+                    // User (2026-11-05): «نباید دو رهگذر یک شکل هم‌زمان در تصویر باشن»: never the character already out
                     var set = peds[Random.Range(0, peds.Count)];
+                    for (int tries = 0; tries < 8 && SetIsOut(set); tries++) set = peds[Random.Range(0, peds.Count)];
+                    if (SetIsOut(set)) return;
                     Spawn(set, pedHeight * PedHeightScale(set), farSidewalkZ + Random.Range(-0.3f, 0.3f), pedSpeed * PedSpeedScale(set) * Random.Range(0.8f, 1.2f), 16f, pedsFaceRight);
                 }
             }
@@ -346,6 +349,12 @@ namespace Sheytoonak
             if (n.Contains("oldman")) return 0.93f; // stooped
             if (n.Contains("boy")) return 0.78f;    // a child
             return 1f;
+        }
+
+        bool SetIsOut(List<Sprite> set)
+        {
+            foreach (var m in movers) if (m.frames != null && m.frames.Count > 0 && set.Count > 0 && m.frames[0] == set[0]) return true;
+            return false;
         }
 
         void Spawn(List<Sprite> frames, float height, float z, float speed, float halfRange, bool facesRight)
