@@ -230,7 +230,8 @@ namespace Sheytoonak.Prototype
             // houses 7–12 stay in code until their wide versions arrive.
             // User (2026-11-05): the 3:1 paintings (2172x724) replace the 2.3:1 ones; houses 13–22 stay in code until their 3:1
             // versions arrive («فعلا این سه تا رو داشته باش تا باقی برسن»).
-            var houses = new[] { House23(), House24(), House25() };
+            // test (user, 2026-11-05): one 3:1 painting with the top row 8 % below the edge, alone, to see if it fills the frame
+            var houses = new[] { House26() };
             allHouses = houses;
 
             // Player: foot position + window mapping. No body: the game is first-person (POV).
@@ -282,7 +283,7 @@ namespace Sheytoonak.Prototype
                 duelGame.housePool = houses; // a different house every duel
                 // CI screenshots always show the newest house, so each new painting is actually seen before the user plays it.
                 if (!string.IsNullOrEmpty(System.Environment.GetEnvironmentVariable("SHEYTOONAK_SHOTS")))
-                    duelGame.housePool = new[] { houses[houses.Length - 2], houses[houses.Length - 1] };
+                    duelGame.housePool = houses.Length >= 2 ? new[] { houses[houses.Length - 2], houses[houses.Length - 1] } : houses;
                 duelGame.ball = ballCtl;
                 duelGame.foot = foot;
                 duelGame.mapper = mapper;
@@ -544,6 +545,15 @@ namespace Sheytoonak.Prototype
                 R(240f, 420f, 340f, 580f), R(970f, 420f, 1090f, 580f), R(1430f, 480f, 1800f, 650f), R(1845f, 420f, 1935f, 580f),
             },
             0.25f, 1.95f, 0f, 1.2f, null, "Art/house_25_broken", R(1140f, 420f, 1250f, 580f));
+
+        HouseDefinition House26() => MakePaintedHouse("البيت ٢٦", "Art/house_26", 2172f, 724f, Wide3W, // Alexandria test, no broken twin yet
+            new[]
+            {
+                R(225f, 70f, 345f, 250f), R(505f, 70f, 625f, 250f), R(785f, 70f, 905f, 250f), R(1065f, 70f, 1190f, 250f),
+                R(1350f, 70f, 1470f, 250f), R(1635f, 70f, 1755f, 250f), R(1915f, 70f, 2040f, 250f),
+                R(580f, 460f, 690f, 620f), R(1385f, 460f, 1490f, 620f), R(1640f, 500f, 2040f, 660f),
+            },
+            0.25f, 1.95f, 0f, 1.2f, null, null, R(1130f, 430f, 1300f, 630f));
 
         static Rect R(float x0, float y0, float x1, float y1) => Rect.MinMaxRect(x0, y0, x1, y1);
         static WindowDetail Pot(int w, float x0, float y0, float x1, float y1) => new WindowDetail(w, DetailKind.Pot) { pixel = R(x0, y0, x1, y1) };
