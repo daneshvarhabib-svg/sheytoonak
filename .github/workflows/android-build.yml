@@ -145,10 +145,7 @@ jobs:
   android:
     name: Build Android APK
     needs: tests
-    # Free Actions minutes (user, 2026-11-05: 1812 of 2000 used, no paid plan). The APK job is ~17 of a run's ~35
-    # minutes, so it only runs on a manual dispatch or when the commit message carries [apk]; tests and screenshots
-    # still run on every push.
-    if: github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[apk]')
+    # The repository is public (user, 2026-11-05), so Actions minutes are free again and the APK builds on every push.
     runs-on: ubuntu-latest
     timeout-minutes: 120
     steps:
