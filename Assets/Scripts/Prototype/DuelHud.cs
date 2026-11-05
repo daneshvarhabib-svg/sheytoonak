@@ -150,6 +150,9 @@ namespace Sheytoonak.Prototype
                     GUI.DrawTexture(new Rect(fr.x - 3 * u, fr.y - 3 * u, fr.width + 6 * u, fr.height + 6 * u), Texture2D.whiteTexture);
                     GUI.color = duel.Selected < 0 ? new Color(1f, 1f, 1f, 0.75f + 0.25f * Mathf.Sin(Time.time * 5f)) : sel ? Color.white : new Color(0.7f, 0.7f, 0.7f);
                     Face(fr, h.Id);
+                    GUI.color = Color.white;
+                    var pf = Kit("portrait");
+                    if (pf != null) GUI.DrawTexture(new Rect(fr.x - fr.width * 0.12f, fr.y - fr.height * 0.12f, fr.width * 1.24f, fr.height * 1.24f), pf, ScaleMode.StretchToFill);
                     GUI.color = oc;
                     if (GUI.Button(fr, GUIContent.none, GUIStyle.none)) { touch?.IgnoreFor(0.4f); duel.Select(i); }
                 }
@@ -229,13 +232,40 @@ namespace Sheytoonak.Prototype
         }
 
         /// <summary>A rounded-looking badge with a white glyph; disabled = dimmed. Falls back to the Arabic name if the icon is missing.</summary>
+        static readonly System.Collections.Generic.Dictionary<string, Texture2D> kit = new System.Collections.Generic.Dictionary<string, Texture2D>();
+        internal static Texture2D Kit(string name)
+        {
+            if (!kit.TryGetValue(name, out var t)) { t = Resources.Load<Texture2D>("Art/UI/" + name); kit[name] = t; }
+            return t;
+        }
+
+        /// <summary>Painted button for a badge colour: red, green, orange or blue by hue; greys and very dark colours get none.</summary>
+        static Texture2D ButtonFor(Color c)
+        {
+            Color.RGBToHSV(c, out float h, out float sat, out float v);
+            if (sat < 0.3f || v < 0.25f) return null;
+            string n = h < 0.05f || h > 0.92f ? "btn_red" : h < 0.14f ? "btn_orange" : h < 0.45f ? "btn_green" : "btn_blue";
+            return Kit(n);
+        }
+
         internal static bool IconButton(Rect r, string iconId, Color bg, bool enabled, string fallbackAr)
         {
             var old = GUI.color;
-            GUI.color = enabled ? bg : new Color(bg.r * 0.45f, bg.g * 0.45f, bg.b * 0.45f, 0.8f);
-            GUI.DrawTexture(r, Texture2D.whiteTexture);
-            GUI.color = new Color(1f, 1f, 1f, 0.25f);
-            GUI.DrawTexture(new Rect(r.x, r.y, r.width, 3f), Texture2D.whiteTexture); // a thin highlight on top
+            // painted buttons of the UI kit (2026-11-05, user: «کیفیت بصری بازی خیلی نزدیک بشه» to the reference game):
+            // the colour of the flat badge picks the painted button of the nearest hue; dark controls stay flat
+            var painted = ButtonFor(bg);
+            if (painted != null)
+            {
+                GUI.color = enabled ? Color.white : new Color(0.45f, 0.45f, 0.45f, 0.85f);
+                GUI.DrawTexture(new Rect(r.x - r.width * 0.06f, r.y - r.height * 0.04f, r.width * 1.12f, r.height * 1.1f), painted, ScaleMode.StretchToFill);
+            }
+            else
+            {
+                GUI.color = enabled ? bg : new Color(bg.r * 0.45f, bg.g * 0.45f, bg.b * 0.45f, 0.8f);
+                GUI.DrawTexture(r, Texture2D.whiteTexture);
+                GUI.color = new Color(1f, 1f, 1f, 0.25f);
+                GUI.DrawTexture(new Rect(r.x, r.y, r.width, 3f), Texture2D.whiteTexture); // a thin highlight on top
+            }
             GUI.color = enabled ? Color.white : new Color(1f, 1f, 1f, 0.35f);
             var tex = Icon(iconId);
             float m = r.width * 0.14f;
