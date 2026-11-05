@@ -577,7 +577,9 @@ namespace Sheytoonak.Prototype
 
             // The wall keeps going above the painting (no roof): a box in the painting's own brick colour.
             Color top = AverageColour(tex, 0.02f, 0.06f);
-            var wallMat = Mat(top);
+            // ⚠️ run 73/75: a flat average colour above the painting read as a grey/olive bar across the top of the screen.
+            // The painting's own top rows stretched upward continue its sky (or wall) instead.
+            var wallMat = TopRows(mat, tex);
             float above = 60f - paintedHeight;
             Box(root, new Vector3(0f, paintedHeight + above * 0.5f, 0.3f), new Vector3(w, above, 0.5f), wallMat);
             // Neighbours: painted blank walls (Art/wall_left, Art/wall_right: houses without visible windows,
@@ -726,6 +728,14 @@ namespace Sheytoonak.Prototype
             if (t != null) { t.localRotation = Quaternion.identity; t.localScale = Vector3.one; }
         }
 
+        static Material TopRows(Material painting, Texture2D tex)
+        {
+            var m = new Material(painting) { mainTexture = tex };
+            m.mainTextureScale = new Vector2(1f, 0.004f);
+            m.mainTextureOffset = new Vector2(0f, 0.994f);
+            return m;
+        }
+
         void SideWall(Transform root, string resource, float side, float w, float paintedHeight, Material fallback)
         {
             var tex = Resources.Load<Texture2D>(resource);
@@ -746,7 +756,7 @@ namespace Sheytoonak.Prototype
                 quad.transform.localScale = new Vector3(ww, paintedHeight, 1f);
                 quad.GetComponent<Renderer>().sharedMaterial = mat;
             }
-            var above = Mat(AverageColour(tex, 0.02f, 0.06f));
+            var above = TopRows(mat, tex);
             Box(root, new Vector3(side * (w * 0.5f + ww), paintedHeight + (60f - paintedHeight) * 0.5f, 0.3f), new Vector3(ww * 2f, 60f - paintedHeight, 0.5f), above);
         }
 
