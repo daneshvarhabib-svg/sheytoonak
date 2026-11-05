@@ -1243,8 +1243,7 @@ namespace Sheytoonak.Prototype
 
             if (showStart && duel)
             {
-                Panel();
-                HomeScreen(u, big);
+                HomeScreen(u, big); // its own full-screen backdrop: the street behind it is not shown
             }
             else if (showStart)
             {
@@ -1274,45 +1273,154 @@ namespace Sheytoonak.Prototype
         /// Home: two big picture buttons, a duel and the 12/3 challenge (SCENARIO §10), shards and curses in the corners,
         /// the running challenge under its button. No paragraphs (user 2026-11-02: «کلا تو بازی نوشته زیاده»).
         /// </summary>
+        // User (2026-11-05, with a screenshot of the reference game's lobby): «کاور خود بازی قبل از شروعه نباید بک گراندش
+        // این باشه، باید مثل پسرخوانده باشه، یسری دکمه که کارهای مختلف توش میکنی». The lobby is its own screen now: a deep
+        // blue patterned backdrop over the whole street, a top bar of painted planks (shards, curses), the arena card
+        // (the painting of the house the last duel was played at, on a ribbon), the two big painted buttons, the bag rack
+        // in a panel, and side buttons for what comes next (missions, heroes, shop, clan) marked «soon» instead of hidden.
         void HomeScreen(float u, GUIStyle big)
         {
-            float pad = 16 * u, isz = 44 * u;
-            var num = new GUIStyle(big) { fontSize = Mathf.RoundToInt(32 * u), alignment = TextAnchor.MiddleLeft };
-            GUI.Label(new Rect(0, pad + SafeTop(), Screen.width, 70 * u), Ar.T(Ar.Title), new GUIStyle(big) { alignment = TextAnchor.MiddleCenter });
-            DuelHud.DrawIcon(new Rect(pad, pad + SafeTop(), isz, isz), "shards", Color.white);
-            GUI.Label(new Rect(pad + isz + 8 * u, pad + SafeTop(), 200 * u, isz), Ar.N(duelGame.ShardBank), num);
-            DuelHud.DrawIcon(new Rect(Screen.width - pad - isz, pad + SafeTop(), isz, isz), "curse", Color.white);
-            GUI.Label(new Rect(Screen.width - pad - isz - 208 * u, pad + SafeTop(), 200 * u, isz), Ar.N(duelGame.Curses[0]), new GUIStyle(num) { alignment = TextAnchor.MiddleRight });
+            HomeBackdrop();
+            float pad = 14 * u, top = pad + SafeTop();
+            var num = new GUIStyle(big) { fontSize = Mathf.RoundToInt(28 * u), alignment = TextAnchor.MiddleCenter };
+            var small = new GUIStyle(num) { fontSize = Mathf.RoundToInt(20 * u) };
 
-            float bw = Mathf.Min(260 * u, Screen.width * 0.3f), bh = bw * 0.75f, by = Screen.height * 0.3f;
-            var duelR = new Rect(Screen.width * 0.5f + 20 * u, by, bw, bh);       // right = first for a right-to-left reader
-            var chalR = new Rect(Screen.width * 0.5f - 20 * u - bw, by, bw, bh);
-            if (DuelHud.IconButton(duelR, "duel", new Color(0.16f, 0.5f, 0.32f), true, null)) StartGameFromScript();
+            // top bar: shards on the right (first for a right-to-left reader), curses next to them, the title on the left
+            float barH = 58 * u, barW = Mathf.Min(250 * u, Screen.width * 0.2f);
+            var shardsR = new Rect(Screen.width - pad - barW, top, barW, barH);
+            var cursesR = new Rect(shardsR.x - 12 * u - barW, top, barW, barH);
+            Plank(shardsR); Plank(cursesR);
+            DuelHud.DrawIcon(new Rect(shardsR.xMax - barH * 0.95f, top + barH * 0.12f, barH * 0.76f, barH * 0.76f), "shards", Color.white);
+            GUI.Label(new Rect(shardsR.x + 10 * u, top, shardsR.width - barH, barH), Ar.N(duelGame.ShardBank), num);
+            DuelHud.DrawIcon(new Rect(cursesR.xMax - barH * 0.95f, top + barH * 0.12f, barH * 0.76f, barH * 0.76f), "curse", Color.white);
+            GUI.Label(new Rect(cursesR.x + 10 * u, top, cursesR.width - barH, barH), Ar.N(duelGame.Curses[0]), num);
+            var titleR = new Rect(pad, top, Mathf.Min(330 * u, Screen.width * 0.3f), barH);
+            Plank(titleR);
+            GUI.Label(titleR, Ar.T(Ar.Title), num);
+
+            // arena card in the middle
+            float cw = Mathf.Min(430 * u, Screen.width * 0.34f), ch = cw * 0.56f;
+            var card = new Rect((Screen.width - cw) * 0.5f, top + barH + 16 * u, cw, ch);
+            var kitPanel = DuelHud.Kit("panel");
+            if (kitPanel != null) GUI.DrawTexture(card, kitPanel, ScaleMode.StretchToFill);
+            var houseTex = duelGame.house != null && !string.IsNullOrEmpty(duelGame.house.paintedTexture) ? Resources.Load<Texture2D>(duelGame.house.paintedTexture) : null;
+            if (houseTex != null)
+            {
+                var inner = new Rect(card.x + cw * 0.05f, card.y + ch * 0.08f, cw * 0.9f, ch * 0.84f);
+                float ta = houseTex.width / (float)houseTex.height, ia = inner.width / inner.height;
+                var tc = ia > ta ? new Rect(0f, (1f - ta / ia) * 0.5f, 1f, ta / ia) : new Rect((1f - ia / ta) * 0.5f, 0f, ia / ta, 1f);
+                GUI.DrawTextureWithTexCoords(inner, houseTex, tc);
+            }
+            var ribbon = DuelHud.Kit("ribbon");
+            var ribR = new Rect(card.center.x - cw * 0.42f, card.yMax - ch * 0.2f, cw * 0.84f, cw * 0.84f * 246f / 969f);
+            if (ribbon != null) GUI.DrawTexture(ribR, ribbon, ScaleMode.StretchToFill);
+            var ink = new GUIStyle(small) { fontSize = Mathf.RoundToInt(22 * u) }; ink.normal.textColor = new Color(0.35f, 0.18f, 0.08f);
+            GUI.Label(new Rect(ribR.x, ribR.y + ribR.height * 0.05f, ribR.width, ribR.height * 0.6f), Ar.T(duelGame.house != null ? duelGame.house.displayName : Ar.Title), ink);
+
+            // the two big buttons under the card: duel (orange) on the right, the 12/3 challenge (blue) on the left
+            float bw = Mathf.Min(230 * u, Screen.width * 0.18f), bh = bw * 0.62f, by = ribR.yMax + 18 * u;
+            var duelR = new Rect(Screen.width * 0.5f + 10 * u, by, bw, bh);
+            var chalR = new Rect(Screen.width * 0.5f - 10 * u - bw, by, bw, bh);
+            if (BigButton(duelR, "btn_orange", "duel", "مبارزة", true, u)) StartGameFromScript();
             bool can = duelGame.CanEnterChallenge;
-            if (DuelHud.IconButton(chalR, "trophy", new Color(0.85f, 0.5f, 0.12f), can, null))
+            if (BigButton(chalR, "btn_blue", "trophy", "تحدّي", can, u))
             {
                 showStart = false; endTitle = null; touch?.IgnoreFor(0.5f); duelGame.PlayChallenge();
             }
-            float sy = by + bh + 16 * u;
+            float sy = by + bh + 6 * u;
             var run = duelGame.Challenge;
             if (duelGame.ChallengeActive)
             {
-                DuelHud.ChallengeStrip(new Rect(chalR.x - 40 * u, sy, chalR.width + 80 * u, 40 * u), run, u);
+                DuelHud.ChallengeStrip(new Rect(chalR.x - 20 * u, sy, chalR.width + 40 * u, 34 * u), run, u);
                 var left = run.EndsUtc - System.DateTime.UtcNow;
-                // left of the run strip (below it collided with the bag rack, run 60)
-                float cx = chalR.x - 40 * u - 140 * u;
-                DuelHud.DrawIcon(new Rect(cx, sy + 5 * u, 30 * u, 30 * u), "clock", Color.white);
-                GUI.Label(new Rect(cx + 34 * u, sy, 110 * u, 40 * u), Ar.N(Mathf.Max(0, (int)left.TotalHours)) + ":" + Ar.N(Mathf.Max(0, left.Minutes)).PadLeft(2, '٠'),
-                    new GUIStyle(num) { fontSize = Mathf.RoundToInt(24 * u) });
+                DuelHud.DrawIcon(new Rect(chalR.x - 150 * u, sy + 3 * u, 28 * u, 28 * u), "clock", Color.white);
+                GUI.Label(new Rect(chalR.x - 120 * u, sy, 100 * u, 34 * u), Ar.N(Mathf.Max(0, (int)left.TotalHours)) + ":" + Ar.N(Mathf.Max(0, left.Minutes)).PadLeft(2, '٠'), small);
             }
             else
             {
-                // the entry: shards price (0 = the free first run)
-                DuelHud.DrawIcon(new Rect(chalR.x + chalR.width * 0.5f - 40 * u, sy, 34 * u, 34 * u), "shards", can ? Color.white : new Color(1f, 0.4f, 0.4f));
-                GUI.Label(new Rect(chalR.x + chalR.width * 0.5f, sy, 200 * u, 34 * u), Ar.N(duelGame.ChallengeFree ? 0 : Sheytoonak.Core.Challenge.ChallengeRun.DefaultEntry),
-                    new GUIStyle(num) { fontSize = Mathf.RoundToInt(26 * u) });
+                DuelHud.DrawIcon(new Rect(chalR.center.x - 36 * u, sy, 30 * u, 30 * u), "shards", can ? Color.white : new Color(1f, 0.4f, 0.4f));
+                GUI.Label(new Rect(chalR.center.x - 4 * u, sy, 90 * u, 30 * u), Ar.N(duelGame.ChallengeFree ? 0 : Sheytoonak.Core.Challenge.ChallengeRun.DefaultEntry), new GUIStyle(small) { alignment = TextAnchor.MiddleLeft });
             }
+
+            // side buttons: what is planned (docs/RESEARCH.fa.md queue), honest about not being there yet
+            float sbw = Mathf.Min(200 * u, Screen.width * 0.15f), sbh = sbw * 0.62f;
+            SideSoon(new Rect(pad, top + barH + 30 * u, sbw, sbh), "btn_green", "pick", "مهمّات", u);
+            SideSoon(new Rect(Screen.width - pad - sbw, top + barH + 30 * u, sbw, sbh), "btn_red", "duel", "الأبطال", u);
+            SideSoon(new Rect(pad, Screen.height - sbh - pad, sbw, sbh), "btn_orange", "shards", "دكّان", u);
+            SideSoon(new Rect(Screen.width - pad - sbw, Screen.height - sbh - pad, sbw, sbh), "btn_blue", "trophy", "الحارة", u);
+
+            // the bag rack sits in a dark panel along the bottom
+            float sw = Mathf.Min(105 * u, (Screen.width - 80 * u) / 4f), gap = 14 * u, total = sw * 4 + gap * 3;
+            var rackBg = new Rect((Screen.width - total) * 0.5f - 18 * u, Screen.height - sw - 44 * u - 14 * u, total + 36 * u, sw + 54 * u);
+            if (kitPanel != null) GUI.DrawTexture(rackBg, kitPanel, ScaleMode.StretchToFill);
             BagRack(u);
+        }
+
+        static Texture2D homePattern;
+        /// <summary>Deep blue with a faint tile of eight-point stars, like a carpet (generated once, no asset).</summary>
+        static void HomeBackdrop()
+        {
+            if (homePattern == null)
+            {
+                const int n = 96;
+                homePattern = new Texture2D(n, n, TextureFormat.RGBA32, false) { wrapMode = TextureWrapMode.Repeat, filterMode = FilterMode.Bilinear };
+                var px = new Color32[n * n];
+                for (int y = 0; y < n; y++)
+                    for (int x = 0; x < n; x++)
+                    {
+                        float dx = Mathf.Abs(x - n * 0.5f), dy = Mathf.Abs(y - n * 0.5f);
+                        // two squares, one turned 45 degrees: an eight-point star outline
+                        float sq = Mathf.Max(dx, dy), di = (dx + dy) * 0.7071f;
+                        bool line = Mathf.Abs(sq - 26f) < 1.2f || Mathf.Abs(di - 26f) < 1.2f || Mathf.Abs(Mathf.Max(dx, dy) - 47f) < 0.8f;
+                        px[y * n + x] = line ? new Color32(38, 58, 140, 255) : new Color32(18, 30, 92, 255);
+                    }
+                homePattern.SetPixels32(px); homePattern.Apply();
+            }
+            var all = new Rect(0, 0, Screen.width, Screen.height);
+            float tile = 120f * Screen.height / 720f;
+            GUI.DrawTextureWithTexCoords(all, homePattern, new Rect(0, 0, Screen.width / tile, Screen.height / tile));
+            // a soft lighter glow in the middle
+            var old = GUI.color; GUI.color = new Color(0.35f, 0.5f, 1f, 0.12f);
+            GUI.DrawTexture(new Rect(Screen.width * 0.2f, Screen.height * 0.1f, Screen.width * 0.6f, Screen.height * 0.8f), Texture2D.whiteTexture);
+            GUI.color = old;
+        }
+
+        static void Plank(Rect r)
+        {
+            var bar = DuelHud.Kit("bar");
+            if (bar != null) GUI.DrawTexture(r, bar, ScaleMode.StretchToFill);
+            else { var old = GUI.color; GUI.color = new Color(0f, 0f, 0f, 0.6f); GUI.DrawTexture(r, Texture2D.whiteTexture); GUI.color = old; }
+        }
+
+        static bool BigButton(Rect r, string kitName, string icon, string label, bool enabled, float u)
+        {
+            var tex = DuelHud.Kit(kitName);
+            var old = GUI.color;
+            GUI.color = enabled ? Color.white : new Color(0.5f, 0.5f, 0.5f, 0.9f);
+            if (tex != null) GUI.DrawTexture(r, tex, ScaleMode.StretchToFill);
+            GUI.color = old;
+            float isz = r.height * 0.5f;
+            DuelHud.DrawIcon(new Rect(r.center.x - isz * 0.5f, r.y + r.height * 0.1f, isz, isz), icon, enabled ? Color.white : new Color(0.8f, 0.8f, 0.8f));
+            var st = new GUIStyle(GUI.skin.label) { font = Ar.Font, fontSize = Mathf.RoundToInt(r.height * 0.22f), alignment = TextAnchor.MiddleCenter, fontStyle = FontStyle.Bold };
+            var shadow = new GUIStyle(st); shadow.normal.textColor = new Color(0f, 0f, 0f, 0.55f);
+            st.normal.textColor = Color.white;
+            var lr = new Rect(r.x, r.y + r.height * 0.58f, r.width, r.height * 0.3f);
+            GUI.Label(new Rect(lr.x + 2, lr.y + 2, lr.width, lr.height), Ar.T(label), shadow);
+            GUI.Label(lr, Ar.T(label), st);
+            return enabled && GUI.Button(r, GUIContent.none, GUIStyle.none);
+        }
+
+        float soonUntil; Rect soonAt;
+        void SideSoon(Rect r, string kitName, string icon, string label, float u)
+        {
+            if (BigButton(r, kitName, icon, label, true, u)) { soonUntil = Time.time + 1.5f; soonAt = r; touch?.IgnoreFor(0.3f); }
+            var tag = new GUIStyle(GUI.skin.label) { font = Ar.Font, fontSize = Mathf.RoundToInt(16 * u), alignment = TextAnchor.MiddleCenter };
+            tag.normal.textColor = new Color(1f, 0.92f, 0.6f);
+            bool flash = Time.time < soonUntil && soonAt == r;
+            var old = GUI.color; GUI.color = new Color(0f, 0f, 0f, flash ? 0.85f : 0.55f);
+            var tr = new Rect(r.center.x - 40 * u, r.y - 10 * u, 80 * u, 24 * u);
+            GUI.DrawTexture(tr, Texture2D.whiteTexture); GUI.color = old;
+            GUI.Label(tr, Ar.T("قريباً"), tag);
         }
 
         static readonly Color[] BagTint =
