@@ -18,6 +18,8 @@ namespace Sheytoonak
 
         // ⚠️ ped_01's third frame was dropped (user 2026-11-04: «یکی از عکسا تسبیح تو یه دستشه، تو دو تای دیگه اون یکی
         // دستش»): its prayer beads were in the far hand. Stride (a) and passing (b) alternate; a and c were the same stride.
+        // ped_02 (user 2026-11-05, the shopper): frames 2 and 3 of her sheet had three hands («عکس دوم و سوم سه تا دست دارن
+        // اون رو در نظر نگیر»), so her walk is sheet frames 1, 5, 4, 6.
         // A "set" is one character: ped_01.png alone, or ped_01_a.png / ped_01_b.png / ped_01_c.png as walk frames
         // (legs crossing, apart, crossing the other way). User 2026-10-28: a single frame sliding along "does not walk".
         readonly List<Sprite> trees = new List<Sprite>();
