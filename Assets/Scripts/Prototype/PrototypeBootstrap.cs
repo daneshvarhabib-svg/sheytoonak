@@ -231,7 +231,7 @@ namespace Sheytoonak.Prototype
             // User (2026-11-05): the 3:1 paintings (2172x724) replace the 2.3:1 ones; houses 13–22 stay in code until their 3:1
             // versions arrive («فعلا این سه تا رو داشته باش تا باقی برسن»).
             // test (user, 2026-11-05): one 3:1 painting with the top row 8 % below the edge, alone, to see if it fills the frame
-            var houses = new[] { House26() };
+            var houses = new[] { House27() };
             allHouses = houses;
 
             // Player: foot position + window mapping. No body: the game is first-person (POV).
@@ -555,6 +555,15 @@ namespace Sheytoonak.Prototype
             },
             0.25f, 1.95f, 0f, 1.2f, null, null, R(1130f, 430f, 1300f, 630f));
 
+        HouseDefinition House27() => MakePaintedHouse("البيت ٢٧", "Art/house_27", 2172f, 724f, Wide3W, // Alexandria test 2, no broken twin yet
+            new[]
+            {
+                R(205f, 50f, 335f, 240f), R(535f, 50f, 660f, 240f), R(860f, 50f, 985f, 240f), R(1180f, 50f, 1305f, 240f),
+                R(1505f, 50f, 1630f, 240f), R(1830f, 50f, 1955f, 240f),
+                R(205f, 440f, 325f, 630f), R(1160f, 490f, 2000f, 660f),
+            },
+            0.25f, 1.95f, 0f, 1.2f, null, null, R(700f, 420f, 850f, 600f));
+
         static Rect R(float x0, float y0, float x1, float y1) => Rect.MinMaxRect(x0, y0, x1, y1);
         static WindowDetail Pot(int w, float x0, float y0, float x1, float y1) => new WindowDetail(w, DetailKind.Pot) { pixel = R(x0, y0, x1, y1) };
 
@@ -691,24 +700,25 @@ namespace Sheytoonak.Prototype
             if (!string.IsNullOrEmpty(h.paintedTexture))
             {
                 float want = FacadeWidthForCamera(z);
-                // ⚠️ run 89: filling the width alone pushed the upper window row off the top of the screen (a 2.2:1 phone
-                // shows ~0.45 of a 3:2 painting's height above the road). The house grows only as far as its highest
-                // window still sits under 80 % of the screen; what is left beside it is filled with the painting mirrored
-                // (same street, same style, no grey neighbour walls), so the frame is still nothing but the painting.
-                // User (2026-11-05): «اگر نشد از بالا آسمون بده به جای این که بکشی» — the painting always fills the camera's
-                // width; whatever the painting's aspect leaves above it is sky, never a stretched wall and never a capped house.
-                viewHalfWidth = FacadeWidthForCamera(z) * 0.5f;
-                if (Mathf.Abs(want - w) > 0.01f)
+                // User (2026-11-05, run 115): «یه کاری کنیم همه قاب پنجره بیفته ولی همسایه هم ندیم … از بالا آسمون بدیم یکمی هم از
+                // راست و چپ بکشیمش». The painting always spans the camera's width (no neighbours). Its height follows its own
+                // aspect, but if the top window row would sit above 88 % of the screen the height is reduced until it fits:
+                // the picture is then a little wider than its aspect (stretched sideways), and the room above it is sky.
+                viewHalfWidth = want * 0.5f;
+                float kx = want / w, ky = kx;
+                float topLimit = HeightAtScreenFraction(z, 0.88f), topWindow = 0f;
+                foreach (var r0 in h.worldWindows) topWindow = Mathf.Max(topWindow, r0.yMax);
+                if (topWindow > 0.01f && topWindow * ky > topLimit) ky = Mathf.Max(kx * 0.6f, topLimit / topWindow);
+                if (Mathf.Abs(kx - 1f) > 0.001f || Mathf.Abs(ky - 1f) > 0.001f)
                 {
                     // the definition is scaled in place (windows are world rects derived from pixels at the old width) and
-                    // mapped again, so the rules, the hit test and the drawing all agree on the new width
-                    float k = want / w;
+                    // mapped again, so the rules, the hit test and the drawing all agree on the new size
                     var wr = h.worldWindows;
                     for (int i = 0; i < wr.Length; i++)
-                        wr[i] = Rect.MinMaxRect(wr[i].xMin * k, wr[i].yMin * k, wr[i].xMax * k, wr[i].yMax * k);
+                        wr[i] = Rect.MinMaxRect(wr[i].xMin * kx, wr[i].yMin * ky, wr[i].xMax * kx, wr[i].yMax * ky);
                     h.worldWindows = wr;
-                    h.worldFacadeWidth = want; h.worldRoofHeight = roof * k;
-                    w = want; roof = roof * k;
+                    h.worldFacadeWidth = want; h.worldRoofHeight = roof * ky;
+                    w = want; roof = roof * ky;
                     if (windowMapper != null) windowMapper.Map(h);
                 }
                 return BuildPaintedFacade(h, root, w, roof);
