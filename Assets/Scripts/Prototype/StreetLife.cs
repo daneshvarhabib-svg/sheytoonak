@@ -242,12 +242,6 @@ namespace Sheytoonak
 
         int walkers;
         /// <summary>
-        /// The painted bicycle (user, 2026-11-05, three pictures: frame without wheels, one wheel, the rider in two pedalling
-        /// poses). Numbers are pixels of the frame picture (600 x 395): the fork tips where the axles go, the wheel radius that
-        /// fits the mudguards, and where the rider's picture sits so his hips are on the saddle (measured in a preview).
-        /// </summary>
-
-        /// <summary>
         /// The man in the wheelchair (user 2026-11-05): two painted poses of man-and-chair (hand forward, hand back) and
         /// a separate wheel laid over the painted one, rolling with the distance; the poses alternate like the cyclist's.
         /// In the rider picture the big wheel is centred at (150, 429) of 456x609 with radius 150; the loose wheel
@@ -325,6 +319,25 @@ namespace Sheytoonak
             }
             float speed = pedSpeed * 3.2f * Random.Range(0.9f, 1.1f);
             movers.Add(new Mover { t = root, sr = body, frames = frames, speed = toRight ? speed : -speed, endX = 18f, wheels = ws, wheelRadius = radii[0] / ppu * k, cyclist = true });
+        }
+
+        /// <summary>Who walks how: the old man with the cane (ped_03_oldman, user 2026-11-05) shuffles at ~0.6, a hurried
+        /// man rushes at ~1.8; everybody else keeps the base pace.</summary>
+        static float PedSpeedScale(List<Sprite> set)
+        {
+            string n = set.Count > 0 ? set[0].name : "";
+            if (n.Contains("oldman")) return 0.6f;
+            if (n.Contains("hurried")) return 1.8f;
+            if (n.Contains("crutches")) return 0.5f; // ped_05 (user 2026-11-05): a cast and two crutches
+            if (n.Contains("boy")) return 1.15f;    // ped_06: the boy with the ball
+            return 1f;
+        }
+        static float PedHeightScale(List<Sprite> set)
+        {
+            string n = set.Count > 0 ? set[0].name : "";
+            if (n.Contains("oldman")) return 0.93f; // stooped
+            if (n.Contains("boy")) return 0.78f;    // a child
+            return 1f;
         }
 
         bool SetIsOut(List<Sprite> set)
