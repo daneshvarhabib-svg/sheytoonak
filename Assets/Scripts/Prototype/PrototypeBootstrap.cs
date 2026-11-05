@@ -266,6 +266,7 @@ namespace Sheytoonak.Prototype
                 duelGame = gameGo.AddComponent<DuelManager>();
                 duelGame.config = config;
                 duelGame.house = houses[1]; // 3x3 windows: a clear 1 / 2 split
+                duelGame.housePool = houses; // a different house every duel
                 duelGame.ball = ballCtl;
                 duelGame.foot = foot;
                 duelGame.mapper = mapper;

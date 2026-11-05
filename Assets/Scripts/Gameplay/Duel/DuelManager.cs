@@ -19,6 +19,18 @@ namespace Sheytoonak
     {
         public GameConfig config;
         public HouseDefinition house;
+        /// <summary>Every painted house; each duel picks one, never the same twice in a row (user 2026-11-05: «خونه بک‌گراند
+        /// نباید ثابت باشه همیشه و بهتره پنجاه شصت تا خونه مختلف باشه و بازیکنان هر بار یه خونه ببینن»).</summary>
+        public HouseDefinition[] housePool;
+
+        void PickHouse()
+        {
+            if (housePool == null || housePool.Length == 0) return;
+            if (housePool.Length == 1) { house = housePool[0]; return; }
+            HouseDefinition next;
+            do next = housePool[Random.Range(0, housePool.Length)]; while (next == house);
+            house = next;
+        }
         public BallController ball;
         public PlayerFoot foot;
         public BackdropWindowMapper mapper;
@@ -182,6 +194,7 @@ namespace Sheytoonak
             StopAllCoroutines(); botRoutine = resolveRoutine = null;
             Rules = null; Draft = null;
             ball.Hide();
+            PickHouse();
             mapper.Map(house);
             GameEvents.RaiseHouseLoaded(house, 0);
             InChallenge = true;
@@ -211,6 +224,7 @@ namespace Sheytoonak
             StopAllCoroutines(); botRoutine = resolveRoutine = null;
             Rules = null;
             ball.Hide();
+            PickHouse();
             mapper.Map(house);
             GameEvents.RaiseHouseLoaded(house, 0);
             draftRng = randomSeed != 0 ? new System.Random(randomSeed) : new System.Random();
