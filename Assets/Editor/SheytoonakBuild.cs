@@ -268,6 +268,32 @@ namespace Sheytoonak.EditorTools
                                          ", target " + EditorUserBuildSettings.activeBuildTarget + ", android override " + (ps != null ? ps.overridden + " " + ps.format : "?"));
             }
 
+            // ⚠️ runs 81-106: still RGBA32. Is the encoder itself alive in this batch editor? One texture is compressed in
+            // memory here (asset untouched) and timed; the command line and the graphics device are printed with it.
+            try
+            {
+                var args = string.Join(" ", System.Environment.GetCommandLineArgs());
+                Debug.Log("SHEYTOONAK TEXTURE cmdline nographics=" + args.Contains("-nographics") + " batchmode=" + args.Contains("-batchmode") +
+                          " gfx=" + SystemInfo.graphicsDeviceType + " astc6x6 supported=" + SystemInfo.SupportsTextureFormat(TextureFormat.ASTC_6x6));
+                var src = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/Resources/Art/house_11.png");
+                var imp2 = AssetImporter.GetAtPath("Assets/Resources/Art/house_11.png") as TextureImporter;
+                if (src != null && imp2 != null)
+                {
+                    Debug.Log("SHEYTOONAK TEXTURE house_11 automatic format for Android = " + imp2.GetAutomaticFormat("Android") +
+                              ", importer textureCompression=" + imp2.textureCompression + ", isReadable=" + src.isReadable);
+                    var copy = new Texture2D(src.width, src.height, TextureFormat.RGBA32, false);
+                    var rt = RenderTexture.GetTemporary(src.width, src.height, 0, RenderTextureFormat.ARGB32);
+                    Graphics.Blit(src, rt); var prev = RenderTexture.active; RenderTexture.active = rt;
+                    copy.ReadPixels(new Rect(0, 0, src.width, src.height), 0, 0); copy.Apply();
+                    RenderTexture.active = prev; RenderTexture.ReleaseTemporary(rt);
+                    var sw2 = System.Diagnostics.Stopwatch.StartNew();
+                    EditorUtility.CompressTexture(copy, TextureFormat.ASTC_6x6, 50);
+                    Debug.Log("SHEYTOONAK TEXTURE CompressTexture(ASTC_6x6) -> " + copy.format + " in " + sw2.Elapsed.TotalSeconds.ToString("0.00") + " s");
+                    Object.DestroyImmediate(copy);
+                }
+            }
+            catch (System.Exception e) { Debug.Log("SHEYTOONAK TEXTURE probe failed: " + e.GetType().Name + " " + e.Message); }
+
             string dir = Path.GetDirectoryName(apkPath);
             if (!string.IsNullOrEmpty(dir)) Directory.CreateDirectory(dir);
 
