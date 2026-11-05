@@ -32,6 +32,7 @@ namespace Sheytoonak
         class Mover
         {
             public Transform t; public SpriteRenderer sr; public List<Sprite> frames; public float speed, endX, frame;
+            public Transform[] wheels; public float wheelRadius; // painted cars: wheels spin with the distance driven
         }
 
         void Awake()
@@ -51,9 +52,65 @@ namespace Sheytoonak
                 if (kv.Key.StartsWith("ped")) peds.Add(kv.Value);
                 else if (kv.Key.StartsWith("car")) cars.Add(kv.Value);
             }
+            LoadCars();
             PlantTrees();
             nextPed = Time.time + Random.Range(1f, 3f);
             nextCar = Time.time + Random.Range(2f, 6f);
+        }
+
+        // User (2026-11-05): «فولکس و واگن هم چرخ ندارن فقط قالپاق دارن، باید چرخ داشته باشن و چرخش بچرخه». Cars are now
+        // a body without wheels (Art/Cars/car_N_name) and a separate wheel (wheel_N) that turns as the car drives;
+        // Art/Cars/cars.txt holds, in body pixels, the sill line, the wheel radius and the arch centres.
+        class CarDef { public Sprite body, wheel; public float w, h, wheelY, radius; public float[] xs; }
+        readonly List<CarDef> paintedCars = new List<CarDef>();
+        void LoadCars()
+        {
+            var txt = Resources.Load<TextAsset>("Art/Cars/cars");
+            if (txt == null) return;
+            foreach (var line in txt.text.Split('\n'))
+            {
+                var f = line.Trim().Split(' ');
+                if (f.Length < 8 || f[0].StartsWith("#")) continue;
+                var inv = System.Globalization.CultureInfo.InvariantCulture;
+                var bt = Resources.Load<Texture2D>("Art/Cars/car_" + f[1] + "_" + f[0]);
+                var wt = Resources.Load<Texture2D>("Art/Cars/wheel_" + f[1]);
+                if (bt == null || wt == null) continue;
+                float W = float.Parse(f[2], inv), H = float.Parse(f[3], inv), sill = float.Parse(f[4], inv), r = float.Parse(f[5], inv);
+                float cy = sill - r * 0.15f, ground = cy + r; // wheel centre a little up into the arch, its bottom on the road
+                var d = new CarDef { w = W, h = H, radius = r, wheelY = r };
+                // the body's pivot is the road under it (below its own picture): pivot.y < 0
+                d.body = Sprite.Create(bt, new Rect(0, 0, bt.width, bt.height), new Vector2(0.5f, -(ground - H) / H), 100f);
+                d.wheel = Sprite.Create(wt, new Rect(0, 0, wt.width, wt.height), new Vector2(0.5f, 0.5f), 100f);
+                d.xs = new float[f.Length - 6];
+                for (int i = 6; i < f.Length; i++) d.xs[i - 6] = float.Parse(f[i], inv);
+                paintedCars.Add(d);
+            }
+        }
+
+        void SpawnCar(CarDef d, float speed)
+        {
+            bool toRight = Random.value < 0.5f;
+            float scale = carLength / (d.w / 100f);
+            var root = new GameObject("Car").transform;
+            root.SetParent(transform, false);
+            root.position = new Vector3(toRight ? -30f : 30f, 0f, roadZ);
+            root.localScale = new Vector3(toRight ? scale : -scale, scale, scale); // painted facing right
+            var body = new GameObject("Body").AddComponent<SpriteRenderer>();
+            body.sprite = d.body; body.transform.SetParent(root, false);
+            var ws = new Transform[d.xs.Length];
+            float wsz = 2f * d.radius / d.wheel.rect.width; // wheel picture -> wheel size in body pixels
+            for (int i = 0; i < d.xs.Length; i++)
+            {
+                var wr = new GameObject("Wheel").AddComponent<SpriteRenderer>();
+                wr.sprite = d.wheel;
+                wr.transform.SetParent(root, false);
+                // a hair behind the body so the arch edge overlaps the tyre (distance sorting, not sortingOrder)
+                wr.transform.localPosition = new Vector3((d.xs[i] - d.w * 0.5f) / 100f, d.wheelY / 100f, 0.02f / scale);
+                wr.transform.localScale = Vector3.one * wsz;
+                ws[i] = wr.transform;
+            }
+            movers.Add(new Mover { t = root, sr = body, frames = new List<Sprite> { d.body }, speed = toRight ? speed : -speed, endX = 30f,
+                                   wheels = ws, wheelRadius = d.radius / 100f * scale });
         }
 
         void OnEnable() => GameEvents.WindChanged += OnWind;
@@ -107,7 +164,12 @@ namespace Sheytoonak
                 nextPed = t + Random.Range(pedEvery.x, pedEvery.y);
                 Spawn(peds[Random.Range(0, peds.Count)], pedHeight, farSidewalkZ + Random.Range(-0.3f, 0.3f), pedSpeed * Random.Range(0.8f, 1.2f), 16f, pedsFaceRight);
             }
-            if (cars.Count > 0 && t >= nextCar && !carOut)
+            if (paintedCars.Count > 0 && t >= nextCar && !carOut)
+            {
+                nextCar = t + Random.Range(carEvery.x, carEvery.y);
+                SpawnCar(paintedCars[Random.Range(0, paintedCars.Count)], carSpeed * Random.Range(0.85f, 1.15f));
+            }
+            else if (paintedCars.Count == 0 && cars.Count > 0 && t >= nextCar && !carOut)
             {
                 nextCar = t + Random.Range(carEvery.x, carEvery.y);
                 var set = cars[Random.Range(0, cars.Count)];
@@ -119,6 +181,12 @@ namespace Sheytoonak
             {
                 var m = movers[i];
                 m.t.position += Vector3.right * m.speed * Time.deltaTime;
+                if (m.wheels != null)
+                {
+                    // rolling without slipping: angle = distance / radius; the mirrored root flips the sense by itself
+                    float deg = Mathf.Abs(m.speed) * Time.deltaTime / Mathf.Max(0.01f, m.wheelRadius) * Mathf.Rad2Deg;
+                    foreach (var w in m.wheels) w.Rotate(0f, 0f, -deg, Space.Self);
+                }
                 if (Mathf.Abs(m.speed) < 3f)
                 {
                     // Walk cycle when frames exist; otherwise a small bob and lean so it at least does not glide.
