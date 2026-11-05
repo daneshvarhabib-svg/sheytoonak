@@ -15,48 +15,23 @@ namespace Sheytoonak.Tests
         }
 
         [Test]
-        public void Row_map_puts_the_ones_on_the_real_bottom_row()
+        public void Every_window_is_worth_one_and_an_even_house_gets_one_upper_two()
         {
-            // run 30: facade indices are top-first, so index order gave the TOP row the 1s
-            var rowMap = new[] { 2, 2, 2, 1, 1, 1, 0, 0, 0 };
-            var shards = new int[9];
+            // user 2026-11-05: «باید یه جوری باشه که مساوی نشه … یک پنجره حداقل امتیازش بیشتر باشه اگر تعداد پنجره‌ها زوجه»
             var h = StarterHeroes.All;
             for (int seed = 1; seed < 30; seed++)
             {
-                var r = new DuelRules(new[] { 3, 3, 3 }, shards, new[] { h[0], h[1], h[2] }, new[] { h[3], h[4], h[0] }, seed, rowMap);
-                Assert.IsTrue(r.HiddenWindow < 6, "the 3 never sits in the bottom row");
-                for (int w = 0; w < 6; w++) if (w != r.HiddenWindow) Assert.AreNotEqual(3, r.WindowValue[w]);
-                int ones = 0; for (int w = 6; w < 9; w++) if (r.WindowValue[w] == 1) ones++;
-                Assert.GreaterOrEqual(ones, 2, "seed " + seed);
-                for (int w = 0; w < 6; w++) Assert.AreNotEqual(1, r.WindowValue[w], "no 1 in an upper row, seed " + seed);
-                Assert.AreEqual(1, r.TotalValue % 2);
-            }
-        }
+                var odd = new DuelRules(new[] { 3, 3, 3 }, new int[9], new[] { h[0], h[1], h[2] }, new[] { h[3], h[4], h[0] }, seed, new[] { 2, 2, 2, 1, 1, 1, 0, 0, 0 });
+                for (int w = 0; w < 9; w++) Assert.AreEqual(1, odd.WindowValue[w]);
+                Assert.AreEqual(-1, odd.HiddenWindow);
+                Assert.AreEqual(5, odd.Majority);
 
-        [Test]
-        public void Odd_nudge_never_puts_a_one_in_an_upper_row()
-        {
-            var shards = new int[5];
-            var h = StarterHeroes.All;
-            var rowMap = new[] { 1, 1, 0, 0, 0 }; // top-first, like the facade
-            for (int seed = 1; seed < 30; seed++)
-            {
-                var r = new DuelRules(new[] { 3, 2 }, shards, new[] { h[0], h[1], h[2] }, new[] { h[3], h[4], h[0] }, seed, rowMap);
-                Assert.AreEqual(1, r.TotalValue % 2);
-                Assert.AreNotEqual(1, r.WindowValue[0]); Assert.AreNotEqual(1, r.WindowValue[1]);
-            }
-        }
-
-        [Test]
-        public void Total_value_is_always_odd_and_the_three_is_hidden()
-        {
-            for (int seed = 1; seed < 40; seed++)
-            {
-                var r = Make(seed, new[] { 3, 3, 4 });
-                Assert.AreEqual(1, r.TotalValue % 2, "seed " + seed);
-                Assert.AreEqual(3, r.WindowValue[r.HiddenWindow]);
-                Assert.AreEqual(2, r.ShownValue(r.HiddenWindow), "hidden reads as 2 until it breaks");
-                Assert.IsTrue(r.HiddenWindow >= 3, "the 3 sits in an upper row");
+                var even = new DuelRules(new[] { 4, 4 }, new int[8], new[] { h[0], h[1], h[2] }, new[] { h[3], h[4], h[0] }, seed, new[] { 1, 1, 1, 1, 0, 0, 0, 0 });
+                int twos = 0; for (int w = 0; w < 8; w++) if (even.WindowValue[w] == 2) twos++; else Assert.AreEqual(1, even.WindowValue[w]);
+                Assert.AreEqual(1, twos, "seed " + seed);
+                Assert.IsTrue(even.HiddenWindow < 4, "the 2 sits in an upper row");
+                Assert.AreEqual(2, even.ShownValue(even.HiddenWindow), "shown openly");
+                Assert.AreEqual(1, even.TotalValue % 2);
             }
         }
 

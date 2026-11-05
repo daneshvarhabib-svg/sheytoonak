@@ -283,7 +283,7 @@ namespace Sheytoonak
             Rules = new DuelRules(rows, shards, left, right, randomSeed, rowMap);
             Bot = new DuelBot(randomSeed);
             Rules.TurnStarted += OnTurnStarted;
-            Rules.WindowTaken += (s, w, v) => { if (w == Rules.HiddenWindow) Toast?.Invoke("٣ ★", 1.6f); };
+            Rules.WindowTaken += (s, w, v) => { if (v > 1) Toast?.Invoke(Ar.N(v) + " ★", 1.6f); };
             Rules.Ended += OnEnded;
             Rules.RageGained += s => Pop?.Invoke("rage", s, PopKind.Info);
             PlaceBallAtCentre();
