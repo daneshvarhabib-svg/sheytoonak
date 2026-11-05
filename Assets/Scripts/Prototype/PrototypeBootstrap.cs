@@ -44,7 +44,7 @@ namespace Sheytoonak.Prototype
         public bool duel = true;
         // Seen from behind with the heroes in frame: higher, further back, a little pitched down, wider vertically.
         public Vector3 duelCameraOffset = new Vector3(0f, 3.0f, -6.0f);
-        public float duelCameraPitchDeg = 5f;
+        public float duelCameraPitchDeg = 3f; // run 108: at 5 a 3:1 painting's top row did not fit under 86 % of the screen; 3 shows ~0.7 m more wall
         public float duelMinVerticalFov = 48f;
         public float duelHorizontalFov = 64f;
         DuelManager duelGame;

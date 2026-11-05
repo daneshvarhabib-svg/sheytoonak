@@ -222,6 +222,55 @@ namespace Sheytoonak.EditorTools
             Debug.Log("SHEYTOONAK SIGNING fixed keystore, alias " + alias);
         }
 
+        const string ParkedFolder = "Assets/CIParkedOriginals"; // outside Resources: the PNGs wait here during the build
+
+        static void PrecompressResources()
+        {
+            var sw = System.Diagnostics.Stopwatch.StartNew();
+            int done = 0, failed = 0; long bytes = 0;
+            var guids = AssetDatabase.FindAssets("t:Texture2D", new[] { "Assets/Resources" });
+            foreach (var guid in guids)
+            {
+                string path = AssetDatabase.GUIDToAssetPath(guid);
+                if (!path.EndsWith(".png") && !path.EndsWith(".jpg")) continue;
+                try
+                {
+                    var src = AssetDatabase.LoadAssetAtPath<Texture2D>(path);
+                    if (src == null) { failed++; continue; }
+                    bool hero = path.Contains("/Heroes/") && !path.EndsWith("_face.png");
+                    bool house = path.Contains("/Art/house_") || path.Contains("/Art/ground_");
+                    int cap = hero ? 512 : house ? 2048 : 1024;
+                    float k = Mathf.Min(1f, cap / (float)Mathf.Max(src.width, src.height));
+                    int w = Mathf.Max(4, Mathf.RoundToInt(src.width * k)), h = Mathf.Max(4, Mathf.RoundToInt(src.height * k));
+                    var rt = RenderTexture.GetTemporary(w, h, 0, RenderTextureFormat.ARGB32, RenderTextureReadWrite.sRGB);
+                    var prev = RenderTexture.active;
+                    Graphics.Blit(src, rt);
+                    RenderTexture.active = rt;
+                    var copy = new Texture2D(w, h, TextureFormat.RGBA32, true, false);
+                    copy.ReadPixels(new Rect(0, 0, w, h), 0, 0);
+                    copy.Apply(true, false);
+                    RenderTexture.active = prev; RenderTexture.ReleaseTemporary(rt);
+                    EditorUtility.CompressTexture(copy, house ? TextureFormat.ASTC_5x5 : TextureFormat.ASTC_6x6, 50);
+                    copy.wrapMode = src.wrapMode; copy.filterMode = src.filterMode; copy.anisoLevel = src.anisoLevel;
+                    copy.name = src.name;
+                    string parked = ParkedFolder + "/" + path.Substring("Assets/Resources/".Length);
+                    Directory.CreateDirectory(Path.GetDirectoryName(parked));
+                    string err = AssetDatabase.MoveAsset(path, parked);
+                    if (!string.IsNullOrEmpty(err)) { Debug.LogWarning("SHEYTOONAK PRECOMPRESS move failed " + path + ": " + err); failed++; continue; }
+                    string assetPath = Path.ChangeExtension(path, ".asset");
+                    AssetDatabase.CreateAsset(copy, assetPath);
+                    bytes += copy.GetRawTextureData<byte>().Length;
+                    done++;
+                }
+                catch (System.Exception e) { Debug.LogWarning("SHEYTOONAK PRECOMPRESS failed " + path + ": " + e.GetType().Name + " " + e.Message); failed++; }
+            }
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+            Debug.Log("SHEYTOONAK PRECOMPRESS " + done + " textures to ASTC (" + (bytes / 1048576f).ToString("0.0") + " MB), " + failed + " failed, in " + sw.Elapsed.TotalSeconds.ToString("0") + " s");
+            var probe = Resources.Load<Texture2D>("Art/house_11");
+            Debug.Log("SHEYTOONAK PRECOMPRESS probe Art/house_11 -> " + (probe != null ? probe.format + " " + probe.width + "x" + probe.height + " mips " + probe.mipmapCount : "null"));
+        }
+
         /// <summary>Builds the APK. Returns true only if Unity reports success and the file exists.</summary>
         static bool BuildAndroid(string apkPath, int versionCode)
         {
@@ -293,6 +342,13 @@ namespace Sheytoonak.EditorTools
                 }
             }
             catch (System.Exception e) { Debug.Log("SHEYTOONAK TEXTURE probe failed: " + e.GetType().Name + " " + e.Message); }
+
+            // ⚠️ run 108 proved it: the ASTC encoder works in this editor (CompressTexture 1.67 s, OpenGLCore, ASTC supported)
+            // but the importer never calls it (270 imports in 8 s, RGBA32, build 1.2 GB). So the build compresses the
+            // pictures itself: every PNG under Resources becomes a Texture2D asset already in ASTC (5x5 for the paintings and
+            // the ground, 6x6 for the rest) at the capped size, and the PNG is moved out of Resources for the build. Nothing
+            // of this is committed; the CI checkout is thrown away.
+            if (System.Environment.GetEnvironmentVariable("SHEYTOONAK_NO_PRECOMPRESS") != "1") PrecompressResources();
 
             string dir = Path.GetDirectoryName(apkPath);
             if (!string.IsNullOrEmpty(dir)) Directory.CreateDirectory(dir);
