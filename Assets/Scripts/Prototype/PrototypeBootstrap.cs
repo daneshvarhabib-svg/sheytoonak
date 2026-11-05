@@ -731,11 +731,32 @@ namespace Sheytoonak.Prototype
             if (t != null) { t.localRotation = Quaternion.identity; t.localScale = Vector3.one; }
         }
 
+        // ⚠️ run 78: stretching the painting's top row upward drew vertical streaks (every pixel became a stripe). Instead
+        // the top band (4 %) is averaged into 8 columns: a soft left-to-right gradient of its own sky/wall colours.
         static Material TopRows(Material painting, Texture2D tex)
         {
-            var m = new Material(painting) { mainTexture = tex };
-            m.mainTextureScale = new Vector2(1f, 0.004f);
-            m.mainTextureOffset = new Vector2(0f, 0.994f);
+            var m = new Material(painting);
+            try
+            {
+                const int cols = 8;
+                int band = Mathf.Max(1, tex.height / 25), y0 = tex.height - band;
+                var px = tex.GetPixels(0, y0, tex.width, band);
+                var g = new Texture2D(cols, 1, TextureFormat.RGBA32, false) { wrapMode = TextureWrapMode.Clamp, filterMode = FilterMode.Bilinear };
+                for (int c = 0; c < cols; c++)
+                {
+                    Color sum = Color.black; int n = 0;
+                    int x0 = c * tex.width / cols, x1 = (c + 1) * tex.width / cols;
+                    for (int y = 0; y < band; y++) for (int x = x0; x < x1; x++) { sum += px[y * tex.width + x]; n++; }
+                    var col = sum / Mathf.Max(1, n); col.a = 1f;
+                    g.SetPixel(c, 0, col);
+                }
+                g.Apply();
+                m.mainTexture = g; m.mainTextureScale = Vector2.one; m.mainTextureOffset = Vector2.zero;
+            }
+            catch (UnityException)
+            {
+                m.mainTexture = null; m.color = AverageColour(tex, 0.02f, 0.06f);
+            }
             return m;
         }
 
