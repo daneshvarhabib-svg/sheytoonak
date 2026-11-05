@@ -573,9 +573,9 @@ namespace Sheytoonak.Prototype
                 float want = FacadeWidthForCamera(z);
                 // ⚠️ run 89: filling the width alone pushed the upper window row off the top of the screen (a 2.2:1 phone
                 // shows ~0.45 of a 3:2 painting's height above the road). The house grows only as far as its highest
-                // window still sits under 90 % of the screen; what is left beside it is filled with the painting mirrored
+                // window still sits under 80 % of the screen; what is left beside it is filled with the painting mirrored
                 // (same street, same style, no grey neighbour walls), so the frame is still nothing but the painting.
-                float topLimit = HeightAtScreenFraction(z, 0.9f), topWindow = 0f;
+                float topLimit = HeightAtScreenFraction(z, 0.8f), topWindow = 0f; // run 90 (user): at 0.9 the top row was still clipped under the HUD («باید کامل معلوم باشه»)
                 foreach (var r0 in h.worldWindows) topWindow = Mathf.Max(topWindow, r0.yMax);
                 if (topWindow > 0.01f) want = Mathf.Min(want, Mathf.Max(w, w * topLimit / topWindow));
                 viewHalfWidth = FacadeWidthForCamera(z) * 0.5f;
