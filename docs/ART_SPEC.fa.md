@@ -233,9 +233,9 @@ IMPORTANT: this character is LEFT-footed. The kicking leg in frames 3, 4 and 5 i
 و در تصویرِ ایستاده: `standing with weight on the right leg, left foot slightly forward, ready to kick with the LEFT foot`.
 
 
-## دوچرخه (هنوز گرفته نشده)
+## دوچرخه (گرفته شد ۱۴ آبان: `Props/bike_frame`, `bike_wheel`, `rider_01_a/b`)
 
-فعلاً دوچرخه‌سوار از رهگذرِ موجود + دو چرخِ فولکس ساخته می‌شه. پرامپت برای نسخه‌ی نقاشی‌شده:
+پرامپتی که استفاده شد:
 
 ```
 Side-view sprite sheet on a flat pure green background (#00FF00), no shadow, no text, same painted style as the street.

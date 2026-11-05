@@ -199,7 +199,7 @@ namespace Sheytoonak
                 {
                     if (m.frames.Count > 1)
                     {
-                        m.frame += Time.deltaTime * walkFps * 1.4f; // pedalling: the walk frames, a little faster
+                        m.frame += Time.deltaTime * 4f; // pedalling: the two painted poses, four a second
                         m.sr.sprite = m.frames[(int)m.frame % m.frames.Count];
                     }
                 }
@@ -229,52 +229,57 @@ namespace Sheytoonak
 
         int walkers;
         /// <summary>
-        /// A cyclist from what is painted already: a passer-by sitting a little forward on two car wheels (the Beetle rim at a
-        /// fifth of the size), the wheels rolling with the distance, the legs the walk frames at pedal speed. Not a painted
-        /// bicycle; a prompt for one is noted in docs/ART_SPEC.fa.md.
+        /// The painted bicycle (user, 2026-11-05, three pictures: frame without wheels, one wheel, the rider in two pedalling
+        /// poses). Numbers are pixels of the frame picture (600 x 395): the fork tips where the axles go, the wheel radius that
+        /// fits the mudguards, and where the rider's picture sits so his hips are on the saddle (measured in a preview).
         /// </summary>
-        void SpawnCyclist(List<Sprite> rider)
+        const float BikeWheelPx = 118f;
+        static readonly Vector2[] BikeAxlesPx = { new Vector2(199f, 332f), new Vector2(554f, 342f) };
+        const float RiderScale = 0.80f; static readonly Vector2 RiderTopLeftPx = new Vector2(156f, 53f);
+
+        void SpawnCyclist(List<Sprite> fallbackRider)
         {
-            var d = paintedCars[Random.Range(0, paintedCars.Count)];
+            var frameT = Resources.Load<Texture2D>("Art/Props/bike_frame");
+            var wheelT = Resources.Load<Texture2D>("Art/Props/bike_wheel");
+            var r0 = Resources.Load<Texture2D>("Art/Props/rider_01_a"); var r1 = Resources.Load<Texture2D>("Art/Props/rider_01_b");
+            if (frameT == null || wheelT == null || r0 == null || r1 == null) return; // the painted set is the only cyclist now
             bool toRight = Random.value < 0.5f;
             float z = roadZ + 1.6f; // the near edge of the far lane
+            float ppu = 100f;
+            // world scale: the bicycle is about 1.8 m long (frame picture 600 px -> 6 m at ppu 100), so 0.3
+            float k = 1.8f / (frameT.width / ppu);
+            float ground = (BikeAxlesPx[0].y + BikeWheelPx) / ppu * k; // the rear tyre's bottom is on the road
             var root = new GameObject("Cyclist").transform;
             root.SetParent(transform, false);
             root.position = new Vector3(toRight ? -18f : 18f, 0f, z);
-            float wr = 0.34f;
+            root.localScale = new Vector3(toRight ? 1f : -1f, 1f, 1f); // painted facing right
+            Vector3 Px(float x, float y, float zz) => new Vector3((x - frameT.width * 0.5f) / ppu * k, ground - y / ppu * k, zz);
             var ws = new Transform[2];
             for (int i = 0; i < 2; i++)
             {
                 var sr = new GameObject("Wheel").AddComponent<SpriteRenderer>();
-                sr.sprite = d.wheel; sr.transform.SetParent(root, false);
-                sr.transform.localPosition = new Vector3(i == 0 ? -0.52f : 0.52f, wr, 0.01f);
-                sr.transform.localScale = Vector3.one * (2f * wr / d.wheel.bounds.size.x);
+                sr.sprite = Sprite.Create(wheelT, new Rect(0, 0, wheelT.width, wheelT.height), new Vector2(0.5f, 0.5f), ppu);
+                sr.transform.SetParent(root, false);
+                sr.transform.localPosition = Px(BikeAxlesPx[i].x, BikeAxlesPx[i].y, 0.02f);
+                sr.transform.localScale = Vector3.one * (2f * BikeWheelPx / wheelT.width) * k;
                 ws[i] = sr.transform;
             }
-            // frame: two dark bars (seat tube and top tube) so the wheels read as one bicycle
-            var bar = M(new Color(0.12f, 0.1f, 0.09f));
-            Bar(root, new Vector3(-0.1f, wr + 0.42f, 0.02f), new Vector3(0.95f, 0.05f, 0.02f), 0f, bar);
-            Bar(root, new Vector3(0.1f, wr + 0.28f, 0.02f), new Vector3(0.75f, 0.05f, 0.02f), 55f, bar);
-            Bar(root, new Vector3(-0.3f, wr + 0.28f, 0.02f), new Vector3(0.75f, 0.05f, 0.02f), -65f, bar);
+            var frame = new GameObject("Frame").AddComponent<SpriteRenderer>();
+            frame.sprite = Sprite.Create(frameT, new Rect(0, 0, frameT.width, frameT.height), new Vector2(0f, 1f), ppu);
+            frame.transform.SetParent(root, false);
+            frame.transform.localPosition = Px(0f, 0f, 0.01f);
+            frame.transform.localScale = Vector3.one * k;
             var body = new GameObject("Rider").AddComponent<SpriteRenderer>();
-            body.sprite = rider[0]; body.transform.SetParent(root, false);
-            float k = pedHeight * 0.92f / Mathf.Max(0.01f, rider[0].bounds.size.y);
-            body.transform.localScale = Vector3.one * k;
-            body.transform.localPosition = new Vector3(-0.15f, wr + 0.2f, -0.01f); // sitting: feet at the pedals, not the road
-            body.transform.localRotation = Quaternion.Euler(0f, 0f, toRight == pedsFaceRight ? -8f : 8f); // leaning forward
-            if (toRight != pedsFaceRight) root.localScale = new Vector3(-1f, 1f, 1f);
+            var frames = new List<Sprite>
+            {
+                Sprite.Create(r0, new Rect(0, 0, r0.width, r0.height), new Vector2(0f, 1f), ppu),
+                Sprite.Create(r1, new Rect(0, 0, r1.width, r1.height), new Vector2(0f, 1f), ppu),
+            };
+            body.sprite = frames[0]; body.transform.SetParent(root, false);
+            body.transform.localPosition = Px(RiderTopLeftPx.x, RiderTopLeftPx.y, 0f);
+            body.transform.localScale = Vector3.one * k * RiderScale;
             float speed = pedSpeed * 3.2f * Random.Range(0.9f, 1.1f);
-            movers.Add(new Mover { t = root, sr = body, frames = rider, speed = toRight ? speed : -speed, endX = 18f, wheels = ws, wheelRadius = wr, cyclist = true });
-        }
-
-        static Material M(Color c) { var m = new Material(Shader.Find("Standard")) { color = c }; m.SetFloat("_Glossiness", 0.1f); return m; }
-        static void Bar(Transform parent, Vector3 pos, Vector3 size, float zDeg, Material m)
-        {
-            var go = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            var c = go.GetComponent<Collider>(); if (c != null) { c.enabled = false; Destroy(c); }
-            go.transform.SetParent(parent, false);
-            go.transform.localPosition = pos; go.transform.localScale = size; go.transform.localRotation = Quaternion.Euler(0f, 0f, zDeg);
-            go.GetComponent<Renderer>().sharedMaterial = m;
+            movers.Add(new Mover { t = root, sr = body, frames = frames, speed = toRight ? speed : -speed, endX = 18f, wheels = ws, wheelRadius = BikeWheelPx / ppu * k, cyclist = true });
         }
 
         void Spawn(List<Sprite> frames, float height, float z, float speed, float halfRange, bool facesRight)
