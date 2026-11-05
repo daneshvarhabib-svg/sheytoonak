@@ -20,6 +20,7 @@ namespace Sheytoonak
         // دستش»): its prayer beads were in the far hand. Stride (a) and passing (b) alternate; a and c were the same stride.
         // ped_02 (user 2026-11-05, the shopper): frames 2 and 3 of her sheet had three hands («عکس دوم و سوم سه تا دست دارن
         // اون رو در نظر نگیر»), so her walk is sheet frames 1, 5, 4, 6.
+        // ped_03 (user 2026-11-05, the old man with a cane): sheet frame 3 had no cane («عکس سومی از چپ بی عصاست»), dropped.
         // A "set" is one character: ped_01.png alone, or ped_01_a.png / ped_01_b.png / ped_01_c.png as walk frames
         // (legs crossing, apart, crossing the other way). User 2026-10-28: a single frame sliding along "does not walk".
         readonly List<Sprite> trees = new List<Sprite>();
@@ -44,6 +45,7 @@ namespace Sheytoonak
             foreach (var tex in Resources.LoadAll<Texture2D>("Art/Props"))
             {
                 var sp = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0f), 100f);
+                sp.name = tex.name; // Sprite.Create leaves the name empty: the frame order (a, b, c…) and the per-set pace read it
                 if (tex.name.StartsWith("tree")) { trees.Add(sp); continue; }
                 string key = SetKey(tex.name);
                 if (!sets.TryGetValue(key, out var list)) sets[key] = list = new List<Sprite>();
@@ -172,7 +174,11 @@ namespace Sheytoonak
             {
                 nextPed = t + Random.Range(pedEvery.x, pedEvery.y) * (pedsOut == 0 ? 1f : 0.6f);
                 if (paintedCars.Count > 0 && ++walkers % 3 == 0) SpawnCyclist(peds[Random.Range(0, peds.Count)]);
-                else Spawn(peds[Random.Range(0, peds.Count)], pedHeight, farSidewalkZ + Random.Range(-0.3f, 0.3f), pedSpeed * Random.Range(0.8f, 1.2f), 16f, pedsFaceRight);
+                else
+                {
+                    var set = peds[Random.Range(0, peds.Count)];
+                    Spawn(set, pedHeight * PedHeightScale(set), farSidewalkZ + Random.Range(-0.3f, 0.3f), pedSpeed * PedSpeedScale(set) * Random.Range(0.8f, 1.2f), 16f, pedsFaceRight);
+                }
             }
             if (paintedCars.Count > 0 && t >= nextCar && !carOut)
             {
@@ -282,6 +288,21 @@ namespace Sheytoonak
             body.transform.localScale = Vector3.one * k * RiderScale;
             float speed = pedSpeed * 3.2f * Random.Range(0.9f, 1.1f);
             movers.Add(new Mover { t = root, sr = body, frames = frames, speed = toRight ? speed : -speed, endX = 18f, wheels = ws, wheelRadius = BikeWheelPx / ppu * k, cyclist = true });
+        }
+
+        /// <summary>Who walks how: the old man with the cane (ped_03_oldman, user 2026-11-05) shuffles at ~0.6, a hurried
+        /// man rushes at ~1.8; everybody else keeps the base pace.</summary>
+        static float PedSpeedScale(List<Sprite> set)
+        {
+            string n = set.Count > 0 ? set[0].name : "";
+            if (n.Contains("oldman")) return 0.6f;
+            if (n.Contains("hurried")) return 1.8f;
+            return 1f;
+        }
+        static float PedHeightScale(List<Sprite> set)
+        {
+            string n = set.Count > 0 ? set[0].name : "";
+            return n.Contains("oldman") ? 0.93f : 1f; // stooped
         }
 
         void Spawn(List<Sprite> frames, float height, float z, float speed, float halfRange, bool facesRight)
