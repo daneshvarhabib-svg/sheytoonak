@@ -229,6 +229,7 @@ namespace Sheytoonak.Prototype
             // User (2026-11-05): «به نظرم دوباره تصویر خونه رو بگیریم بهتره» — the pool is the wide (2.3:1) paintings only; the 3:2
             // houses 7–12 stay in code until their wide versions arrive.
             var houses = new[] { House13(), House14(), House15(), House16(), House17(), House18(), House19(), House20(), House21(), House22() };
+            allHouses = houses;
 
             // Player: foot position + window mapping. No body: the game is first-person (POV).
             var player = new GameObject("Player");
@@ -707,6 +708,7 @@ namespace Sheytoonak.Prototype
 
         /// <summary>The painting on a quad, plain brick above it to the sky, and an invisible dark pane per window that shows once broken.</summary>
         float viewHalfWidth; // half of what the camera sees at the facade, set in BuildFacade
+        HouseDefinition[] allHouses; // the pool: the neighbours beside the duel house are faded copies of other paintings
 
         Transform BuildPaintedFacade(HouseDefinition h, Transform root, float w, float paintedHeight)
         {
@@ -732,21 +734,46 @@ namespace Sheytoonak.Prototype
             // sideways: the wall, the floor lines and the awning band run on, nothing repeats. (A wider painting fixes it.)
             if (viewHalfWidth > w * 0.5f + 0.05f)
             {
-                // ⚠️ run 98 (user): «چرا باز درختا و اینطوری شده؟ این که تخمیه هنوز». Stretching the edge smeared it, and tiling
-                // a full-height band repeated whatever stood in it (a tree, a lamp, a balcony). Now a small square of plain
-                // wall, chosen by eye for each painting (HouseDefinition.wallPatch), is mirror-tiled in both directions
-                // beside the house: only the wall's own stone or plaster, nothing that could repeat.
+                // User (2026-11-05): «کنارش خونه‌های دیگه رو بذار ولی فیدش کن». The neighbours are two other paintings from
+                // the pool at the same pixel scale, set a little back and dimmed to half brightness with the colour drained,
+                // so the eye stays on the lit house in the middle. With no other painting the plain-wall patch tiles instead.
+                var others = new System.Collections.Generic.List<HouseDefinition>();
+                if (allHouses != null) foreach (var o in allHouses) if (o != h && !string.IsNullOrEmpty(o.paintedTexture)) others.Add(o);
                 float side = viewHalfWidth - w * 0.5f + 0.5f;
-                var wallTile = WallPatch(mat, tex, h.wallPatch, w, paintedHeight, side);
-                for (int dir = -1; dir <= 1; dir += 2)
+                int pick = Random.Range(0, Mathf.Max(1, others.Count));
+                for (int dir = -1, n = 0; dir <= 1; dir += 2, n++)
                 {
                     var q = GameObject.CreatePrimitive(PrimitiveType.Quad);
                     Strip(q);
-                    q.name = "Painting edge " + dir;
+                    q.name = "Neighbour " + dir;
                     q.transform.SetParent(root, false);
-                    q.transform.localPosition = new Vector3(dir * (w * 0.5f + side * 0.5f), paintedHeight * 0.5f, 0.05f);
-                    q.transform.localScale = new Vector3(side, paintedHeight, 1f);
-                    q.GetComponent<Renderer>().sharedMaterial = wallTile;
+                    Texture2D nt = others.Count > 0 ? Resources.Load<Texture2D>(others[(pick + n) % others.Count].paintedTexture) : null;
+                    if (nt != null)
+                    {
+                        float nw = w * nt.width / (float)tex.width * (tex.height / (float)nt.height); // same height as this painting
+                        var nm = new Material(mat) { mainTexture = nt, color = new Color(0.5f, 0.5f, 0.52f) };
+                        nm.SetFloat("_Glossiness", 0f);
+                        // the far edge of the neighbour meets the duel house: the left one shows its right end
+                        float u0 = dir < 0 ? Mathf.Max(0f, 1f - side / nw) : 0f, uw = Mathf.Min(1f, side / nw);
+                        nm.mainTextureScale = new Vector2(uw, 1f); nm.mainTextureOffset = new Vector2(u0, 0f);
+                        q.GetComponent<Renderer>().sharedMaterial = nm;
+                        q.transform.localPosition = new Vector3(dir * (w * 0.5f + Mathf.Min(side, nw) * 0.5f), paintedHeight * 0.5f, 0.2f);
+                        q.transform.localScale = new Vector3(Mathf.Min(side, nw), paintedHeight, 1f);
+                        if (nw < side) // a third, dimmer wall patch covers whatever is left
+                        {
+                            var rest = GameObject.CreatePrimitive(PrimitiveType.Quad); Strip(rest); rest.transform.SetParent(root, false);
+                            rest.transform.localPosition = new Vector3(dir * (w * 0.5f + nw + (side - nw) * 0.5f), paintedHeight * 0.5f, 0.25f);
+                            rest.transform.localScale = new Vector3(side - nw, paintedHeight, 1f);
+                            var pm = WallPatch(mat, tex, h.wallPatch, w, paintedHeight, side - nw); pm.color = new Color(0.45f, 0.45f, 0.47f);
+                            rest.GetComponent<Renderer>().sharedMaterial = pm;
+                        }
+                    }
+                    else
+                    {
+                        q.transform.localPosition = new Vector3(dir * (w * 0.5f + side * 0.5f), paintedHeight * 0.5f, 0.05f);
+                        q.transform.localScale = new Vector3(side, paintedHeight, 1f);
+                        q.GetComponent<Renderer>().sharedMaterial = WallPatch(mat, tex, h.wallPatch, w, paintedHeight, side);
+                    }
                 }
             }
 
