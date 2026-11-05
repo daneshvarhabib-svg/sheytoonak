@@ -33,6 +33,7 @@ namespace Sheytoonak
         {
             public Transform t; public SpriteRenderer sr; public List<Sprite> frames; public float speed, endX, frame;
             public Transform[] wheels; public float wheelRadius; // painted cars: wheels spin with the distance driven
+            public bool cyclist; // a rider on two wheels: wheels roll, the walk frames pedal, no bob
         }
 
         void Awake()
@@ -53,7 +54,7 @@ namespace Sheytoonak
                 else if (kv.Key.StartsWith("car")) cars.Add(kv.Value);
             }
             LoadCars();
-            PlantTrees();
+            // the sprite trees are gone (user 2026-11-05): the painting fills the frame and its own trees sway
             nextPed = Time.time + Random.Range(1f, 3f);
             nextCar = Time.time + Random.Range(2f, 6f);
         }
@@ -157,12 +158,19 @@ namespace Sheytoonak
                 treeTs[i].localRotation = Quaternion.Euler(0f, 0f, sway - wind * 3f);
             }
             // One pedestrian and one car at a time: with several the street looked like a parade of the same man.
-            bool pedOut = false, carOut = false;
-            foreach (var m in movers) { if (Mathf.Abs(m.speed) < 3f) pedOut = true; else carOut = true; }
-            if (peds.Count > 0 && t >= nextPed && !pedOut)
+            // User (2026-11-05): «چندتا رهگذر دیگه و دوچرخه‌سواری که چرخش تکون بخوره و پاش رو هم اضافه کنیم». Two walkers may be
+            // out at once when they are far apart, and every third "walker" is a cyclist.
+            int pedsOut = 0; bool carOut = false; float nearestPedX = 99f;
+            foreach (var m in movers)
             {
-                nextPed = t + Random.Range(pedEvery.x, pedEvery.y);
-                Spawn(peds[Random.Range(0, peds.Count)], pedHeight, farSidewalkZ + Random.Range(-0.3f, 0.3f), pedSpeed * Random.Range(0.8f, 1.2f), 16f, pedsFaceRight);
+                if (m.wheels != null && !m.cyclist) { carOut = true; continue; }
+                pedsOut++; nearestPedX = Mathf.Min(nearestPedX, Mathf.Abs(m.t.position.x));
+            }
+            if (peds.Count > 0 && t >= nextPed && (pedsOut == 0 || (pedsOut == 1 && nearestPedX > 5f)))
+            {
+                nextPed = t + Random.Range(pedEvery.x, pedEvery.y) * (pedsOut == 0 ? 1f : 0.6f);
+                if (paintedCars.Count > 0 && ++walkers % 3 == 0) SpawnCyclist(peds[Random.Range(0, peds.Count)]);
+                else Spawn(peds[Random.Range(0, peds.Count)], pedHeight, farSidewalkZ + Random.Range(-0.3f, 0.3f), pedSpeed * Random.Range(0.8f, 1.2f), 16f, pedsFaceRight);
             }
             if (paintedCars.Count > 0 && t >= nextCar && !carOut)
             {
@@ -187,7 +195,15 @@ namespace Sheytoonak
                     float deg = Mathf.Abs(m.speed) * Time.deltaTime / Mathf.Max(0.01f, m.wheelRadius) * Mathf.Rad2Deg;
                     foreach (var w in m.wheels) w.Rotate(0f, 0f, -deg, Space.Self);
                 }
-                if (Mathf.Abs(m.speed) < 3f)
+                if (m.cyclist)
+                {
+                    if (m.frames.Count > 1)
+                    {
+                        m.frame += Time.deltaTime * walkFps * 1.4f; // pedalling: the walk frames, a little faster
+                        m.sr.sprite = m.frames[(int)m.frame % m.frames.Count];
+                    }
+                }
+                else if (Mathf.Abs(m.speed) < 3f)
                 {
                     // Walk cycle when frames exist; otherwise a small bob and lean so it at least does not glide.
                     if (m.frames.Count > 1)
@@ -209,6 +225,56 @@ namespace Sheytoonak
                     movers.RemoveAt(i);
                 }
             }
+        }
+
+        int walkers;
+        /// <summary>
+        /// A cyclist from what is painted already: a passer-by sitting a little forward on two car wheels (the Beetle rim at a
+        /// fifth of the size), the wheels rolling with the distance, the legs the walk frames at pedal speed. Not a painted
+        /// bicycle; a prompt for one is noted in docs/ART_SPEC.fa.md.
+        /// </summary>
+        void SpawnCyclist(List<Sprite> rider)
+        {
+            var d = paintedCars[Random.Range(0, paintedCars.Count)];
+            bool toRight = Random.value < 0.5f;
+            float z = roadZ + 1.6f; // the near edge of the far lane
+            var root = new GameObject("Cyclist").transform;
+            root.SetParent(transform, false);
+            root.position = new Vector3(toRight ? -18f : 18f, 0f, z);
+            float wr = 0.34f;
+            var ws = new Transform[2];
+            for (int i = 0; i < 2; i++)
+            {
+                var sr = new GameObject("Wheel").AddComponent<SpriteRenderer>();
+                sr.sprite = d.wheel; sr.transform.SetParent(root, false);
+                sr.transform.localPosition = new Vector3(i == 0 ? -0.52f : 0.52f, wr, 0.01f);
+                sr.transform.localScale = Vector3.one * (2f * wr / d.wheel.bounds.size.x);
+                ws[i] = sr.transform;
+            }
+            // frame: two dark bars (seat tube and top tube) so the wheels read as one bicycle
+            var bar = M(new Color(0.12f, 0.1f, 0.09f));
+            Bar(root, new Vector3(-0.1f, wr + 0.42f, 0.02f), new Vector3(0.95f, 0.05f, 0.02f), 0f, bar);
+            Bar(root, new Vector3(0.1f, wr + 0.28f, 0.02f), new Vector3(0.75f, 0.05f, 0.02f), 55f, bar);
+            Bar(root, new Vector3(-0.3f, wr + 0.28f, 0.02f), new Vector3(0.75f, 0.05f, 0.02f), -65f, bar);
+            var body = new GameObject("Rider").AddComponent<SpriteRenderer>();
+            body.sprite = rider[0]; body.transform.SetParent(root, false);
+            float k = pedHeight * 0.92f / Mathf.Max(0.01f, rider[0].bounds.size.y);
+            body.transform.localScale = Vector3.one * k;
+            body.transform.localPosition = new Vector3(-0.15f, wr + 0.2f, -0.01f); // sitting: feet at the pedals, not the road
+            body.transform.localRotation = Quaternion.Euler(0f, 0f, toRight == pedsFaceRight ? -8f : 8f); // leaning forward
+            if (toRight != pedsFaceRight) root.localScale = new Vector3(-1f, 1f, 1f);
+            float speed = pedSpeed * 3.2f * Random.Range(0.9f, 1.1f);
+            movers.Add(new Mover { t = root, sr = body, frames = rider, speed = toRight ? speed : -speed, endX = 18f, wheels = ws, wheelRadius = wr, cyclist = true });
+        }
+
+        static Material M(Color c) { var m = new Material(Shader.Find("Standard")) { color = c }; m.SetFloat("_Glossiness", 0.1f); return m; }
+        static void Bar(Transform parent, Vector3 pos, Vector3 size, float zDeg, Material m)
+        {
+            var go = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            var c = go.GetComponent<Collider>(); if (c != null) { c.enabled = false; Destroy(c); }
+            go.transform.SetParent(parent, false);
+            go.transform.localPosition = pos; go.transform.localScale = size; go.transform.localRotation = Quaternion.Euler(0f, 0f, zDeg);
+            go.GetComponent<Renderer>().sharedMaterial = m;
         }
 
         void Spawn(List<Sprite> frames, float height, float z, float speed, float halfRange, bool facesRight)

@@ -231,3 +231,15 @@ Use the attached character exactly (same face, clothes, colours, art style, thre
 IMPORTANT: this character is LEFT-footed. The kicking leg in frames 3, 4 and 5 is the LEFT leg (the leg on the left side of the body as seen from behind); the RIGHT leg is the standing leg planted on the ground. Do not kick with the right leg.
 ```
 و در تصویرِ ایستاده: `standing with weight on the right leg, left foot slightly forward, ready to kick with the LEFT foot`.
+
+
+## دوچرخه (هنوز گرفته نشده)
+
+فعلاً دوچرخه‌سوار از رهگذرِ موجود + دو چرخِ فولکس ساخته می‌شه. پرامپت برای نسخه‌ی نقاشی‌شده:
+
+```
+Side-view sprite sheet on a flat pure green background (#00FF00), no shadow, no text, same painted style as the street.
+1) an old black city bicycle facing RIGHT, drawn WITHOUT wheels (empty forks), 2) one bicycle wheel seen exactly from the side with visible spokes,
+3) a young man in a white shirt sitting on that bicycle, drawn alone without the bicycle, in two pedalling poses (one knee up, the other knee up).
+Clear green gaps between the four pictures, crisp edges.
+```

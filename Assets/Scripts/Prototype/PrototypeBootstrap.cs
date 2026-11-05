@@ -378,7 +378,7 @@ namespace Sheytoonak.Prototype
                 R(244f, 153f, 383f, 349f), R(545f, 153f, 683f, 349f), R(863f, 153f, 1003f, 349f), R(1161f, 153f, 1299f, 349f),
                 R(244f, 449f, 383f, 645f), R(545f, 449f, 683f, 645f), R(863f, 449f, 1003f, 645f), R(1161f, 449f, 1299f, 645f),
             },
-            0.25f, 1.95f, 0f, 1.1f, null, "Art/house_07_broken");
+            0.25f, 1.95f, 0f, 1.1f, new[] { new WindowDetail(-1, DetailKind.Tree) { pixel = R(0f, 0f, 135f, 335f) }, new WindowDetail(-1, DetailKind.Tree) { pixel = R(1385f, 330f, 1536f, 1024f) } }, "Art/house_07_broken");
 
         // The five pairs of 2026-11-05 (user): each broken window shows its own rectangle of the *_broken painting.
         // Beirut, green shutters, 4 x 3 and the barred ground-floor window.
@@ -401,7 +401,7 @@ namespace Sheytoonak.Prototype
                 R(195f, 412f, 325f, 540f), R(457f, 412f, 587f, 540f), R(722f, 412f, 850f, 540f),
                 R(242f, 750f, 560f, 895f),
             },
-            0.25f, 1.95f, 0f, 1.15f, null, "Art/house_09_broken");
+            0.25f, 1.95f, 0f, 1.15f, new[] { new WindowDetail(-1, DetailKind.Tree) { pixel = R(0f, 20f, 105f, 640f) }, new WindowDetail(-1, DetailKind.Tree) { pixel = R(895f, 30f, 1000f, 640f) } }, "Art/house_09_broken");
 
         // Pink plaster, 4 x 3.
         HouseDefinition House10() => MakePaintedHouse("البيت ١٠", "Art/house_10", 1536f, 1024f, 13f,
@@ -411,7 +411,7 @@ namespace Sheytoonak.Prototype
                 R(250f, 357f, 410f, 468f), R(560f, 357f, 705f, 468f), R(843f, 357f, 1000f, 468f), R(1138f, 357f, 1295f, 468f),
                 R(250f, 553f, 408f, 670f), R(550f, 553f, 712f, 670f), R(843f, 553f, 1003f, 670f), R(1138f, 553f, 1298f, 670f),
             },
-            0.25f, 1.95f, 0f, 1.1f, null, "Art/house_10_broken");
+            0.25f, 1.95f, 0f, 1.1f, new[] { new WindowDetail(-1, DetailKind.Tree) { pixel = R(0f, 540f, 135f, 1024f) }, new WindowDetail(-1, DetailKind.Tree) { pixel = R(1395f, 530f, 1536f, 1024f) } }, "Art/house_10_broken");
 
         // Turquoise tiles and brick, 3 x 3 big windows.
         HouseDefinition House11() => MakePaintedHouse("البيت ١١", "Art/house_11", 1536f, 1024f, 13f,
@@ -421,7 +421,7 @@ namespace Sheytoonak.Prototype
                 R(318f, 303f, 532f, 448f), R(662f, 303f, 877f, 448f), R(1007f, 303f, 1222f, 448f),
                 R(318f, 528f, 532f, 675f), R(662f, 528f, 877f, 675f), R(1007f, 528f, 1222f, 675f),
             },
-            0.3f, 1.9f, 0f, 1.0f, null, "Art/house_11_broken");
+            0.3f, 1.9f, 0f, 1.0f, new[] { new WindowDetail(-1, DetailKind.Tree) { pixel = R(0f, 560f, 135f, 1024f) }, new WindowDetail(-1, DetailKind.Tree) { pixel = R(1395f, 560f, 1536f, 1024f) } }, "Art/house_11_broken");
 
         // Tunis, white and blue, 3 x 4 narrow windows (bigger hit boxes: the glass is small).
         HouseDefinition House12() => MakePaintedHouse("البيت ١٢", "Art/house_12", 1536f, 1024f, 13f,
@@ -432,7 +432,7 @@ namespace Sheytoonak.Prototype
                 R(445f, 455f, 537f, 560f), R(722f, 455f, 812f, 560f), R(998f, 455f, 1087f, 560f),
                 R(445f, 630f, 535f, 735f), R(722f, 630f, 812f, 735f), R(1000f, 630f, 1088f, 735f),
             },
-            0.25f, 1.95f, 0f, 1.2f, null, "Art/house_12_broken");
+            0.25f, 1.95f, 0f, 1.2f, new[] { new WindowDetail(-1, DetailKind.Tree) { pixel = R(0f, 520f, 185f, 1024f) }, new WindowDetail(-1, DetailKind.Tree) { pixel = R(1375f, 590f, 1536f, 1024f) } }, "Art/house_12_broken");
 
         static Rect R(float x0, float y0, float x1, float y1) => Rect.MinMaxRect(x0, y0, x1, y1);
         static WindowDetail Pot(int w, float x0, float y0, float x1, float y1) => new WindowDetail(w, DetailKind.Pot) { pixel = R(x0, y0, x1, y1) };
@@ -459,10 +459,18 @@ namespace Sheytoonak.Prototype
         }
 
         /// <summary>Facade from a painting: pixel rects (origin top-left, as measured on the image) become world rects on a quad w metres wide.</summary>
+        /// <summary>
+        /// Width the facade painting needs to fill the phone from edge to edge: the duel camera (z -6, 64 degrees across) sees
+        /// 2 * 13 * tan(32) = 16.2 m at the facade 13 m away; a little more so the edge never shows on wide phones.
+        /// User (2026-11-05): «کلا ما تو قاب فقط همون خونه رو ببینیم». Windows scale with it (they are given in image pixels).
+        /// </summary>
+        const float PaintedFacadeWidth = 17.2f;
+
         static HouseDefinition MakePaintedHouse(string name, string texture, float imgW, float imgH, float w, Rect[] pixelWindows,
                                                 float wind, float returnTime, float spread, float hitScale, WindowDetail[] details = null,
                                                 string broken = null)
         {
+            w = PaintedFacadeWidth * w / 13f; // the 13 m houses were tuned at the old width; a cropped one keeps its ratio
             float h = w * imgH / imgW;
             var house = ScriptableObject.CreateInstance<HouseDefinition>();
             house.name = name;
@@ -577,6 +585,8 @@ namespace Sheytoonak.Prototype
             quad.transform.localPosition = new Vector3(0f, paintedHeight * 0.5f, 0f);
             quad.transform.localScale = new Vector3(w, paintedHeight, 1f);
             quad.GetComponent<Renderer>().sharedMaterial = mat;
+            // User (2026-11-05): «عکس خونه باید ابعادش بزرگتر شه و کل تصویر رو بگیره … کلا ما تو قاب فقط همون خونه رو ببینیم».
+            // The painting is sized in MakePaintedHouse to the camera's view at the facade, so there is nothing beside it.
 
             // The wall keeps going above the painting (no roof): a box in the painting's own brick colour.
             Color top = AverageColour(tex, 0.02f, 0.06f);
@@ -587,9 +597,7 @@ namespace Sheytoonak.Prototype
             Box(root, new Vector3(0f, paintedHeight + above * 0.5f, 0.3f), new Vector3(w, above, 0.5f), wallMat);
             // Neighbours: painted blank walls (Art/wall_left, Art/wall_right: houses without visible windows,
             // user 2026-10-27) when they exist, otherwise a darker shade of this painting's brick.
-            var sideMat = Mat(top * 0.88f);
-            SideWall(root, "Art/wall_left", -1f, w, paintedHeight, sideMat);
-            SideWall(root, "Art/wall_right", 1f, w, paintedHeight, sideMat);
+            // the neighbour walls (Art/wall_left/right) are gone with the full-frame painting (user, 2026-11-05)
 
             var rects = h.worldWindows;
             windowRenderers = new Renderer[rects.Length];
@@ -633,6 +641,7 @@ namespace Sheytoonak.Prototype
             paintedTex = tex; paintedW = w; paintedH = paintedHeight; detailRoot = root;
             foreach (var d in h.details)
                 if (d.kind == DetailKind.Laundry) Laundry(d);
+                else if (d.kind == DetailKind.Tree) PaintedTree(d);
             return root;
         }
 
@@ -672,6 +681,36 @@ namespace Sheytoonak.Prototype
             var sr = go.AddComponent<SpriteRenderer>();
             sr.sprite = Sprite.Create(tex, new Rect(0, 0, cw, ch), new Vector2(0.5f, 0.5f), ppu);
             return sr;
+        }
+
+        /// <summary>
+        /// User (2026-11-05): «درختا رو باید بندازی روی همون درختایی که تو تصاویر هست و یکمی تکونش بدی». The tree is cut out
+        /// of the painting at its own pixels, pivoted at the trunk's foot, and leans gently with the wind (a slight lean and
+        /// a slower sway, like branches, not a board rocking). The painting underneath keeps the tree too, so a lean only
+        /// uncovers more leaves, never wall.
+        /// </summary>
+        void PaintedTree(WindowDetail d)
+        {
+            var sr = Cutout(d, -0.02f, out Rect pix);
+            var t = sr.transform;
+            // move the pivot to the bottom centre: wrap in a parent at the foot
+            var foot = new GameObject("Tree foot").transform;
+            foot.SetParent(detailRoot, false);
+            float wx = (pix.center.x / paintedTex.width - 0.5f) * paintedW, wy0 = (1f - pix.yMax / paintedTex.height) * paintedH;
+            foot.localPosition = new Vector3(wx, wy0, -0.02f);
+            t.SetParent(foot, true);
+            StartCoroutine(TreeSway(foot, Random.Range(0f, 6f)));
+        }
+
+        IEnumerator TreeSway(Transform t, float phase)
+        {
+            while (t != null)
+            {
+                float w = wind;
+                float a = Mathf.Sin(Time.time * 0.9f + phase) * (0.8f + Mathf.Abs(w) * 3f) + Mathf.Sin(Time.time * 2.3f + phase * 1.7f) * 0.35f - w * 2.5f;
+                t.localRotation = Quaternion.Euler(0f, 0f, a);
+                yield return null;
+            }
         }
 
         void Laundry(WindowDetail d)

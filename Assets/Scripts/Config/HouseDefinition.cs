@@ -63,7 +63,7 @@ namespace Sheytoonak
         [Range(0.3f, 1.2f)] public float windowHitScale = 1f;
     }
 
-    public enum DetailKind { Pot, Cat, Curtain, Laundry }
+    public enum DetailKind { Pot, Cat, Curtain, Laundry, Tree }
 
     [Serializable]
     public struct WindowDetail
