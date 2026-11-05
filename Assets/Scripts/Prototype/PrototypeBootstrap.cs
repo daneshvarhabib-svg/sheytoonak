@@ -447,7 +447,7 @@ namespace Sheytoonak.Prototype
                 R(1352f, 45f, 1456f, 215f), R(1707f, 50f, 1808f, 235f),
                 R(170f, 440f, 280f, 655f), R(508f, 440f, 635f, 655f), R(1305f, 480f, 1700f, 690f),
             },
-            0.25f, 1.95f, 0f, 1.2f, null, "Art/house_13_broken");
+            0.25f, 1.95f, 0f, 1.2f, null, "Art/house_13_broken", R(720f, 400f, 840f, 520f));
 
         const float WideW = 13f * 1916f / 1536f;
         HouseDefinition House14() => MakePaintedHouse("البيت ١٤", "Art/house_14", 1916f, 821f, WideW, // Tunis, blue shutters, café
@@ -456,28 +456,28 @@ namespace Sheytoonak.Prototype
                 R(170f, 35f, 345f, 275f), R(660f, 35f, 830f, 275f), R(1085f, 40f, 1255f, 275f), R(1585f, 40f, 1755f, 275f),
                 R(95f, 450f, 335f, 650f), R(350f, 455f, 500f, 650f), R(665f, 395f, 825f, 650f), R(1440f, 400f, 1600f, 650f),
             },
-            0.25f, 1.95f, 0f, 1.2f, null, "Art/house_14_broken");
+            0.25f, 1.95f, 0f, 1.2f, null, "Art/house_14_broken", R(450f, 50f, 560f, 200f));
         HouseDefinition House15() => MakePaintedHouse("البيت ١٥", "Art/house_15", 1916f, 821f, WideW, // Alexandria, green shutters, kiosk
             new[]
             {
                 R(290f, 65f, 395f, 330f), R(585f, 65f, 690f, 330f), R(915f, 65f, 1020f, 330f), R(1240f, 65f, 1345f, 330f), R(1565f, 65f, 1670f, 330f),
                 R(230f, 490f, 365f, 690f), R(555f, 490f, 695f, 690f), R(1180f, 520f, 1560f, 700f), R(1575f, 490f, 1715f, 690f),
             },
-            0.25f, 1.95f, 0f, 1.2f, null, "Art/house_15_broken");
+            0.25f, 1.95f, 0f, 1.2f, null, "Art/house_15_broken", R(760f, 450f, 850f, 640f));
         HouseDefinition House16() => MakePaintedHouse("البيت ١٦", "Art/house_16", 1916f, 821f, WideW, // Damascus ablaq, spice shop
             new[]
             {
                 R(215f, 60f, 370f, 280f), R(620f, 60f, 770f, 280f), R(1045f, 60f, 1195f, 280f), R(1455f, 60f, 1600f, 280f),
                 R(175f, 440f, 375f, 690f), R(1050f, 440f, 1210f, 690f), R(1320f, 470f, 1620f, 700f),
             },
-            0.25f, 1.95f, 0f, 1.2f, null, "Art/house_16_broken");
+            0.25f, 1.95f, 0f, 1.2f, null, "Art/house_16_broken", R(850f, 40f, 960f, 230f));
         HouseDefinition House17() => MakePaintedHouse("البيت ١٧", "Art/house_17", 1916f, 821f, WideW, // Beirut sandstone, bakery, laundry
             new[]
             {
                 R(480f, 60f, 620f, 250f), R(905f, 60f, 1050f, 250f), R(1345f, 60f, 1490f, 250f),
                 R(315f, 515f, 495f, 690f), R(985f, 515f, 1165f, 690f), R(1320f, 560f, 1680f, 760f),
             },
-            0.25f, 1.95f, 0f, 1.2f, new[] { new WindowDetail(-1, DetailKind.Laundry) { pixel = R(650f, 200f, 1180f, 365f) } }, "Art/house_17_broken");
+            0.25f, 1.95f, 0f, 1.2f, new[] { new WindowDetail(-1, DetailKind.Laundry) { pixel = R(650f, 200f, 1180f, 365f) } }, "Art/house_17_broken", R(1690f, 40f, 1850f, 200f));
 
         HouseDefinition House18() => MakePaintedHouse("البيت ١٨", "Art/house_18", 1916f, 821f, WideW, // Tunis, blue shutters, café on the left
             new[]
@@ -486,7 +486,7 @@ namespace Sheytoonak.Prototype
                 R(240f, 245f, 410f, 405f), R(665f, 245f, 830f, 405f), R(1080f, 245f, 1245f, 405f), R(1495f, 245f, 1660f, 405f),
                 R(95f, 510f, 545f, 690f), R(655f, 490f, 785f, 690f), R(1160f, 490f, 1295f, 690f), R(1510f, 490f, 1645f, 690f),
             },
-            0.25f, 1.95f, 0f, 1.2f, null, "Art/house_18_broken");
+            0.25f, 1.95f, 0f, 1.2f, null, "Art/house_18_broken", R(905f, 30f, 1015f, 200f));
         HouseDefinition House19() => MakePaintedHouse("البيت ١٩", "Art/house_19", 1915f, 821f, WideW, // tiles over brick, ceramics shop
             new[]
             {
@@ -494,7 +494,7 @@ namespace Sheytoonak.Prototype
                 R(175f, 245f, 450f, 365f), R(770f, 245f, 1080f, 365f), R(1385f, 245f, 1690f, 365f),
                 R(530f, 540f, 805f, 760f), R(805f, 540f, 1010f, 760f), R(1010f, 540f, 1300f, 760f), R(1510f, 490f, 1660f, 690f),
             },
-            0.25f, 1.95f, 0f, 1.2f, null, "Art/house_19_broken");
+            0.25f, 1.95f, 0f, 1.2f, null, "Art/house_19_broken", R(1100f, 150f, 1300f, 360f));
         HouseDefinition House20() => MakePaintedHouse("البيت ٢٠", "Art/house_20", 1916f, 821f, WideW, // pink plaster, pharmacy
             new[]
             {
@@ -502,14 +502,14 @@ namespace Sheytoonak.Prototype
                 R(455f, 310f, 565f, 485f), R(780f, 310f, 885f, 485f), R(1105f, 310f, 1210f, 485f), R(1430f, 310f, 1535f, 485f),
                 R(265f, 590f, 415f, 740f), R(965f, 590f, 1110f, 740f), R(1295f, 640f, 1810f, 790f),
             },
-            0.25f, 1.95f, 0f, 1.2f, null, "Art/house_20_broken");
+            0.25f, 1.95f, 0f, 1.2f, null, "Art/house_20_broken", R(1620f, 40f, 1780f, 200f));
         HouseDefinition House21() => MakePaintedHouse("البيت ٢١", "Art/house_21", 1916f, 821f, WideW, // sandstone, balcony, grocer
             new[]
             {
                 R(185f, 55f, 300f, 280f), R(500f, 55f, 620f, 280f), R(830f, 55f, 940f, 280f), R(975f, 55f, 1085f, 280f), R(1400f, 55f, 1510f, 280f), R(1700f, 55f, 1810f, 280f),
                 R(150f, 480f, 330f, 700f), R(950f, 480f, 1115f, 700f), R(1385f, 510f, 1740f, 720f),
             },
-            0.25f, 1.95f, 0f, 1.2f, null, "Art/house_21_broken");
+            0.25f, 1.95f, 0f, 1.2f, null, "Art/house_21_broken", R(1190f, 440f, 1340f, 640f));
         HouseDefinition House22() => MakePaintedHouse("البيت ٢٢", "Art/house_22", 1916f, 821f, WideW, // sandstone, two rows, bakery, laundry
             new[]
             {
@@ -517,7 +517,7 @@ namespace Sheytoonak.Prototype
                 R(300f, 235f, 405f, 350f), R(665f, 235f, 765f, 350f), R(945f, 235f, 1045f, 350f), R(1225f, 235f, 1325f, 350f), R(1520f, 235f, 1620f, 350f),
                 R(275f, 545f, 420f, 720f), R(1540f, 545f, 1685f, 720f), R(600f, 575f, 945f, 790f),
             },
-            0.25f, 1.95f, 0f, 1.2f, new[] { new WindowDetail(-1, DetailKind.Laundry) { pixel = R(640f, 330f, 1400f, 440f) } }, "Art/house_22_broken");
+            0.25f, 1.95f, 0f, 1.2f, new[] { new WindowDetail(-1, DetailKind.Laundry) { pixel = R(640f, 330f, 1400f, 440f) } }, "Art/house_22_broken", R(990f, 600f, 1150f, 780f));
 
         static Rect R(float x0, float y0, float x1, float y1) => Rect.MinMaxRect(x0, y0, x1, y1);
         static WindowDetail Pot(int w, float x0, float y0, float x1, float y1) => new WindowDetail(w, DetailKind.Pot) { pixel = R(x0, y0, x1, y1) };
@@ -580,7 +580,7 @@ namespace Sheytoonak.Prototype
 
         static HouseDefinition MakePaintedHouse(string name, string texture, float imgW, float imgH, float w, Rect[] pixelWindows,
                                                 float wind, float returnTime, float spread, float hitScale, WindowDetail[] details = null,
-                                                string broken = null)
+                                                string broken = null, Rect wallPatch = default)
         {
             w = PaintedFacadeWidth * w / 13f; // the 13 m houses were tuned at the old width; a cropped one keeps its ratio
             float h = w * imgH / imgW;
@@ -589,6 +589,7 @@ namespace Sheytoonak.Prototype
             house.displayName = name;
             house.paintedTexture = texture;
             house.brokenTexture = broken ?? "";
+            house.wallPatch = wallPatch; // pixels of the painting, chosen by eye: no window, door, lamp, plant or awning
             house.facadeDistance = 13f;
             house.worldRoofHeight = h;          // where the painting (and the windows) stop; the wall itself continues
             house.worldFacadeWidth = w;
@@ -731,19 +732,21 @@ namespace Sheytoonak.Prototype
             // sideways: the wall, the floor lines and the awning band run on, nothing repeats. (A wider painting fixes it.)
             if (viewHalfWidth > w * 0.5f + 0.05f)
             {
-                // ⚠️ run 98 (user): the stretched 3 % strip smeared the stone into streaks. Now the outer 6 % of the painting
-                // is copied into its own texture and tiled with mirror wrap: the wall's own stones repeat seamlessly.
+                // ⚠️ run 98 (user): «چرا باز درختا و اینطوری شده؟ این که تخمیه هنوز». Stretching the edge smeared it, and tiling
+                // a full-height band repeated whatever stood in it (a tree, a lamp, a balcony). Now a small square of plain
+                // wall, chosen by eye for each painting (HouseDefinition.wallPatch), is mirror-tiled in both directions
+                // beside the house: only the wall's own stone or plaster, nothing that could repeat.
                 float side = viewHalfWidth - w * 0.5f + 0.5f;
+                var wallTile = WallPatch(mat, tex, h.wallPatch, w, paintedHeight, side);
                 for (int dir = -1; dir <= 1; dir += 2)
                 {
-                    var strip = EdgeTile(mat, tex, dir, side / w);
                     var q = GameObject.CreatePrimitive(PrimitiveType.Quad);
                     Strip(q);
                     q.name = "Painting edge " + dir;
                     q.transform.SetParent(root, false);
                     q.transform.localPosition = new Vector3(dir * (w * 0.5f + side * 0.5f), paintedHeight * 0.5f, 0.05f);
                     q.transform.localScale = new Vector3(side, paintedHeight, 1f);
-                    q.GetComponent<Renderer>().sharedMaterial = strip;
+                    q.GetComponent<Renderer>().sharedMaterial = wallTile;
                 }
             }
 
@@ -939,62 +942,28 @@ namespace Sheytoonak.Prototype
 
         // ⚠️ run 78: stretching the painting's top row upward drew vertical streaks (every pixel became a stripe). Instead
         // the top band (4 %) is averaged into 8 columns: a soft left-to-right gradient of its own sky/wall colours.
-        /// <summary>The painting's outer band (6 % of its width, full height) as a texture of its own, mirror-tiled across a
-        /// strip `sideFrac` paintings wide beside the house; `dir` is -1 for the left edge, +1 for the right.</summary>
-        static Material EdgeTile(Material painting, Texture2D tex, int dir, float sideFrac)
+        /// <summary>A material that mirror-tiles the painting's plain-wall patch (pixels) over a strip `side` wide and
+        /// `paintedHeight` high, at the painting's own pixel scale. No patch set: the painting's edge column, stretched.</summary>
+        static Material WallPatch(Material painting, Texture2D tex, Rect patch, float paintedWidth, float paintedHeight, float side)
         {
             var m = new Material(painting);
             try
             {
-                int bw = Mathf.Max(8, tex.width * 6 / 100);
-                // ⚠️ user (run 98): «چرا باز درختا و اینطوری شده؟» — the very edge often holds a tree or a vine, and a tiled
-                // tree is as bad as a smeared one. So the band is the calmest stretch of wall in the outer third on that
-                // side: the columns whose colour changes least from row to row (plain stone or plaster, no glass, no leaves).
-                int x0 = CalmestBand(tex, dir, bw);
-                var px = tex.GetPixels(x0, 0, bw, tex.height);
-                var t = new Texture2D(bw, tex.height, TextureFormat.RGBA32, false) { wrapMode = TextureWrapMode.Mirror, filterMode = FilterMode.Bilinear };
-                t.SetPixels(px); t.Apply();
-                float tiles = sideFrac * tex.width / bw; // how many band widths the strip spans
+                if (patch.width < 8f || patch.height < 8f) throw new UnityException("no wall patch");
+                int x0 = Mathf.Clamp((int)patch.xMin, 0, tex.width - 8), y0 = Mathf.Clamp(tex.height - (int)patch.yMax, 0, tex.height - 8);
+                int pw = Mathf.Min((int)patch.width, tex.width - x0), ph = Mathf.Min((int)patch.height, tex.height - y0);
+                var t = new Texture2D(pw, ph, TextureFormat.RGBA32, true) { wrapMode = TextureWrapMode.Mirror, filterMode = FilterMode.Bilinear };
+                t.SetPixels(tex.GetPixels(x0, y0, pw, ph)); t.Apply();
+                float worldPerPx = paintedWidth / tex.width;
                 m.mainTexture = t;
-                // the band nearest the house must touch it un-mirrored: the left strip ends at u = 1 (its right side), the
-                // right strip starts at u = 0
-                m.mainTextureScale = new Vector2(tiles, 1f);
-                m.mainTextureOffset = new Vector2(dir < 0 ? 1f - tiles : 0f, 0f);
+                m.mainTextureScale = new Vector2(side / (pw * worldPerPx), paintedHeight / (ph * worldPerPx));
+                m.mainTextureOffset = Vector2.zero;
             }
             catch (UnityException)
             {
-                m.mainTextureScale = new Vector2(0.03f, 1f); m.mainTextureOffset = new Vector2(dir < 0 ? 0f : 0.97f, 0f);
+                m.mainTextureScale = new Vector2(0.001f, 1f); m.mainTextureOffset = new Vector2(0.5f, 0f);
             }
             return m;
-        }
-
-        /// <summary>Start column of the `bw`-wide band in the painting's outer third (left for dir &lt; 0) whose pixels vary
-        /// least down each column; sampled every fourth pixel.</summary>
-        static int CalmestBand(Texture2D tex, int dir, int bw)
-        {
-            int w = tex.width, h = tex.height, third = Mathf.Max(bw, w / 3);
-            int from = dir < 0 ? 0 : w - third, to = dir < 0 ? third - bw : w - bw;
-            var all = tex.GetPixels32();
-            var colVar = new float[w];
-            for (int x = from; x < to + bw; x += 1)
-            {
-                float v = 0f; int n = 0; Color32 prev = all[x];
-                for (int y = 4; y < h; y += 4)
-                {
-                    Color32 c = all[y * w + x];
-                    v += Mathf.Abs(c.r - prev.r) + Mathf.Abs(c.g - prev.g) + Mathf.Abs(c.b - prev.b);
-                    prev = c; n++;
-                }
-                colVar[x] = v / Mathf.Max(1, n);
-            }
-            int best = dir < 0 ? 0 : w - bw; float bestV = float.MaxValue;
-            for (int x = from; x <= to; x += 4)
-            {
-                float sum = 0f;
-                for (int i = 0; i < bw; i++) sum += colVar[x + i];
-                if (sum < bestV) { bestV = sum; best = x; }
-            }
-            return best;
         }
 
         static Material TopRows(Material painting, Texture2D tex)
