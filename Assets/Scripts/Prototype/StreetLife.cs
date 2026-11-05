@@ -173,7 +173,9 @@ namespace Sheytoonak
             if (peds.Count > 0 && t >= nextPed && (pedsOut == 0 || (pedsOut == 1 && nearestPedX > 5f)))
             {
                 nextPed = t + Random.Range(pedEvery.x, pedEvery.y) * (pedsOut == 0 ? 1f : 0.6f);
-                if (paintedCars.Count > 0 && ++walkers % 3 == 0) SpawnCyclist(peds[Random.Range(0, peds.Count)]);
+                ++walkers;
+                if (walkers % 5 == 0 && SpawnWheelchair()) { }
+                else if (paintedCars.Count > 0 && walkers % 3 == 0) SpawnCyclist(peds[Random.Range(0, peds.Count)]);
                 else
                 {
                     var set = peds[Random.Range(0, peds.Count)];
@@ -245,6 +247,43 @@ namespace Sheytoonak
         static readonly Vector2[] BikeAxlesPx = { new Vector2(199f, 332f), new Vector2(554f, 342f) };
         const float RiderScale = 0.80f; static readonly Vector2 RiderTopLeftPx = new Vector2(156f, 53f);
 
+        /// <summary>
+        /// The man in the wheelchair (user 2026-11-05): two painted poses of man-and-chair (hand forward, hand back) and
+        /// a separate wheel laid over the painted one, rolling with the distance; the poses alternate like the cyclist's.
+        /// In the rider picture the big wheel is centred at (150, 429) of 456x609 with radius 150; the loose wheel
+        /// picture is 389 px across.
+        /// </summary>
+        bool SpawnWheelchair()
+        {
+            var r0 = Resources.Load<Texture2D>("Art/Props/wheelchair_rider_a"); var r1 = Resources.Load<Texture2D>("Art/Props/wheelchair_rider_b");
+            var wheelT = Resources.Load<Texture2D>("Art/Props/wheelchair_wheel");
+            if (r0 == null || r1 == null || wheelT == null) return false;
+            const float ppu = 100f, wheelCx = 150f, wheelCy = 429f, wheelR = 150f;
+            float k = 1.35f / (r0.height / ppu); // a seated man is about 1.35 m tall
+            bool toRight = Random.value < 0.5f;
+            var root = new GameObject("Wheelchair").transform;
+            root.SetParent(transform, false);
+            root.position = new Vector3(toRight ? -16f : 16f, 0f, farSidewalkZ + Random.Range(-0.3f, 0.3f));
+            root.localScale = new Vector3(toRight ? 1f : -1f, 1f, 1f); // painted facing right
+            var body = new GameObject("Rider").AddComponent<SpriteRenderer>();
+            var frames = new List<Sprite>
+            {
+                Sprite.Create(r0, new Rect(0, 0, r0.width, r0.height), new Vector2(0f, 1f), ppu),
+                Sprite.Create(r1, new Rect(0, 0, r1.width, r1.height), new Vector2(0f, 1f), ppu),
+            };
+            body.sprite = frames[0]; body.transform.SetParent(root, false);
+            body.transform.localPosition = new Vector3(-r0.width * 0.5f / ppu * k, r0.height / ppu * k, 0f);
+            body.transform.localScale = Vector3.one * k;
+            var wheel = new GameObject("Wheel").AddComponent<SpriteRenderer>();
+            wheel.sprite = Sprite.Create(wheelT, new Rect(0, 0, wheelT.width, wheelT.height), new Vector2(0.5f, 0.5f), ppu);
+            wheel.transform.SetParent(root, false);
+            wheel.transform.localPosition = new Vector3((wheelCx - r0.width * 0.5f) / ppu * k, (r0.height - wheelCy) / ppu * k, -0.02f);
+            wheel.transform.localScale = Vector3.one * (2f * wheelR / wheelT.width) * k;
+            float speed = pedSpeed * 0.8f * Random.Range(0.9f, 1.1f);
+            movers.Add(new Mover { t = root, sr = body, frames = frames, speed = toRight ? speed : -speed, endX = 16f, wheels = new[] { wheel.transform }, wheelRadius = wheelR / ppu * k, cyclist = true });
+            return true;
+        }
+
         void SpawnCyclist(List<Sprite> fallbackRider)
         {
             var frameT = Resources.Load<Texture2D>("Art/Props/bike_frame");
@@ -297,12 +336,16 @@ namespace Sheytoonak
             string n = set.Count > 0 ? set[0].name : "";
             if (n.Contains("oldman")) return 0.6f;
             if (n.Contains("hurried")) return 1.8f;
+            if (n.Contains("crutches")) return 0.5f; // ped_05 (user 2026-11-05): a cast and two crutches
+            if (n.Contains("boy")) return 1.15f;    // ped_06: the boy with the ball
             return 1f;
         }
         static float PedHeightScale(List<Sprite> set)
         {
             string n = set.Count > 0 ? set[0].name : "";
-            return n.Contains("oldman") ? 0.93f : 1f; // stooped
+            if (n.Contains("oldman")) return 0.93f; // stooped
+            if (n.Contains("boy")) return 0.78f;    // a child
+            return 1f;
         }
 
         void Spawn(List<Sprite> frames, float height, float z, float speed, float halfRange, bool facesRight)

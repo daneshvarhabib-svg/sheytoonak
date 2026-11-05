@@ -658,7 +658,7 @@ namespace Sheytoonak.Prototype
                 // shows ~0.45 of a 3:2 painting's height above the road). The house grows only as far as its highest
                 // window still sits under 80 % of the screen; what is left beside it is filled with the painting mirrored
                 // (same street, same style, no grey neighbour walls), so the frame is still nothing but the painting.
-                float topLimit = HeightAtScreenFraction(z, 0.8f), topWindow = 0f; // run 90 (user): at 0.9 the top row was still clipped under the HUD («باید کامل معلوم باشه»)
+                float topLimit = HeightAtScreenFraction(z, 0.86f), topWindow = 0f; // run 90 (user): at 0.9 the top row was still clipped under the HUD («باید کامل معلوم باشه»)
                 foreach (var r0 in h.worldWindows) topWindow = Mathf.Max(topWindow, r0.yMax);
                 if (topWindow > 0.01f) want = Mathf.Min(want, Mathf.Max(w, w * topLimit / topWindow));
                 viewHalfWidth = FacadeWidthForCamera(z) * 0.5f;
@@ -731,11 +731,12 @@ namespace Sheytoonak.Prototype
             // sideways: the wall, the floor lines and the awning band run on, nothing repeats. (A wider painting fixes it.)
             if (viewHalfWidth > w * 0.5f + 0.05f)
             {
-                const float edge = 0.03f;
+                // ⚠️ run 98 (user): the stretched 3 % strip smeared the stone into streaks. Now the outer 6 % of the painting
+                // is copied into its own texture and tiled with mirror wrap: the wall's own stones repeat seamlessly.
                 float side = viewHalfWidth - w * 0.5f + 0.5f;
                 for (int dir = -1; dir <= 1; dir += 2)
                 {
-                    var strip = new Material(mat) { mainTextureScale = new Vector2(edge, 1f), mainTextureOffset = new Vector2(dir < 0 ? 0f : 1f - edge, 0f) };
+                    var strip = EdgeTile(mat, tex, dir, side / w);
                     var q = GameObject.CreatePrimitive(PrimitiveType.Quad);
                     Strip(q);
                     q.name = "Painting edge " + dir;
@@ -938,6 +939,32 @@ namespace Sheytoonak.Prototype
 
         // ⚠️ run 78: stretching the painting's top row upward drew vertical streaks (every pixel became a stripe). Instead
         // the top band (4 %) is averaged into 8 columns: a soft left-to-right gradient of its own sky/wall colours.
+        /// <summary>The painting's outer band (6 % of its width, full height) as a texture of its own, mirror-tiled across a
+        /// strip `sideFrac` paintings wide beside the house; `dir` is -1 for the left edge, +1 for the right.</summary>
+        static Material EdgeTile(Material painting, Texture2D tex, int dir, float sideFrac)
+        {
+            var m = new Material(painting);
+            try
+            {
+                int bw = Mathf.Max(8, tex.width * 6 / 100);
+                int x0 = dir < 0 ? 0 : tex.width - bw;
+                var px = tex.GetPixels(x0, 0, bw, tex.height);
+                var t = new Texture2D(bw, tex.height, TextureFormat.RGBA32, false) { wrapMode = TextureWrapMode.Mirror, filterMode = FilterMode.Bilinear };
+                t.SetPixels(px); t.Apply();
+                float tiles = sideFrac * tex.width / bw; // how many band widths the strip spans
+                m.mainTexture = t;
+                // the band nearest the house must touch it un-mirrored: the left strip ends at u = 1 (its right side), the
+                // right strip starts at u = 0
+                m.mainTextureScale = new Vector2(tiles, 1f);
+                m.mainTextureOffset = new Vector2(dir < 0 ? 1f - tiles : 0f, 0f);
+            }
+            catch (UnityException)
+            {
+                m.mainTextureScale = new Vector2(0.03f, 1f); m.mainTextureOffset = new Vector2(dir < 0 ? 0f : 0.97f, 0f);
+            }
+            return m;
+        }
+
         static Material TopRows(Material painting, Texture2D tex)
         {
             var m = new Material(painting);
