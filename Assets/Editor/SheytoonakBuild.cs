@@ -239,6 +239,13 @@ namespace Sheytoonak.EditorTools
                 return false;
             }
             EditorUserBuildSettings.buildAppBundle = false; // an .apk you can install directly on the phone
+            // ASTC for every texture without its own override (2026-11-05: the textures went in raw, see TextureCompression)
+            EditorUserBuildSettings.androidBuildSubtarget = MobileTextureSubtarget.ASTC;
+            foreach (var probe in new[] { "Assets/Resources/Art/house_11.png", "Assets/Resources/Art/Heroes/zaatar_idle.png" })
+            {
+                var t = AssetDatabase.LoadAssetAtPath<Texture2D>(probe);
+                if (t != null) Debug.Log("SHEYTOONAK TEXTURE " + probe + ": " + t.format + " " + t.width + "x" + t.height + " mips " + t.mipmapCount);
+            }
 
             string dir = Path.GetDirectoryName(apkPath);
             if (!string.IsNullOrEmpty(dir)) Directory.CreateDirectory(dir);
