@@ -900,7 +900,9 @@ namespace Sheytoonak.Prototype
             sky.transform.SetParent(root, false);
             sky.transform.localPosition = new Vector3(0f, paintedHeight + above * 0.5f, 0.6f);
             sky.transform.localScale = new Vector3(Mathf.Max(w, viewHalfWidth * 2f + 1f) * 1.2f, above, 1f);
-            skyMat.mainTextureScale = new Vector2(1f, 0.7f); skyMat.mainTextureOffset = new Vector2(0f, 0.3f);
+            // ⚠️ The painted sky is blue only in its top ~40 % of rows (user 2026-11-06: «تیکه آبی داشته باشه اون بالا»); the
+            // quad runs from the roof to just past the screen top, so v 0.45..1.0 puts the blue under the HUD and the haze at the roof.
+            skyMat.mainTextureScale = new Vector2(1f, 0.55f); skyMat.mainTextureOffset = new Vector2(0f, 0.45f);
             sky.GetComponent<Renderer>().sharedMaterial = skyMat;
             // Neighbours: painted blank walls (Art/wall_left, Art/wall_right: houses without visible windows,
             // user 2026-10-27) when they exist, otherwise a darker shade of this painting's brick.
