@@ -459,15 +459,21 @@ namespace Sheytoonak
                 // whatever it had to hide: once the bottom row was broken it covered the next row up and became a giant.
                 // A vehicle has its real size now, so it can only hide the house's lowest row, and only as many windows
                 // as its length reaches; with that row broken it has no target.
-                const int bottom = 0; // RowOf counts upward from the lowest row of the house, broken or not
-                var low = list.FindAll(w => RowOf(w) == bottom);
+                // ⚠️ user (2026-11-06): «سم‌هایی مثل اتوبوس و کامیون و گاری قفله». On the wide paintings the ground floor is a
+                // barred window at one end and a shop front wider than a bus at the other: the exact-row test split them
+                // and the "whole window inside the reach" test rejected the shop, so no vehicle ever had a target. Now
+                // the ground floor is every window whose sill is within 1.5 m of the lowest sill, and a vehicle counts a
+                // window as hidden when its centre is within the reach (it parks in front of a wide shop and hides it).
+                float lowest = float.MaxValue;
+                foreach (int w in list) lowest = Mathf.Min(lowest, mapper.WindowRects[w].yMin);
+                var low = list.FindAll(w => mapper.WindowRects[w].yMin <= lowest + 1.5f);
                 low.Sort((a, b) => mapper.WindowRects[a].x.CompareTo(mapper.WindowRects[b].x));
                 float reach = VehicleReach(poison.Id);
                 System.Collections.Generic.List<int> best = new System.Collections.Generic.List<int>();
                 for (int i = 0; i < low.Count; i++)
                 {
                     var run = new System.Collections.Generic.List<int>();
-                    for (int j = i; j < low.Count && mapper.WindowRects[low[j]].xMax - mapper.WindowRects[low[i]].xMin <= reach; j++) run.Add(low[j]);
+                    for (int j = i; j < low.Count && mapper.WindowRects[low[j]].center.x - mapper.WindowRects[low[i]].center.x <= reach; j++) run.Add(low[j]);
                     if (run.Count > best.Count) best = run;
                 }
                 int keep = Mathf.Min(best.Count, list.Count - 1);

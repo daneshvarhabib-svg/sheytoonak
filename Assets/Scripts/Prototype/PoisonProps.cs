@@ -91,7 +91,10 @@ namespace Sheytoonak.Prototype
         {
             float xMin = float.MaxValue, xMax = float.MinValue, top = 0f;
             foreach (var r in covered) { xMin = Mathf.Min(xMin, r.xMin); xMax = Mathf.Max(xMax, r.xMax); top = Mathf.Max(top, r.yMax); }
-            float len = Mathf.Max(6f, xMax - xMin + 1.4f), w = 2.5f;
+            // a vehicle keeps its real length (bus 11, lorry 8.5, cart 3.5 m) even in front of a shop front wider than
+            // itself: it parks on the middle of the covered glass (the rules count the window as hidden by its centre)
+            float realLen = id == "cart" ? 3.5f : id == "truck" ? 8.5f : 11f;
+            float len = Mathf.Clamp(xMax - xMin + 1.4f, realLen * 0.8f, realLen), w = 2.5f;
             // ⚠️ the bus stands ~3 m in front of the facade, so seen from the low camera its roof reads much higher
             // than its real height (run 30: it hid the middle row too). Size it so its front roof edge lands just above
             // the covered row *as projected onto the facade*.
