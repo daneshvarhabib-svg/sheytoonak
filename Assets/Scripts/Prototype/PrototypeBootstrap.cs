@@ -231,7 +231,7 @@ namespace Sheytoonak.Prototype
             // User (2026-11-05): the 3:1 paintings (2172x724) replace the 2.3:1 ones; houses 13–22 stay in code until their 3:1
             // versions arrive («فعلا این سه تا رو داشته باش تا باقی برسن»).
             // test (user, 2026-11-05): one 3:1 painting with the top row 8 % below the edge, alone, to see if it fills the frame
-            var houses = new[] { House28(), House29(), House30(), House31(), House32() };
+            var houses = new[] { House28(), House29(), House30(), House31(), House32(), House33(), House34(), House35() };
             allHouses = houses;
 
             // Player: foot position + window mapping. No body: the game is first-person (POV).
@@ -605,6 +605,28 @@ namespace Sheytoonak.Prototype
                 R(130f, 405f, 355f, 560f), R(810f, 455f, 1310f, 670f), R(1340f, 475f, 1735f, 670f),
             },
             0.25f, 1.95f, 0f, 1.2f, null, "Art/house_32_broken", R(380f, 230f, 560f, 330f));
+
+        HouseDefinition House33() => MakePaintedHouse("البيت ٣٣", "Art/house_33", 2172f, 724f, Wide3W, // Damascus ablaq spice shop, stencil family
+            new[]
+            {
+                R(190f, 60f, 350f, 265f), R(640f, 60f, 790f, 265f), R(1010f, 60f, 1165f, 265f), R(1390f, 60f, 1540f, 265f), R(1770f, 60f, 1920f, 265f),
+                R(600f, 390f, 770f, 585f), R(1600f, 400f, 2110f, 650f),
+            },
+            0.25f, 1.95f, 0f, 1.2f, null, "Art/house_33_broken", R(1220f, 300f, 1420f, 440f));
+        HouseDefinition House34() => MakePaintedHouse("البيت ٣٤", "Art/house_34", 2172f, 724f, Wide3W, // stone grocer, blue shutters, awning (cleaner house)
+            new[]
+            {
+                R(190f, 55f, 350f, 250f), R(600f, 55f, 760f, 250f), R(1010f, 55f, 1170f, 250f), R(1420f, 55f, 1590f, 250f), R(1830f, 55f, 1990f, 250f),
+                R(190f, 440f, 410f, 610f), R(1035f, 440f, 1770f, 600f),
+            },
+            0.25f, 1.95f, 0f, 1.2f, null, "Art/house_34_broken", R(1250f, 80f, 1420f, 250f));
+        HouseDefinition House35() => MakePaintedHouse("البيت ٣٥", "Art/house_35", 2172f, 724f, Wide3W, // Tunis café, big graffiti on the right
+            new[]
+            {
+                R(110f, 45f, 335f, 250f), R(525f, 45f, 740f, 250f), R(945f, 45f, 1150f, 250f), R(1420f, 45f, 1625f, 250f), R(1830f, 45f, 2045f, 250f),
+                R(85f, 400f, 760f, 690f), R(1290f, 410f, 1480f, 595f),
+            },
+            0.25f, 1.95f, 0f, 1.2f, null, "Art/house_35_broken", R(1150f, 420f, 1300f, 600f));
 
         static Rect R(float x0, float y0, float x1, float y1) => Rect.MinMaxRect(x0, y0, x1, y1);
         static WindowDetail Pot(int w, float x0, float y0, float x1, float y1) => new WindowDetail(w, DetailKind.Pot) { pixel = R(x0, y0, x1, y1) };
