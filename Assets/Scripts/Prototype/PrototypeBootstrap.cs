@@ -560,9 +560,9 @@ namespace Sheytoonak.Prototype
             {
                 R(205f, 50f, 335f, 240f), R(535f, 50f, 660f, 240f), R(860f, 50f, 985f, 240f), R(1180f, 50f, 1305f, 240f),
                 R(1505f, 50f, 1630f, 240f), R(1830f, 50f, 1955f, 240f),
-                R(205f, 440f, 325f, 630f), R(1160f, 490f, 2000f, 660f),
+                R(190f, 400f, 310f, 600f), R(1090f, 450f, 1920f, 640f),
             },
-            0.25f, 1.95f, 0f, 1.2f, null, null, R(700f, 420f, 850f, 600f));
+            0.25f, 1.95f, 0f, 1.2f, null, "Art/house_27_broken", R(700f, 420f, 850f, 600f));
 
         static Rect R(float x0, float y0, float x1, float y1) => Rect.MinMaxRect(x0, y0, x1, y1);
         static WindowDetail Pot(int w, float x0, float y0, float x1, float y1) => new WindowDetail(w, DetailKind.Pot) { pixel = R(x0, y0, x1, y1) };
