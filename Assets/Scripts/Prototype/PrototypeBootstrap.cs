@@ -321,6 +321,7 @@ namespace Sheytoonak.Prototype
             }
             gameGo.AddComponent<ProceduralSfx>();
             gameGo.AddComponent<CurseVoice>();
+            gameGo.AddComponent<MusicPlayer>();
             gameGo.AddComponent<StreetLife>();
             if (!duel)
             {

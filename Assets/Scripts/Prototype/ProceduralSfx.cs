@@ -16,10 +16,8 @@ namespace Sheytoonak
 
         const int Rate = 22050;
         AudioSource src;
-        // User (2026-11-06): «صداها رو هم اضافه کنیم … فحش‌ها رو اول بگیریم». Any clip dropped into Resources/Audio/Curses
-        // (wav/mp3/ogg, any name) is played ~0.4 s after a window breaks, never the same one twice in a row; with none
-        // there is no voice, only the glass.
-        AudioClip[] curses; int lastCurse = -1;
+        // ⚠️ The recorded curses are CurseVoice's job (it already existed); a second loader here
+        // played every line twice, once per component. Only the glass lives here.
 
         void Awake()
         {
@@ -36,18 +34,6 @@ namespace Sheytoonak
             medal = medal ? medal : Tone("medal", 0.7f, new[] { 523f, 659f, 784f, 1047f }, 0.17f);
             win = win ? win : Tone("win", 1.2f, new[] { 523f, 659f, 784f, 1047f, 1319f }, 0.24f);
             lose = lose ? lose : Tone("lose", 0.9f, new[] { 330f, 262f, 196f }, 0.3f);
-            curses = Resources.LoadAll<AudioClip>("Audio/Curses");
-        }
-
-        System.Collections.IEnumerator CurseAfter(float seconds)
-        {
-            yield return new WaitForSeconds(seconds);
-            if (curses == null || curses.Length == 0 || src == null) yield break;
-            int i = curses.Length == 1 ? 0 : UnityEngine.Random.Range(0, curses.Length - 1);
-            if (i >= lastCurse && curses.Length > 1) i++;
-            lastCurse = i;
-            src.pitch = 1f;
-            src.PlayOneShot(curses[i], volume);
         }
 
         void OnEnable()
@@ -88,7 +74,7 @@ namespace Sheytoonak
         void OnKicked(Sheytoonak.Core.KickGesture g, float quality, Vector3 v) => Play(kick, 0.7f + 0.3f * g.Strength01, 0.95f + 0.15f * g.Strength01);
         void OnBounced(Vector3 p, int n, bool returning) => Play(bounce, 0.8f, UnityEngine.Random.Range(0.95f, 1.05f));
         void OnWall(Vector3 p) => Play(wall);
-        void OnGlass(int i, Vector3 p) { Play(glass, 1f, UnityEngine.Random.Range(0.9f, 1.1f)); StartCoroutine(CurseAfter(0.4f)); }
+        void OnGlass(int i, Vector3 p) => Play(glass, 1f, UnityEngine.Random.Range(0.9f, 1.1f));
         void OnInHouse(int i, bool back) => Play(swallow);
         void OnThrow(int i) => Play(throwBack);
         void OnLife(int left, Sheytoonak.Core.LossReason r) => Play(lifeLost);

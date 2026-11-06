@@ -278,3 +278,10 @@ Seamless tileable texture of a broken Beirut sidewalk, hand-painted: cracked con
 ```
 Hazy late-afternoon city sky over Beirut, hand-painted, pale dusty horizon to muted blue, thin smog band, a few soft clouds, two distant power lines crossing the top; no buildings, no sun disc. 1024x512.
 ```
+
+## موسیقیِ متن (۱۶ آبان)
+فایل‌ها در `Assets/Resources/Audio/Music/` (ogg؛ لوپ‌ها با crossfadeِ ffmpeg لوپ‌پذیر شده‌اند): `duel_loop` (شارع الأطفال، ۱۲۰ ثانیه)، `tension_loop` (شارع الجاهزة، ۲۶ ثانیه)، `sting_win`، `sting_lose`. لابی هنوز ندارد (نسخه‌ی اول «زیادی غمگین» بود). پرامپت‌ها انگلیسی، بی‌کلام؛ ⚠️ نسخه‌ی رایگانِ Suno/Udio فقط غیرتجاری است.
+
+- دوئل: *Instrumental, no vocals. Playful Levantine street-game music, 110 BPM, seamless loop. Oud and buzuq riff over darbuka and riq, cheeky clarinet, off-beat handclaps. Mischievous kids-in-the-alley mood, Beirut/Damascus back street, slightly lo-fi.*
+- تنش: *same theme but urgent: 135 BPM, driving darbuka and tabla rolls, fast buzuq tremolo, rising tension, 30-second loop.*
+- برد/باخت: *4-second sting: triumphant oud and clarinet flourish with a darbuka hit* / *comic descending clarinet slide, a sad oud note, one darbuka thud.*

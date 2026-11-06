@@ -44,7 +44,9 @@ namespace Sheytoonak
             }
             else c = placeholder;
             if (c == null) yield break;
-            src.pitch = Random.Range(0.92f, 1.08f);
+            // One TTS speaker recorded all nine lines (user 2026-11-06: «همه رو با یه صدا میگه، خوب نیست»); a wider
+            // pitch spread turns one voice into several neighbours until a second speaker is recorded.
+            src.pitch = Random.Range(0.86f, 1.16f);
             src.PlayOneShot(c, volume);
         }
 
