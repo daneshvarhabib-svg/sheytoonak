@@ -44,7 +44,7 @@ namespace Sheytoonak.Core.Duel
 
             // 2. kick: the most valuable breakable window, with a little whim
             var targets = new List<int>();
-            for (int w = 0; w < rules.WindowCount; w++) if (rules.IsBreakable(w)) targets.Add(w);
+            for (int w = 0; w < rules.WindowCount; w++) if (rules.LooksBreakable(w)) targets.Add(w); // the bot does not know the sealed window either
             bool kicked = rules.ActionsLeft == 1 && !LastActionWasKick; // heuristic: second action after a kick → poison
             if (targets.Count > 0 && !(rules.ActionsLeft == 1 && LastActionWasKick))
             {

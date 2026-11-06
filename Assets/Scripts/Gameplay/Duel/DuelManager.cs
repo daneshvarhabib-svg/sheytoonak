@@ -326,7 +326,7 @@ namespace Sheytoonak
         void OnTurnStarted(Side s, int turn, int actions)
         {
             TurnTimeLeft = DuelRules.TurnSeconds;
-            foot.Hold = s != Me; // the bot always kicks from the middle; my finger moves the kicker on my turn
+            foot.Hold = true; // user (2026-11-06): «بازیکن وقتی ضربه میزنه چرا حرکت می‌کنه؟ نباید افقی بره» — phone tilt moved the kicker; nobody moves now
             Selected = -1; KickArmed = false; kickerReady[0] = kickerReady[1] = false;
             KickerReleased?.Invoke(Side.Left); KickerReleased?.Invoke(Side.Right);
             TurnChanged?.Invoke(s);
@@ -500,7 +500,11 @@ namespace Sheytoonak
             if (kickActive)
             {
                 // the same action goes on: hit the ball that came back off the wall, if the foot reaches it
-                if (kicker == Me && returning && ball.InPlay && rallyHits + 1 < HitsPerBall && foot.BallInReach(ball.transform.position, ball.Radius)) Rekick(Me, g);
+                // user (2026-11-06): «سه بار فرصت داره تا یه بار توپ بخوره زمین دوباره ضربه بزنه … رو هوا ضربه نمی‌زنه بعد از یه بار
+                // زمین خوردن». Once the rebound has bounced it may be struck wherever it is in the lane (the kid runs to it);
+                // before the bounce only when it is actually at the foot.
+                bool reachable = foot.BallInReach(ball.transform.position, ball.Radius) || (bouncesSinceWall >= 1 && Mathf.Abs(ball.transform.position.x) <= config.laneHalfWidth + 1.5f);
+                if (kicker == Me && returning && ball.InPlay && rallyHits + 1 < HitsPerBall && reachable) Rekick(Me, g);
                 return;
             }
             if (hitsToCome && kicker == Me)
@@ -757,7 +761,8 @@ namespace Sheytoonak
                     if (resolveRoutine == null) resolveRoutine = StartCoroutine(ResolveAfter(1.0f));
                     return;
                 }
-                if (!Rules.IsBroken(w)) Pop?.Invoke(Rules.IsCovered(w) ? "bus" : "open_window", kicker, PopKind.Poison); // the poison that stopped it
+                if (w == Rules.SealedWindow) Toast?.Invoke(Ar.Sealed, 1.4f); // the one window of an even house that never breaks
+                else if (!Rules.IsBroken(w)) Pop?.Invoke(Rules.IsCovered(w) ? "bus" : "open_window", kicker, PopKind.Poison); // the poison that stopped it
             }
             GameEvents.RaiseWallHit(point);
             // ⚠️ until 2026-11-02 the ball was just dropped here and the action ended: one shot, no rebound.

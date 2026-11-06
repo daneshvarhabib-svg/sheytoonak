@@ -51,6 +51,8 @@ namespace Sheytoonak.Core.Duel
         public readonly int[] WindowValue;      // 1 / 2 / 3 per window; the 3 is Hidden until it breaks
         public readonly int[] WindowShards;     // shards each window is worth (by size)
         public readonly int HiddenWindow;
+        /// <summary>The window of an even house that never breaks (worth 0); -1 when the house is odd. Not shown to anyone.</summary>
+        public readonly int SealedWindow;
         public readonly int TotalValue;
         readonly int[] brokenBy;                // -1 sound, else Side
         public readonly HeroDef[][] Heroes = new HeroDef[2][];
@@ -95,20 +97,22 @@ namespace Sheytoonak.Core.Duel
                 for (int r = 0; r < rows.Length; r++)
                     for (int c = 0; c < rows[r]; c++) rowOfWindow[idx++] = r;
             }
-            // User (2026-11-05): the duel ended after three good shots (bottom 1, upper 2, hidden 3: a 9-window house had
-            // a majority of 9 points). Now every window is worth 1, so it is "most windows"; and «باید یه جوری باشه که مساوی
-            // نشه، واسه همین باید یک پنجره حداقل امتیازش بیشتر باشه اگر تعداد پنجره‌ها زوجه»: with an even count one window
-            // of an upper row is worth 2, shown openly (no secret any more). HiddenWindow names that window, -1 when odd.
+            // User (2026-11-05): every window is worth 1, "most windows wins". With an even count there must be no tie;
+            // the 2-point window of 2026-11-05 made the total odd but the user saw «۴ ۴» anyway and chose (2026-11-06):
+            // «می‌تونیم تو هر دست یه پنجره رو نشون بذاریم. هرچی ضربه بزنی نشکنه. اینطوری هیجانش هم بیشتره». So one upper
+            // window of an even house is sealed: it never breaks, scores nothing, and nobody is told which one.
+            // SealedWindow names it (-1 when odd); HiddenWindow is the same number, kept for old callers.
             WindowValue = new int[n];
             for (int i = 0; i < n; i++) WindowValue[i] = 1;
-            HiddenWindow = -1;
+            SealedWindow = -1;
             if (n % 2 == 0)
             {
                 var upper = new System.Collections.Generic.List<int>();
                 for (int i = 0; i < n; i++) if (rowOfWindow[i] > 0) upper.Add(i);
-                HiddenWindow = upper.Count > 0 ? upper[rng.Next(upper.Count)] : rng.Next(n);
-                WindowValue[HiddenWindow] = 2;
+                SealedWindow = upper.Count > 0 ? upper[rng.Next(upper.Count)] : rng.Next(n);
+                WindowValue[SealedWindow] = 0;
             }
+            HiddenWindow = SealedWindow;
             int total = 0; foreach (int v in WindowValue) total += v;
             TotalValue = total;
             WindowShards = shardsPerWindow ?? new int[n];
@@ -123,8 +127,8 @@ namespace Sheytoonak.Core.Duel
         public bool IsBroken(int w) => brokenBy[w] >= 0;
         public int BrokenBy(int w) => brokenBy[w];
         public bool IsHidden(int w) => false; // the secret 3 is gone (2026-11-05)
-        /// <summary>What the HUD shows for a window (since 2026-11-05 nothing is hidden: its real value).</summary>
-        public int ShownValue(int w) => WindowValue[w];
+        /// <summary>What the HUD shows for a window: 1 for every window, the sealed one included (its secret is the point).</summary>
+        public int ShownValue(int w) => w == SealedWindow ? 1 : WindowValue[w];
         public int Majority => TotalValue / 2 + 1;
 
         public void Start(Side first)
@@ -148,7 +152,9 @@ namespace Sheytoonak.Core.Duel
             return false;
         }
         /// <summary>Sound, open and not covered: can be broken right now.</summary>
-        public bool IsBreakable(int w) => !IsBroken(w) && !IsCovered(w) && !IsClosed(w);
+        public bool IsBreakable(int w) => w != SealedWindow && !IsBroken(w) && !IsCovered(w) && !IsClosed(w);
+        /// <summary>What a player (or the bot) may aim at: a sealed window looks like any other until the ball hits it.</summary>
+        public bool LooksBreakable(int w) => !IsBroken(w) && !IsCovered(w) && !IsClosed(w);
         public int BreakableCount() { int c = 0; for (int i = 0; i < WindowCount; i++) if (IsBreakable(i)) c++; return c; }
 
         public KickModifiers ModifiersFor(Side s)

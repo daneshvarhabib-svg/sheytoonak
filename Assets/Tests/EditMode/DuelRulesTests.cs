@@ -15,22 +15,25 @@ namespace Sheytoonak.Tests
         }
 
         [Test]
-        public void Every_window_is_worth_one_and_an_even_house_gets_one_upper_two()
+        public void Every_window_is_worth_one_and_an_even_house_seals_one_upper_window()
         {
-            // user 2026-11-05: «باید یه جوری باشه که مساوی نشه … یک پنجره حداقل امتیازش بیشتر باشه اگر تعداد پنجره‌ها زوجه»
+            // user 2026-11-05: never a tie; user 2026-11-06: «تو هر دست یه پنجره رو نشون بذاریم. هرچی ضربه بزنی نشکنه»
             var h = StarterHeroes.All;
             for (int seed = 1; seed < 30; seed++)
             {
                 var odd = new DuelRules(new[] { 3, 3, 3 }, new int[9], new[] { h[0], h[1], h[2] }, new[] { h[3], h[4], h[0] }, seed, new[] { 2, 2, 2, 1, 1, 1, 0, 0, 0 });
                 for (int w = 0; w < 9; w++) Assert.AreEqual(1, odd.WindowValue[w]);
-                Assert.AreEqual(-1, odd.HiddenWindow);
+                Assert.AreEqual(-1, odd.SealedWindow);
                 Assert.AreEqual(5, odd.Majority);
 
                 var even = new DuelRules(new[] { 4, 4 }, new int[8], new[] { h[0], h[1], h[2] }, new[] { h[3], h[4], h[0] }, seed, new[] { 1, 1, 1, 1, 0, 0, 0, 0 });
-                int twos = 0; for (int w = 0; w < 8; w++) if (even.WindowValue[w] == 2) twos++; else Assert.AreEqual(1, even.WindowValue[w]);
-                Assert.AreEqual(1, twos, "seed " + seed);
-                Assert.IsTrue(even.HiddenWindow < 4, "the 2 sits in an upper row");
-                Assert.AreEqual(2, even.ShownValue(even.HiddenWindow), "shown openly");
+                int sw = even.SealedWindow;
+                Assert.IsTrue(sw >= 0 && sw < 4, "the sealed window sits in an upper row, seed " + seed);
+                Assert.AreEqual(0, even.WindowValue[sw]);
+                Assert.IsFalse(even.IsBreakable(sw));
+                Assert.IsTrue(even.LooksBreakable(sw), "nobody can tell it apart");
+                Assert.AreEqual(1, even.ShownValue(sw), "shown like any other");
+                Assert.AreEqual(7, even.TotalValue);
                 Assert.AreEqual(1, even.TotalValue % 2);
             }
         }
