@@ -247,7 +247,11 @@ namespace Sheytoonak.Prototype
             ballGo.transform.localScale = Vector3.one * (config.ballRadius * 2f);
             var r = ballGo.GetComponent<Renderer>();
             r.sharedMaterial = ball;
-            r.material.mainTexture = FootballTexture();
+            // User (2026-11-06): «توپی که باهاش شیشه میارن پایین بهتره توپ بچه‌های کوچه باشه نه این توپ تر و تمیز»: a painted
+            // street ball (Art/Props/ball_street, an equirectangular wrap) when it exists, the clean procedural one until then.
+            var street = Resources.Load<Texture2D>("Art/Props/ball_street");
+            r.material.mainTexture = street != null ? street : FootballTexture();
+            if (street != null) r.material.SetFloat("_Glossiness", 0.08f);
             ballGo.GetComponent<SphereCollider>().sharedMaterial = new PhysicsMaterial("Ball")
             {
                 bounciness = 0.6f,
@@ -1059,15 +1063,34 @@ namespace Sheytoonak.Prototype
             return m;
         }
 
-        /// <summary>A warm late-afternoon sky: pale haze at the roof line, deeper blue higher up (1x64 gradient).</summary>
+        /// <summary>
+        /// A warm late-afternoon sky with soft clouds (user, 2026-11-06: «آسمون بالای ساختمون حس آسمون بده … یه پترن مثل
+        /// آسفالت کف»): a 512x256 texture, haze at the roof line to blue above, with two octaves of Perlin clouds that thin
+        /// out near the horizon. If Art/sky.png exists in Resources it is used instead.
+        /// </summary>
         static Material SkyGradient(Material painting)
         {
             var m = new Material(painting) { color = Color.white };
-            var g = new Texture2D(1, 64, TextureFormat.RGBA32, false) { wrapMode = TextureWrapMode.Clamp, filterMode = FilterMode.Bilinear };
-            var low = new Color(0.93f, 0.86f, 0.74f); var high = new Color(0.47f, 0.68f, 0.90f);
-            for (int y = 0; y < 64; y++) g.SetPixel(0, y, Color.Lerp(low, high, Mathf.Pow(y / 63f, 0.6f)));
-            g.Apply();
-            m.mainTexture = g; m.mainTextureScale = new Vector2(1f, 0.2f); m.mainTextureOffset = Vector2.zero; // the 60 m wall shows the lowest fifth
+            var painted = Resources.Load<Texture2D>("Art/sky");
+            Texture2D g = painted;
+            if (g == null)
+            {
+                const int W = 512, H = 256;
+                g = new Texture2D(W, H, TextureFormat.RGBA32, true) { wrapMode = TextureWrapMode.Repeat, filterMode = FilterMode.Bilinear };
+                var low = new Color(0.95f, 0.87f, 0.76f); var high = new Color(0.45f, 0.66f, 0.90f); var cloud = new Color(1f, 0.97f, 0.93f);
+                var px = new Color[W * H];
+                for (int y = 0; y < H; y++)
+                    for (int x = 0; x < W; x++)
+                    {
+                        float v = y / (float)(H - 1);
+                        var c = Color.Lerp(low, high, Mathf.Pow(v, 0.7f));
+                        float n = Mathf.PerlinNoise(x * 0.012f, y * 0.02f) * 0.65f + Mathf.PerlinNoise(x * 0.04f + 7f, y * 0.06f + 3f) * 0.35f;
+                        float a = Mathf.SmoothStep(0.5f, 0.78f, n) * Mathf.Clamp01((v - 0.08f) * 2.5f) * 0.85f;
+                        px[y * W + x] = Color.Lerp(c, cloud, a);
+                    }
+                g.SetPixels(px); g.Apply(true, false);
+            }
+            m.mainTexture = g; m.mainTextureScale = new Vector2(2f, 0.25f); m.mainTextureOffset = Vector2.zero; // the 60 m wall shows the lowest quarter
             m.SetFloat("_Glossiness", 0f);
             return m;
         }

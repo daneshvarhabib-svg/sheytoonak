@@ -513,6 +513,7 @@ namespace Sheytoonak
         {
             bool again = hitsToCome && s == kicker;
             if (!again && Rules.BeginKick(s) != ActionReject.None) return;
+            FitAimToHouse();
             int hitsSoFar = again ? rallyHits + 1 : 0;
             hitsToCome = false;
             Rules.NoteActivity(s);
@@ -598,15 +599,19 @@ namespace Sheytoonak
         /// </summary>
         void FitAimToHouse()
         {
+            // ⚠️ run 117 (user): the outermost windows were still out of reach. This ran once at NewDuel, before the stage
+            // scaled the painting to the camera (the rects doubled afterwards). Now it is also called at every kick, on the
+            // rects as they are then, from where the ball actually lies.
             float far = 0f;
             foreach (var r in mapper.WindowRects) far = Mathf.Max(far, Mathf.Abs(r.center.x) + r.width * 0.5f);
             float d = Mathf.Max(1f, mapper.FacadeZ - foot.StrikeSpot.z);
-            config.kick.MaxAimYawDeg = Mathf.Max(25f, Mathf.Atan2(far + 0.4f, d) * Mathf.Rad2Deg);
+            config.kick.MaxAimYawDeg = Mathf.Max(25f, Mathf.Atan2(far + Mathf.Abs(foot.StrikeSpot.x) + 0.6f, d) * Mathf.Rad2Deg);
         }
 
         /// <summary>Aim gesture that lands on a window's centre (inverse of KickSolver.SolveAtWall), with the bot's error.</summary>
         KickGesture GestureFor(int window, float error)
         {
+            FitAimToHouse();
             Rect r = mapper.WindowRects[window];
             float d = mapper.FacadeZ - foot.StrikeSpot.z;
             float yaw = Mathf.Atan2(r.center.x, d) * Mathf.Rad2Deg;
