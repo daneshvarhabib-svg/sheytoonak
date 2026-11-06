@@ -243,3 +243,38 @@ Side-view sprite sheet on a flat pure green background (#00FF00), no shadow, no 
 3) a young man in a white shirt sitting on that bicycle, drawn alone without the bicycle, in two pedalling poses (one knee up, the other knee up).
 Clear green gaps between the four pictures, crisp edges.
 ```
+
+## فضای واقعیِ بیروت و دمشقِ امروز (کاربر، ۱۶ آبان): «اینقدر همه چی گل و بلبل نباشه، یکمی چرک باشه، گرافیتی داشته باشه»
+
+مرجعِ کاربر: دیوارِ بتنیِ بیروت با گرافیتیِ بزرگِ پرتره و تگ‌های رنگی (Rebel / Refund / ثورة)، و گرافیتیِ سیاه‌سفیدِ دمشق (موتور و آدم‌ها، تابلوی «حرية / FREEDOM»). **هیچ‌کدام از این عکس‌ها کپی نمی‌شوند؛ فقط حال‌وهوا.**
+
+### قاعده‌ی تازه برای همه‌ی خانه‌ها (۳:۱، دو تصویر: سالم + همه‌شیشه‌شکسته)
+به هر پرامپتِ خانه این بند اضافه می‌شود:
+```
+Present-day Beirut / Damascus street, NOT picturesque: the plaster is stained, cracked and patched, paint peeling in sheets, rust streaks under the balconies, a bundle of sagging electricity cables and a dangling wire across the facade, an old air-conditioner box dripping, a cracked satellite dish, bullet-pocked corner stone. The ground-floor wall carries street graffiti: one big colourful spray-paint mural (abstract shapes and a stylised face, no readable words) and several smaller tags and stencils in black, red and yellow; two faded torn posters pasted over each other. Keep the windows and shop front clear of graffiti. Hand-painted illustration, muted dusty colours, late afternoon light.
+```
+و از هر پرامپت این‌ها حذف می‌شود: «geraniums», «bougainvillea», «jasmine», «potted plants», «bright noon light»، «cheerful».
+
+### نسبتِ چرکی
+- یک‌سوم خانه‌ها: گرافیتیِ بزرگ + تگ‌ها (مثلِ دیوارِ بتنیِ بیروت).
+- یک‌سوم: فقط تگ‌های کوچک و پوسترِ پاره و کابل (معمولی‌تر).
+- یک‌سوم: تمیزتر ولی با گچِ ریخته و کابل (تا تنوع بماند).
+
+### پرامپتِ کاملِ نمونه (دمشق، ۳:۱)
+```
+Ultra-wide street-level view of a single present-day Damascus house facade, aspect ratio 3:1, 2172x724, hand-painted illustration, muted dusty colours, late afternoon light. The wall reaches both edges of the frame; no neighbouring buildings, no sky, no street in front; flat front view. The top 8 % of the image is plain wall; one row of large windows with wooden shutters evenly spread across the width, a barred ground-floor window, an iron door, a small grocer with a glass front on the right. The plaster is stained, cracked and patched, paint peeling, rust streaks under the sills, a bundle of sagging electricity cables across the facade, an old dripping air-conditioner box, a cracked satellite dish. The ground-floor wall carries street graffiti: a big black-and-white spray-paint mural of stylised figures (no readable words) and several small tags and stencils in red and black, two faded torn posters. Windows and the shop glass stay clear of graffiti.
+```
+نسخه‌ی شکسته: همان + `identical composition, same framing and light, every window pane shattered`.
+
+### زمینِ خیابان و پیاده‌رو (بازگرفتن)
+```
+Seamless tileable texture of a worn Beirut asphalt road, hand-painted: patched tar, cracks, a faded white lane line fragment, oil stain, dust. 1024x1024, flat even lighting.
+```
+```
+Seamless tileable texture of a broken Beirut sidewalk, hand-painted: cracked concrete slabs, one slab missing showing earth, cigarette butts, a bottle cap, dust. 1024x1024, flat even lighting.
+```
+
+### آسمان (اختیاری، `Art/sky.png`، 2:1)
+```
+Hazy late-afternoon city sky over Beirut, hand-painted, pale dusty horizon to muted blue, thin smog band, a few soft clouds, two distant power lines crossing the top; no buildings, no sun disc. 1024x512.
+```
