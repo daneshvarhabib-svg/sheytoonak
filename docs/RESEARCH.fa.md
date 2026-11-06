@@ -90,3 +90,5 @@
 - هزینه: متوسط (قاعده در Core + دو آیکون + متنِ پیام). ریسک: پیچیدگی برایِ بازیکنِ تازه → فقط از سطحِ ۳ به بعد باز شود. ⚠️ شبیهِ پ۵ است که رد شد؛ فرقش این است که تله‌ای رویِ پنجره نیست، بلوف رویِ خودِ کنشِ موجود است.
 
 منابع: [Supercell: About the update, Records changes](https://supercell.com/en/games/brawlstars/blog/game-updates/about-the-update-records-changes)، [Supercell: RIP Masteries](https://supercell.com/en/games/brawlstars/blog/news/rip-masteries)، [Supercell: 2025 in review](https://supercell.com/en/games/brawlstars/blog/community/2025-in-review-franks-blog-post)، [GamingOnPhone: چرا Mastery حذف شد](https://gamingonphone.com/news/brawl-stars-developer-team-explains-why-masteries-were-removed)، [Mechanics of Magic: Bluffing, judging](https://mechanicsofmagic.com/?p=6735)، [Werewolf / Mafia (Spielbound)](https://spielbound.org/taxonomy/term/289).
+
+**وضعیت (۱۶ آبان):** کاربر: «هیچ کدوم نره تو صف» → پ۸، پ۹ و پ۱۰ رد شدند.
