@@ -231,7 +231,7 @@ namespace Sheytoonak.Prototype
             // User (2026-11-05): the 3:1 paintings (2172x724) replace the 2.3:1 ones; houses 13–22 stay in code until their 3:1
             // versions arrive («فعلا این سه تا رو داشته باش تا باقی برسن»).
             // test (user, 2026-11-05): one 3:1 painting with the top row 8 % below the edge, alone, to see if it fills the frame
-            var houses = new[] { House27() };
+            var houses = new[] { House27(), House28() };
             allHouses = houses;
 
             // Player: foot position + window mapping. No body: the game is first-person (POV).
@@ -567,6 +567,14 @@ namespace Sheytoonak.Prototype
                 R(190f, 400f, 310f, 600f), R(1090f, 450f, 1920f, 640f),
             },
             0.25f, 1.95f, 0f, 1.2f, null, "Art/house_27_broken", R(700f, 420f, 850f, 600f));
+
+        HouseDefinition House28() => MakePaintedHouse("البيت ٢٨", "Art/house_28", 2172f, 724f, Wide3W, // first gritty Damascus house: mural, posters, cables, grocer
+            new[]
+            {
+                R(140f, 45f, 395f, 225f), R(635f, 45f, 915f, 225f), R(1135f, 45f, 1430f, 225f), R(1660f, 45f, 1930f, 225f),
+                R(765f, 355f, 1005f, 545f), R(1625f, 350f, 2040f, 640f),
+            },
+            0.25f, 1.95f, 0f, 1.2f, null, "Art/house_28_broken", R(1050f, 100f, 1230f, 300f));
 
         static Rect R(float x0, float y0, float x1, float y1) => Rect.MinMaxRect(x0, y0, x1, y1);
         static WindowDetail Pot(int w, float x0, float y0, float x1, float y1) => new WindowDetail(w, DetailKind.Pot) { pixel = R(x0, y0, x1, y1) };
