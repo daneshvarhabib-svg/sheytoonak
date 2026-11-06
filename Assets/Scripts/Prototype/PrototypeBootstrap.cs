@@ -893,7 +893,7 @@ namespace Sheytoonak.Prototype
             var skyMat = SkyGradient(mat);
             // the sky quad reaches just past the top of the screen and shows the painted sky's upper 70 % (the blue and
             // the power lines), not its haze: user (2026-11-06) «تیکه آبی داشته باشه اون بالا»
-            float skyTop = Mathf.Max(paintedHeight + 1.5f, HeightAtScreenFraction(z, 1.08f));
+            float skyTop = Mathf.Max(paintedHeight + 1.5f, HeightAtScreenFraction(root.position.z, 1.08f));
             float above = skyTop - paintedHeight;
             var sky = GameObject.CreatePrimitive(PrimitiveType.Quad);
             Strip(sky); sky.name = "Sky";
