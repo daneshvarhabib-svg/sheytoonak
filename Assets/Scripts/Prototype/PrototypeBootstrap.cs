@@ -231,7 +231,7 @@ namespace Sheytoonak.Prototype
             // User (2026-11-05): the 3:1 paintings (2172x724) replace the 2.3:1 ones; houses 13–22 stay in code until their 3:1
             // versions arrive («فعلا این سه تا رو داشته باش تا باقی برسن»).
             // test (user, 2026-11-05): one 3:1 painting with the top row 8 % below the edge, alone, to see if it fills the frame
-            var houses = new[] { House27(), House28() };
+            var houses = new[] { House28(), House29(), House30(), House31(), House32() };
             allHouses = houses;
 
             // Player: foot position + window mapping. No body: the game is first-person (POV).
@@ -571,10 +571,40 @@ namespace Sheytoonak.Prototype
         HouseDefinition House28() => MakePaintedHouse("البيت ٢٨", "Art/house_28", 2172f, 724f, Wide3W, // first gritty Damascus house: mural, posters, cables, grocer
             new[]
             {
-                R(140f, 45f, 395f, 225f), R(635f, 45f, 915f, 225f), R(1135f, 45f, 1430f, 225f), R(1660f, 45f, 1930f, 225f),
-                R(765f, 355f, 1005f, 545f), R(1625f, 350f, 2040f, 640f),
+                
+                R(140f, 45f, 395f, 232f), R(690f, 45f, 960f, 232f), R(1220f, 45f, 1455f, 232f), R(1830f, 45f, 2050f, 235f),
+                R(825f, 395f, 1100f, 612f), R(1770f, 405f, 2140f, 712f),
             },
             0.25f, 1.95f, 0f, 1.2f, null, "Art/house_28_broken", R(1050f, 100f, 1230f, 300f));
+
+        HouseDefinition House29() => MakePaintedHouse("البيت ٢٩", "Art/house_29", 2172f, 724f, Wide3W, // Beirut bakery, mural and laundry
+            new[]
+            {
+                R(165f, 50f, 300f, 250f), R(610f, 60f, 745f, 240f), R(1020f, 65f, 1155f, 240f), R(1440f, 60f, 1575f, 258f), R(1865f, 70f, 2020f, 245f),
+                R(1150f, 445f, 1875f, 600f),
+            },
+            0.25f, 1.95f, 0f, 1.2f, new[] { new WindowDetail(-1, DetailKind.Laundry) { pixel = R(560f, 195f, 1200f, 330f) } }, "Art/house_29_broken", R(1160f, 620f, 1330f, 715f));
+        HouseDefinition House30() => MakePaintedHouse("البيت ٣٠", "Art/house_30", 2172f, 724f, Wide3W, // Damascus kiosk, poster and fist
+            new[]
+            {
+                R(250f, 75f, 355f, 280f), R(560f, 75f, 695f, 320f), R(870f, 75f, 990f, 315f), R(1180f, 75f, 1320f, 330f), R(1500f, 50f, 1710f, 380f), R(1900f, 60f, 2100f, 380f),
+                R(885f, 465f, 1120f, 640f), R(1510f, 440f, 2160f, 650f),
+            },
+            0.25f, 1.95f, 0f, 1.2f, null, "Art/house_30_broken", R(1200f, 420f, 1400f, 620f));
+        HouseDefinition House31() => MakePaintedHouse("البيت ٣١", "Art/house_31", 2172f, 724f, Wide3W, // pink pharmacy, stencil face
+            new[]
+            {
+                R(195f, 55f, 365f, 260f), R(595f, 55f, 760f, 270f), R(990f, 55f, 1170f, 260f), R(1415f, 55f, 1590f, 265f), R(1830f, 55f, 2005f, 275f),
+                R(548f, 435f, 785f, 620f), R(965f, 440f, 1410f, 680f), R(1375f, 520f, 1495f, 670f),
+            },
+            0.25f, 1.95f, 0f, 1.2f, null, "Art/house_31_broken", R(1600f, 560f, 1750f, 700f));
+        HouseDefinition House32() => MakePaintedHouse("البيت ٣٢", "Art/house_32", 2172f, 724f, Wide3W, // tiled ceramics shop, torn awning
+            new[]
+            {
+                R(140f, 45f, 370f, 208f), R(550f, 48f, 740f, 205f), R(925f, 45f, 1240f, 205f), R(1475f, 45f, 1730f, 208f), R(1900f, 45f, 2080f, 205f),
+                R(130f, 405f, 355f, 560f), R(810f, 455f, 1310f, 670f), R(1340f, 475f, 1735f, 670f),
+            },
+            0.25f, 1.95f, 0f, 1.2f, null, "Art/house_32_broken", R(380f, 230f, 560f, 330f));
 
         static Rect R(float x0, float y0, float x1, float y1) => Rect.MinMaxRect(x0, y0, x1, y1);
         static WindowDetail Pot(int w, float x0, float y0, float x1, float y1) => new WindowDetail(w, DetailKind.Pot) { pixel = R(x0, y0, x1, y1) };
