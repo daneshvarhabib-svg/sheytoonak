@@ -770,7 +770,7 @@ namespace Sheytoonak.Prototype
                 // the picture is then a little wider than its aspect (stretched sideways), and the room above it is sky.
                 viewHalfWidth = want * 0.5f;
                 float kx = want / w, ky = kx;
-                float topLimit = HeightAtScreenFraction(z, 0.88f), topWindow = 0f;
+                float topLimit = HeightAtScreenFraction(z, 0.76f), topWindow = 0f; // user (2026-11-06): «آسمون … تیکه آبی داشته باشه اون بالا» — room for sky above the roof line
                 foreach (var r0 in h.worldWindows) topWindow = Mathf.Max(topWindow, r0.yMax);
                 if (topWindow > 0.01f && topWindow * ky > topLimit) ky = Mathf.Max(kx * 0.6f, topLimit / topWindow);
                 if (Mathf.Abs(kx - 1f) > 0.001f || Mathf.Abs(ky - 1f) > 0.001f)
@@ -891,12 +891,16 @@ namespace Sheytoonak.Prototype
             // The painting's own top rows stretched upward continue its sky (or wall) instead.
             // User (2026-11-05): sky above the painting instead of its stretched top rows.
             var skyMat = SkyGradient(mat);
-            float above = 60f - paintedHeight;
+            // the sky quad reaches just past the top of the screen and shows the painted sky's upper 70 % (the blue and
+            // the power lines), not its haze: user (2026-11-06) «تیکه آبی داشته باشه اون بالا»
+            float skyTop = Mathf.Max(paintedHeight + 1.5f, HeightAtScreenFraction(z, 1.08f));
+            float above = skyTop - paintedHeight;
             var sky = GameObject.CreatePrimitive(PrimitiveType.Quad);
             Strip(sky); sky.name = "Sky";
             sky.transform.SetParent(root, false);
             sky.transform.localPosition = new Vector3(0f, paintedHeight + above * 0.5f, 0.6f);
-            sky.transform.localScale = new Vector3(Mathf.Max(w, viewHalfWidth * 2f + 1f) * 2f, above, 1f);
+            sky.transform.localScale = new Vector3(Mathf.Max(w, viewHalfWidth * 2f + 1f) * 1.2f, above, 1f);
+            skyMat.mainTextureScale = new Vector2(1f, 0.7f); skyMat.mainTextureOffset = new Vector2(0f, 0.3f);
             sky.GetComponent<Renderer>().sharedMaterial = skyMat;
             // Neighbours: painted blank walls (Art/wall_left, Art/wall_right: houses without visible windows,
             // user 2026-10-27) when they exist, otherwise a darker shade of this painting's brick.
