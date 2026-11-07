@@ -21,7 +21,7 @@ exture_buffer_range GL_ARB_texture_compression_bptc GL_ARB_texture_compression_r
 pth_stencil GL_ATI_blend_equation_separate GL_ATI_meminfo GL_ATI_texture_float GL_ATI_texture_mirror_once GL_EXT_EGL_image_storage GL_EXT_EGL_image_storage_compression GL_EXT_EGL_sync GL_EXT_abgr GL_EXT_blend_equation_separate GL_EXT_debug_label GL_EXT_depth_bounds_test GL_EXT_draw_buffers2 GL_EXT_draw_instanced GL_EXT_framebuffer_blit GL_EXT_framebuffer_multisample GL_EXT_framebuffer_multisample_blit_scaled GL_EXT_framebuffer_object GL_EXT_framebuffer_sRGB GL_EXT_memory_object GL_EXT_memory_object_fd GL_EXT_packed_depth_stencil GL_EXT_packed_float GL_EXT_pixel_buffer_object GL_EXT_polygon_offset_clamp GL_EXT_provoking_vertex GL_EXT_shader_clock GL_EXT_shader_framebuffer_fetch GL_EXT_shader_framebuffer_fetch_non_coherent GL_EXT_shader_image_load_formatted GL_EXT_shader_integer_mix GL_EXT_texture_array GL_EXT_texture_compression_dxt1 GL_EXT_texture_compression_rgtc GL_EXT_texture_compression_s3tc GL_EXT_texture_filter_anisotropic GL_EXT_texture_filter_minmax GL_EXT_texture_integer GL_EXT_texture_mirror_clamp 
 GL_EXT_texture_sRGB GL_EXT_texture_sRGB_R8 GL_EXT_texture_sRGB_RG8 GL_EXT_texture_sRGB_decode GL_EXT_texture_shadow_lod GL_EXT_texture_shared_exponent GL_EXT_texture_snorm GL_EXT_texture_storage GL_EXT_texture_swizzle GL_EXT_timer_query GL_EXT_transform_feedback GL_EXT_vertex_array_bgra GL_EXT_vertex_attrib_64bit GL_IBM_multimode_draw_arrays GL_INTEL_shader_atomic_float_minmax GL_KHR_blend_equation_advanced GL_KHR_blend_equation_advanced_coherent GL_KHR_context_flush_control GL_KHR_debug GL_KHR_no_error GL_KHR_parallel_shader_compile GL_KHR_robust_buffer_access_behavior GL_KHR_robustness GL_KHR_texture_compression_astc_ldr GL_KHR_texture_compression_astc_sliced_3d GL_MESA_framebuffer_flip_y GL_MESA_pack_invert GL_MESA_shader_integer_functions GL_MESA_texture_signed_rgba GL_NVX_gpu_memory_info GL_NV_alpha_to_coverage_dither_control GL_NV_conditional_render GL_NV_copy_image GL_NV_depth_clamp GL_NV_packed_depth_stencil GL_NV_sample_locations GL_NV_shader_atomic_float GL_NV_texture_barrier GL_OES_EGL_image GL_OV
 R_multiview GL_OVR_multiview2 GL_S3_s3tc
-OPENGL LOG: Creating OpenGL 4.5 graphics device ; Context level  <OpenGL 4.5> ; Context handle 265609200
+OPENGL LOG: Creating OpenGL 4.5 graphics device ; Context level  <OpenGL 4.5> ; Context handle 196399088
 ALSA lib confmisc.c:855:(parse_card) [error.core] cannot find card '0'
 ALSA lib conf.c:5211:(_snd_config_evaluate) [error.core] function snd_func_card_inum returned error: No such file or directory
 ALSA lib confmisc.c:422:(snd_func_concat) [error.core] error evaluating strings
@@ -43,7 +43,7 @@ ALSA lib pcm.c:2722:(snd_pcm_open_noupdate) [error.pcm] Unknown PCM default
 FMOD failed to initialize the output device.: "Error initializing output device. " (60)
 FMOD failed to initialize any audio devices, running on emulated software output with no sound. Please check your audio drivers and/or hardware for malfunction.
 Begin MonoManager ReloadAssembly
-- Loaded All Assemblies, in  0.062 seconds
+- Loaded All Assemblies, in  0.061 seconds
 - Finished resetting the current domain, in  0.002 seconds
 [Physics::Module] Selected backend.
 [Physics::Module] Name: PhysX
@@ -55,28 +55,34 @@ Default vsync count 1
 requesting resize 1600 x 720
 resizing window to 1600 x 720
 Desktop is 1600 x 720 @ 0 Hz
-UnloadTime: 0.407936 ms
+UnloadTime: 0.383719 ms
 SHEYTOONAK SHOTS armed: /home/runner/work/sheytoonak/sheytoonak/shots gfx=OpenGLCore 1600x720
 SHEYTOONAK SHOTS bootstrap found
-SHEYTOONAK SHOTS frame 1 t=2.8s focus=False
+SHEYTOONAK SHOTS frame 1 t=2.7s focus=False
 SHEYTOONAK SHOTS frame 2 t=3.8s focus=False
 SHEYTOONAK SHOTS frame 3 t=4.0s focus=False
 SHEYTOONAK SHOT /home/runner/work/sheytoonak/sheytoonak/shots/01-start.png
 SHEYTOONAK SHOT /home/runner/work/sheytoonak/sheytoonak/shots/02a-draft.png
 SHEYTOONAK SHOT /home/runner/work/sheytoonak/sheytoonak/shots/02-stage.png
-SHEYTOONAK SHOTS frame 150 t=16.4s focus=False
 SHEYTOONAK SHOT /home/runner/work/sheytoonak/sheytoonak/shots/03-my-turn.png
 SHEYTOONAK SHOT /home/runner/work/sheytoonak/sheytoonak/shots/03a-selected.png
 SHEYTOONAK SHOT /home/runner/work/sheytoonak/sheytoonak/shots/03b-at-ball.png
 SHEYTOONAK SHOT /home/runner/work/sheytoonak/sheytoonak/shots/04-kick-air.png
 SHEYTOONAK SHOT /home/runner/work/sheytoonak/sheytoonak/shots/05-kick-hit.png
 SHEYTOONAK SHOT /home/runner/work/sheytoonak/sheytoonak/shots/06-after.png
+SHEYTOONAK SHOTS frame 150 t=15.3s focus=False
+SHEYTOONAK SHOTS frame 300 t=25.8s focus=False
+SHEYTOONAK SHOTS frame 450 t=36.5s focus=False
 SHEYTOONAK SHOT /home/runner/work/sheytoonak/sheytoonak/shots/07-poison-0.png
-SHEYTOONAK SHOTS frame 300 t=27.2s focus=False
+SHEYTOONAK SHOTS frame 600 t=47.1s focus=False
+SHEYTOONAK SHOTS frame 750 t=57.7s focus=False
 SHEYTOONAK SHOT /home/runner/work/sheytoonak/sheytoonak/shots/07-poison-1.png
+SHEYTOONAK SHOTS frame 900 t=68.3s focus=False
+SHEYTOONAK SHOTS frame 1050 t=78.9s focus=False
+SHEYTOONAK SHOTS frame 1200 t=89.5s focus=False
 SHEYTOONAK SHOT /home/runner/work/sheytoonak/sheytoonak/shots/07-poison-2.png
 SHEYTOONAK SHOT /home/runner/work/sheytoonak/sheytoonak/shots/08-bot-turn.png
-SHEYTOONAK SHOTS frame 450 t=38.2s focus=False
+SHEYTOONAK SHOTS frame 1350 t=100.1s focus=False
 SHEYTOONAK SHOT /home/runner/work/sheytoonak/sheytoonak/shots/09-later.png
 SHEYTOONAK SHOT /home/runner/work/sheytoonak/sheytoonak/shots/10-challenge.png
 SHEYTOONAK SHOT /home/runner/work/sheytoonak/sheytoonak/shots/11-home.png
