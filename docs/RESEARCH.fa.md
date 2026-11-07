@@ -92,3 +92,23 @@
 منابع: [Supercell: About the update, Records changes](https://supercell.com/en/games/brawlstars/blog/game-updates/about-the-update-records-changes)، [Supercell: RIP Masteries](https://supercell.com/en/games/brawlstars/blog/news/rip-masteries)، [Supercell: 2025 in review](https://supercell.com/en/games/brawlstars/blog/community/2025-in-review-franks-blog-post)، [GamingOnPhone: چرا Mastery حذف شد](https://gamingonphone.com/news/brawl-stars-developer-team-explains-why-masteries-were-removed)، [Mechanics of Magic: Bluffing, judging](https://mechanicsofmagic.com/?p=6735)، [Werewolf / Mafia (Spielbound)](https://spielbound.org/taxonomy/term/289).
 
 **وضعیت (۱۶ آبان):** کاربر: «هیچ کدوم نره تو صف» → پ۸، پ۹ و پ۱۰ رد شدند.
+
+## پیشنهادهای روزِ ۴ (۱۷ آبان) — زاویه: ده دقیقه‌ی اول (FTUE کلش رویال) و «چرا بعد از باخت می‌مانند» (Brawl Stars)
+زمینه: نقدِ طراحیِ ۱۷ آبان گفت اولین دوئل باید زیرِ ۳۰ ثانیه شروع شود و هسته باید با آدمِ غریبه تست شود؛ این سه پیشنهاد مستقیم به همان می‌خورند.
+
+### پ۱۱. سه دوئلِ آموزشیِ کوتاه به‌جای راهنمای متنی
+- منبع: کلش رویال آموزش را به پنج دوئلِ کوتاهِ پشتِ هم تقسیم می‌کند؛ اولی‌ها دست می‌گیرند، آخری‌ها فقط امتحان می‌کنند ([Apple: Onboarding for Games](https://developer.apple.com/app-store/onboarding-for-games/)، [PocketGamer FTUE](https://www.pocketgamer.biz/ftue-clash-royale/)). رازش: هر مکانیک در یک موقعیتِ امن، یکی‌یکی.
+- ما: اولین اجرا (و دکمه‌ی «آموزش» در تنظیمات) = سه دوئلِ ۵-پنجره‌ای با رباتِ نرم: (۱) فقط شوت، با یک فلشِ لرزان روی پنجره؛ (۲) حریف اتوبوس می‌گذارد → «پادزهر بزن»؛ (۳) دوئلِ کاملِ کوتاه. هر کدام زیرِ یک دقیقه، بی‌متنِ بلند، فقط یک جمله‌ی عامیانه‌ی شامی بالای صفحه. بعدش لابی.
+- هزینه: متوسط (سه سناریویِ ثابت + رباتِ کندتر + فلش). ریسک: کم؛ همین حالا هر غریبه‌ای که APK را می‌گیرد اول گیج می‌شود (§۲.۱ نقد).
+
+### پ۱۲. باختِ بی‌دردِ تازه‌کار و سطحی که پایین نمی‌آید
+- منبع: Brawl Stars زیرِ ۱۰۰۰ جام باخت را کم‌هزینه می‌کند، «Underdog» باختِ نابرابر را جبران می‌کند، و سطحِ هر قهرمان بر پایه‌ی **اوجِ** جام است و با باخت پایین نمی‌آید ([Supercell blog](https://supercell.com/en/games/brawlstars/blog/news/trophy-season-rework-is-coming)، [Underdog](https://www.sportskeeda.com/esports/what-underdog-status-brawl-stars)).
+- ما: فحش (= ارز/رتبه) تا ۲۰ تا با باخت کم نمی‌شود؛ بالاتر همان «برد +۵ / باخت −۲». و یک «اوجِ فحش» جدا ذخیره شود که هرگز پایین نمی‌آید و جایزه‌های پ۲ به آن گره بخورد، نه به عددِ لحظه‌ای. حریفِ آشکارا قوی‌تر (تیمِ ربات با سطحِ بالاتر، بعد از پ۱) = باختِ صفر.
+- هزینه: کم (دو عدد در PlayerPrefs + یک شرط در `RewardFor`). ریسک: کم.
+
+### پ۱۳. لحظه‌ی اولین جایزه، بزرگ و فوری
+- منبع: تحلیلِ Game Developer از کلش رویال: «ارائه و ریتمِ اولین صندوقچه عالی است» و همیشه یک چیزِ تازه در دیدرس است ([Game Developer](https://gamedeveloper.com/design/breaking-down-supercell-s-next-hit-clash-royale)).
+- ما: بعد از اولین برد، کیسه همان‌جا رویِ صحنه (نه در لابی) پاره می‌شود: شیشه‌خرده می‌ریزد، یک قهرمانِ تازه یا کارت با صدای فحشِ شاد بیرون می‌آید، و لابی با انگشتِ راهنما به «کیسه‌ی بعدی = بردِ بعدی» اشاره می‌کند. فقط بارِ اول این‌قدر پرسروصدا.
+- هزینه: کم تا متوسط (یک انیمیشنِ IMGUI + صدا). ریسک: کم.
+
+منابعِ بیشتر: [Inworld: tutorial design](https://inworld.ai/blog/game-ux-best-practices-for-video-game-tutorial-design)، [Brawl Stars trophy rework 2026](https://mobilematters.gg/news/brawl-stars/trophy-system-rework-2026).
