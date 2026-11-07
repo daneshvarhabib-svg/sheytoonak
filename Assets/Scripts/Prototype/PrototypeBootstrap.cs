@@ -1625,8 +1625,9 @@ namespace Sheytoonak.Prototype
                 // the sign drops in from above during the first 0.6 s and settles top-centre, ~46 % of the width
                 float t = Mathf.Clamp01((SplashSeconds - left) / 0.6f);
                 float drop = (1f - t) * (1f - t) * sh * 0.5f;
-                float lw = sw * 0.46f, lh = lw * logoTex.height / logoTex.width;
-                GUI.DrawTexture(new Rect((sw - lw) * 0.5f, sh * 0.03f - drop, lw, lh), logoTex, ScaleMode.StretchToFill);
+                // run 155: at 46 % the sign hid the kids' heads; 34 %, hung from the top edge, leaves the painting readable
+                float lw = sw * 0.34f, lh = lw * logoTex.height / logoTex.width;
+                GUI.DrawTexture(new Rect((sw - lw) * 0.5f, -lh * 0.06f - drop, lw, lh), logoTex, ScaleMode.StretchToFill);
             }
             GUI.color = old;
             return true;
