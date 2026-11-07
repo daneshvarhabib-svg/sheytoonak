@@ -112,3 +112,5 @@
 - هزینه: کم تا متوسط (یک انیمیشنِ IMGUI + صدا). ریسک: کم.
 
 منابعِ بیشتر: [Inworld: tutorial design](https://inworld.ai/blog/game-ux-best-practices-for-video-game-tutorial-design)، [Brawl Stars trophy rework 2026](https://mobilematters.gg/news/brawl-stars/trophy-system-rework-2026).
+
+**وضعیت (۱۷ آبان):** کاربر: «هر سه برن تو صف» → پ۱۱، پ۱۲، پ۱۳ تأییدشده و در صف. صفِ کامل: پ۱–پ۴، پ۶، پ۷، پ۱۱–پ۱۳. ترتیبِ پیشنهادیِ ساخت (طبقِ نقدِ ۱۷ آبان): اول پ۱۱ (آموزش، لازمه‌ی تستِ انسانی)، بعد پ۱۳ و پ۱۲، بقیه بعد از تأییدِ هسته.
