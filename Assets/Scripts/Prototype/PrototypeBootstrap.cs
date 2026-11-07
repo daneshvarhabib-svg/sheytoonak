@@ -87,8 +87,16 @@ namespace Sheytoonak.Prototype
 
         // ------------------------------------------------------------------ setup
 
+        // Splash (user 2026-11-07: «بذار رو بازی، نوشته بیاد بالای اسپلش»): the painted alley (Art/UI/splash) with the tin
+        // sign logo (Art/UI/logo) hanging over it for a few seconds after boot; a tap skips it.
+        Texture2D splashTex, logoTex; float splashUntil;
+        const float SplashSeconds = 3.2f;
+
         void Awake()
         {
+            splashTex = Resources.Load<Texture2D>("Art/UI/splash");
+            logoTex = Resources.Load<Texture2D>("Art/UI/logo");
+            splashUntil = splashTex != null ? Time.realtimeSinceStartup + SplashSeconds : 0f;
             EnsureMaterials();
             BuildCameraAndLight();
             BuildStreet();
@@ -1599,8 +1607,34 @@ namespace Sheytoonak.Prototype
 
         // ------------------------------------------------------------------ HUD (spoken Levantine Arabic, see Ar.cs)
 
+        bool DrawSplash()
+        {
+            if (splashTex == null || Time.realtimeSinceStartup >= splashUntil) return false;
+            if (Input.touchCount > 0 || Input.GetMouseButton(0)) { splashUntil = 0f; return false; }
+            float left = splashUntil - Time.realtimeSinceStartup;
+            float a = Mathf.Clamp01(left / 0.5f); // fades out in the last half second
+            // cover the whole screen, keep the aspect
+            float sw = Screen.width, sh = Screen.height;
+            float k = Mathf.Max(sw / splashTex.width, sh / splashTex.height);
+            float w = splashTex.width * k, h = splashTex.height * k;
+            var old = GUI.color;
+            GUI.color = new Color(1f, 1f, 1f, a);
+            GUI.DrawTexture(new Rect((sw - w) * 0.5f, (sh - h) * 0.5f, w, h), splashTex, ScaleMode.StretchToFill);
+            if (logoTex != null)
+            {
+                // the sign drops in from above during the first 0.6 s and settles top-centre, ~46 % of the width
+                float t = Mathf.Clamp01((SplashSeconds - left) / 0.6f);
+                float drop = (1f - t) * (1f - t) * sh * 0.5f;
+                float lw = sw * 0.46f, lh = lw * logoTex.height / logoTex.width;
+                GUI.DrawTexture(new Rect((sw - lw) * 0.5f, sh * 0.03f - drop, lw, lh), logoTex, ScaleMode.StretchToFill);
+            }
+            GUI.color = old;
+            return true;
+        }
+
         void OnGUI()
         {
+            if (DrawSplash()) return;
             float u = Mathf.Max(1f, Screen.height / 900f);
             var font = Ar.Font;
             var label = new GUIStyle(GUI.skin.label) { fontSize = Mathf.RoundToInt(24 * u), normal = { textColor = Color.white }, font = font };

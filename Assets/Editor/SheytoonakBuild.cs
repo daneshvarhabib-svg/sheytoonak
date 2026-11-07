@@ -54,9 +54,34 @@ namespace Sheytoonak.EditorTools
             PlayerSettings.SetScriptingBackend(NamedBuildTarget.Android, ScriptingImplementation.IL2CPP);
             PlayerSettings.Android.targetArchitectures = AndroidArchitecture.ARM64;
             PlayerSettings.Android.minSdkVersion = (AndroidSdkVersions)MinAndroidApi;
+            ApplyIcons();
             AssetDatabase.SaveAssets();
             foreach (var problem in VerifyProjectSettings()) Debug.LogWarning("SHEYTOONAK SETTINGS " + problem);
             Debug.Log("SHEYTOONAK SETTINGS applied and saved: " + PackageId + ", landscape, IL2CPP ARM64");
+        }
+
+        /// <summary>
+        /// The app icon (user 2026-11-07: «آیکون هم بذار که روی اپ باشه بجای یونیتی»): Assets/Icons/app_icon.png becomes the
+        /// default icon and every Android icon kind (legacy, round, adaptive background with no foreground layer).
+        /// </summary>
+        public static void ApplyIcons()
+        {
+            var tex = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/Icons/app_icon.png");
+            if (tex == null) { Debug.LogWarning("SHEYTOONAK ICON Assets/Icons/app_icon.png not found, Unity's default icon stays"); return; }
+            PlayerSettings.SetIconsForTargetGroup(BuildTargetGroup.Unknown, new[] { tex });
+            var target = NamedBuildTarget.Android;
+            foreach (var kind in PlayerSettings.GetSupportedIconKinds(target))
+            {
+                var icons = PlayerSettings.GetPlatformIcons(target, kind);
+                foreach (var icon in icons)
+                {
+                    var layers = new Texture2D[icon.maxLayerCount];
+                    layers[0] = tex; // adaptive: the painting is the background, no foreground layer
+                    icon.SetTextures(layers);
+                }
+                PlayerSettings.SetPlatformIcons(target, kind, icons);
+            }
+            Debug.Log("SHEYTOONAK ICON set from Assets/Icons/app_icon.png");
         }
 
         /// <summary>Returns every mismatch between the current settings and what the build needs (empty = all good).</summary>
@@ -177,6 +202,7 @@ namespace Sheytoonak.EditorTools
                 }
                 else
                 {
+                    ApplyIcons(); // the painted icon, not Unity's (ProjectSettings are not committed with icons; set at build time)
                     var args = ParseArgs();
                     string path = args.TryGetValue("customBuildPath", out var p) && !string.IsNullOrEmpty(p) ? p : DefaultApkPath;
                     if (!path.EndsWith(".apk", StringComparison.OrdinalIgnoreCase)) path = Path.Combine(path, "Sheytoonak.apk");
