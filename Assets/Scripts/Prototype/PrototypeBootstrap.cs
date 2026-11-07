@@ -231,7 +231,7 @@ namespace Sheytoonak.Prototype
             // User (2026-11-05): the 3:1 paintings (2172x724) replace the 2.3:1 ones; houses 13–22 stay in code until their 3:1
             // versions arrive («فعلا این سه تا رو داشته باش تا باقی برسن»).
             // test (user, 2026-11-05): one 3:1 painting with the top row 8 % below the edge, alone, to see if it fills the frame
-            var houses = new[] { House28(), House29(), House30(), House31(), House32(), House33(), House34(), House35() };
+            var houses = new[] { House28(), House29(), House30(), House31(), House32(), House33(), House34(), House35(), House36() };
             allHouses = houses;
 
             // Player: foot position + window mapping. No body: the game is first-person (POV).
@@ -385,6 +385,16 @@ namespace Sheytoonak.Prototype
 
         const float Wide3W = 13f * 2172f / 1536f; // a 3:1 painting at the same pixel density as the old 13 m 3:2 houses
         // Houses 7–27 (3:2 and 2.3:1 paintings) were removed on 2026-11-07 (design review §2.8): the pool is the 3:1 gritty houses only.
+
+        // First house of the odd-count rule (user 2026-11-07: «حداقل ۱۱ و حداکثر ۲۷، فرد»): 5 + 5 + (4 barred + shop) = 15.
+        HouseDefinition House36() => MakePaintedHouse("البيت ٣٦", "Art/house_36", 2172f, 724f, Wide3W, // Beirut, peeling plaster, three rows, 15 windows
+            new[]
+            {
+                R(198f, 27f, 364f, 169f), R(595f, 27f, 766f, 169f), R(999f, 27f, 1184f, 161f), R(1401f, 26f, 1586f, 163f), R(1776f, 27f, 1998f, 169f),
+                R(173f, 209f, 365f, 351f), R(590f, 207f, 778f, 351f), R(991f, 206f, 1178f, 351f), R(1363f, 207f, 1592f, 351f), R(1760f, 210f, 2018f, 352f),
+                R(136f, 467f, 364f, 635f), R(500f, 467f, 728f, 635f), R(856f, 480f, 1241f, 663f), R(1531f, 467f, 1759f, 635f), R(1911f, 467f, 2139f, 635f),
+            },
+            0.25f, 1.95f, 0f, 1.2f, null, "Art/house_36_broken", R(1250f, 100f, 1500f, 300f));
 
         HouseDefinition House28() => MakePaintedHouse("البيت ٢٨", "Art/house_28", 2172f, 724f, Wide3W, // first gritty Damascus house: mural, posters, cables, grocer
             new[]
