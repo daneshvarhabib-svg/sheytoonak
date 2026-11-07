@@ -14,7 +14,9 @@ namespace Sheytoonak
     public class MusicPlayer : MonoBehaviour
     {
         [Range(0f, 1f)] public float volume = 0.55f;
-        public float fadeSeconds = 1.2f;
+        // User (2026-11-07): «موسیقی خیلی یهویی عوض می‌شه، بهتره فید شه اول بعد اون یکی آروم شروع شه بعد صداش بیشتر بشه»:
+        // the old bed fades out completely, a short breath, then the new one rises from silence.
+        public float fadeOutSeconds = 1.2f, gapSeconds = 0.35f, fadeInSeconds = 2.5f;
 
         AudioClip duelLoop, tensionLoop, stingWin, stingLose, lobbyLoop;
         AudioSource a, b, sting;   // a/b alternate as the music bed, sting is one-shot
@@ -70,7 +72,8 @@ namespace Sheytoonak
         }
 
         float lobbyAt = -1f;
-        bool OnLobby => live != null && live.clip == lobbyLoop;
+        bool OnLobby => live != null && (live.clip == lobbyLoop || pendingClip == lobbyLoop);
+        AudioClip pendingClip;
 
         void Update()
         {
@@ -86,30 +89,37 @@ namespace Sheytoonak
             if (nearEnd && !tense && tensionLoop != null) { tense = true; Switch(tensionLoop); }
         }
 
-        /// <summary>Crossfade the bed to <paramref name="clip"/> (null = silence).</summary>
+        /// <summary>Fade the bed out, then bring <paramref name="clip"/> in from silence (null = stay silent).</summary>
         void Switch(AudioClip clip)
         {
             var from = live;
             var to = clip == null ? null : (from == a ? b : a);
-            if (to != null) { to.clip = clip; to.volume = 0f; to.Play(); }
-            live = to;
+            live = to; pendingClip = clip;
             StopAllCoroutines();
-            StartCoroutine(Fade(from, to));
+            StartCoroutine(Fade(from, to, clip));
         }
 
-        IEnumerator Fade(AudioSource from, AudioSource to)
+        IEnumerator Fade(AudioSource from, AudioSource to, AudioClip clip)
         {
             float t = 0f, f0 = from != null ? from.volume : 0f;
-            while (t < fadeSeconds)
+            while (from != null && t < fadeOutSeconds)
             {
                 t += Time.unscaledDeltaTime;
-                float k = Mathf.Clamp01(t / fadeSeconds);
-                if (from != null) from.volume = Mathf.Lerp(f0, 0f, k);
-                if (to != null) to.volume = Mathf.Lerp(0f, volume, k);
+                from.volume = Mathf.Lerp(f0, 0f, Mathf.Clamp01(t / fadeOutSeconds));
                 yield return null;
             }
             if (from != null) { from.volume = 0f; from.Stop(); }
-            if (to != null) to.volume = volume;
+            if (to == null) yield break;
+            if (from != null) yield return new WaitForSecondsRealtime(gapSeconds);
+            to.clip = clip; to.volume = 0f; to.Play();
+            t = 0f;
+            while (t < fadeInSeconds)
+            {
+                t += Time.unscaledDeltaTime;
+                to.volume = Mathf.Lerp(0f, volume, Mathf.Clamp01(t / fadeInSeconds));
+                yield return null;
+            }
+            to.volume = volume;
         }
     }
 }

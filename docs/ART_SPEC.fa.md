@@ -285,3 +285,26 @@ Hazy late-afternoon city sky over Beirut, hand-painted, pale dusty horizon to mu
 - دوئل: *Instrumental, no vocals. Playful Levantine street-game music, 110 BPM, seamless loop. Oud and buzuq riff over darbuka and riq, cheeky clarinet, off-beat handclaps. Mischievous kids-in-the-alley mood, Beirut/Damascus back street, slightly lo-fi.*
 - تنش: *same theme but urgent: 135 BPM, driving darbuka and tabla rolls, fast buzuq tremolo, rising tension, 30-second loop.*
 - برد/باخت: *4-second sting: triumphant oud and clarinet flourish with a darbuka hit* / *comic descending clarinet slide, a sad oud note, one darbuka thud.*
+
+## صدای قهرمان‌ها و ابزارها (۱۷ آبان)
+`HeroVoice` این فایل‌ها را از Resources برمی‌دارد (ogg؛ هر چند تا، نام با همان پیشوند، تصادفی و هرگز دو بار پشتِ هم یکی):
+
+| مسیر | کِی |
+|---|---|
+| `Audio/Heroes/<id>/kick_01.ogg …` | لحظه‌ی شوتِ همان قهرمان |
+| `Audio/Fx/poison_01.ogg …` | گذاشتنِ سم (هر دو طرف) |
+| `Audio/Fx/antidote_01.ogg …` | پادزهر (هر دو طرف) |
+
+شناسه‌ها: `abu_shahata` أبو شحّاطة (بیروتی)، `zaatar` زعتر (شامی)، `fulla` فُلّة (اسکندرانی)، `rima` ريما الشرشوحة (صیداوی)، `toni` طوني الزعران (بیروتی)، `um_arabiyat` أم العربيات (بغدادی)، `hamada` حمادة الطرشجي (مصری)، `bubakr` بوبكر الصيّاد (تونسی).
+
+پیشنهادِ خطِ شوت (کوتاه، ۲–۳ تا برای هر نفر، با لهجه‌ی خودش):
+- أبو شحّاطة: «خود هالشحّاطة!» / «يا الله!»
+- زعتر: «بسم الله!» / «شوفوا هالضربة!»
+- فُلّة: «خدها يا بابا!» / «أيوه!»
+- ريما: «يا ويلك!» / «هيّا!»
+- طوني: «ولك رووح!» / «هيدي إلك!»
+- أم العربيات: «ها!» / «خذها يا ابني!»
+- حمادة: «يلّا بينا!» / «آه يا سلام!»
+- بوبكر: «برا!» / «هيّا هيّا!»
+
+سم: «صوتِ ریختنِ مایع + خنده‌ی موذیانه»؛ پادزهر: «پوفِ جادویی + آهِ آسودگی». (پرامپتِ افکت: *short cartoon sfx, 1 second, …*)
