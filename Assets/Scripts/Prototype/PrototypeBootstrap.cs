@@ -231,7 +231,7 @@ namespace Sheytoonak.Prototype
             // User (2026-11-05): the 3:1 paintings (2172x724) replace the 2.3:1 ones; houses 13–22 stay in code until their 3:1
             // versions arrive («فعلا این سه تا رو داشته باش تا باقی برسن»).
             // test (user, 2026-11-05): one 3:1 painting with the top row 8 % below the edge, alone, to see if it fills the frame
-            var houses = new[] { House28(), House29(), House30(), House31(), House32(), House33(), House34(), House35(), House36(), House37() };
+            var houses = new[] { House28(), House29(), House30(), House31(), House32(), House33(), House34(), House35(), House36(), House37(), House38(), House39(), House40() };
             allHouses = houses;
 
             // Player: foot position + window mapping. No body: the game is first-person (POV).
@@ -406,6 +406,36 @@ namespace Sheytoonak.Prototype
                 R(293f, 483f, 450f, 651f), R(863f, 548f, 1525f, 705f), R(1748f, 483f, 1911f, 651f),
             },
             0.25f, 1.95f, 0f, 1.2f, null, "Art/house_37_broken", R(1200f, 420f, 1400f, 600f));
+
+        // Beirut 1970s concrete block, pink, bullet-pocked: 7 + 7 + 6 barred + the glass of the stairwell door = 21 (review 2026-11-07).
+        HouseDefinition House38() => MakePaintedHouse("البيت ٣٨", "Art/house_38", 2172f, 724f, Wide3W,
+            new[]
+            {
+                R(222f, 59f, 374f, 173f), R(494f, 59f, 646f, 173f), R(749f, 59f, 901f, 173f), R(1009f, 59f, 1162f, 173f), R(1270f, 59f, 1422f, 173f), R(1536f, 59f, 1688f, 173f), R(1802f, 59f, 1954f, 173f),
+                R(222f, 266f, 374f, 401f), R(494f, 266f, 646f, 401f), R(749f, 266f, 901f, 401f), R(1009f, 266f, 1162f, 401f), R(1270f, 266f, 1422f, 401f), R(1536f, 266f, 1688f, 401f), R(1802f, 266f, 1954f, 401f),
+                R(217f, 510f, 374f, 640f), R(494f, 510f, 651f, 640f), R(749f, 510f, 906f, 640f), R(1270f, 510f, 1428f, 640f), R(1536f, 510f, 1694f, 640f), R(1802f, 510f, 1960f, 640f), R(1009f, 526f, 1162f, 695f),
+            },
+            0.25f, 1.95f, 0f, 1.2f, new[] { new WindowDetail(-1, DetailKind.Laundry) { pixel = R(440f, 320f, 640f, 400f) } }, "Art/house_38_broken", R(1000f, 180f, 1200f, 260f));
+
+        // Alexandria corniche, lime wash and green wood, café with neon: 4 + 4 + (kiosk + café + barred) = 11.
+        HouseDefinition House39() => MakePaintedHouse("البيت ٣٩", "Art/house_39", 2172f, 724f, Wide3W,
+            new[]
+            {
+                R(314f, 27f, 483f, 157f), R(781f, 27f, 955f, 157f), R(1238f, 27f, 1411f, 157f), R(1721f, 27f, 1895f, 157f),
+                R(314f, 217f, 488f, 401f), R(781f, 217f, 955f, 401f), R(1238f, 217f, 1411f, 401f), R(1726f, 217f, 1900f, 401f),
+                R(233f, 532f, 532f, 662f), R(727f, 504f, 1346f, 673f), R(1498f, 510f, 1661f, 651f),
+            },
+            0.25f, 1.95f, 0f, 1.2f, null, "Art/house_39_broken", R(1050f, 450f, 1250f, 600f));
+
+        // Tunis medina, yellowed plaster and cobalt blue, bakery: 6 + 6 + (4 barred + bakery) = 17.
+        HouseDefinition House40() => MakePaintedHouse("البيت ٤٠", "Art/house_40", 2172f, 724f, Wide3W,
+            new[]
+            {
+                R(304f, 38f, 390f, 124f), R(662f, 38f, 749f, 124f), R(939f, 38f, 1026f, 124f), R(1227f, 38f, 1314f, 124f), R(1509f, 38f, 1596f, 124f), R(1802f, 38f, 1889f, 124f),
+                R(282f, 206f, 434f, 336f), R(635f, 206f, 787f, 336f), R(895f, 206f, 1047f, 336f), R(1172f, 206f, 1324f, 336f), R(1460f, 206f, 1612f, 336f), R(1759f, 206f, 1911f, 336f),
+                R(179f, 445f, 352f, 635f), R(526f, 445f, 700f, 635f), R(787f, 439f, 1102f, 635f), R(1476f, 445f, 1639f, 635f), R(1835f, 445f, 2009f, 635f),
+            },
+            0.25f, 1.95f, 0f, 1.2f, null, "Art/house_40_broken", R(1250f, 420f, 1450f, 600f));
 
         HouseDefinition House28() => MakePaintedHouse("البيت ٢٨", "Art/house_28", 2172f, 724f, Wide3W, // first gritty Damascus house: mural, posters, cables, grocer
             new[]
