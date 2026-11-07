@@ -308,3 +308,24 @@ Hazy late-afternoon city sky over Beirut, hand-painted, pale dusty horizon to mu
 - بوبكر: «برا!» / «هيّا هيّا!»
 
 سم: «صوتِ ریختنِ مایع + خنده‌ی موذیانه»؛ پادزهر: «پوفِ جادویی + آهِ آسودگی». (پرامپتِ افکت: *short cartoon sfx, 1 second, …*)
+
+### تعدادِ پنجره: فرد، بین ۱۱ و ۲۷ (کاربر، ۱۷ آبان)
+«تعداد پنجره‌های قابلِ شکستن در همه‌ی تصاویر فرد باشه؛ تعدادشون بیشتر باشه، حداقل ۱۱ و حداکثر ۲۷.» با جمعِ فرد، پنجره‌ی مهرشده دیگر لازم نیست (کد فقط برای خانه‌ی زوج کرکره می‌گذارد). ویترینِ مغازه یک پنجره حساب می‌شود (یک قابِ شیشه‌ایِ بزرگ، نه چند تکه).
+
+چیدمان‌های پیشنهادی (ردیف از بالا؛ هر عدد = پنجره‌ی شیشه‌دارِ شمردنی):
+| جمع | چیدمان |
+|---|---|
+| ۱۱ | ۴ + ۴ + (۲ پنجره + ۱ ویترین) |
+| ۱۳ | ۵ + ۵ + (۲ + ۱ ویترین) |
+| ۱۵ | ۵ + ۵ + ۵ |
+| ۱۷ | ۶ + ۶ + (۴ + ۱ ویترین) |
+| ۲۱ | ۷ + ۷ + ۷ |
+| ۲۷ | ۹ + ۹ + ۹ |
+
+پرامپتِ پایه (عددها را از جدول بگذار؛ ۳ ردیف تا در قابِ ۳:۱ پنجره‌ها ریز نشوند، هر ردیف هم‌تراز):
+```
+Ultra-wide street-level view of a single present-day Beirut house facade, aspect ratio 3:1, 2172x724, hand-painted illustration, muted dusty colours, late afternoon light. The wall reaches both edges of the frame; no neighbouring buildings, no sky, no street in front; flat front view. The top 6 % of the image is plain wall. EXACTLY three rows of windows, aligned in straight columns: top row EXACTLY 5 identical rectangular windows with wooden shutters, middle row EXACTLY 5 identical windows with small balconies, ground floor EXACTLY 5 openings: 4 barred windows and 1 wide shop front with a single large glass pane, plus an iron door. Every window is fully visible, none hidden by balconies, awnings, cables or plants; all glass panes clean and intact. Count the windows: 15 in total. The plaster is stained, cracked and patched, paint peeling in sheets, rust streaks under the sills, a bundle of sagging electricity cables, an old air-conditioner box, a cracked satellite dish; street graffiti on the ground floor (abstract shapes, no readable words), two torn posters. No people, no cars.
+```
+نسخه‌ی شکسته: همان + `identical composition, same framing and light, every window pane and the shop glass shattered with jagged holes, dark rooms behind`.
+
+⚠️ مدل‌های تصویر در شمردن ضعیف‌اند: اگر خروجی ۱۴ یا ۱۶ شد، پنجره‌ها را از رویِ خودِ تصویر می‌شمارم و اگر زوج بود یکی را در کد مهر می‌کنم (کرکره)، پس عددِ دقیق حیاتی نیست؛ ولی «EXACTLY n» و «Count the windows» کمک می‌کند.
