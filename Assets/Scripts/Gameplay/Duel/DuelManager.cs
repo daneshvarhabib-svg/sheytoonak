@@ -378,13 +378,16 @@ namespace Sheytoonak
                 // where the last kick left it and jumped to the foot only at the kick
                 if (!kickActive && BallSettled && ball.gameObject.activeSelf && ball.Body != null && ball.Body.isKinematic)
                     ball.transform.position = foot.StrikeSpot + Vector3.up * ball.Radius;
-                TurnTimeLeft -= Time.deltaTime;
+                // ⚠️ The clock only runs while the player is being waited for. With 20 s turns it used to run through the
+                // rally too, and a timeout in the middle of the third hit ended the turn under a flying ball (user 2026-11-07:
+                // «ضربه سوم رو که می‌زنی توپ غیب می‌شه و درست حرکت نمیکنه»).
+                if (!kickActive && BallSettled && !hitsToCome) TurnTimeLeft -= Time.deltaTime;
                 if (autoKick && Rules.Current == Me && KickArmed && BallSettled && !kickActive && !hitsToCome)
                 {
                     autoKick = false;
                     Kick(Me, new KickGesture(0.35f, Random.Range(-0.25f, 0.25f), 0f), -1);
                 }
-                if (TurnTimeLeft <= 0f)
+                if (TurnTimeLeft <= 0f && !kickActive && BallSettled)
                 {
                     Pop?.Invoke("clock", Rules.Current, PopKind.Info);
                     var who = Rules.Current;
@@ -742,7 +745,7 @@ namespace Sheytoonak
             {
                 hitsToCome = true;
                 BallSettled = false;
-                if (BallDead != null) BallDead.Invoke(ball.transform.position); else PlaceBallAtCentre();
+                if (BallDead != null) BallDead.Invoke(DeadBallSpot()); else PlaceBallAtCentre();
                 Toast?.Invoke(Ar.N(HitsPerBall - rallyHits - 1) + " " + Ar.HitsLeft, 1.2f);
                 return;
             }
@@ -753,8 +756,21 @@ namespace Sheytoonak
             // User (2026-11-05): «توپ یهویی غیب می‌شه و ضربه برنمی‌گرده … توپ برگرده ولی دوبار بخوره زمین و بادش کم شه انگار».
             // The ball is no longer teleported to the foot: where it died it goes limp (BallDead), the stage rolls it back
             // to the kicker; until it is there no kick can start (BallSettled false).
-            if (ball.InPlay && BallDead != null) { BallSettled = false; BallDead.Invoke(ball.transform.position); }
+            if (ball.InPlay && BallDead != null) { BallSettled = false; BallDead.Invoke(DeadBallSpot()); }
             else PlaceBallAtCentre();
+        }
+
+        /// <summary>
+        /// Where the dead ball starts its roll back: its own spot, pulled into the visible lane. A ball that was killed
+        /// behind the camera, off the lane or past the facade used to be "settled" from there (invisible) and then rolled
+        /// in from nowhere for seconds (user 2026-11-07).
+        /// </summary>
+        Vector3 DeadBallSpot()
+        {
+            Vector3 p = ball.transform.position;
+            float zMin = foot.Z + 0.6f, zMax = mapper.FacadeZ - 1f;
+            float xMax = config.laneHalfWidth + 2.5f;
+            return new Vector3(Mathf.Clamp(p.x, -xMax, xMax), ball.Radius, Mathf.Clamp(p.z, zMin, zMax));
         }
 
         IEnumerator ResolveAfter(float seconds)
@@ -775,7 +791,8 @@ namespace Sheytoonak
                 bouncesSinceWall++;
                 GameEvents.RaiseBounced(point, bouncesSinceWall, true);
                 if (kicker != Me && bouncesSinceWall == 1 && BotRehits()) return;
-                if (bouncesSinceWall >= 2 && resolveRoutine == null) resolveRoutine = StartCoroutine(ResolveAfter(0.3f));
+                bool noHitsLeft = rallyHits + 1 >= HitsPerBall;
+                if ((bouncesSinceWall >= 2 || noHitsLeft) && resolveRoutine == null) resolveRoutine = StartCoroutine(ResolveAfter(noHitsLeft ? 0.15f : 0.3f));
                 return;
             }
             groundBounces++;

@@ -486,7 +486,8 @@ namespace Sheytoonak.Prototype
             }
             // roll the rest of the way, slowing down
             Vector3 start = p; float dist = Vector3.Distance(start, home);
-            for (float k = 0f; k < 1f; k += Time.deltaTime / Mathf.Max(0.6f, dist * 0.35f))
+            // the roll home is never longer than ~1.4 s (a ball dying at the wall used to crawl back for 4-5 s)
+            for (float k = 0f; k < 1f; k += Time.deltaTime / Mathf.Clamp(dist * 0.25f, 0.5f, 1.4f))
             {
                 float e = 1f - (1f - k) * (1f - k);
                 t.position = Vector3.Lerp(start, home, e);

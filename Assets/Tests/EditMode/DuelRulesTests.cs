@@ -282,5 +282,19 @@ namespace Sheytoonak.Tests
                 Assert.AreEqual(3, d.Picked[0].Count); Assert.AreEqual(3, d.Picked[1].Count);
             }
         }
+
+        [Test]
+        public void A_timeout_never_ends_a_turn_while_the_ball_is_in_the_air()
+        {
+            var r = Make();
+            r.Start(Side.Left);
+            Assert.AreEqual(ActionReject.None, r.BeginKick(Side.Left));
+            r.Timeout(Side.Left);
+            Assert.AreEqual(Side.Left, r.Current, "the kick is still flying (user 2026-11-07: the ball vanished on the third hit)");
+            Assert.IsTrue(r.KickInFlight);
+            r.EndKick(Side.Left, -1);
+            r.Timeout(Side.Left);
+            Assert.AreEqual(Side.Right, r.Current, "once the ball is down a timeout ends the turn as before");
+        }
     }
 }

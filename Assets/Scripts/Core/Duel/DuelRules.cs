@@ -318,7 +318,7 @@ namespace Sheytoonak.Core.Duel
         /// <summary>The minute ran out. Two in a row = surrender.</summary>
         public void Timeout(Side s)
         {
-            if (Finished || s != Current) return;
+            if (Finished || s != Current || KickInFlight) return; // a ball in the air is never timed out (user 2026-11-07: the ball vanished on the third hit)
             Timeouts[(int)s]++;
             if (Timeouts[(int)s] >= 2) { Surrender(s); return; }
             EndTurn();

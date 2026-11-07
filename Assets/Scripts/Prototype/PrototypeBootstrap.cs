@@ -405,7 +405,10 @@ namespace Sheytoonak.Prototype
                 R(304f, 249f, 423f, 401f), R(662f, 249f, 798f, 401f), R(1047f, 249f, 1172f, 401f), R(1422f, 249f, 1547f, 401f), R(1797f, 249f, 1922f, 401f),
                 R(293f, 483f, 450f, 651f), R(863f, 548f, 1525f, 705f), R(1748f, 483f, 1911f, 651f),
             },
-            0.25f, 1.95f, 0f, 1.2f, null, "Art/house_37_broken", R(1200f, 420f, 1400f, 600f));
+            // ⚠️ the broken twin the user sent was a different generation (2110x745, windows not in the same places); its
+            // cut-outs did not match the frames (user 2026-11-07: «تصاویر پنجره‌های شکسته با ساختمون مچ نیست»), so the
+            // procedural broken pane is used until a twin painted from the intact image arrives.
+            0.25f, 1.95f, 0f, 1.2f, null, null, R(1200f, 420f, 1400f, 600f));
 
         // Beirut 1970s concrete block, pink, bullet-pocked: 7 + 7 + 6 barred + the glass of the stairwell door = 21 (review 2026-11-07).
         HouseDefinition House38() => MakePaintedHouse("البيت ٣٨", "Art/house_38", 2172f, 724f, Wide3W,
