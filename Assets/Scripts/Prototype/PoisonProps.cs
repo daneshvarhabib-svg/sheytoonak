@@ -160,6 +160,31 @@ namespace Sheytoonak.Prototype
         // ------------------------------------------------------------------ open window (Close)
 
         /// <summary>The neighbour leans out of an opened casement: two sashes swung outwards and a head.</summary>
+        /// <summary>The sealed window of an even house (review 2026-11-07 §2.2): a rolled-down corrugated shutter, visibly
+        /// not a target. Painted art (Art/shutter) when it exists, else grey slats.</summary>
+        public static GameObject Shutter(Rect r, float facadeZ)
+        {
+            var root = new GameObject("Sealed window shutter").transform;
+            root.position = new Vector3(r.center.x, r.center.y, facadeZ - 0.04f);
+            var art = Art("shutter", 0.5f);
+            if (art != null)
+            {
+                var sr = Spr(art, root, Vector3.zero, r.height * 1.04f, true);
+                sr.transform.localScale = new Vector3(r.width * 1.06f / Mathf.Max(0.01f, art.bounds.size.x), sr.transform.localScale.y, 1f);
+                return root.gameObject;
+            }
+            var steel = M("shutter", new Color(0.42f, 0.43f, 0.45f), 0.35f);
+            var dark = M("shutter_dark", new Color(0.26f, 0.27f, 0.29f), 0.2f);
+            Part(PrimitiveType.Cube, root, Vector3.zero, new Vector3(r.width * 1.06f, r.height * 1.04f, 0.03f), dark);
+            int slats = Mathf.Max(4, Mathf.RoundToInt(r.height / 0.18f));
+            for (int i = 0; i < slats; i++)
+            {
+                float y = r.height * 0.5f - (i + 0.5f) * r.height / slats;
+                Part(PrimitiveType.Cube, root, new Vector3(0f, y, -0.02f), new Vector3(r.width * 1.06f, r.height / slats * 0.55f, 0.02f), steel);
+            }
+            return root.gameObject;
+        }
+
         public static GameObject OpenWindow(Rect r, float facadeZ)
         {
             var root = new GameObject("Poison open window").transform;

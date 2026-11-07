@@ -88,14 +88,27 @@ namespace Sheytoonak.Core.Bags
 
         public bool AnyUnlocking(DateTime nowUtc) { foreach (var b in Rack) if (b != null && b.Unlocking && nowUtc.Ticks < b.ReadyTicks) return true; return false; }
 
+        // Design review 2026-11-07 §2.6: the 2/6/12/18 h timers were Clash Royale 2017 and nobody likes them. A tapped bag
+        // is "unlocking" until the player's next win, which opens it (WinUnlocks); Hours/ClockFactor stay only as data.
         public bool StartUnlock(int slot, DateTime nowUtc)
         {
             var b = Rack[slot];
             if (b == null || b.Unlocking || AnyUnlocking(nowUtc)) return false;
             b.UnlockStartTicks = nowUtc.Ticks;
-            b.ReadyTicks = nowUtc.Ticks + (long)(TimeSpan.FromHours(Hours[(int)b.Size]).Ticks / ClockFactor(nowUtc));
+            b.ReadyTicks = long.MaxValue; // a win, not the clock, sets it
             return true;
         }
+
+        /// <summary>A win opens the bag that was waiting (returns its slot, or -1).</summary>
+        public int WinUnlocks()
+        {
+            for (int i = 0; i < Slots; i++)
+                if (Rack[i] != null && Rack[i].Unlocking && Rack[i].ReadyTicks == long.MaxValue) { Rack[i].ReadyTicks = 0; return i; }
+            return -1;
+        }
+
+        /// <summary>True while a bag waits for the next win.</summary>
+        public bool WaitsForWin(int slot) => Rack[slot] != null && Rack[slot].Unlocking && Rack[slot].ReadyTicks == long.MaxValue;
 
         public bool IsReady(int slot, DateTime nowUtc) => Rack[slot] != null && Rack[slot].Unlocking && nowUtc.Ticks >= Rack[slot].ReadyTicks;
 

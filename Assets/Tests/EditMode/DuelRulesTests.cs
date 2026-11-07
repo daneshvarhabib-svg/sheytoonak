@@ -31,8 +31,8 @@ namespace Sheytoonak.Tests
                 Assert.IsTrue(sw >= 0 && sw < 4, "the sealed window sits in an upper row, seed " + seed);
                 Assert.AreEqual(0, even.WindowValue[sw]);
                 Assert.IsFalse(even.IsBreakable(sw));
-                Assert.IsTrue(even.LooksBreakable(sw), "nobody can tell it apart");
-                Assert.AreEqual(1, even.ShownValue(sw), "shown like any other");
+                Assert.IsFalse(even.LooksBreakable(sw), "the seal is shown, nobody targets it (review 2026-11-07)");
+                Assert.AreEqual(0, even.ShownValue(sw), "shown as sealed (review 2026-11-07)");
                 Assert.AreEqual(7, even.TotalValue);
                 Assert.AreEqual(1, even.TotalValue % 2);
             }
@@ -86,7 +86,8 @@ namespace Sheytoonak.Tests
             // nothing left there it must be refused, not placed over no window at all
             var r = Make(seed: 3, rows: new[] { 2, 1 });
             r.Start(Side.Left); r.BeginKick(Side.Left); r.EndKick(Side.Left, -1);
-            var bus = StarterHeroes.Get("zaatar").Poison;
+            // the starter bus is one turn since 2026-11-07 (review §2.4); the two-turn mechanic is tested on its own tool
+            var bus = new Tool("bus2", "باص", Effect.Cover, 1, Lifetime.TwoTurns);
             Assert.AreEqual(ActionReject.NoTarget, r.CanPoison(Side.Right, bus, new int[0]));
             Assert.AreEqual(ActionReject.None, r.CanPoison(Side.Right, bus, new[] { 0 }));
         }
@@ -96,7 +97,8 @@ namespace Sheytoonak.Tests
         {
             var r = Make(seed: 3, rows: new[] { 2, 1 });
             r.Start(Side.Left); r.BeginKick(Side.Left); r.EndKick(Side.Left, -1);
-            var bus = StarterHeroes.Get("zaatar").Poison;
+            // the starter bus is one turn since 2026-11-07 (review §2.4); the two-turn mechanic is tested on its own tool
+            var bus = new Tool("bus2", "باص", Effect.Cover, 1, Lifetime.TwoTurns);
             Assert.AreEqual(ActionReject.PoisonWouldCloseEverything, r.CanPoison(Side.Right, bus, new[] { 0, 1, 2 }));
             Assert.AreEqual(ActionReject.None, r.Poison(Side.Right, bus, new[] { 0 }));
             Assert.IsTrue(r.IsCovered(0));
@@ -136,7 +138,7 @@ namespace Sheytoonak.Tests
         {
             var r = Make();
             r.Start(Side.Left);
-            r.Poison(Side.Left, StarterHeroes.Get("rima").Poison, new[] { 4 });
+            r.Poison(Side.Left, new Tool("open_window2", "الجار فتح الشباك", Effect.Close, 1, Lifetime.TwoTurns), new[] { 4 });
             Assert.IsTrue(r.IsClosed(4));
             r.Pass(Side.Left); r.Pass(Side.Right);
             Assert.IsTrue(r.IsClosed(4), "still there during the next two turns");

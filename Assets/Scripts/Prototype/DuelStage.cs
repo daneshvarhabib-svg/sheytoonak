@@ -20,6 +20,7 @@ namespace Sheytoonak.Prototype
         public readonly Transform[][] Heroes = new Transform[2][];
         readonly Vector3[][] homes = new Vector3[2][];
         readonly Dictionary<ActivePoison, List<GameObject>> props = new Dictionary<ActivePoison, List<GameObject>>();
+        GameObject shutter; // the sealed window, shown (review 2026-11-07 §2.2)
         GameObject pigeon;
 
         void Start()
@@ -178,6 +179,8 @@ namespace Sheytoonak.Prototype
             ApplyLooks();
             foreach (var kv in props) foreach (var go in kv.Value) if (go != null) Destroy(go);
             props.Clear();
+            if (shutter != null) Destroy(shutter);
+            shutter = duel.Rules.SealedWindow >= 0 ? PoisonProps.Shutter(mapper.WindowRects[duel.Rules.SealedWindow], mapper.FacadeZ) : null;
             duel.Rules.PoisonPlaced += OnPoison;
             duel.Rules.PoisonExpired += OnExpired;
             duel.Rules.AntidoteUsed += OnAntidote;

@@ -55,7 +55,7 @@ namespace Sheytoonak.Core.Duel
                 new Tool("pigeon", "حمامة", Effect.Chance, 1, Lifetime.OneTurn),
                 new Tool("nails", "مسامير عالطريق", Effect.Cover, 1)),
             new HeroDef("zaatar", "زعتر الشامي",
-                new Tool("bus", "باص", Effect.Cover, 1, Lifetime.TwoTurns),
+                new Tool("bus", "باص", Effect.Cover, 1, Lifetime.OneTurn) /* two turns until the human test (review 2026-11-07 §2.4) */,
                 new Tool("vane", "دوّارة هوا", Effect.Accuracy, 1)),
             new HeroDef("fulla", "فُلّة الإسكندرانية",
                 new Tool("wind", "هوا قوي", Effect.Accuracy, 1, Lifetime.OneTurn),
@@ -63,7 +63,7 @@ namespace Sheytoonak.Core.Duel
             new HeroDef("rima", "ريما الشرشوحة الصيداوية",
                 // ⚠️ until 2026-11-04 the neighbour stayed until an antidote (pebble). User: «اون سه تا شیشه‌ای که بازه چیه؟ … نباید بعد از
                 // یکی دو نوبت خودش بسته شه؟» -- with every other window broken the duel could not end. Now she shuts it after two turns.
-                new Tool("open_window", "الجار فتح الشباك", Effect.Close, 1, Lifetime.TwoTurns),
+                new Tool("open_window", "الجار فتح الشباك", Effect.Close, 1, Lifetime.OneTurn) /* two turns until the human test (review 2026-11-07 §2.4) */,
                 new Tool("plank", "لوح عالجورة", Effect.Reach, 1)),
             new HeroDef("toni", "طوني الزعران البيروتي",
                 new Tool("puddle", "جورة مي", Effect.Reach, 1, Lifetime.OneTurn),
@@ -72,13 +72,13 @@ namespace Sheytoonak.Core.Duel
             // همه بچه نباشن … تا پیرمرد و پیرزن»). Their poisons reuse the stage props of the same effect until their
             // own art arrives (painted the same day: lorry, pickle cart, rain cloud, complaint, umbrella, flashlight). Um al-Arabiyat kicks with her left foot.
             new HeroDef("um_arabiyat", "أم العربيات البغدادية",
-                new Tool("truck", "شاحنة عالية", Effect.Cover, 1, Lifetime.TwoTurns),
+                new Tool("truck", "شاحنة عالية", Effect.Cover, 1, Lifetime.OneTurn) /* two turns until the human test (review 2026-11-07 §2.4) */,
                 new Tool("complaint", "شكوى للبلدية", Effect.Cover, 1)),
             new HeroDef("hamada", "حمادة الطرشجي المصراوي",
                 new Tool("cart", "عربية البياع", Effect.Cover, 1, Lifetime.OneTurn),
                 new Tool("umbrella", "شمسية", Effect.Reach, 1)),
             new HeroDef("bubakr", "بوبكر الصيّاد التونسي",
-                new Tool("rain", "مطر", Effect.Reach, 1, Lifetime.TwoTurns),
+                new Tool("rain", "مطر", Effect.Reach, 1, Lifetime.OneTurn) /* two turns until the human test (review 2026-11-07 §2.4) */,
                 new Tool("flashlight", "ضو بطارية", Effect.Accuracy, 1)),
         };
 

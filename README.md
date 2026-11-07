@@ -8,6 +8,8 @@ window of a building earns a medal; 8 buildings, 3 lives. Persian, right-to-left
 
 ## Status
 
+**Motion (tilt/shake) kick input is abandoned** (`Assets/Scripts/Input/MotionKickInput.cs`, kept for reference, never wired since 2026-10-27): the kick is a swipe only.
+
 **Not built or played yet.** The repository holds the gameplay scripts, unit tests, design documents, a
 placeholder prototype that builds its whole scene from code (grey boxes, a football, simple legs, an
 English debug HUD) and a cloud build workflow for an Android APK. The code has **never been compiled**

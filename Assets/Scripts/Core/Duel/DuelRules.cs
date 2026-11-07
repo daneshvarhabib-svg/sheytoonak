@@ -44,7 +44,11 @@ namespace Sheytoonak.Core.Duel
     /// </summary>
     public sealed class DuelRules
     {
-        public const int TurnSeconds = 60;
+        // Design review 2026-11-07 §2.3: 60 s turns made a duel up to ~16 minutes, half of it watching; 20 s, and a
+        // missed turn is a weak automatic kick (DuelManager), not a lost turn.
+        public const int TurnSeconds = 20;
+        /// <summary>Half-turns after which the side with more windows wins (odd total: no tie). Review §2.3.</summary>
+        public const int MaxTurns = 16;
         public const int RageEveryTurns = 3;
         public const int CurseWin = 5, CurseLose = 2;
 
@@ -128,7 +132,9 @@ namespace Sheytoonak.Core.Duel
         public int BrokenBy(int w) => brokenBy[w];
         public bool IsHidden(int w) => false; // the secret 3 is gone (2026-11-05)
         /// <summary>What the HUD shows for a window: 1 for every window, the sealed one included (its secret is the point).</summary>
-        public int ShownValue(int w) => w == SealedWindow ? 1 : WindowValue[w];
+        // Design review 2026-11-07 §2.2: a secret seal felt like a cheat («بازی تقلب کرد»); the sealed window is now shown
+        // as such (shutter on the stage, no badge) and nobody targets it.
+        public int ShownValue(int w) => WindowValue[w];
         public int Majority => TotalValue / 2 + 1;
 
         public void Start(Side first)
@@ -154,7 +160,7 @@ namespace Sheytoonak.Core.Duel
         /// <summary>Sound, open and not covered: can be broken right now.</summary>
         public bool IsBreakable(int w) => w != SealedWindow && !IsBroken(w) && !IsCovered(w) && !IsClosed(w);
         /// <summary>What a player (or the bot) may aim at: a sealed window looks like any other until the ball hits it.</summary>
-        public bool LooksBreakable(int w) => !IsBroken(w) && !IsCovered(w) && !IsClosed(w);
+        public bool LooksBreakable(int w) => IsBreakable(w); // the seal is visible now, so looks = is
         public int BreakableCount() { int c = 0; for (int i = 0; i < WindowCount; i++) if (IsBreakable(i)) c++; return c; }
 
         public KickModifiers ModifiersFor(Side s)
@@ -339,6 +345,7 @@ namespace Sheytoonak.Core.Duel
 
             Current = Current == Side.Left ? Side.Right : Side.Left;
             Turn++;
+            if (Turn > MaxTurns) { Finish(Windows[0] >= Windows[1] ? Side.Left : Side.Right, "turn cap"); return; }
             ActionsLeft = 2;
             int c = (int)Current;
             if (!RageReady[c] && --RageTimer[c] <= 0) { RageReady[c] = true; RageGained?.Invoke(Current); }

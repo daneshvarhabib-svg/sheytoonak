@@ -42,7 +42,7 @@ namespace Sheytoonak.Prototype
             if (!ended)
                 for (int w = 0; w < rules.WindowCount; w++)
                 {
-                    if (rules.IsBroken(w)) continue;
+                    if (rules.IsBroken(w) || w == rules.SealedWindow) continue; // the shutter says it all
                     Rect r = mapper.WindowRects[w];
                     Vector3 sp = cam.WorldToScreenPoint(new Vector3(r.center.x, r.yMax + 0.1f, mapper.FacadeZ));
                     if (sp.z < 0) continue;

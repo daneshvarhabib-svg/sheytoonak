@@ -46,6 +46,7 @@ namespace Sheytoonak
         public DuelBot Bot { get; private set; }
         public Side Me => Side.Left;
         public float TurnTimeLeft { get; private set; }
+        bool autoKick;
         public int LastHitWindow { get; private set; } = -1;
         public bool PlayerMayKick => Rules != null && Rules.CanAct(Me) == ActionReject.None;
         public int[] Curses { get; } = { 0, 0 };
@@ -192,7 +193,7 @@ namespace Sheytoonak
             return paid;
         }
 
-        /// <summary>No draft: three heroes dealt at random from the shared pool to each side, equal tools (money does not help).</summary>
+        /// <summary>Challenge duel: the ban/pick draft (review 2026-11-07 §2.5: the draft belongs to the competitive mode).</summary>
         void NewChallengeDuel()
         {
             StopAllCoroutines(); botRoutine = resolveRoutine = null; hitsToCome = false; kickActive = false;
@@ -203,7 +204,7 @@ namespace Sheytoonak
             FitAimToHouse();
             GameEvents.RaiseHouseLoaded(house, 0);
             InChallenge = true;
-            BeginDuel(Deal(), Deal(), Random.value < 0.5f ? Side.Left : Side.Right);
+            StartDraft();
         }
 
         static HeroDef[] Deal()
@@ -222,17 +223,47 @@ namespace Sheytoonak
             ball.Hide();
         }
 
-        /// <summary>Starts the pre-duel draft (ban/pick); the duel itself begins when the draft is done.</summary>
+        // Design review 2026-11-07 §2.5: with eight heroes a ban/pick before every duel is dead weight and the first
+        // duel must start within 30 s of installing. The quick duel uses the team chosen in the lobby (saved, default
+        // the first three); the draft is the challenge's ritual.
+        const string PrefTeam = "sheytoonak.team";
+        public string[] Team
+        {
+            get
+            {
+                var s = PlayerPrefs.GetString(PrefTeam, "");
+                var ids = s.Length > 0 ? s.Split(',') : new string[0];
+                var ok = new System.Collections.Generic.List<string>();
+                foreach (var id in ids) if (System.Array.Exists(StarterHeroes.All, h => h.Id == id) && !ok.Contains(id)) ok.Add(id);
+                for (int i = 0; ok.Count < 3 && i < StarterHeroes.All.Length; i++) if (!ok.Contains(StarterHeroes.All[i].Id)) ok.Add(StarterHeroes.All[i].Id);
+                return ok.GetRange(0, 3).ToArray();
+            }
+        }
+        public void SetTeam(string[] ids) { PlayerPrefs.SetString(PrefTeam, string.Join(",", ids)); PlayerPrefs.Save(); }
+
+        /// <summary>Quick duel: my saved team against three other heroes dealt at random, no draft.</summary>
         public void NewDuel()
         {
             InChallenge = false;
             StopAllCoroutines(); botRoutine = resolveRoutine = null; hitsToCome = false; kickActive = false;
-            Rules = null;
+            Rules = null; Draft = null;
             ball.Hide();
             PickHouse();
             mapper.Map(house);
             FitAimToHouse();
             GameEvents.RaiseHouseLoaded(house, 0);
+            var mine = new HeroDef[3]; var team = Team;
+            for (int i = 0; i < 3; i++) mine[i] = StarterHeroes.Get(team[i]);
+            var pool = new System.Collections.Generic.List<HeroDef>(StarterHeroes.All);
+            pool.RemoveAll(h => System.Array.IndexOf(team, h.Id) >= 0);
+            var theirs = new HeroDef[3];
+            for (int i = 0; i < 3; i++) { int k = Random.Range(0, pool.Count); theirs[i] = pool[k]; pool.RemoveAt(k); }
+            BeginDuel(mine, theirs, Random.value < 0.5f ? Side.Left : Side.Right);
+        }
+
+        /// <summary>Starts the pre-duel draft (ban/pick); the duel itself begins when the draft is done.</summary>
+        void StartDraft()
+        {
             draftRng = randomSeed != 0 ? new System.Random(randomSeed) : new System.Random();
             var mine = PoolIds();
             var theirs = PoolIds();
@@ -325,7 +356,7 @@ namespace Sheytoonak
 
         void OnTurnStarted(Side s, int turn, int actions)
         {
-            TurnTimeLeft = DuelRules.TurnSeconds;
+            TurnTimeLeft = DuelRules.TurnSeconds; autoKick = false;
             foot.Hold = true; // user (2026-11-06): «بازیکن وقتی ضربه میزنه چرا حرکت می‌کنه؟ نباید افقی بره» — phone tilt moved the kicker; nobody moves now
             Selected = -1; KickArmed = false; kickerReady[0] = kickerReady[1] = false;
             KickerReleased?.Invoke(Side.Left); KickerReleased?.Invoke(Side.Right);
@@ -348,12 +379,30 @@ namespace Sheytoonak
                 if (!kickActive && BallSettled && ball.gameObject.activeSelf && ball.Body != null && ball.Body.isKinematic)
                     ball.transform.position = foot.StrikeSpot + Vector3.up * ball.Radius;
                 TurnTimeLeft -= Time.deltaTime;
+                if (autoKick && Rules.Current == Me && KickArmed && BallSettled && !kickActive && !hitsToCome)
+                {
+                    autoKick = false;
+                    Kick(Me, new KickGesture(0.35f, Random.Range(-0.25f, 0.25f), 0f), -1);
+                }
                 if (TurnTimeLeft <= 0f)
                 {
                     Pop?.Invoke("clock", Rules.Current, PopKind.Info);
                     var who = Rules.Current;
-                    Rules.Timeout(who);
-                    if (!Rules.Finished) TurnTimeLeft = DuelRules.TurnSeconds;
+                    // Review 2026-11-07 §2.3: my missed turn is a weak kick by whoever is chosen (or the first hero), not a
+                    // lost turn; a second miss in a row is still the usual timeout.
+                    if (who == Me && !autoKick && Rules.CanAct(Me) == ActionReject.None && !kickActive && !hitsToCome && Rules.Timeouts[(int)Me] == 0)
+                    {
+                        autoKick = true;
+                        Rules.Timeouts[(int)Me]++;
+                        if (!KickArmed) { if (Selected < 0) Select(0); ArmKick(); }
+                        TurnTimeLeft = 4f; // the walk up and the kick; then the turn really ends
+                    }
+                    else
+                    {
+                        autoKick = false;
+                        Rules.Timeout(who);
+                        if (!Rules.Finished) TurnTimeLeft = DuelRules.TurnSeconds;
+                    }
                 }
             }
             else if (Time.time - kickStarted > 6f) FinishKick(); // the ball got stuck somewhere: resolve anyway
@@ -377,8 +426,9 @@ namespace Sheytoonak
                 PlayerPrefs.SetInt(PrefCurse, Curses[0]); PlayerPrefs.SetInt(PrefShards, ShardBank); PlayerPrefs.Save();
                 Bags.AddFromCurses(Curses[0]);
             }
-            // a bag comes from a win (any duel, challenge too), not from time; a full rack gets nothing
-            if (winner == Me) Bags.AddFromWin();
+            // a bag comes from a win (any duel, challenge too), not from time; a full rack gets nothing.
+            // Review 2026-11-07 §2.6: no timers — the bag you tapped opens with your next win.
+            if (winner == Me) { Bags.WinUnlocks(); Bags.AddFromWin(); }
             SaveBags();
             ball.Hide();
             Finished?.Invoke(winner, winner == Me);
