@@ -1210,7 +1210,7 @@ namespace Sheytoonak.Prototype
         /// </summary>
         // ⚠️ until 2026-11-04 any window could throw out an orange cat. User: «پنجره‌ای که پشتش گربه نیست می‌خوره زمین گربه
         // ازش … پشت پنجره گربه خاکستریه ولی گربه‌ای که می‌افته زمین نارنجیه». Now only what the painting shows behind
-        // that window comes out (the house's details: the grey cat of window 8, the pots on the sills), else a curtain.
+        // that window comes out (the house's details: the grey cat of window 8, the pots on the sills), else nothing.
         void WindowLife(int window, Vector3 at, Vector3 size)
         {
             bool cat = false, pot = false;
@@ -1226,12 +1226,12 @@ namespace Sheytoonak.Prototype
                         var sr = Cutout(d, -0.08f, out Rect pix);
                         PatchBehind(pix);
                         StartCoroutine(PotFalls(at, size, sr.transform));
-                        StartCoroutine(CurtainOut(at, size));
                         return;
                     }
+            // User (2026-11-07): «پرده‌ی سفیدی که جدا طراحی کرده بودیم … اصلاً زیبا نیست. کلا برش داریم». No curtain any more:
+            // a window with nothing painted behind it just breaks.
             if (cat) StartCoroutine(CatLeap(at, size));
             else if (pot && Random.value < 0.6f) StartCoroutine(PotFalls(at, size));
-            else StartCoroutine(CurtainOut(at, size));
         }
 
         Transform FxSprite(string name, float worldHeight) => FxSprite(name, worldHeight, new Vector2(0.5f, 0.5f));
@@ -1339,45 +1339,6 @@ namespace Sheytoonak.Prototype
                 t.position = q;
                 yield return null;
             }
-            if (t != null) Destroy(t.gameObject);
-        }
-
-        /// <summary>The curtain hangs from its rod at the top of the hole, a gust blows it out through the broken glass,
-        /// then it keeps breathing in the wind and finally drops out of the frame. Pivot at the rod, never bigger than the window.</summary>
-        IEnumerator CurtainOut(Vector3 at, Vector3 size)
-        {
-            var t = FxSprite("fx_curtain", size.y * 0.8f, new Vector2(0.5f, 1f));
-            if (t == null) yield break;
-            var sr = t.GetComponent<SpriteRenderer>();
-            float fit = Mathf.Min(1f, size.x * 0.8f / Mathf.Max(0.01f, sr.bounds.size.x));
-            Vector3 baseScale = t.localScale * fit;
-            t.localScale = baseScale;
-            t.position = at + new Vector3(0f, size.y * 0.42f, -0.06f);
-            float dir = Random.value < 0.5f ? -1f : 1f;
-            sr.flipX = dir < 0f;
-            float start = Time.time, life = 5f;
-            while (t != null && Time.time - start < life)
-            {
-                float e = Time.time - start;
-                float gust = Mathf.Exp(-e * 1.4f);              // the first push, dying out
-                float breath = 0.25f * (1f + Mathf.Sin(e * 2.3f)) * Mathf.Sin(e * 5.1f + 1f); // slow wind afterwards
-                // out through the hole: the bottom swings toward the street (scale y shrinks a bit as it tilts at us)
-                t.localRotation = Quaternion.Euler(0f, 0f, dir * (28f * gust + 9f * breath));
-                t.localScale = new Vector3(baseScale.x * (1f + 0.08f * gust * Mathf.Sin(e * 14f)), baseScale.y * (1f - 0.18f * gust), baseScale.z);
-                yield return null;
-            }
-            if (t == null) yield break;
-            // the rod gives way: it falls to the pavement, crumples and is gone
-            float vy = 0f, rot = dir * 40f;
-            Vector3 p = t.position;
-            while (t != null && p.y > 0.1f)
-            {
-                vy -= 9.8f * 0.35f * Time.deltaTime;         // cloth: slower than a stone
-                p += new Vector3(dir * 0.4f * Time.deltaTime, vy * Time.deltaTime, -0.8f * Time.deltaTime);
-                t.position = p; t.Rotate(0f, 0f, rot * Time.deltaTime);
-                yield return null;
-            }
-            for (float k = 0f; k < 1f && t != null; k += Time.deltaTime * 2f) { t.localScale = new Vector3(baseScale.x * (1f + 0.3f * k), baseScale.y * (1f - k), baseScale.z); yield return null; }
             if (t != null) Destroy(t.gameObject);
         }
 
@@ -1635,8 +1596,8 @@ namespace Sheytoonak.Prototype
         /// </summary>
         // User (2026-11-05, with a screenshot of the reference game's lobby): «کاور خود بازی قبل از شروعه نباید بک گراندش
         // این باشه، باید مثل پسرخوانده باشه، یسری دکمه که کارهای مختلف توش میکنی». The lobby is its own screen now: a deep
-        // blue patterned backdrop over the whole street, a top bar of painted planks (shards, curses), the arena card
-        // (the painting of the house the last duel was played at, on a ribbon), the two big painted buttons, the bag rack
+        // painting over the whole street (see HomeBackdrop), a top bar of painted planks (shards, curses), the heroes card
+        // (the kids in battle, on a ribbon with the game's name), the two big painted buttons, the bag rack
         // in a panel, and side buttons for what comes next (missions, heroes, shop, clan) marked «soon» instead of hidden.
         void HomeScreen(float u, GUIStyle big)
         {
@@ -1663,19 +1624,21 @@ namespace Sheytoonak.Prototype
             var card = new Rect((Screen.width - cw) * 0.5f, top + barH + 16 * u, cw, ch);
             var kitPanel = DuelHud.Kit("panel");
             if (kitPanel != null) GUI.DrawTexture(card, kitPanel, ScaleMode.StretchToFill);
-            var houseTex = duelGame.house != null && !string.IsNullOrEmpty(duelGame.house.paintedTexture) ? Resources.Load<Texture2D>(duelGame.house.paintedTexture) : null;
-            if (houseTex != null)
+            // User (2026-11-07): «عکسی هم که هست عکس خونه نباشه. عکس قهرمان‌ها باشه در حال نبرد» — Art/UI/heroes_battle.png
+            // when painted, the splash painting (the kids with the ball) until then. The house is never shown here.
+            if (!heroesCardLooked) { heroesCardLooked = true; heroesCardTex = Resources.Load<Texture2D>("Art/UI/heroes_battle") ?? Resources.Load<Texture2D>("Art/UI/splash"); }
+            if (heroesCardTex != null)
             {
                 var inner = new Rect(card.x + cw * 0.05f, card.y + ch * 0.08f, cw * 0.9f, ch * 0.84f);
-                float ta = houseTex.width / (float)houseTex.height, ia = inner.width / inner.height;
+                float ta = heroesCardTex.width / (float)heroesCardTex.height, ia = inner.width / inner.height;
                 var tc = ia > ta ? new Rect(0f, (1f - ta / ia) * 0.5f, 1f, ta / ia) : new Rect((1f - ia / ta) * 0.5f, 0f, ia / ta, 1f);
-                GUI.DrawTextureWithTexCoords(inner, houseTex, tc);
+                GUI.DrawTextureWithTexCoords(inner, heroesCardTex, tc);
             }
             var ribbon = DuelHud.Kit("ribbon");
             var ribR = new Rect(card.center.x - cw * 0.42f, card.yMax - ch * 0.2f, cw * 0.84f, cw * 0.84f * 246f / 969f);
             if (ribbon != null) GUI.DrawTexture(ribR, ribbon, ScaleMode.StretchToFill);
             var ink = new GUIStyle(small) { fontSize = Mathf.RoundToInt(22 * u) }; ink.normal.textColor = new Color(0.35f, 0.18f, 0.08f);
-            GUI.Label(new Rect(ribR.x, ribR.y + ribR.height * 0.05f, ribR.width, ribR.height * 0.6f), Ar.T(duelGame.house != null ? duelGame.house.displayName : Ar.Title), ink);
+            GUI.Label(new Rect(ribR.x, ribR.y + ribR.height * 0.05f, ribR.width, ribR.height * 0.6f), Ar.T(Ar.Title), ink);
 
             // the two big buttons under the card: duel (orange) on the right, the 12/3 challenge (blue) on the left
             float bw = Mathf.Min(230 * u, Screen.width * 0.18f), bh = bw * 0.62f, by = ribR.yMax + 18 * u;
@@ -1716,32 +1679,34 @@ namespace Sheytoonak.Prototype
             BagRack(u);
         }
 
-        static Texture2D homePattern;
-        /// <summary>Deep blue with a faint tile of eight-point stars, like a carpet (generated once, no asset).</summary>
+        static Texture2D homeBg, heroesCardTex; static bool homeBgLooked, heroesCardLooked;
+        /// <summary>
+        /// User (2026-11-07): «صفحه بک گراند اولیه خیلی زشته و شبیه لوگوی شبکه ۴ه … عوضش کنیم». The generated blue
+        /// star carpet is gone. The lobby now sits on a painting: Art/UI/home.png when it exists (prompt in
+        /// docs/ART_SPEC.fa.md, «قهرمان‌ها در حال نبرد»), until then the splash painting, darkened so the planks and
+        /// buttons stay readable on top.
+        /// </summary>
         static void HomeBackdrop()
         {
-            if (homePattern == null)
+            if (!homeBgLooked)
             {
-                const int n = 96;
-                homePattern = new Texture2D(n, n, TextureFormat.RGBA32, false) { wrapMode = TextureWrapMode.Repeat, filterMode = FilterMode.Bilinear };
-                var px = new Color32[n * n];
-                for (int y = 0; y < n; y++)
-                    for (int x = 0; x < n; x++)
-                    {
-                        float dx = Mathf.Abs(x - n * 0.5f), dy = Mathf.Abs(y - n * 0.5f);
-                        // two squares, one turned 45 degrees: an eight-point star outline
-                        float sq = Mathf.Max(dx, dy), di = (dx + dy) * 0.7071f;
-                        bool line = Mathf.Abs(sq - 26f) < 1.2f || Mathf.Abs(di - 26f) < 1.2f || Mathf.Abs(Mathf.Max(dx, dy) - 47f) < 0.8f;
-                        px[y * n + x] = line ? new Color32(38, 58, 140, 255) : new Color32(18, 30, 92, 255);
-                    }
-                homePattern.SetPixels32(px); homePattern.Apply();
+                homeBgLooked = true;
+                homeBg = Resources.Load<Texture2D>("Art/UI/home") ?? Resources.Load<Texture2D>("Art/UI/splash");
             }
             var all = new Rect(0, 0, Screen.width, Screen.height);
-            float tile = 120f * Screen.height / 720f;
-            GUI.DrawTextureWithTexCoords(all, homePattern, new Rect(0, 0, Screen.width / tile, Screen.height / tile));
-            // a soft lighter glow in the middle
-            var old = GUI.color; GUI.color = new Color(0.35f, 0.5f, 1f, 0.12f);
-            GUI.DrawTexture(new Rect(Screen.width * 0.2f, Screen.height * 0.1f, Screen.width * 0.6f, Screen.height * 0.8f), Texture2D.whiteTexture);
+            if (homeBg != null)
+            {
+                float k = Mathf.Max(Screen.width / (float)homeBg.width, Screen.height / (float)homeBg.height);
+                float w = homeBg.width * k, h = homeBg.height * k;
+                GUI.DrawTexture(new Rect((Screen.width - w) * 0.5f, (Screen.height - h) * 0.5f, w, h), homeBg, ScaleMode.StretchToFill);
+            }
+            else { var c = GUI.color; GUI.color = new Color(0.08f, 0.1f, 0.18f); GUI.DrawTexture(all, Texture2D.whiteTexture); GUI.color = c; }
+            // darken so the UI reads; the middle a touch lighter than the edges
+            var old = GUI.color;
+            GUI.color = new Color(0f, 0f, 0.04f, 0.42f); GUI.DrawTexture(all, Texture2D.whiteTexture);
+            GUI.color = new Color(0f, 0f, 0f, 0.25f);
+            GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height * 0.18f), Texture2D.whiteTexture);
+            GUI.DrawTexture(new Rect(0, Screen.height * 0.78f, Screen.width, Screen.height * 0.22f), Texture2D.whiteTexture);
             GUI.color = old;
         }
 

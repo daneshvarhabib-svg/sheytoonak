@@ -63,22 +63,13 @@ namespace Sheytoonak.Prototype
             duel.Finished -= OnFinished;
         }
 
+        // User (2026-11-07): «این صحنه آدمک‌های شبیه مهره شطرنج رو بردار از بازی کلا هیچ جا نباشه». The capsule+sphere
+        // placeholder is gone: a hero is an empty root until its painting (Art/Heroes/<id>_idle.png) is attached in
+        // ApplyLooks; a hero with no painting stays invisible rather than turning into a chess piece.
         GameObject MakeHero(Material mat, Vector3 pos, string name)
         {
             var root = new GameObject("Hero " + name);
             root.transform.position = pos;
-            var body = GameObject.CreatePrimitive(PrimitiveType.Capsule);
-            Object.Destroy(body.GetComponent<Collider>());
-            body.transform.SetParent(root.transform, false);
-            body.transform.localPosition = new Vector3(0f, 0.55f, 0f);
-            body.transform.localScale = new Vector3(0.34f, 0.55f, 0.34f);
-            body.GetComponent<Renderer>().sharedMaterial = mat;
-            var head = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            Object.Destroy(head.GetComponent<Collider>());
-            head.transform.SetParent(root.transform, false);
-            head.transform.localPosition = new Vector3(0f, 1.22f, 0f);
-            head.transform.localScale = Vector3.one * 0.26f;
-            head.GetComponent<Renderer>().sharedMaterial = mat;
             return root;
         }
 
@@ -87,7 +78,7 @@ namespace Sheytoonak.Prototype
         /// <summary>Art/Heroes/&lt;id&gt;_idle.png and &lt;id&gt;_kick.png (docs/ART_SPEC.fa.md, heroes section).
         /// Drawn facing right, three-quarter back view with about a third of the face showing (user: «یک سوم از صورت
         /// قهرمان رو ببینیم، کامل از پشت نباشه»); the right side is mirrored so both teams face the middle.
-        /// No file yet = the capsule stays.</summary>
+        /// No file yet = nothing is drawn for that hero (no placeholder).</summary>
         public float heroHeight = 1.6f; // a bit over real kid height so they read on a phone
         readonly Dictionary<string, Sprite> sprites = new Dictionary<string, Sprite>();
         readonly SpriteRenderer[][] painted = { new SpriteRenderer[3], new SpriteRenderer[3] };
@@ -115,7 +106,6 @@ namespace Sheytoonak.Prototype
                     lookIds[side][i] = id;
                     var idle = HeroSprite(id, "idle");
                     if (painted[side][i] != null) { Destroy(painted[side][i].gameObject); painted[side][i] = null; }
-                    foreach (Transform c in hero) c.gameObject.SetActive(idle == null); // the capsule placeholder
                     if (idle == null) continue;
                     var go = new GameObject("Painted " + id);
                     go.transform.SetParent(hero, false);
@@ -221,7 +211,7 @@ namespace Sheytoonak.Prototype
         Vector3 Spot(Side side)
         {
             float off = side == Side.Left ? -0.45f : 0.45f;
-            Vector3 b = side == duel.Me ? foot.StrikeSpot : new Vector3(ballX, 0f, foot.StrikeSpot.z);
+            Vector3 b = foot.StrikeSpot; // both kickers hold their line; ballX is only for the shadow/ring marks
             return new Vector3(b.x + off, 0f, b.z - 0.35f);
         }
 
@@ -242,11 +232,10 @@ namespace Sheytoonak.Prototype
             // waits behind the ball, follows it (my finger moves the ball spot; the rebound moves the ball)
             while (true)
             {
-                // mine follows my finger (the foot decides the reach of the rebound); the bot's runs to its ball
-                Vector3 target = side != duel.Me && duel.RallyActive && duel.ball != null && duel.ball.gameObject.activeSelf
-                    ? new Vector3(duel.ball.transform.position.x + (side == Side.Left ? -0.45f : 0.45f), 0f, Spot(side).z)
-                    : Spot(side);
-                hero.position = Vector3.MoveTowards(hero.position, target, 5.5f * Time.deltaTime);
+                // User (2026-11-07): «بازیکنان وقتی پشت توپن بعد از ضربه الکی به راست و چپ حرکت می‌کنن». The kicker no
+                // longer chases the ball's x during the rally (the rebound now lands on the kicker's own line, see
+                // DuelManager.SendBack); he only drifts to his spot, slowly.
+                hero.position = Vector3.MoveTowards(hero.position, Spot(side), 1.5f * Time.deltaTime);
                 yield return null;
             }
         }

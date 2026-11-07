@@ -634,7 +634,10 @@ namespace Sheytoonak
             if (!ball.InPlay) return;
             Vector3 from = ball.transform.position;
             Vector3 real = ball.Body.linearVelocity; if (real.z > 0f) real.z = -real.z * 0.6f;
-            float x = Mathf.Clamp(foot.X + Random.Range(-1f, 1f) * (house != null ? house.returnSpreadX : 0.8f), -config.laneHalfWidth, config.laneHalfWidth);
+            // User (2026-11-07): the rebound used to land up to returnSpreadX (~2 m) left or right of the kicker, so he
+            // ran sideways after every hit. It now comes back onto his own line, with at most a hand's width of wobble.
+            float spread = Mathf.Min(0.15f, house != null ? house.returnSpreadX : 0.15f);
+            float x = Mathf.Clamp(foot.X + Random.Range(-1f, 1f) * spread, -config.laneHalfWidth, config.laneHalfWidth);
             float z = foot.Z + Random.Range(config.returnLandingDepth.x, config.returnLandingDepth.y);
             var d = KickSolver.BallisticVelocity(new Vec3(from.x, from.y, from.z), new Vec3(x, ball.Radius, z), house != null ? house.returnFlightTime : 1.6f, -Physics.gravity.y);
             ball.SetVelocity(Vector3.Lerp(real, new Vector3(d.X, d.Y, d.Z), config.returnAssist));
@@ -777,8 +780,9 @@ namespace Sheytoonak
         {
             Vector3 p = ball.transform.position;
             float zMin = foot.Z + 0.6f, zMax = mapper.FacadeZ - 1f;
-            float xMax = config.laneHalfWidth + 2.5f;
-            return new Vector3(Mathf.Clamp(p.x, -xMax, xMax), ball.Radius, Mathf.Clamp(p.z, zMin, zMax));
+            // x stays near the kicker so the roll back is straight, not a diagonal that drags him sideways (2026-11-07)
+            float xMax = 0.6f;
+            return new Vector3(Mathf.Clamp(p.x, foot.X - xMax, foot.X + xMax), ball.Radius, Mathf.Clamp(p.z, zMin, zMax));
         }
 
         IEnumerator ResolveAfter(float seconds)

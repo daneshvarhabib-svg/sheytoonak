@@ -5,8 +5,8 @@ namespace Sheytoonak.Prototype
 {
     /// <summary>
     /// The ban/pick screen before every duel (user, 2026-11-01). Cards for every hero in the pool with the
-    /// poison and the antidote; the current step says what to do; the opponent's picks stay hidden ("؟")
-    /// until the duel starts, its bans are public because they remove the hero for both.
+    /// poison and the antidote; the current step says what to do; the opponent's picks and bans are shown as they
+    /// happen (user 2026-11-07: a team is built against what the other side took).
     /// </summary>
     public class DraftScreen : MonoBehaviour
     {
@@ -163,7 +163,9 @@ namespace Sheytoonak.Prototype
             }
             FocusPanel(d, all, myTurn, new Rect(Screen.width - pad - panelW, y0, panelW, Screen.height - y0 - 110 * u), u, label, big);
 
-            // the two teams so far: mine as portraits on the right, the opponent's as hidden "؟" cards on the left
+            // the two teams so far: mine as portraits on the right, the opponent's as portraits on the left.
+            // User (2026-11-07): «موقع انتخاب بازیکن من باید ببینم رقیبم چی انتخاب کرده که بر اساس اون تیمم رو بچینم» —
+            // the hidden «؟» cards are gone; every pick is shown as soon as it is made.
             float ty = Screen.height - 90 * u, ps = 70 * u;
             var mineList = d.Picked[(int)duel.Me];
             for (int k = 0; k < mineList.Count; k++)
@@ -172,12 +174,12 @@ namespace Sheytoonak.Prototype
                 var o = GUI.color; GUI.color = new Color(0.3f, 0.55f, 1f); GUI.DrawTexture(pr, Texture2D.whiteTexture); GUI.color = o;
                 Portrait(new Rect(pr.x + 3 * u, pr.y + 3 * u, pr.width - 6 * u, pr.height - 6 * u), mineList[k]);
             }
-            for (int k = 0; k < d.Picked[1 - (int)duel.Me].Count; k++)
+            var theirs = d.Picked[1 - (int)duel.Me];
+            for (int k = 0; k < theirs.Count; k++)
             {
                 var pr = new Rect(pad + k * (ps + 8 * u), ty, ps, ps);
-                var o = GUI.color; GUI.color = new Color(1f, 0.6f, 0.35f); GUI.DrawTexture(pr, Texture2D.whiteTexture);
-                GUI.color = new Color(0.12f, 0.12f, 0.14f); GUI.DrawTexture(new Rect(pr.x + 3 * u, pr.y + 3 * u, pr.width - 6 * u, pr.height - 6 * u), Texture2D.whiteTexture); GUI.color = o;
-                GUI.Label(pr, "؟", new GUIStyle(big) { alignment = TextAnchor.MiddleCenter });
+                var o = GUI.color; GUI.color = new Color(1f, 0.6f, 0.35f); GUI.DrawTexture(pr, Texture2D.whiteTexture); GUI.color = o;
+                Portrait(new Rect(pr.x + 3 * u, pr.y + 3 * u, pr.width - 6 * u, pr.height - 6 * u), theirs[k]);
             }
         }
     }

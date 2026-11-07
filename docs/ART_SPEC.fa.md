@@ -360,3 +360,17 @@ Mobile game app icon, 1:1, hand-painted, no text. Close-up of a single old woode
 ```
 Splash screen for a mobile game, landscape 16:9, 2048x1152, hand-painted illustration, same gritty present-day Beirut/Damascus alley style as the game: cracked stained plaster facades, sagging electricity cables, graffiti, torn posters. Low camera on the street at late afternoon. Three mischievous kids (a boy in a white vest and green shorts, a girl in a blue dress with braids, a teenager in a green tracksuit) seen from behind, mid-celebration, as a worn leather ball smashes through an upper window and glass explodes outward; an angry old neighbour leaning out of the next window shaking a fist. Empty calm space at the top-centre of the sky for the logo, and the lower 15 % slightly darker for a loading bar. Warm dusty light, muted colours, no text, no watermark.
 ```
+
+## پس‌زمینه‌ی لابی و کارتِ قهرمان‌ها (۱۷ آبان)
+کاربر: «صفحه بک گراند اولیه خیلی زشته … عکسی هم که هست عکس خونه نباشه. عکس قهرمان‌ها باشه در حال نبرد.» تا این دو نرسند بازی اسپلش را می‌گذارد.
+فایل‌ها: `UI/home.png` (۱۶:۹، ۲۰۴۸×۱۱۵۲، افقی؛ کلِ صفحه‌ی لابی زیرِ دکمه‌ها -- کم‌کنتراست و تیره‌تر از اسپلش تا نوشته‌ها خوانا بمانند)، `UI/heroes_battle.png` (۱۶:۹، ۱۵۳۶×۸۶۴؛ کارتِ وسطِ لابی، پرجنب‌وجوش).
+
+### `home.png`
+```
+Lobby background for a mobile game, landscape 16:9, 2048x1152, hand-painted illustration, gritty present-day Beirut/Damascus alley style: cracked stained plaster facades, sagging cables, graffiti, torn posters, dusk light with a few lit windows. Wide shot of a street football "battle" between two gangs of kids: on the left three kids (a boy in a white vest and green shorts, a girl in a blue dress with braids, a teenager in a green tracksuit) and on the right three rival kids (a chubby boy in a red striped shirt, a tall girl in a yellow hijab and jeans, a small boy with a cap), facing each other across the street, a worn leather ball frozen mid-air between them, shattered glass glinting around a broken upper window, an old neighbour shouting from a balcony. Composition keeps the centre of the frame open and quiet (the UI sits there) with the figures toward the lower third and edges. Overall darker, low-contrast, slightly desaturated so white text reads on top. No text, no watermark.
+```
+### `heroes_battle.png`
+```
+Key art for a mobile game card, landscape 16:9, 1536x864, hand-painted, same gritty Beirut alley style. Dynamic close shot: a boy in a white vest and green shorts mid-kick, a worn leather ball exploding a ground-floor window into shards, a girl in a blue dress with braids laughing and pointing, a teenager in a green tracksuit raising a fist; across the street two rival kids ducking behind a parked old Mercedes, one holding a slingshot. Dust, flying glass, warm late-afternoon light, strong diagonal motion, faces visible and expressive (three-quarter view, not from behind). No text, no watermark.
+```
+⚠️ قهرمان‌ها هشت نفرند و نقاشی‌شان جداست (`Art/Heroes/`)؛ این دو تصویر فقط حال‌وهوا می‌دهند، لازم نیست عیناً همان هشت نفر باشند.
