@@ -67,6 +67,7 @@ namespace Sheytoonak.EditorTools
         public static void ApplyIcons()
         {
             var tex = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/Icons/app_icon.png");
+            var clear = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/Icons/transparent.png");
             if (tex == null) { Debug.LogWarning("SHEYTOONAK ICON Assets/Icons/app_icon.png not found, Unity's default icon stays"); return; }
             PlayerSettings.SetIconsForTargetGroup(BuildTargetGroup.Unknown, new[] { tex });
             var target = NamedBuildTarget.Android;
@@ -76,12 +77,18 @@ namespace Sheytoonak.EditorTools
                 foreach (var icon in icons)
                 {
                     var layers = new Texture2D[icon.maxLayerCount];
-                    layers[0] = tex; // adaptive: the painting is the background, no foreground layer
+                    layers[0] = tex;
+                    // adaptive icons have two layers; an empty foreground made Unity draw its own logo over the painting
+                    // (user 2026-11-07: «ایکونش هم نیاد روی آیکون بازی»), so the foreground is an explicit transparent image
+                    for (int i = 1; i < layers.Length; i++) layers[i] = clear != null ? clear : tex;
                     icon.SetTextures(layers);
                 }
                 PlayerSettings.SetPlatformIcons(target, kind, icons);
             }
-            Debug.Log("SHEYTOONAK ICON set from Assets/Icons/app_icon.png");
+            // Unity 6 lets the Personal plan turn the "Made with Unity" splash off (user 2026-11-07: «اسپلش یونیتی نباشه»).
+            PlayerSettings.SplashScreen.show = false;
+            PlayerSettings.SplashScreen.showUnityLogo = false;
+            Debug.Log("SHEYTOONAK ICON set from Assets/Icons/app_icon.png; Unity splash off");
         }
 
         /// <summary>Returns every mismatch between the current settings and what the build needs (empty = all good).</summary>

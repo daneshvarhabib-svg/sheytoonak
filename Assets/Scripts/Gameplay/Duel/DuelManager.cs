@@ -27,10 +27,18 @@ namespace Sheytoonak
         {
             if (housePool == null || housePool.Length == 0) return;
             if (housePool.Length == 1) { house = housePool[0]; return; }
-            HouseDefinition next;
-            do next = housePool[Random.Range(0, housePool.Length)]; while (next == house);
-            house = next;
+            // A shuffled bag: every house comes up once before any repeats (user 2026-11-07: «چرا هنوز خونه های جدید رو
+            // نیاوردی تو بازی؟» — they were in the pool, pure random just kept showing the same few).
+            if (bag == null || bag.Count == 0)
+            {
+                bag = new System.Collections.Generic.List<HouseDefinition>(housePool);
+                for (int i = bag.Count - 1; i > 0; i--) { int k = Random.Range(0, i + 1); (bag[i], bag[k]) = (bag[k], bag[i]); }
+                if (bag.Count > 1 && bag[bag.Count - 1] == house) (bag[0], bag[bag.Count - 1]) = (bag[bag.Count - 1], bag[0]);
+            }
+            house = bag[bag.Count - 1];
+            bag.RemoveAt(bag.Count - 1);
         }
+        System.Collections.Generic.List<HouseDefinition> bag;
         public BallController ball;
         public PlayerFoot foot;
         public BackdropWindowMapper mapper;
