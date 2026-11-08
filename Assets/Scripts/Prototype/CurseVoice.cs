@@ -27,8 +27,10 @@ namespace Sheytoonak
             if (clips.Length == 0) placeholder = Grumble();
         }
 
-        void OnEnable() => GameEvents.WindowBroken += OnBroken;
-        void OnDisable() => GameEvents.WindowBroken -= OnBroken;
+        // User (2026-11-08): «با شکستن تک تک پنجره‌ها فحش رو نداشته باشیم» -- the curse is the resident's line, so it plays
+        // only when one leans out (every few windows, PrototypeBootstrap.OnWindowBroken), not on every break.
+        void OnEnable() => GameEvents.ResidentShouts += OnBroken;
+        void OnDisable() => GameEvents.ResidentShouts -= OnBroken;
 
         void OnBroken(int i, Vector3 point) => StartCoroutine(Shout());
 

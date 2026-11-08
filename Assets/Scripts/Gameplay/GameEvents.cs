@@ -26,6 +26,10 @@ namespace Sheytoonak
         public static event Action<Vector3> WallHit;
         /// <summary>Glass breaks: index into HouseDefinition.windows, world point of the impact.</summary>
         public static event Action<int, Vector3> WindowBroken;
+        /// <summary>A resident leans out of this broken window and curses (not every window: every few, user 2026-11-08).</summary>
+        public static event Action<int, Vector3> ResidentShouts;
+        /// <summary>A new duel: counters that are "per round" (residents, victims) start over.</summary>
+        public static event Action RoundStarted;
         /// <summary>The ball flew into an already broken window. thrownBack = the owner throws it out again.</summary>
         public static event Action<int, bool> BallInHouse;
         /// <summary>The owner's throw starts now from this window.</summary>
@@ -47,6 +51,8 @@ namespace Sheytoonak
         internal static void RaiseBounced(Vector3 p, int n, bool returning) => Bounced?.Invoke(p, n, returning);
         internal static void RaiseWallHit(Vector3 p) => WallHit?.Invoke(p);
         internal static void RaiseWindowBroken(int i, Vector3 p) => WindowBroken?.Invoke(i, p);
+        internal static void RaiseResidentShouts(int i, Vector3 p) => ResidentShouts?.Invoke(i, p);
+        internal static void RaiseRoundStarted() => RoundStarted?.Invoke();
         internal static void RaiseBallInHouse(int i, bool back) => BallInHouse?.Invoke(i, back);
         internal static void RaiseOwnerThrow(int i) => OwnerThrow?.Invoke(i);
         internal static void RaiseLifeLost(int left, LossReason r) => LifeLost?.Invoke(left, r);

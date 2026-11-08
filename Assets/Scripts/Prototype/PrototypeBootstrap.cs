@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using Sheytoonak.Core;
 using UnityEngine;
 
@@ -107,6 +108,7 @@ namespace Sheytoonak.Prototype
         {
             GameEvents.HouseLoaded += OnHouseLoaded;
             GameEvents.WindowBroken += OnWindowBroken;
+            GameEvents.RoundStarted += OnRoundStarted;
             GameEvents.WalkStarted += OnWalkStarted;
             GameEvents.Kicked += OnKicked;
             GameEvents.KickRejected += OnKickRejected;
@@ -123,6 +125,7 @@ namespace Sheytoonak.Prototype
         {
             GameEvents.HouseLoaded -= OnHouseLoaded;
             GameEvents.WindowBroken -= OnWindowBroken;
+            GameEvents.RoundStarted -= OnRoundStarted;
             GameEvents.WalkStarted -= OnWalkStarted;
             GameEvents.Kicked -= OnKicked;
             GameEvents.KickRejected -= OnKickRejected;
@@ -1251,8 +1254,16 @@ namespace Sheytoonak.Prototype
             // painted twice shows the painter's own smashed window and nothing else moves; the 2-point window gets the granny.
             if (paintedBroken)
             {
-                if (duelGame != null && duelGame.Rules != null && duelGame.Rules.WindowValue[i] >= 2)
+                // User (2026-11-08): «با شکستن هر چندتا پنجره بیاد بیرون و فحش بده. با شکستن تک تک پنجره‌ها فحش رو نداشته
+                // باشیم». A resident leans out every 2-4 broken windows of the round (the first after 2), never on each one;
+                // the curse voice is tied to the same moment (GameEvents.ResidentShouts).
+                brokenThisRound++;
+                if (brokenThisRound >= nextResidentAt)
+                {
+                    nextResidentAt = brokenThisRound + Random.Range(2, 5);
+                    GameEvents.RaiseResidentShouts(i, point);
                     StartCoroutine(GrannyCurses(windowRenderers[i].transform.position, windowRenderers[i].transform.lossyScale));
+                }
             }
             else if (game != null) WakeDetails(i);
             else WindowLife(i, windowRenderers[i].transform.position, windowRenderers[i].transform.lossyScale);
@@ -1320,12 +1331,27 @@ namespace Sheytoonak.Prototype
         /// The neighbour cut out of her painting (Art/Poison/granny: only the woman, no frame, so the window itself is not
         /// changed) rises in the smashed window, shakes her fist, a curse bubble pops over her head, then she ducks back.
         /// </summary>
+        int brokenThisRound, nextResidentAt = 2, lastResident = -1;
+        void OnRoundStarted() { brokenThisRound = 0; nextResidentAt = 2; }
+
+        /// <summary>The residents who lean out: Art/Poison/resident_*.png (the granny is granny2); never the same one twice running.</summary>
+        Texture2D PickResident()
+        {
+            var all = new List<Texture2D>(Resources.LoadAll<Texture2D>("Art/Poison"));
+            all.RemoveAll(t => !(t.name.StartsWith("resident_") || t.name == "granny2"));
+            if (all.Count == 0) return null;
+            int k = all.Count == 1 ? 0 : Random.Range(0, all.Count - 1);
+            if (all.Count > 1 && k >= lastResident) k++;
+            lastResident = k;
+            return all[k];
+        }
+
         IEnumerator GrannyCurses(Vector3 at, Vector3 size)
         {
             // User (2026-11-08): «این پیرزنه اصلاً به آرت فعلی نمی‌خوره». The old cartoon cut-out (Art/Poison/granny) is
-            // retired; a granny painted in the facades' style goes in Art/Poison/granny2 (prompt in docs/ART_SPEC.fa.md).
-            // Until it exists nothing is drawn and the window's own curse voice still plays.
-            var tex = Resources.Load<Texture2D>("Art/Poison/granny2");
+            // retired; residents painted in the facades' style live in Art/Poison (granny2, resident_*; prompts in
+            // docs/ART_SPEC.fa.md). Until one exists nothing is drawn.
+            var tex = PickResident();
             if (tex == null) yield break;
             yield return new WaitForSeconds(0.35f);
             var go = new GameObject("Granny");

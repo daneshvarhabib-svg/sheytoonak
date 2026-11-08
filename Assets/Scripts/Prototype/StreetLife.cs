@@ -63,9 +63,14 @@ namespace Sheytoonak
             nextPed = Time.time + Random.Range(1f, 3f);
             nextCar = Time.time + Random.Range(2f, 6f);
             GameEvents.WindowBroken += OnWindowBroken;
+            GameEvents.RoundStarted += OnRoundStarted;
         }
 
-        void OnDestroy() { GameEvents.WindowBroken -= OnWindowBroken; }
+        void OnDestroy() { GameEvents.WindowBroken -= OnWindowBroken; GameEvents.RoundStarted -= OnRoundStarted; }
+
+        // User (2026-11-08): «کشته شدن عابر پیاده هم دو سه بار نهایتاً در هر دست رخ بده»
+        int victimsThisRound, victimsAllowed = 3;
+        void OnRoundStarted() { victimsThisRound = 0; victimsAllowed = Random.Range(2, 4); }
 
         // User (2026-11-08): «وقتی شیشه می‌شکنه عابر پیاده زیر پنجره است یه لحظه شوکه شه و سرش خونی بشه و بعد آمبولانس بیاد
         // ببردش». A walker right under the window freezes, a red stain spreads on the head, he keels over on the pavement;
@@ -73,12 +78,14 @@ namespace Sheytoonak
         // on the road, stops at him, he is gone, it drives off. Without the picture he just lies there and fades.
         void OnWindowBroken(int window, Vector3 point)
         {
+            if (victimsThisRound >= victimsAllowed) return;
             for (int i = movers.Count - 1; i >= 0; i--)
             {
                 var m = movers[i];
                 if (m.cyclist || m.wheels != null || Mathf.Abs(m.speed) >= 3f) continue; // walkers only
                 if (Mathf.Abs(m.t.position.z - farSidewalkZ) > 1f || Mathf.Abs(m.t.position.x - point.x) > 1.1f) continue;
                 movers.RemoveAt(i);
+                victimsThisRound++;
                 StartCoroutine(Victim(m));
                 break;
             }

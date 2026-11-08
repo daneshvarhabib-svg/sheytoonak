@@ -333,6 +333,7 @@ namespace Sheytoonak
             Rules.RageGained += s => Pop?.Invoke("rage", s, PopKind.Info);
             PlaceBallAtCentre();
             Curses[1] = Mathf.Max(0, Curses[0] + Random.Range(-3, 4)); // a "matched" opponent
+            GameEvents.RaiseRoundStarted();
             DuelStarted?.Invoke();
             // the drafter who banned first also opens (and gets the single first action)
             Rules.Start(first);

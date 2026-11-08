@@ -386,3 +386,21 @@ Cut-out character for a game, portrait 3:4, on a flat solid bright green backgro
 ```
 Cut-out for a game, side view, on a flat solid bright green background #00FF00, no ground, no shadow on the ground, no scene. Painted in the same realistic hand-painted style as a weathered Beirut street painting (soft brushwork, muted dusty colours). An old boxy Lebanese Red Cross style ambulance, white with a red stripe and a red crescent/cross, rear doors open toward the viewer's right end of the vehicle, facing right; two paramedics in white shirts lifting a wheeled stretcher into the back, a person lying on it fully covered by a white sheet, one shoe sticking out from under the sheet. Whole vehicle and stretcher visible, wheels fully included. No text, no watermark.
 ```
+
+## ساکنانِ فحّاش، چند چهره (۱۸ آبان)
+کاربر: «چندتا تصویر داشته باشیم از کسی که سرش رو از شیشه شکسته میاره بیرون و فحش میده. با شکستن هر چندتا پنجره بیاد بیرون». هر ۲ تا ۴ پنجره یکی بیرون می‌آید (نه هر پنجره) و صدای فحش فقط همان لحظه پخش می‌شود. فایل‌ها: `Poison/resident_01.png` … `resident_04.png` (۳:۴، ~۹۰۰×۱۲۰۰، رویِ سبزِ #00FF00؛ `granny2.png` از قبل هست). همان قالبِ پیرزن، فقط شخصیت عوض می‌شود -- جمله‌ی اول و آخرِ پرامپت ثابت بماند:
+```
+Cut-out character for a game, portrait 3:4, on a flat solid bright green background #00FF00, NO window frame, NO wall, NO background scene. Painted in the same realistic hand-painted style as a weathered Beirut facade painting (soft brushwork, muted dusty colours, natural light from above-left). <CHARACTER>, seen from the waist up, leaning forward as if out of a window sill, shouting furiously, forearms resting on an invisible sill at the bottom edge of the image (crop at the sill line). Slightly three-quarter view facing the viewer's left. No text, no speech bubble, no watermark.
+```
+جایِ `<CHARACTER>`:
+- `A bald middle-aged Levantine man in a white sleeveless undershirt, thick moustache, hairy arms, a slipper raised in one hand`
+- `A young Levantine woman in a pink bathrobe with a towel turban, face cream on her cheeks, pointing an accusing finger`
+- `A skinny old man in pyjamas and a wool skullcap, round glasses crooked, waving a cane`
+- `A big Levantine grandfather in a grey tracksuit top, white stubble, worry beads swinging from the raised fist`
+
+## صدا: لحن، نه فقط لهجه (۱۸ آبان)
+کاربر: «لهجه رو خوب در آورده ولی هیچ لحنی نداره … باید با یه AI دیگه که لحن و خشونت و فحش و هیجان رو می‌فهمه کار کنیم». TTSهایی که بازیگری می‌کنند و عربی را هم دارند (پیشنهاد، تست با یک خط):
+1. **ElevenLabs، مدلِ v3** -- تگِ احساس داخلِ متن: `[shouting] [angry]`، `[laughs]`، `[whispers]`؛ عربی را پشتیبانی می‌کند، صدایِ آماده‌ی مرد/زنِ عربی دارد. نمونه‌ی ورودی: `[furious, shouting from a window] يا كلب! كسّرت الشبّاك!`. کنترلِ Stability را پایین (۳۰–۴۰) بگذار تا اغراق کند.
+2. **Hume Octave** -- به‌جایِ تگ، توضیحِ صحنه می‌گیرد («an old Beirut woman screaming out of a window at kids, hoarse, outraged»)؛ برایِ فحش و هیجان خوب است.
+3. **OpenAI gpt-4o-mini-tts** -- فیلدِ `instructions` («shout, Levantine street accent, enraged, fast»)؛ ارزان ولی عربی‌اش ضعیف‌تر.
+قاعده‌ها همان قبلی: هر خط جدا، سکوتِ کوتاه اول و آخر، mp3/wav؛ من همان فیلترِ A را می‌زنم. برایِ قهرمان‌ها هم همین: ضربه = نفسِ کوتاه + فریادِ پیروزی، سم = خنده‌ی شیطانی، پادزهر = «هه!» راحت‌شده.
