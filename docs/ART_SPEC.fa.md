@@ -404,3 +404,10 @@ Cut-out character for a game, portrait 3:4, on a flat solid bright green backgro
 2. **Hume Octave** -- به‌جایِ تگ، توضیحِ صحنه می‌گیرد («an old Beirut woman screaming out of a window at kids, hoarse, outraged»)؛ برایِ فحش و هیجان خوب است.
 3. **OpenAI gpt-4o-mini-tts** -- فیلدِ `instructions` («shout, Levantine street accent, enraged, fast»)؛ ارزان ولی عربی‌اش ضعیف‌تر.
 قاعده‌ها همان قبلی: هر خط جدا، سکوتِ کوتاه اول و آخر، mp3/wav؛ من همان فیلترِ A را می‌زنم. برایِ قهرمان‌ها هم همین: ضربه = نفسِ کوتاه + فریادِ پیروزی، سم = خنده‌ی شیطانی، پادزهر = «هه!» راحت‌شده.
+
+### آمبولانس، نسخه‌ی چندتکه (۱۸ آبان)
+کاربر: «نباید تعداد بیشتری تصویر از آمبولانس و پرسنلش داشته باشی؟». تصویرِ یک‌تکه (`Props/ambulance.png`) فعلاً کار می‌کند؛ با این شش فایل صحنه مرحله‌ای می‌شود (می‌آید، می‌ایستد، در باز، برانکاردِ خالی تا عابر، برگشت با برانکاردِ پر، در بسته، می‌رود). همه رویِ سبزِ #00FF00، **همان آمبولانسِ تصویرِ اول و همان دو امدادگر، همه رو به چپ** (کابین سمتِ چپ):
+- `ambulance_closed.png`: `The same old white Red Crescent van from the previous picture, exact same side view and angle facing left, all doors shut, nobody around it, no stretcher.`
+- `ambulance_open.png`: `The same van, same view, rear doors wide open showing the empty interior, nobody around it, no stretcher.`
+- `medics_empty_a.png` / `medics_empty_b.png`: `The same two paramedics (white shirts with red crescent, navy trousers) pushing an EMPTY wheeled stretcher to the left, side view, no vehicle. Frame A: front medic's left leg forward. Frame B: right leg forward.`
+- `medics_loaded_a.png` / `medics_loaded_b.png`: همان دو فریم، `… pushing the wheeled stretcher with a person lying on it fully covered by a white sheet, one shoe showing …`

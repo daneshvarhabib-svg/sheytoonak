@@ -132,20 +132,70 @@ namespace Sheytoonak
             }
             yield return new WaitForSeconds(1.6f);
             if (t == null) yield break;
+            // ⚠️ the pictures come out facing LEFT (the user's ambulance has its cab on the left; the medics push to the
+            // left), so a vehicle driving right is the mirrored one.
+            Texture2D closed = Resources.Load<Texture2D>("Art/Props/ambulance_closed"), open = Resources.Load<Texture2D>("Art/Props/ambulance_open");
+            Texture2D ea = Resources.Load<Texture2D>("Art/Props/medics_empty_a"), eb = Resources.Load<Texture2D>("Art/Props/medics_empty_b");
+            Texture2D la = Resources.Load<Texture2D>("Art/Props/medics_loaded_a"), lb = Resources.Load<Texture2D>("Art/Props/medics_loaded_b");
             var amb = Resources.Load<Texture2D>("Art/Props/ambulance");
-            if (amb != null)
+            if (closed != null && open != null && ea != null && la != null)
             {
-                bool fromLeft = t.position.x > 0f ? false : true; // comes from the nearer edge, leaves the other way
+                // User (2026-11-08): «نباید تعداد بیشتری تصویر از آمبولانس و پرسنلش داشته باشی؟ اینطوری که نمی‌تونی طبیعی در
+                // بیاری حرکتشون رو». Staged: the van drives in and parks beside him, doors open, two medics wheel an empty
+                // stretcher out to him, come back with him under the sheet, doors close, it drives off.
+                bool drivesRight = t.position.x > 0f; // comes from the far side so it passes in front of him before stopping
+                float side = drivesRight ? -1f : 1f;   // the van parks a little short of him on its own approach side
+                var sp = Sprite.Create(closed, new Rect(0, 0, closed.width, closed.height), new Vector2(0.5f, 0f), 100f);
+                var van = Make("Ambulance", sp, 2.5f, new Vector3(drivesRight ? -24f : 24f, 0f, roadZ + 1.4f));
+                var vr = van.GetComponent<SpriteRenderer>();
+                if (drivesRight) van.localScale = new Vector3(-van.localScale.x, van.localScale.y, van.localScale.z);
+                float x0 = van.position.x, x1 = t.position.x + side * 2.2f;
+                for (float k = 0f; k < 1f; k += Time.deltaTime / 2f) { if (van == null) yield break; van.position = new Vector3(Mathf.Lerp(x0, x1, 1f - (1f - k) * (1f - k)), 0f, van.position.z); yield return null; }
+                yield return new WaitForSeconds(0.4f);
+                vr.sprite = Sprite.Create(open, new Rect(0, 0, open.width, open.height), new Vector2(0.5f, 0f), 100f);
+                yield return new WaitForSeconds(0.5f);
+                // medics with the empty stretcher appear at the rear of the van and walk to him on the pavement
+                var fe = new List<Sprite> { Sprite.Create(ea, new Rect(0, 0, ea.width, ea.height), new Vector2(0.5f, 0f), 100f) };
+                if (eb != null) fe.Add(Sprite.Create(eb, new Rect(0, 0, eb.width, eb.height), new Vector2(0.5f, 0f), 100f));
+                var fl = new List<Sprite> { Sprite.Create(la, new Rect(0, 0, la.width, la.height), new Vector2(0.5f, 0f), 100f) };
+                if (lb != null) fl.Add(Sprite.Create(lb, new Rect(0, 0, lb.width, lb.height), new Vector2(0.5f, 0f), 100f));
+                float rearX = x1 + side * 1.6f; // the van stopped short of him on its approach side, so its rear is nearer him
+                var med = Make("Medics", fe[0], 1.85f, new Vector3(rearX, 0f, farSidewalkZ - 0.25f));
+                var mr = med.GetComponent<SpriteRenderer>();
+                float mx0 = rearX, mx1 = t.position.x - side * 0.9f; // they stop beside him
+                bool toRight = mx1 > mx0;
+                if (toRight) med.localScale = new Vector3(-med.localScale.x, med.localScale.y, med.localScale.z);
+                float f = 0f;
+                for (float k = 0f; k < 1f; k += Time.deltaTime / 1.6f) { if (med == null) yield break; f += Time.deltaTime * 4f; mr.sprite = fe[(int)f % fe.Count]; med.position = new Vector3(Mathf.Lerp(mx0, mx1, k), 0f, med.position.z); yield return null; }
+                yield return new WaitForSeconds(0.7f);
+                if (t != null) Destroy(t.gameObject); // lifted onto the stretcher
+                mr.sprite = fl[0];
+                med.localScale = new Vector3(-med.localScale.x, med.localScale.y, med.localScale.z); // turn round
+                yield return new WaitForSeconds(0.4f);
+                for (float k = 0f; k < 1f; k += Time.deltaTime / 1.8f) { if (med == null) yield break; f += Time.deltaTime * 3.5f; mr.sprite = fl[(int)f % fl.Count]; med.position = new Vector3(Mathf.Lerp(mx1, mx0, k), 0f, med.position.z); yield return null; }
+                yield return new WaitForSeconds(0.5f);
+                Destroy(med.gameObject);
+                yield return new WaitForSeconds(0.4f);
+                vr.sprite = sp; // doors shut
+                yield return new WaitForSeconds(0.5f);
+                float xe = drivesRight ? 26f : -26f;
+                for (float k = 0f; k < 1f; k += Time.deltaTime / 2.4f) { if (van == null) yield break; van.position = new Vector3(Mathf.Lerp(x1, xe, k * k), 0f, van.position.z); yield return null; }
+                Destroy(van.gameObject);
+            }
+            else if (amb != null)
+            {
+                // one composite picture (the user's first): the van with the stretcher already being loaded drives in,
+                // stops at him, he is gone behind it, it drives off. Painted facing left.
+                bool drivesRight = t.position.x > 0f;
                 var sp = Sprite.Create(amb, new Rect(0, 0, amb.width, amb.height), new Vector2(0.5f, 0f), 100f);
-                var a = Make("Ambulance", sp, 2.6f, new Vector3(fromLeft ? -24f : 24f, 0f, roadZ + 1.2f));
-                if (!fromLeft) a.localScale = new Vector3(-a.localScale.x, a.localScale.y, a.localScale.z); // painted driving right
+                var a = Make("Ambulance", sp, 2.6f, new Vector3(drivesRight ? -24f : 24f, 0f, roadZ + 1.2f));
+                if (drivesRight) a.localScale = new Vector3(-a.localScale.x, a.localScale.y, a.localScale.z);
                 float x0 = a.position.x, x1 = t.position.x;
                 for (float k = 0f; k < 1f; k += Time.deltaTime / 1.8f) { if (a == null) yield break; a.position = new Vector3(Mathf.Lerp(x0, x1, 1f - (1f - k) * (1f - k)), 0f, a.position.z); yield return null; }
                 yield return new WaitForSeconds(0.6f);
-                // the body goes behind the ambulance
                 if (t != null) { for (float k = 0f; k < 0.5f; k += Time.deltaTime) { sr.color = new Color(1f, 1f, 1f, 1f - k / 0.5f); yield return null; } Destroy(t.gameObject); }
                 yield return new WaitForSeconds(0.8f);
-                float xe = fromLeft ? 26f : -26f;
+                float xe = drivesRight ? 26f : -26f;
                 for (float k = 0f; k < 1f; k += Time.deltaTime / 2.2f) { if (a == null) yield break; a.position = new Vector3(Mathf.Lerp(x1, xe, k * k), 0f, a.position.z); yield return null; }
                 Destroy(a.gameObject);
             }
