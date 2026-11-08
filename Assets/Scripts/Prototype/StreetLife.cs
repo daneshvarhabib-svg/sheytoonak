@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -61,6 +62,92 @@ namespace Sheytoonak
             // the sprite trees are gone (user 2026-11-05): the painting fills the frame and its own trees sway
             nextPed = Time.time + Random.Range(1f, 3f);
             nextCar = Time.time + Random.Range(2f, 6f);
+            GameEvents.WindowBroken += OnWindowBroken;
+        }
+
+        void OnDestroy() { GameEvents.WindowBroken -= OnWindowBroken; }
+
+        // User (2026-11-08): «وقتی شیشه می‌شکنه عابر پیاده زیر پنجره است یه لحظه شوکه شه و سرش خونی بشه و بعد آمبولانس بیاد
+        // ببردش». A walker right under the window freezes, a red stain spreads on the head, he keels over on the pavement;
+        // then the ambulance picture (Art/Props/ambulance, the user's: a body under a white sheet being loaded) drives in
+        // on the road, stops at him, he is gone, it drives off. Without the picture he just lies there and fades.
+        void OnWindowBroken(int window, Vector3 point)
+        {
+            for (int i = movers.Count - 1; i >= 0; i--)
+            {
+                var m = movers[i];
+                if (m.cyclist || m.wheels != null || Mathf.Abs(m.speed) >= 3f) continue; // walkers only
+                if (Mathf.Abs(m.t.position.z - farSidewalkZ) > 1f || Mathf.Abs(m.t.position.x - point.x) > 1.1f) continue;
+                movers.RemoveAt(i);
+                StartCoroutine(Victim(m));
+                break;
+            }
+        }
+
+        static Texture2D bloodTex;
+        IEnumerator Victim(Mover m)
+        {
+            var t = m.t; var sr = m.sr;
+            if (t == null) yield break;
+            t.name = "Victim";
+            // shocked: frozen mid-stride, a small jolt upward
+            Vector3 p0 = t.position;
+            for (float k = 0f; k < 0.35f; k += Time.deltaTime) { if (t == null) yield break; t.position = p0 + Vector3.up * 0.06f * Mathf.Sin(k / 0.35f * Mathf.PI); yield return null; }
+            // the stain on the head (top of the sprite), growing
+            if (bloodTex == null)
+            {
+                const int n = 32; bloodTex = new Texture2D(n, n, TextureFormat.RGBA32, false);
+                var px = new Color32[n * n];
+                for (int y = 0; y < n; y++) for (int x = 0; x < n; x++)
+                { float d = Vector2.Distance(new Vector2(x, y), new Vector2(15.5f, 15.5f)) / 15.5f; float a = Mathf.Clamp01(1.2f - d * d * 1.4f); px[y * n + x] = new Color32(150, 10, 10, (byte)(a * 255)); }
+                bloodTex.SetPixels32(px); bloodTex.Apply();
+            }
+            var blood = new GameObject("Blood").AddComponent<SpriteRenderer>();
+            blood.sprite = Sprite.Create(bloodTex, new Rect(0, 0, 32, 32), new Vector2(0.5f, 0.5f), 100f);
+            blood.transform.SetParent(t, false);
+            float hTop = sr.sprite.bounds.size.y; // sprite units: pivot at the feet
+            blood.transform.localPosition = new Vector3(0f, hTop * 0.93f, -0.01f);
+            blood.sortingOrder = sr.sortingOrder + 1;
+            for (float k = 0f; k < 0.5f; k += Time.deltaTime)
+            {
+                if (t == null) yield break;
+                blood.transform.localScale = Vector3.one * Mathf.Lerp(0.2f, 1.3f, k / 0.5f) * (hTop * 0.22f / 0.32f);
+                yield return null;
+            }
+            // keels over: falls away from the house onto the pavement (rotates about the feet)
+            float dir = m.speed >= 0f ? -1f : 1f;
+            for (float k = 0f; k < 0.6f; k += Time.deltaTime)
+            {
+                if (t == null) yield break;
+                float e = k / 0.6f; e = e * e;
+                t.localRotation = Quaternion.Euler(0f, 0f, dir * 88f * e);
+                yield return null;
+            }
+            yield return new WaitForSeconds(1.6f);
+            if (t == null) yield break;
+            var amb = Resources.Load<Texture2D>("Art/Props/ambulance");
+            if (amb != null)
+            {
+                bool fromLeft = t.position.x > 0f ? false : true; // comes from the nearer edge, leaves the other way
+                var sp = Sprite.Create(amb, new Rect(0, 0, amb.width, amb.height), new Vector2(0.5f, 0f), 100f);
+                var a = Make("Ambulance", sp, 2.6f, new Vector3(fromLeft ? -24f : 24f, 0f, roadZ + 1.2f));
+                if (!fromLeft) a.localScale = new Vector3(-a.localScale.x, a.localScale.y, a.localScale.z); // painted driving right
+                float x0 = a.position.x, x1 = t.position.x;
+                for (float k = 0f; k < 1f; k += Time.deltaTime / 1.8f) { if (a == null) yield break; a.position = new Vector3(Mathf.Lerp(x0, x1, 1f - (1f - k) * (1f - k)), 0f, a.position.z); yield return null; }
+                yield return new WaitForSeconds(0.6f);
+                // the body goes behind the ambulance
+                if (t != null) { for (float k = 0f; k < 0.5f; k += Time.deltaTime) { sr.color = new Color(1f, 1f, 1f, 1f - k / 0.5f); yield return null; } Destroy(t.gameObject); }
+                yield return new WaitForSeconds(0.8f);
+                float xe = fromLeft ? 26f : -26f;
+                for (float k = 0f; k < 1f; k += Time.deltaTime / 2.2f) { if (a == null) yield break; a.position = new Vector3(Mathf.Lerp(x1, xe, k * k), 0f, a.position.z); yield return null; }
+                Destroy(a.gameObject);
+            }
+            else
+            {
+                yield return new WaitForSeconds(2f);
+                for (float k = 0f; k < 1f; k += Time.deltaTime) { if (t == null) yield break; sr.color = new Color(1f, 1f, 1f, 1f - k); blood.color = sr.color; yield return null; }
+                if (t != null) Destroy(t.gameObject);
+            }
         }
 
         // User (2026-11-05): «فولکس و واگن هم چرخ ندارن فقط قالپاق دارن، باید چرخ داشته باشن و چرخش بچرخه». Cars are now

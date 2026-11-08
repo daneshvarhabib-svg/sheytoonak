@@ -113,6 +113,7 @@ namespace Sheytoonak.Prototype
                     r.sprite = idle;
                     r.flipX = side == 1;
                     go.transform.localScale = Vector3.one * (heroHeight / Mathf.Max(0.01f, idle.bounds.size.y));
+                    baseY[r] = go.transform.localScale.y; breathPhase[r] = Random.value * Mathf.PI * 2f;
                     painted[side][i] = r;
                     if (i == kickSlot[side]) kickerScale[side] = go.transform.localScale;
                 }
@@ -127,7 +128,27 @@ namespace Sheytoonak.Prototype
             r.sprite = sp;
             // frames come from different sheets (a 5-frame sheet is ~1/3 the pixels of a single pose): scale per sprite
             r.transform.localScale = Vector3.one * (heroHeight / Mathf.Max(0.01f, sp.bounds.size.y));
+            baseY[r] = r.transform.localScale.y;
             if (slot == kickSlot[(int)side]) kickerScale[(int)side] = r.transform.localScale;
+        }
+
+        // User (2026-11-08): «بازیکنان نفس بکشن و یه حرکت ریزی به بالا داشته باشن … در حد یه میلیمتر بالا پایین شن». The
+        // sprite's pivot is at the feet, so a ~1 % slow stretch in y lifts the head and chest a touch and settles again.
+        readonly Dictionary<SpriteRenderer, float> baseY = new Dictionary<SpriteRenderer, float>();
+        readonly Dictionary<SpriteRenderer, float> breathPhase = new Dictionary<SpriteRenderer, float>();
+        void Breathe()
+        {
+            for (int side = 0; side < 2; side++)
+                for (int i = 0; i < 3; i++)
+                {
+                    var r = painted[side][i];
+                    if (r == null || !baseY.TryGetValue(r, out float by)) continue;
+                    if (striking[side] != null && i == kickSlot[side]) continue; // the kick animation owns the scale
+                    breathPhase.TryGetValue(r, out float ph);
+                    float b = 1f + 0.012f * (0.5f + 0.5f * Mathf.Sin(Time.time * 2f * Mathf.PI / 3.4f + ph)); // in ~1.4 s, out ~2 s
+                    var ls = r.transform.localScale;
+                    r.transform.localScale = new Vector3(ls.x, by * b, ls.z);
+                }
         }
 
         /// <summary>The 6-frame run cycle (r1..r6, 2026-11-04: «حرکت بازیکن‌ها هنوز طبیعی نیست») when painted; otherwise the
@@ -275,6 +296,7 @@ namespace Sheytoonak.Prototype
 
         void LateUpdate()
         {
+            Breathe();
             if (duel == null || duel.ball == null) return;
             ballX = Mathf.Lerp(ballX, duel.ball.transform.position.x, 4f * Time.deltaTime);
             BallMarks();

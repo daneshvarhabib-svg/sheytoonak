@@ -380,3 +380,9 @@ Key art for a mobile game card, landscape 16:9, 1536x864, hand-painted, same gri
 ```
 Cut-out character for a game, portrait 3:4, on a flat solid bright green background #00FF00, NO window frame, NO wall, NO background scene. Painted in the same realistic hand-painted style as a weathered Beirut facade painting (soft brushwork, muted dusty colours, natural light from above-left). A stout old Levantine grandmother seen from the waist up, leaning forward as if out of a window sill, one fist raised and shaking, mouth open mid-shout, furious eyes; floral headscarf, cardigan over a house dress, apron. Her forearms rest on an invisible sill at the bottom edge of the image (crop at the sill line). Slightly three-quarter view facing the viewer's left. No text, no speech bubble, no watermark.
 ```
+
+## آمبولانس و عابرِ زخمی (۱۸ آبان)
+کاربر: «وقتی شیشه می‌شکنه عابر پیاده زیر پنجره است یه لحظه شوکه شه و سرش خونی بشه و بعد آمبولانس بیاد ببردش». شوک، لکه‌ی خون و افتادن در کد است؛ فقط یک تصویر لازم است: `Props/ambulance.png` (نمای جانبی، رو به راست، ~۱۶۰۰×۹۰۰، رویِ سبزِ #00FF00). تا نرسد عابر فقط می‌افتد و محو می‌شود.
+```
+Cut-out for a game, side view, on a flat solid bright green background #00FF00, no ground, no shadow on the ground, no scene. Painted in the same realistic hand-painted style as a weathered Beirut street painting (soft brushwork, muted dusty colours). An old boxy Lebanese Red Cross style ambulance, white with a red stripe and a red crescent/cross, rear doors open toward the viewer's right end of the vehicle, facing right; two paramedics in white shirts lifting a wheeled stretcher into the back, a person lying on it fully covered by a white sheet, one shoe sticking out from under the sheet. Whole vehicle and stretcher visible, wheels fully included. No text, no watermark.
+```
