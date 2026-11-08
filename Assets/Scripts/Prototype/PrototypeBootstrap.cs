@@ -1322,7 +1322,10 @@ namespace Sheytoonak.Prototype
         /// </summary>
         IEnumerator GrannyCurses(Vector3 at, Vector3 size)
         {
-            var tex = Resources.Load<Texture2D>("Art/Poison/granny");
+            // User (2026-11-08): «این پیرزنه اصلاً به آرت فعلی نمی‌خوره». The old cartoon cut-out (Art/Poison/granny) is
+            // retired; a granny painted in the facades' style goes in Art/Poison/granny2 (prompt in docs/ART_SPEC.fa.md).
+            // Until it exists nothing is drawn and the window's own curse voice still plays.
+            var tex = Resources.Load<Texture2D>("Art/Poison/granny2");
             if (tex == null) yield break;
             yield return new WaitForSeconds(0.35f);
             var go = new GameObject("Granny");

@@ -440,10 +440,11 @@ namespace Sheytoonak.Prototype
         void OnBallDead(Vector3 at)
         {
             if (settling != null) StopCoroutine(settling);
-            settling = StartCoroutine(SettleBall(at));
+            settling = StartCoroutine(SettleBall(at, duel.DeadBallRolls ? 0 : 2));
         }
         Coroutine settling;
-        IEnumerator SettleBall(Vector3 at)
+        /// <param name="hops">0 when the ball already bounced itself (user 2026-11-08: no fake bounces after the real ones)</param>
+        IEnumerator SettleBall(Vector3 at, int hops)
         {
             var ball = duel.ball;
             var t = ball.transform;
@@ -454,7 +455,7 @@ namespace Sheytoonak.Prototype
             Vector3 home = foot.StrikeSpot + Vector3.up * ball.Radius;
             float hop = 0.35f, dur = 0.35f;
             Vector3 p = t.position;
-            for (int bounce = 0; bounce < 2; bounce++)
+            for (int bounce = 0; bounce < hops; bounce++)
             {
                 Vector3 to = Vector3.Lerp(p, home, 0.25f);
                 for (float k = 0f; k < 1f; k += Time.deltaTime / dur)

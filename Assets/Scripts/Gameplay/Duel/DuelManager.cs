@@ -752,14 +752,10 @@ namespace Sheytoonak
             kickActive = false;
             // User (2026-11-05): «هر توپ رو جدا از اولش که میزنی تا سه ضربه باید بشه زد». A ball that did not break glass
             // comes back to the foot and the same action continues, up to three hits in all; only then the action ends.
-            if (hitWindow < 0 && ball.InPlay && rallyHits + 1 < HitsPerBall && !Rules.Finished)
-            {
-                hitsToCome = true;
-                BallSettled = false;
-                if (BallDead != null) BallDead.Invoke(DeadBallSpot()); else PlaceBallAtCentre();
-                Toast?.Invoke(Ar.N(HitsPerBall - rallyHits - 1) + " " + Ar.HitsLeft, 1.2f);
-                return;
-            }
+            // ⚠️ until 2026-11-08 a rebound that bounced twice was rolled back to the foot and the same action went on from
+            // rest ("hitsToCome"). User: «ما فقط و فقط در صورتی می‌تونیم با حداکثر سه ضربه به توپ شیشه رو بشکونیم که توپ
+            // بیشتر از یه بار زمین نخورده باشه و اگر بیشتر از یه بار زمین بخوره یا بخوره به شیشه نوبتمون می‌سوزه». So the
+            // extra hits exist only on the live rebound (Rekick, before its second bounce); two bounces end the turn.
             hitsToCome = false;
             var outcome = Rules.EndKick(kicker, hitWindow);
             LastHitWindow = hitWindow;
@@ -767,8 +763,23 @@ namespace Sheytoonak
             // User (2026-11-05): «توپ یهویی غیب می‌شه و ضربه برنمی‌گرده … توپ برگرده ولی دوبار بخوره زمین و بادش کم شه انگار».
             // The ball is no longer teleported to the foot: where it died it goes limp (BallDead), the stage rolls it back
             // to the kicker; until it is there no kick can start (BallSettled false).
-            if (ball.InPlay && BallDead != null) { BallSettled = false; BallDead.Invoke(DeadBallSpot()); }
+            // User (2026-11-08): «تو ضربه سوم حتماً دوبار زمین بخوره و بیاد سمت بازیکن … نه این که توپی که دو ثانیه پیش شوت
+            // کردیم یهویی قل بخوره». A ball that already bounced twice on its own is not re-dropped with fake hops: it
+            // rolls on from where it really is (DeadBallRolls); the hops are only for a ball killed out of play.
+            DeadBallRolls = bouncesSinceWall >= 2 || groundBounces >= 2;
+            if (ball.InPlay && BallDead != null) { BallSettled = false; BallDead.Invoke(DeadBallRolls ? RollingBallSpot() : DeadBallSpot()); }
             else PlaceBallAtCentre();
+        }
+
+        /// <summary>True while the dead ball should just roll home from its real spot (it bounced twice itself).</summary>
+        public bool DeadBallRolls { get; private set; }
+
+        Vector3 RollingBallSpot()
+        {
+            Vector3 p = ball.transform.position;
+            float zMin = foot.Z + 0.6f, zMax = mapper.FacadeZ - 1f;
+            float xMax = config.laneHalfWidth + 2.5f;
+            return new Vector3(Mathf.Clamp(p.x, -xMax, xMax), ball.Radius, Mathf.Clamp(p.z, zMin, zMax));
         }
 
         /// <summary>
@@ -803,8 +814,9 @@ namespace Sheytoonak
                 bouncesSinceWall++;
                 GameEvents.RaiseBounced(point, bouncesSinceWall, true);
                 if (kicker != Me && bouncesSinceWall == 1 && BotRehits()) return;
-                bool noHitsLeft = rallyHits + 1 >= HitsPerBall;
-                if ((bouncesSinceWall >= 2 || noHitsLeft) && resolveRoutine == null) resolveRoutine = StartCoroutine(ResolveAfter(noHitsLeft ? 0.15f : 0.3f));
+                // the second bounce ends the turn whatever hits are left (user 2026-11-08); the ball keeps rolling under
+                // physics for a moment and then rolls home from where it is (FinishKick -> DeadBallRolls)
+                if (bouncesSinceWall >= 2 && resolveRoutine == null) resolveRoutine = StartCoroutine(ResolveAfter(0.45f));
                 return;
             }
             groundBounces++;

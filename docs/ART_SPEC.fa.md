@@ -374,3 +374,9 @@ Lobby background for a mobile game, landscape 16:9, 2048x1152, hand-painted illu
 Key art for a mobile game card, landscape 16:9, 1536x864, hand-painted, same gritty Beirut alley style. Dynamic close shot: a boy in a white vest and green shorts mid-kick, a worn leather ball exploding a ground-floor window into shards, a girl in a blue dress with braids laughing and pointing, a teenager in a green tracksuit raising a fist; across the street two rival kids ducking behind a parked old Mercedes, one holding a slingshot. Dust, flying glass, warm late-afternoon light, strong diagonal motion, faces visible and expressive (three-quarter view, not from behind). No text, no watermark.
 ```
 ⚠️ قهرمان‌ها هشت نفرند و نقاشی‌شان جداست (`Art/Heroes/`)؛ این دو تصویر فقط حال‌وهوا می‌دهند، لازم نیست عیناً همان هشت نفر باشند.
+
+## پیرزنِ فحّاش، نسخه‌ی هم‌سبک با خانه‌ها (۱۸ آبان)
+کاربر: «این پیرزنه اصلاً به آرت فعلی نمی‌خوره». کات‌اوتِ کارتونیِ قدیمی (`Poison/granny.png`) کنار گذاشته شد؛ تا تصویرِ تازه نرسد پیرزن کشیده نمی‌شود (صدای فحش می‌ماند). فایل: `Poison/granny2.png`، ۳:۴ عمودی، ~۹۰۰×۱۲۰۰، رویِ سبزِ #00FF00.
+```
+Cut-out character for a game, portrait 3:4, on a flat solid bright green background #00FF00, NO window frame, NO wall, NO background scene. Painted in the same realistic hand-painted style as a weathered Beirut facade painting (soft brushwork, muted dusty colours, natural light from above-left). A stout old Levantine grandmother seen from the waist up, leaning forward as if out of a window sill, one fist raised and shaking, mouth open mid-shout, furious eyes; floral headscarf, cardigan over a house dress, apron. Her forearms rest on an invisible sill at the bottom edge of the image (crop at the sill line). Slightly three-quarter view facing the viewer's left. No text, no speech bubble, no watermark.
+```
