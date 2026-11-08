@@ -759,7 +759,25 @@ namespace Sheytoonak.Prototype
                 windowRenderers[i] = pane.GetComponent<Renderer>();
                 windowRenderers[i].enabled = false;
             }
-            for (int i = 0; !paintedBroken && i < rects.Length; i++)
+            // User (2026-11-08, house 37 which has no smashed twin): «شیشه‌های شکسته داره رندوم می‌افته روی خونه ها، این
+            // پنجره‌هاش این شکلی نبوده که». The generic painted panes (Art/Broken) are another house's window and never
+            // match. Without a twin the pane is now cut from THIS painting's own window and smashed at break time
+            // (OwnHoleWhereHit): same frame, same curtain, a dark jagged hole and cracks where the ball hit.
+            ownPanes = !paintedBroken && tex.isReadable;
+            for (int i = 0; ownPanes && i < rects.Length; i++)
+            {
+                Rect r = rects[i];
+                var pane = GameObject.CreatePrimitive(PrimitiveType.Quad);
+                Strip(pane);
+                pane.transform.SetParent(root, false);
+                pane.transform.localPosition = new Vector3(r.center.x, r.center.y, -0.01f);
+                pane.transform.localScale = new Vector3(r.width, r.height, 1f);
+                pane.GetComponent<Renderer>().sharedMaterial = mat; // replaced by the smashed crop when it breaks
+                pane.name = "Broken pane " + i;
+                windowRenderers[i] = pane.GetComponent<Renderer>();
+                windowRenderers[i].enabled = false;
+            }
+            for (int i = 0; !paintedBroken && !ownPanes && i < rects.Length; i++)
             {
                 Rect r = rects[i];
                 var pane = Box(root, new Vector3(r.center.x, r.center.y, -0.02f), new Vector3(r.width * 0.9f, r.height * 0.9f, 0.02f), BrokenGlassMat(i, r.width / Mathf.Max(0.01f, r.height)));
@@ -779,6 +797,56 @@ namespace Sheytoonak.Prototype
 
         Texture2D paintedTex; float paintedW, paintedH; Transform detailRoot;
         bool paintedBroken; // the house has a smashed twin painting (BuildPaintedFacade)
+        bool ownPanes;      // no twin: smashed panes are cut from the intact painting itself at break time
+
+        /// <summary>
+        /// The window's own pixels from the intact painting with a jagged dark hole centred where the ball hit and a
+        /// handful of cracks running to the frame. Nothing from another picture.
+        /// </summary>
+        void OwnHoleWhereHit(int window, Vector3 point)
+        {
+            var r = windowRenderers[window];
+            if (r == null || paintedTex == null) return;
+            Vector3 c = r.transform.position, sz = r.transform.lossyScale;
+            // the quad's rect in painting pixels (the painting is paintedW x paintedH world units, centred in x, bottom at y=0)
+            float u0 = (c.x - sz.x * 0.5f - detailRoot.position.x) / paintedW + 0.5f, u1 = u0 + sz.x / paintedW;
+            float v0 = (c.y - sz.y * 0.5f - detailRoot.position.y) / paintedH, v1 = v0 + sz.y / paintedH;
+            int x = Mathf.Clamp(Mathf.RoundToInt(u0 * paintedTex.width), 0, paintedTex.width - 2);
+            int y = Mathf.Clamp(Mathf.RoundToInt(v0 * paintedTex.height), 0, paintedTex.height - 2);
+            int cw = Mathf.Clamp(Mathf.RoundToInt((u1 - u0) * paintedTex.width), 2, paintedTex.width - x);
+            int ch = Mathf.Clamp(Mathf.RoundToInt((v1 - v0) * paintedTex.height), 2, paintedTex.height - y);
+            var px = paintedTex.GetPixels(x, y, cw, ch);
+            float hx = Mathf.Clamp((point.x - c.x) / Mathf.Max(0.01f, sz.x) + 0.5f, 0.2f, 0.8f) * cw;
+            float hy = Mathf.Clamp((point.y - c.y) / Mathf.Max(0.01f, sz.y) + 0.5f, 0.2f, 0.8f) * ch;
+            var rnd = new System.Random(window * 31 + 7);
+            // the hole: a wobbly radius round the hit, about a third of the window; cracks: 7-9 rays to the edge
+            float baseR = Mathf.Min(cw, ch) * 0.30f;
+            var wob = new float[16]; for (int k = 0; k < wob.Length; k++) wob[k] = 0.65f + (float)rnd.NextDouble() * 0.7f;
+            int rays = 7 + rnd.Next(3);
+            var rayA = new float[rays]; for (int k = 0; k < rays; k++) rayA[k] = (float)rnd.NextDouble() * Mathf.PI * 2f;
+            var room = new Color(0.07f, 0.06f, 0.06f);
+            for (int j = 0; j < ch; j++)
+                for (int i = 0; i < cw; i++)
+                {
+                    float dx = i - hx, dy = j - hy, d = Mathf.Sqrt(dx * dx + dy * dy), a = Mathf.Atan2(dy, dx);
+                    float t = (a + Mathf.PI) / (2f * Mathf.PI) * wob.Length; int k0 = (int)t % wob.Length; int k1 = (k0 + 1) % wob.Length;
+                    float rr = baseR * Mathf.Lerp(wob[k0], wob[k1], t - Mathf.Floor(t));
+                    int idx = j * cw + i;
+                    if (d < rr) { px[idx] = Color.Lerp(room, px[idx], 0.12f); continue; }
+                    if (d < rr + 2f) { px[idx] = Color.Lerp(px[idx], Color.white, 0.55f); continue; } // the glass edge catches light
+                    for (int k = 0; k < rays; k++)
+                    {
+                        float da = Mathf.DeltaAngle(a * Mathf.Rad2Deg, rayA[k] * Mathf.Rad2Deg) * Mathf.Deg2Rad;
+                        float across = Mathf.Abs(da) * d; // distance from the ray line
+                        if (across < 0.9f + 0.006f * d) { px[idx] = Color.Lerp(px[idx], new Color(0.92f, 0.95f, 1f), 0.6f); break; }
+                    }
+                }
+            var tex = new Texture2D(cw, ch, TextureFormat.RGBA32, false) { wrapMode = TextureWrapMode.Clamp, filterMode = FilterMode.Bilinear };
+            tex.SetPixels(px); tex.Apply();
+            var m = new Material(r.sharedMaterial) { mainTexture = tex, mainTextureScale = Vector2.one, mainTextureOffset = Vector2.zero };
+            m.SetFloat("_Glossiness", 0.3f);
+            r.material = m;
+        }
 
         Rect DetailPixels(WindowDetail d)
         {
@@ -1176,7 +1244,8 @@ namespace Sheytoonak.Prototype
         {
             if (i < 0 || i >= windowRenderers.Length) return;
             windowRenderers[i].enabled = true; // the pane shows the dark room with a web of cracks (its material is set at build time)
-            if (duel && !paintedBroken) HoleWhereHit(i, point);
+            if (ownPanes) OwnHoleWhereHit(i, point);
+            else if (duel && !paintedBroken) HoleWhereHit(i, point);
             // User (2026-11-05): «با توجه به این که دیگه خود پنجره حالت شکسته‌ش هست اون پرده و گلدون افتادن و گربه و
             // پیرزن حذف شه، فقط و فقط پنجره‌ای که دو امتیازی هست … پیرزن … سرش رو از پنجره بیاره بیرون فحش بده». A house
             // painted twice shows the painter's own smashed window and nothing else moves; the 2-point window gets the granny.
