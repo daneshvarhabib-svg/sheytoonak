@@ -411,3 +411,35 @@ Cut-out character for a game, portrait 3:4, on a flat solid bright green backgro
 - `ambulance_open.png`: `The same van, same view, rear doors wide open showing the empty interior, nobody around it, no stretcher.`
 - `medics_empty_a.png` / `medics_empty_b.png`: `The same two paramedics (white shirts with red crescent, navy trousers) pushing an EMPTY wheeled stretcher to the left, side view, no vehicle. Frame A: front medic's left leg forward. Frame B: right leg forward.`
 - `medics_loaded_a.png` / `medics_loaded_b.png`: همان دو فریم، `… pushing the wheeled stretcher with a person lying on it fully covered by a white sheet, one shoe showing …`
+
+### فحش‌ها برای ElevenLabs v3، دانه‌دانه (۱۸ آبان)
+نمونه‌ی «Ahmed» لحن را درآورد (کاربر). هر خط یک فایل؛ Stability ~۳۵، Similarity ~۷۵، Speed ۱٫۰. مرد = Ahmed؛ زن = یک صدای عربیِ زنِ میان‌سال/مسن (مثلاً «Sana»/«Laila» یا هر زنِ عربیِ کتابخانه). خروجی mp3 → `Audio/Curses/curse_NN` (من فیلتر می‌زنم).
+
+| # | صدا | متن برایِ ElevenLabs (عیناً) |
+|---|---|---|
+| 1 | مرد | `[furious, shouting from an upstairs window] ولك شو عم تعمل؟! ها؟!` |
+| 2 | مرد | `[enraged, yelling] يا حيوان! كسرتلي الشبّاك!` |
+| 3 | زن | `[old woman, screaming hoarsely] الله يقطعك يا ولد! الله يقطعك!` |
+| 4 | مرد | `[angry, barking an order] ولاك روح من هون! يلّا!` |
+| 5 | زن | `[shrieking, outraged] يا مجنون! شو هالمصيبة؟!` |
+| 6 | مرد | `[furious, voice cracking] الله ياخدك يا زلمة!` |
+| 7 | مرد | `[growling, then shouting] يلعن أبو هالشغلة! يلعن أبوها!` |
+| 8 | زن | `[threatening, sharp] بدّي خبّر أبوك، فهمت؟! بدّي خبّرو!` |
+| 9 | زن | `[screaming at the top of her lungs] ولااااك! تعا لهون!` |
+| 10 | مرد | `[exasperated, shouting] يا ربّي! كل يوم نفس القصّة!` |
+
+### خطِ قهرمان‌ها برای ElevenLabs v3 (هیجان‌زده)
+Stability ~۴۰. هر خط یک فایل → `Audio/Heroes/<id>/kick_01..03`. مرد = Ahmed (یا یک مردِ جوانِ عربی برایِ جوان‌ها)، زن = صدای زنِ جوانِ عربی.
+
+| id | صدا | ۱ | ۲ | ۳ |
+|---|---|---|---|---|
+| abu_shahata | مرد، خشن | `[gruff, excited shout] خود هالشحّاطة!` | `[excited] يا الله شوف!` | `[shouting, triumphant] ولك طير!` |
+| zaatar | مرد، جوان، شاد | `[cheerful, excited] بسم الله!` | `[excited, laughing] شوفوا هالضربة!` | `[triumphant shout] هيك بتنكسر!` |
+| fulla | زن، جوان، پرانرژی | `[excited, playful] خدها يا بابا!` | `[cheering] أيوه كده!` | `[shouting, excited] يلّا يا شبّاك!` |
+| rima | زن، میان‌سال، بلند | `[shouting, fierce] يا ويلك!` | `[excited, urging] هيّا هيّا!` | `[triumphant] هيدي من ريما!` |
+| toni | مرد، جوان، زورگو | `[aggressive shout] ولك رووح!` | `[cocky, excited] هيدي إلك!` | `[laughing, shouting] شو هالكفّ!` |
+| um_arabiyat | زن، مسن، محکم | `[sharp, excited] ها!` | `[fierce, shouting] خذها يا ابني!` | `[triumphant] هسّه تشوف!` |
+| hamada | مرد، جوان، شوخ | `[excited, playful] يلّا بينا!` | `[laughing, delighted] آه يا سلام!` | `[shouting, excited] خد عندك!` |
+| bubakr | مرد، میان‌سال، خونسرد | `[calm then sudden shout] برا!` | `[excited, urging] هيّا هيّا!` | `[satisfied, grinning] باهي، خوذها!` |
+
+سم: `[sly, whispering then giggling] هههه… شوف هلّق!` (دو نسخه: مرد و زن) → `Audio/Fx/poison_0N`. پادزهر: `[relieved, laughing] هااا! ولا شي!` → `Audio/Fx/antidote_0N`.
