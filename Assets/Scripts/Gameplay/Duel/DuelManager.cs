@@ -797,6 +797,19 @@ namespace Sheytoonak
             return new Vector3(Mathf.Clamp(p.x, foot.X - xMax, foot.X + xMax), ball.Radius, Mathf.Clamp(p.z, zMin, zMax));
         }
 
+        /// <summary>
+        /// The ball bounced twice on its own: let physics carry it until it is nearly still (or 2.5 s), then the stage
+        /// rolls it home from where it really is. Taking over 0.45 s after the bounce froze a ball still moving at speed
+        /// and then "rolled" it back in a second (user 2026-11-08).
+        /// </summary>
+        IEnumerator ResolveWhenSlow()
+        {
+            float until = Time.time + 2.5f;
+            while (Time.time < until && ball.InPlay && ball.Body != null && ball.Body.linearVelocity.magnitude > 1.2f) yield return null;
+            resolveRoutine = null;
+            FinishKick();
+        }
+
         IEnumerator ResolveAfter(float seconds)
         {
             yield return new WaitForSeconds(seconds);
@@ -817,7 +830,7 @@ namespace Sheytoonak
                 if (kicker != Me && bouncesSinceWall == 1 && BotRehits()) return;
                 // the second bounce ends the turn whatever hits are left (user 2026-11-08); the ball keeps rolling under
                 // physics for a moment and then rolls home from where it is (FinishKick -> DeadBallRolls)
-                if (bouncesSinceWall >= 2 && resolveRoutine == null) resolveRoutine = StartCoroutine(ResolveAfter(0.45f));
+                if (bouncesSinceWall >= 2 && resolveRoutine == null) resolveRoutine = StartCoroutine(ResolveWhenSlow());
                 return;
             }
             groundBounces++;

@@ -7,9 +7,9 @@ namespace Sheytoonak
 {
     /// <summary>
     /// Touch kick (the game's kick since 2026-10-23) plus editor controls.
-    /// Touch or mouse: every tap kicks, and where you tap is the shot (user, 2026-10-24: "هر ضربه هم که
-    /// میزنی به توپ هم جهت داشته باشه هم سرعت"): left/right of the screen centre = aim, height on the
-    /// screen = power (low tap = soft/low shot, high tap = hard/high shot). The finger's x position also
+    /// Touch or mouse, since 2026-11-08 a swipe: drag from the ball toward the windows; the drag's length is
+    /// the power and its angle the aim (user: «انگشتش رو بکشه … هرچی بیشتر بکشه شدتش بیشتر می‌شه، جهتش هم مهمه»).
+    /// ⚠️ 2026-10-24 to 2026-11-08 a tap was the kick (x = aim, y = power); gone. The finger's x position also
     /// moves the player, used only when the phone has no gyroscope (see KickInputRouter).
     /// Keyboard: A/D or arrows move, hold Space to charge, release to kick, Q/E aim.
     /// </summary>
@@ -21,6 +21,12 @@ namespace Sheytoonak
         public float minTapStrength = 0.35f;
         [Tooltip("Aim at a tap on the screen edge (1 = the full MaxAimYawDeg of the kick tuning).")]
         public float edgeAim = 0.8f;
+        [Tooltip("Swipe shorter than this fraction of the screen height is not a kick.")]
+        public float minSwipe = 0.05f;
+        [Tooltip("Swipe this fraction of the screen height (or longer) = full power.")]
+        public float fullSwipe = 0.55f;
+        [Tooltip("Swipe angle from straight up that means full aim (MaxAimYawDeg).")]
+        public float fullAimDeg = 45f;
         [Tooltip("Off (default since 2026-10-27): the player never moves sideways; user: 'حرکت به راست و چپ رو دیگه نداشته باشیم اصلاً'.")]
         public bool moveWithFinger = false;
 
@@ -56,15 +62,17 @@ namespace Sheytoonak
                 if (pressing && ptr.press.wasReleasedThisFrame)
                 {
                     pressing = false;
-                    if (Time.unscaledTime - pressTime < 0.8f)
+                    // User (2026-11-08): «فرد موقع زدن توپ انگشتش رو بکشه روی صفحه از مبدأ توپ به سمت پنجره‌ها؛ هرچی بیشتر بکشه
+                    // شدتش بیشتر می‌شه؛ جهتش هم مهمه». The kick is the swipe: its length is the power (a swipe of 55 % of the
+                    // screen height = full), its angle from straight up is the aim (45 degrees = full yaw). A tap or a
+                    // downward flick is not a kick. The rebound is hit the same way.
+                    Vector2 d = pos - pressPos;
+                    float h = Mathf.Max(1f, Screen.height);
+                    if (Time.unscaledTime - pressTime < 1.2f && d.y > 0f && d.magnitude > h * minSwipe)
                     {
-                        // The release point is the shot: x = direction, y = power.
-                        float nx = Mathf.Clamp(pos.x / Mathf.Max(1f, Screen.width) * 2f - 1f, -1f, 1f);
-                        // ⚠️ user (run 110): «نمی‌شه پنجره‌های پایین و منتهی‌الیه چپ و راست رو زد». Power is measured from the top of
-                        // the hero strip (the dead zone), not the screen bottom, and starts at 0, so the lowest row is a tap just
-                        // above the strip; the aim reaches ±1 at the screen edges, and DuelManager sizes the yaw to the house.
-                        float ny = Mathf.Clamp01((pos.y - DeadZoneHeight) / Mathf.Max(1f, Screen.height - DeadZoneHeight));
-                        Kicked?.Invoke(new KickGesture(ny, nx, 0f));
+                        float power = Mathf.Clamp01((d.magnitude - h * minSwipe) / (h * (fullSwipe - minSwipe)));
+                        float aim = Mathf.Clamp(Mathf.Atan2(d.x, d.y) * Mathf.Rad2Deg / fullAimDeg, -1f, 1f);
+                        Kicked?.Invoke(new KickGesture(power, aim, 0f));
                     }
                 }
             }

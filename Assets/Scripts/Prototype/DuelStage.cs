@@ -145,7 +145,7 @@ namespace Sheytoonak.Prototype
                     if (r == null || !baseY.TryGetValue(r, out float by)) continue;
                     if (striking[side] != null && i == kickSlot[side]) continue; // the kick animation owns the scale
                     breathPhase.TryGetValue(r, out float ph);
-                    float b = 1f + 0.012f * (0.5f + 0.5f * Mathf.Sin(Time.time * 2f * Mathf.PI / 3.4f + ph)); // in ~1.4 s, out ~2 s
+                    float b = 1f + 0.028f * (0.5f + 0.5f * Mathf.Sin(Time.time * 2f * Mathf.PI / 3.4f + ph)); // user (2026-11-08): 1.2 % was «خیلی ریز»
                     var ls = r.transform.localScale;
                     r.transform.localScale = new Vector3(ls.x, by * b, ls.z);
                 }
@@ -498,8 +498,10 @@ namespace Sheytoonak.Prototype
             }
             // roll the rest of the way, slowing down
             Vector3 start = p; float dist = Vector3.Distance(start, home);
-            // the roll home is never longer than ~1.4 s (a ball dying at the wall used to crawl back for 4-5 s)
-            for (float k = 0f; k < 1f; k += Time.deltaTime / Mathf.Clamp(dist * 0.25f, 0.5f, 1.4f))
+            // the roll home: ~1.4 s cap when the ball was dropped (hops), but a ball that bounced itself and is rolling in
+            // from far away takes its time (user 2026-11-08: the third kick's return «چرت و پرت نشون می‌ده»)
+            float rollDur = hops > 0 ? Mathf.Clamp(dist * 0.25f, 0.5f, 1.4f) : Mathf.Clamp(dist * 0.45f, 0.4f, 3f);
+            for (float k = 0f; k < 1f; k += Time.deltaTime / rollDur)
             {
                 float e = 1f - (1f - k) * (1f - k);
                 t.position = Vector3.Lerp(start, home, e);
