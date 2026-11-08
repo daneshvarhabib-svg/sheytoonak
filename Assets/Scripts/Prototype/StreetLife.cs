@@ -152,10 +152,13 @@ namespace Sheytoonak
             // ⚠️ the pictures come out facing LEFT (the user's ambulance has its cab on the left; the medics push to the
             // left), so a vehicle driving right is the mirrored one.
             Texture2D closed = Resources.Load<Texture2D>("Art/Props/ambulance_closed"), open = Resources.Load<Texture2D>("Art/Props/ambulance_open");
-            Texture2D ea = Resources.Load<Texture2D>("Art/Props/medics_empty_a"), eb = Resources.Load<Texture2D>("Art/Props/medics_empty_b");
-            Texture2D la = Resources.Load<Texture2D>("Art/Props/medics_loaded_a"), lb = Resources.Load<Texture2D>("Art/Props/medics_loaded_b");
+            // any number of walk frames per set: medics_empty_a, _b, _c … (the user's sheet has three), medics_loaded_*
+            var emptyT = new List<Texture2D>(); var loadedT = new List<Texture2D>();
+            foreach (var tx in Resources.LoadAll<Texture2D>("Art/Props"))
+                if (tx.name.StartsWith("medics_empty_")) emptyT.Add(tx); else if (tx.name.StartsWith("medics_loaded_")) loadedT.Add(tx);
+            emptyT.Sort((p, q) => string.CompareOrdinal(p.name, q.name)); loadedT.Sort((p, q) => string.CompareOrdinal(p.name, q.name));
             var amb = Resources.Load<Texture2D>("Art/Props/ambulance");
-            if (closed != null && open != null && ea != null && la != null)
+            if (closed != null && open != null && emptyT.Count > 0 && loadedT.Count > 0)
             {
                 // User (2026-11-08): «نباید تعداد بیشتری تصویر از آمبولانس و پرسنلش داشته باشی؟ اینطوری که نمی‌تونی طبیعی در
                 // بیاری حرکتشون رو». Staged: the van drives in and parks beside him, doors open, two medics wheel an empty
@@ -199,10 +202,8 @@ namespace Sheytoonak
                 vr.sprite = Sprite.Create(open, new Rect(0, 0, open.width, open.height), new Vector2(0.5f, 0f), 100f);
                 yield return new WaitForSeconds(0.5f);
                 // medics with the empty stretcher appear at the rear of the van and walk to him on the pavement
-                var fe = new List<Sprite> { Sprite.Create(ea, new Rect(0, 0, ea.width, ea.height), new Vector2(0.5f, 0f), 100f) };
-                if (eb != null) fe.Add(Sprite.Create(eb, new Rect(0, 0, eb.width, eb.height), new Vector2(0.5f, 0f), 100f));
-                var fl = new List<Sprite> { Sprite.Create(la, new Rect(0, 0, la.width, la.height), new Vector2(0.5f, 0f), 100f) };
-                if (lb != null) fl.Add(Sprite.Create(lb, new Rect(0, 0, lb.width, lb.height), new Vector2(0.5f, 0f), 100f));
+                var fe = new List<Sprite>(); foreach (var tx in emptyT) fe.Add(Sprite.Create(tx, new Rect(0, 0, tx.width, tx.height), new Vector2(0.5f, 0f), 100f));
+                var fl = new List<Sprite>(); foreach (var tx in loadedT) fl.Add(Sprite.Create(tx, new Rect(0, 0, tx.width, tx.height), new Vector2(0.5f, 0f), 100f));
                 float rearX = x1 + side * 1.6f; // the van stopped short of him on its approach side, so its rear is nearer him
                 var med = Make("Medics", fe[0], 1.85f, new Vector3(rearX, 0f, farSidewalkZ - 0.25f));
                 var mr = med.GetComponent<SpriteRenderer>();
