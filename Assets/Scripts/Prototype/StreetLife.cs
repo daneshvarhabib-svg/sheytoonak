@@ -167,9 +167,35 @@ namespace Sheytoonak
                 PlayFx("siren", 0.6f, ref lastSiren);
                 var vr = van.GetComponent<SpriteRenderer>();
                 if (drivesRight) van.localScale = new Vector3(-van.localScale.x, van.localScale.y, van.localScale.z);
+                // User (2026-11-08): «ماشین آمبولانس چرخش می‌چرخه جدا؟». Same trick as the cars: a loose wheel over each painted
+                // one, turning with the distance. Measured on the keyed 1473x821 picture: centres (195, 690) and (1105, 700), r 100.
+                var wheelTex = Resources.Load<Texture2D>("Art/Cars/wheel_1");
+                var wheels = new List<Transform>();
+                if (wheelTex != null && closed.width > 1400)
+                {
+                    var wsp = Sprite.Create(wheelTex, new Rect(0, 0, wheelTex.width, wheelTex.height), new Vector2(0.5f, 0.5f), 100f);
+                    foreach (var c in new[] { new Vector2(195f, 690f), new Vector2(1105f, 700f) })
+                    {
+                        var w = new GameObject("Wheel").AddComponent<SpriteRenderer>();
+                        w.sprite = wsp; w.sortingOrder = vr.sortingOrder + 1;
+                        w.transform.SetParent(van, false);
+                        w.transform.localPosition = new Vector3((c.x - closed.width * 0.5f) / 100f, (closed.height - c.y) / 100f, -0.01f);
+                        w.transform.localScale = Vector3.one * (200f / wheelTex.width);
+                        wheels.Add(w.transform);
+                    }
+                }
+                float wheelR = 1f * Mathf.Abs(van.localScale.y); // 100 px at 100 ppu, scaled
                 float x0 = van.position.x, x1 = t.position.x + side * 2.2f;
-                for (float k = 0f; k < 1f; k += Time.deltaTime / 2f) { if (van == null) yield break; van.position = new Vector3(Mathf.Lerp(x0, x1, 1f - (1f - k) * (1f - k)), 0f, van.position.z); yield return null; }
+                for (float k = 0f; k < 1f; k += Time.deltaTime / 2f)
+                {
+                    if (van == null) yield break;
+                    float nx = Mathf.Lerp(x0, x1, 1f - (1f - k) * (1f - k));
+                    float deg = (nx - van.position.x) / Mathf.Max(0.01f, wheelR) * Mathf.Rad2Deg * (drivesRight ? 1f : -1f);
+                    foreach (var w in wheels) w.Rotate(0f, 0f, -deg, Space.Self);
+                    van.position = new Vector3(nx, 0f, van.position.z); yield return null;
+                }
                 yield return new WaitForSeconds(0.4f);
+                foreach (var w in wheels) w.gameObject.SetActive(false); // the open picture is a three-quarter view: its own wheels
                 vr.sprite = Sprite.Create(open, new Rect(0, 0, open.width, open.height), new Vector2(0.5f, 0f), 100f);
                 yield return new WaitForSeconds(0.5f);
                 // medics with the empty stretcher appear at the rear of the van and walk to him on the pavement
@@ -184,20 +210,29 @@ namespace Sheytoonak
                 bool toRight = mx1 > mx0;
                 if (toRight) med.localScale = new Vector3(-med.localScale.x, med.localScale.y, med.localScale.z);
                 float f = 0f;
-                for (float k = 0f; k < 1f; k += Time.deltaTime / 1.6f) { if (med == null) yield break; f += Time.deltaTime * 4f; mr.sprite = fe[(int)f % fe.Count]; med.position = new Vector3(Mathf.Lerp(mx0, mx1, k), 0f, med.position.z); yield return null; }
+                // with one painted frame the walk is a step bob and a slight sway (user asked for frame B; it slots in as medics_*_b)
+                for (float k = 0f; k < 1f; k += Time.deltaTime / 1.6f) { if (med == null) yield break; f += Time.deltaTime * 4f; mr.sprite = fe[(int)f % fe.Count]; med.position = new Vector3(Mathf.Lerp(mx0, mx1, k), fe.Count > 1 ? 0f : Mathf.Abs(Mathf.Sin(k * Mathf.PI * 5f)) * 0.04f, med.position.z); med.localRotation = Quaternion.Euler(0f, 0f, fe.Count > 1 ? 0f : Mathf.Sin(k * Mathf.PI * 10f) * 1.5f); yield return null; }
                 yield return new WaitForSeconds(0.7f);
                 if (t != null) Destroy(t.gameObject); // lifted onto the stretcher
                 mr.sprite = fl[0];
                 med.localScale = new Vector3(-med.localScale.x, med.localScale.y, med.localScale.z); // turn round
                 yield return new WaitForSeconds(0.4f);
-                for (float k = 0f; k < 1f; k += Time.deltaTime / 1.8f) { if (med == null) yield break; f += Time.deltaTime * 3.5f; mr.sprite = fl[(int)f % fl.Count]; med.position = new Vector3(Mathf.Lerp(mx1, mx0, k), 0f, med.position.z); yield return null; }
+                for (float k = 0f; k < 1f; k += Time.deltaTime / 1.8f) { if (med == null) yield break; f += Time.deltaTime * 3.5f; mr.sprite = fl[(int)f % fl.Count]; med.position = new Vector3(Mathf.Lerp(mx1, mx0, k), fl.Count > 1 ? 0f : Mathf.Abs(Mathf.Sin(k * Mathf.PI * 5f)) * 0.03f, med.position.z); med.localRotation = Quaternion.Euler(0f, 0f, fl.Count > 1 ? 0f : Mathf.Sin(k * Mathf.PI * 10f) * 1.2f); yield return null; }
                 yield return new WaitForSeconds(0.5f);
                 Destroy(med.gameObject);
                 yield return new WaitForSeconds(0.4f);
                 vr.sprite = sp; // doors shut
+                foreach (var w in wheels) w.gameObject.SetActive(true);
                 yield return new WaitForSeconds(0.5f);
                 float xe = drivesRight ? 26f : -26f;
-                for (float k = 0f; k < 1f; k += Time.deltaTime / 2.4f) { if (van == null) yield break; van.position = new Vector3(Mathf.Lerp(x1, xe, k * k), 0f, van.position.z); yield return null; }
+                for (float k = 0f; k < 1f; k += Time.deltaTime / 2.4f)
+                {
+                    if (van == null) yield break;
+                    float nx = Mathf.Lerp(x1, xe, k * k);
+                    float deg = (nx - van.position.x) / Mathf.Max(0.01f, wheelR) * Mathf.Rad2Deg * (drivesRight ? 1f : -1f);
+                    foreach (var w in wheels) w.Rotate(0f, 0f, -deg, Space.Self);
+                    van.position = new Vector3(nx, 0f, van.position.z); yield return null;
+                }
                 Destroy(van.gameObject);
             }
             else if (amb != null)
