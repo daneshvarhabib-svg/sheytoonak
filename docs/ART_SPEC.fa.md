@@ -443,3 +443,13 @@ Stability ~۴۰. هر خط یک فایل → `Audio/Heroes/<id>/kick_01..03`. م
 | bubakr | مرد، میان‌سال، خونسرد | `[calm then sudden shout] برا!` | `[excited, urging] هيّا هيّا!` | `[satisfied, grinning] باهي، خوذها!` |
 
 سم: `[sly, whispering then giggling] هههه… شوف هلّق!` (دو نسخه: مرد و زن) → `Audio/Fx/poison_0N`. پادزهر: `[relieved, laughing] هااا! ولا شي!` → `Audio/Fx/antidote_0N`.
+
+### صدای عابرِ قربانی و آژیر (۱۸ آبان)
+`Audio/Fx/victim_01..04` (ElevenLabs v3، هر خط یک فایل، Stability ~۳۵) و `Audio/Fx/siren_01` (ElevenLabs Sound Effects). `StreetLife.PlayFx` تصادفی و بی‌تکرارِ پشتِ هم پخش می‌کند.
+| # | صدا | متن |
+|---|---|---|
+| victim_01 | مرد | `[sudden pained yelp, then dazed] آآخ! … راسي… راسي!` |
+| victim_02 | زن | `[shrieks in pain and shock] آآآي! يا عدرا! شو صار؟!` |
+| victim_03 | مرد مسن | `[groaning, winded, falling] أوووف… يا لطيف… وقعت…` |
+| victim_04 | زن | `[screaming for help] ساعدوني! حدا يتّصل بالإسعاف!` |
+| siren_01 | افکت | `Old Middle Eastern ambulance siren approaching on a narrow street, two-tone wail, slightly distorted horn, 4 seconds, no music.` |

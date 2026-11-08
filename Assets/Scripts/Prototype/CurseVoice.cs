@@ -46,9 +46,9 @@ namespace Sheytoonak
             }
             else c = placeholder;
             if (c == null) yield break;
-            // One TTS speaker recorded all nine lines (user 2026-11-06: «همه رو با یه صدا میگه، خوب نیست»); a wider
-            // pitch spread turns one voice into several neighbours until a second speaker is recorded.
-            src.pitch = Random.Range(0.86f, 1.16f);
+            // 2026-11-08: ten ElevenLabs v3 lines, two real speakers (Ahmed, Tara) with acted anger, so the wide pitch
+            // spread that faked "several neighbours" out of one flat voice is gone; a hair of variation only.
+            src.pitch = Random.Range(0.97f, 1.03f);
             src.PlayOneShot(c, volume);
         }
 

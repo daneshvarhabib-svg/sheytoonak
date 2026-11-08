@@ -92,11 +92,28 @@ namespace Sheytoonak
         }
 
         static Texture2D bloodTex;
+        AudioSource sfx;
+        /// <summary>Audio/Fx/victim_NN (the hit walker's cry) and Audio/Fx/siren (the van): random, never the same twice running.</summary>
+        void PlayFx(string prefix, float volume, ref int last)
+        {
+            var all = new List<AudioClip>();
+            foreach (var c in Resources.LoadAll<AudioClip>("Audio/Fx")) if (c.name.StartsWith(prefix)) all.Add(c);
+            if (all.Count == 0) return;
+            if (sfx == null) { sfx = gameObject.AddComponent<AudioSource>(); sfx.playOnAwake = false; sfx.spatialBlend = 0f; }
+            int k = all.Count == 1 ? 0 : Random.Range(0, all.Count - 1);
+            if (all.Count > 1 && k >= last) k++;
+            last = k;
+            sfx.pitch = Random.Range(0.97f, 1.03f);
+            sfx.PlayOneShot(all[k], volume);
+        }
+        int lastVictimClip = -1, lastSiren = -1;
+
         IEnumerator Victim(Mover m)
         {
             var t = m.t; var sr = m.sr;
             if (t == null) yield break;
             t.name = "Victim";
+            PlayFx("victim", 0.9f, ref lastVictimClip);
             // shocked: frozen mid-stride, a small jolt upward
             Vector3 p0 = t.position;
             for (float k = 0f; k < 0.35f; k += Time.deltaTime) { if (t == null) yield break; t.position = p0 + Vector3.up * 0.06f * Mathf.Sin(k / 0.35f * Mathf.PI); yield return null; }
@@ -147,6 +164,7 @@ namespace Sheytoonak
                 float side = drivesRight ? -1f : 1f;   // the van parks a little short of him on its own approach side
                 var sp = Sprite.Create(closed, new Rect(0, 0, closed.width, closed.height), new Vector2(0.5f, 0f), 100f);
                 var van = Make("Ambulance", sp, 2.5f, new Vector3(drivesRight ? -24f : 24f, 0f, roadZ + 1.4f));
+                PlayFx("siren", 0.6f, ref lastSiren);
                 var vr = van.GetComponent<SpriteRenderer>();
                 if (drivesRight) van.localScale = new Vector3(-van.localScale.x, van.localScale.y, van.localScale.z);
                 float x0 = van.position.x, x1 = t.position.x + side * 2.2f;
@@ -189,6 +207,7 @@ namespace Sheytoonak
                 bool drivesRight = t.position.x > 0f;
                 var sp = Sprite.Create(amb, new Rect(0, 0, amb.width, amb.height), new Vector2(0.5f, 0f), 100f);
                 var a = Make("Ambulance", sp, 2.6f, new Vector3(drivesRight ? -24f : 24f, 0f, roadZ + 1.2f));
+                PlayFx("siren", 0.6f, ref lastSiren);
                 if (drivesRight) a.localScale = new Vector3(-a.localScale.x, a.localScale.y, a.localScale.z);
                 float x0 = a.position.x, x1 = t.position.x;
                 for (float k = 0f; k < 1f; k += Time.deltaTime / 1.8f) { if (a == null) yield break; a.position = new Vector3(Mathf.Lerp(x0, x1, 1f - (1f - k) * (1f - k)), 0f, a.position.z); yield return null; }
