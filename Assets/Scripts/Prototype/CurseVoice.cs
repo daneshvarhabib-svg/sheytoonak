@@ -32,17 +32,28 @@ namespace Sheytoonak
         void OnEnable() => GameEvents.ResidentShouts += OnBroken;
         void OnDisable() => GameEvents.ResidentShouts -= OnBroken;
 
-        void OnBroken(int i, Vector3 point) => StartCoroutine(Shout());
+        void OnBroken(int i, Vector3 point) => StartCoroutine(Shout(ResidentIsFemale));
 
-        IEnumerator Shout()
+        /// <summary>Set by whoever shows the resident just before ResidentShouts (PrototypeBootstrap). User (2026-11-08):
+        /// «شخصیت‌هایی که فحش می‌دن باید صداهاشون مچ باشه با سیماشون؛ تصویر زن رو صدای مرد نشینه و بالعکس».
+        /// Clips: curse_m_* (Ahmed) and curse_f_* (Tara).</summary>
+        public static bool ResidentIsFemale;
+        int lastM = -1, lastF = -1;
+
+        IEnumerator Shout(bool female)
         {
             yield return new WaitForSeconds(delaySeconds);
-            AudioClip c;
-            if (clips.Length > 0)
+            AudioClip c = null;
+            var pool = new System.Collections.Generic.List<AudioClip>();
+            foreach (var a in clips) if (a.name.StartsWith(female ? "curse_f_" : "curse_m_")) pool.Add(a);
+            if (pool.Count == 0) foreach (var a in clips) pool.Add(a); // no clip of that voice: any line beats silence
+            if (pool.Count > 0)
             {
-                int k = clips.Length == 1 ? 0 : Random.Range(0, clips.Length - 1);
-                if (k >= last && clips.Length > 1) k++; // never the same line twice in a row
-                last = k; c = clips[k];
+                int lastK = female ? lastF : lastM;
+                int k = pool.Count == 1 ? 0 : Random.Range(0, pool.Count - 1);
+                if (k >= lastK && pool.Count > 1) k++; // never the same line twice in a row
+                if (female) lastF = k; else lastM = k;
+                c = pool[k];
             }
             else c = placeholder;
             if (c == null) yield break;

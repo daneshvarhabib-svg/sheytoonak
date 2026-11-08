@@ -22,11 +22,11 @@ namespace Sheytoonak
         [Tooltip("Aim at a tap on the screen edge (1 = the full MaxAimYawDeg of the kick tuning).")]
         public float edgeAim = 0.8f;
         [Tooltip("Swipe shorter than this fraction of the screen height is not a kick.")]
-        public float minSwipe = 0.05f;
+        public float minSwipe = 0.025f;
         [Tooltip("Swipe this fraction of the screen height (or longer) = full power.")]
-        public float fullSwipe = 0.55f;
+        public float fullSwipe = 0.32f;
         [Tooltip("Swipe angle from straight up that means full aim (MaxAimYawDeg).")]
-        public float fullAimDeg = 45f;
+        public float fullAimDeg = 55f;
         [Tooltip("Off (default since 2026-10-27): the player never moves sideways; user: 'حرکت به راست و چپ رو دیگه نداشته باشیم اصلاً'.")]
         public bool moveWithFinger = false;
 
@@ -50,6 +50,8 @@ namespace Sheytoonak
         /// the face button could say IgnoreFor. The HUD sets this every frame.
         /// </summary>
         public float DeadZoneHeight;
+        /// <summary>Widths (px) of the button blocks at the left and right ends of that strip; only they are dead.</summary>
+        public float DeadZoneLeft, DeadZoneRight;
 
         void Update()
         {
@@ -57,7 +59,11 @@ namespace Sheytoonak
             if (ptr != null)
             {
                 Vector2 pos = ptr.position.ReadValue();
-                if (ptr.press.wasPressedThisFrame && Time.unscaledTime >= ignoreUntil && pos.y > DeadZoneHeight) { pressing = true; pressPos = pos; pressTime = Time.unscaledTime; }
+                // ⚠️ until 2026-11-08 the whole bottom strip (≈200 px at 900p) was dead, and the ball sits inside it: a swipe
+                // that started near the ball, as asked, never registered (user: «ضربه زدن سخت شده و تقریباً نمی‌شه زد»).
+                // Now only the button blocks at the strip's left and right ends are dead.
+                bool onButtons = pos.y <= DeadZoneHeight && (pos.x <= DeadZoneLeft || pos.x >= Screen.width - DeadZoneRight);
+                if (ptr.press.wasPressedThisFrame && Time.unscaledTime >= ignoreUntil && !onButtons) { pressing = true; pressPos = pos; pressTime = Time.unscaledTime; }
                 if (pressing && moveWithFinger) Lateral = Mathf.Clamp((pressPos.x / Mathf.Max(1, Screen.width)) * 2f - 1f, -1f, 1f);
                 if (pressing && ptr.press.wasReleasedThisFrame)
                 {
@@ -66,9 +72,11 @@ namespace Sheytoonak
                     // شدتش بیشتر می‌شه؛ جهتش هم مهمه». The kick is the swipe: its length is the power (a swipe of 55 % of the
                     // screen height = full), its angle from straight up is the aim (45 degrees = full yaw). A tap or a
                     // downward flick is not a kick. The rebound is hit the same way.
+                    // User (2026-11-08, second pass): «الگوش باید ساده باشه؛ دستش رو می‌ذاره نزدیک توپ و به یه سمتی حرکت می‌ده،
+                    // انگشتش رو که برداشت باید ضربه فایر شه». No time limit, any direction except back toward the player.
                     Vector2 d = pos - pressPos;
                     float h = Mathf.Max(1f, Screen.height);
-                    if (Time.unscaledTime - pressTime < 1.2f && d.y > 0f && d.magnitude > h * minSwipe)
+                    if (d.y > -0.3f * Mathf.Abs(d.x) && d.magnitude > h * minSwipe)
                     {
                         float power = Mathf.Clamp01((d.magnitude - h * minSwipe) / (h * (fullSwipe - minSwipe)));
                         float aim = Mathf.Clamp(Mathf.Atan2(d.x, d.y) * Mathf.Rad2Deg / fullAimDeg, -1f, 1f);

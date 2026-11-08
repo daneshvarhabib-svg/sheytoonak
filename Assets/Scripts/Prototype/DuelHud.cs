@@ -137,7 +137,12 @@ namespace Sheytoonak.Prototype
                 // User (2026-11-05): «کارت انتخاب قهرمان توی بازی و انتخاب قدرت‌هاشون بزرگتر بشه». 62 -> 84 px at 900p.
                 float sz = 84 * u, gap = 10 * u;
                 float stripH = sz * 2 + gap * 3;
-                if (touch != null) touch.DeadZoneHeight = stripH; // taps on the strip are never kicks
+                if (touch != null)
+                {
+                    touch.DeadZoneHeight = stripH;
+                    touch.DeadZoneLeft = pad + 3 * (sz + gap) + gap;   // faces / poison / antidote / kick columns
+                    touch.DeadZoneRight = pad + 2 * (sz + gap) + gap;  // pass, surrender, rage
+                }
                 var old = GUI.color; GUI.color = new Color(0f, 0f, 0f, 0.4f);
                 GUI.DrawTexture(new Rect(0, Screen.height - stripH, Screen.width, stripH), Texture2D.whiteTexture); GUI.color = old;
                 float x0 = pad, yb = Screen.height - stripH + gap;

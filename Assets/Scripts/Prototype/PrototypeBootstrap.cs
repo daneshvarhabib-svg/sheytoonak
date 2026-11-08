@@ -1261,8 +1261,10 @@ namespace Sheytoonak.Prototype
                 if (brokenThisRound >= nextResidentAt)
                 {
                     nextResidentAt = brokenThisRound + Random.Range(2, 5);
+                    var who = PickResident();
+                    CurseVoice.ResidentIsFemale = who != null && FemaleResidents.Contains(who.name); // voice matches the face
                     GameEvents.RaiseResidentShouts(i, point);
-                    StartCoroutine(GrannyCurses(windowRenderers[i].transform.position, windowRenderers[i].transform.lossyScale));
+                    StartCoroutine(GrannyCurses(windowRenderers[i].transform.position, windowRenderers[i].transform.lossyScale, who));
                 }
             }
             else if (game != null) WakeDetails(i);
@@ -1346,12 +1348,15 @@ namespace Sheytoonak.Prototype
             return all[k];
         }
 
-        IEnumerator GrannyCurses(Vector3 at, Vector3 size)
+        // granny2 and resident_03 (bathrobe), resident_05 (abaya) are women; the rest are men and the boy
+        static readonly HashSet<string> FemaleResidents = new HashSet<string> { "granny2", "resident_03", "resident_05" };
+
+        IEnumerator GrannyCurses(Vector3 at, Vector3 size, Texture2D chosen = null)
         {
             // User (2026-11-08): «این پیرزنه اصلاً به آرت فعلی نمی‌خوره». The old cartoon cut-out (Art/Poison/granny) is
             // retired; residents painted in the facades' style live in Art/Poison (granny2, resident_*; prompts in
             // docs/ART_SPEC.fa.md). Until one exists nothing is drawn.
-            var tex = PickResident();
+            var tex = chosen != null ? chosen : PickResident();
             if (tex == null) yield break;
             yield return new WaitForSeconds(0.35f);
             var go = new GameObject("Granny");
