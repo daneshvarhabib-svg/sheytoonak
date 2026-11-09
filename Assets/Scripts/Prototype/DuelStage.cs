@@ -496,28 +496,40 @@ namespace Sheytoonak.Prototype
             float k = 2.4f / Mathf.Max(0.01f, sp.bounds.size.y);
             truck.transform.localScale = new Vector3(fromLeft ? -k : k, k, k);
             float z = corpse.position.z - 0.6f;
-            float stopX = corpse.position.x + (fromLeft ? -1.2f : 1.2f); // the brush sits at the front end of the truck
+            // the painted brush of sweeper.png (2026-11-09) sits at 11.8 % of the width from the front and 9 % up from the
+            // wheels' line, 22.5 % of the width wide; the separate sweeper_brush.png is laid exactly over it
+            var brushLocal = new Vector3(sp.bounds.size.x * (0.118f - 0.5f), sp.bounds.size.y * 0.09f, -0.01f);
+            float stopX = corpse.position.x - brushLocal.x * truck.transform.localScale.x; // brush right over the bird
             float x0 = fromLeft ? -26f : 26f;
             truck.transform.position = new Vector3(x0, 0f, z);
             var brushT = Resources.Load<Texture2D>("Art/Props/sweeper_brush");
-            Transform brush = null;
+            SpriteRenderer brushR = null;
             if (brushT != null)
             {
-                var b = new GameObject("Brush").AddComponent<SpriteRenderer>();
-                b.sprite = Sprite.Create(brushT, new Rect(0, 0, brushT.width, brushT.height), new Vector2(0.5f, 0.5f), 100f);
-                b.sortingOrder = truck.sortingOrder + 1; brush = b.transform;
-                brush.SetParent(truck.transform, false);
-                brush.localPosition = new Vector3(-sp.bounds.size.x * 0.42f, sp.bounds.size.y * 0.1f, -0.01f);
+                brushR = new GameObject("Brush").AddComponent<SpriteRenderer>();
+                brushR.sprite = Sprite.Create(brushT, new Rect(0, 0, brushT.width, brushT.height), new Vector2(0.5f, 0.5f), 100f);
+                brushR.sortingOrder = truck.sortingOrder + 1;
+                brushR.transform.SetParent(truck.transform, false);
+                brushR.transform.localPosition = brushLocal;
+                brushR.transform.localScale = Vector3.one * (sp.bounds.size.x * 0.225f / Mathf.Max(0.01f, brushR.sprite.bounds.size.x));
             }
+            // ⚠️ the brush is painted from the side (a cone of bristles), so turning the sprite would tip it over; it
+            // "spins" by flipping its bristles and a slight wobble instead
+            System.Action<float> spin = speed =>
+            {
+                if (brushR == null) return;
+                brushR.flipX = ((int)(Time.time * speed)) % 2 == 0;
+                var l = brushR.transform.localScale; brushR.transform.localScale = new Vector3(Mathf.Abs(l.y) * (1f + 0.04f * Mathf.Sin(Time.time * speed * 3f)), l.y, l.z);
+            };
             for (float t = 0f; t < 1f; t += Time.deltaTime / 2.2f)
             {
                 truck.transform.position = new Vector3(Mathf.Lerp(x0, stopX, 1f - (1f - t) * (1f - t)), 0f, z);
-                if (brush != null) brush.Rotate(0f, 0f, 720f * Time.deltaTime);
+                spin(14f);
                 yield return null;
             }
             for (float t = 0f; t < 1.2f; t += Time.deltaTime)
             {
-                if (brush != null) brush.Rotate(0f, 0f, 900f * Time.deltaTime);
+                spin(20f);
                 if (corpse != null && t > 0.5f) { Destroy(corpse.gameObject); corpse = null; }
                 yield return null;
             }
@@ -525,7 +537,7 @@ namespace Sheytoonak.Prototype
             for (float t = 0f; t < 1f; t += Time.deltaTime / 2.4f)
             {
                 truck.transform.position = new Vector3(Mathf.Lerp(stopX, xe, t * t), 0f, z);
-                if (brush != null) brush.Rotate(0f, 0f, 720f * Time.deltaTime);
+                spin(14f);
                 yield return null;
             }
             Destroy(truck.gameObject);
