@@ -417,7 +417,7 @@ namespace Sheytoonak
                     }
                 }
             }
-            else if (Time.time - kickStarted > 6f) FinishKick(); // the ball got stuck somewhere: resolve anyway
+            else if (Time.time - kickStarted > 6f) { Rally("stuck timer"); FinishKick(); } // the ball got stuck somewhere: resolve anyway
         }
 
         void OnEnded(Side winner, string reason)
@@ -616,13 +616,21 @@ namespace Sheytoonak
             if (mods.Accuracy > 0) g.Aim += Random.Range(-1f, 1f) * KickModifiers.ErrorDeg(mods.Accuracy) / Mathf.Max(1f, config.kick.MaxAimYawDeg);
             if (mods.Reach > 0) g.Strength01 *= 1f - 0.18f * mods.Reach;
             Vector3 b = ball.transform.position;
-            float offset = s == Me ? foot.ContactOffset(b) : 0f;
-            float quality = s == Me ? KickSolver.ContactQuality(b.y, offset, config.kick) : 1f;
+            // ⚠️ the kid runs to the rebound, so the ball's distance from his standing spot is not a bad contact. Measuring
+            // it gave q 0.22-0.27 and up to 12 degrees of side error on every rebound hit (CI rally probe, run 198), so an
+            // aimed rebound could never find a window (user 2026-11-09: «باید این شانس باشه که توپ به شیشه بخوره»). Only
+            // the height still matters, and never below 0.6.
+            float offset = 0f;
+            float quality = s == Me ? Mathf.Max(0.6f, KickSolver.ContactQuality(b.y, 0f, config.kick)) : 1f;
             var res = KickSolver.SolveAtWall(g, offset, quality, config.kick, Random.Range(-1f, 1f), Random.Range(-1f, 1f),
                                              mapper.FacadeZ - b.z, b.y, mapper.MaxTargetHeight, mapper.MinTargetHeight(config.kick.MinTargetHeight));
             var v = new Vector3(res.Velocity.X, res.Velocity.Y, res.Velocity.Z);
             ball.Launch(v, res.SpinY, 0f);
             if (resolveRoutine != null) { StopCoroutine(resolveRoutine); resolveRoutine = null; }
+            // ⚠️ the stuck-ball timer (6 s, Update) counted from the FIRST kick only, so any rally longer than 6 s was
+            // "resolved" in mid-air: the ball vanished and reappeared rolling in from the front. CI rally probe, run 198:
+            // kick 17.05, rekick#2 22.46, "finish … at (4.69, 4.63, 10.53)" 23.06. That was the user's broken third hit.
+            kickStarted = Time.time;
             returning = false; bouncesSinceWall = 0; groundBounces = 0; hitWindow = -1; rallyHits++;
             Rally($"rekick#{rallyHits} {s} from {b} q={quality:0.00} v={v}");
             Rules.NoteActivity(s);
