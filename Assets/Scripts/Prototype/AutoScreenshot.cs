@@ -82,7 +82,8 @@ namespace Sheytoonak.Prototype
                         // rally probe (user 2026-11-09: the hits on the rebound «ناکارآمده»): a low kick that hits the wall,
                         // two low hits on the rebound, then a real shot at a window as the third rebound hit. Every ball event
                         // is logged as "RALLY …" into rally.txt next to the pictures.
-                        boot.Router?.Inject(new KickGesture(0.0f, 0.6f, 0f));
+                        // aim 1.0 is just past the outermost window (FitAimToHouse): bare wall, so there is always a rebound
+                        boot.Router?.Inject(new KickGesture(0.0f, 1.0f, 0f));
                         yield return Shot("04-kick-air", 0.45f);
                         yield return Shot("05-kick-hit", 0.6f);
                         for (int n = 1; n <= 3; n++)
@@ -90,7 +91,7 @@ namespace Sheytoonak.Prototype
                             float r0 = Time.realtimeSinceStartup + 6f;
                             while (Time.realtimeSinceStartup < r0 && !(duel.CanAimNow && duel.BouncesSinceWall >= 1)) yield return null;
                             if (!duel.CanAimNow) { Debug.Log("RALLY probe: no live rebound before hit " + n); break; }
-                            boot.Router?.Inject(n < 3 ? new KickGesture(0.0f, 0.6f, 0f) : new KickGesture(0.55f, 0.05f, 0f));
+                            boot.Router?.Inject(n < 3 ? new KickGesture(0.0f, 1.0f, 0f) : new KickGesture(0.55f, 0.05f, 0f));
                             yield return Shot("05r-hit" + n + "a", 0.35f);
                             yield return Shot("05r-hit" + n + "b", 0.6f);
                         }
