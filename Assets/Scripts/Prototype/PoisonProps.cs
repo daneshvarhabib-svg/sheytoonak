@@ -139,7 +139,7 @@ namespace Sheytoonak.Prototype
                 if (id == "cart") mid = parkX; // a cart is shorter than most windows: it stands squarely in front of one
                 else mid = Mathf.Lerp(mid, parkX, 0.5f);
                 Vector3 at = new Vector3(mid, 0f, facadeZ - w * 0.5f - 0.6f);
-                if (level > 1) Cargo(root, at, h, upper, fullTop, facadeZ, frontZ, w, r.sortingOrder, level - 1);
+                if (level > 1) Cargo(root, at, h, r.bounds.size.x, upper, fullTop, facadeZ, frontZ, w, r.sortingOrder, level - 1);
                 root.position = at + Vector3.left * 30f;
                 host.StartCoroutine(Slide(root, at, 1.1f));
                 return root.gameObject;
@@ -167,7 +167,7 @@ namespace Sheytoonak.Prototype
         /// <paramref name="items"/> pieces of luggage piled on the roof, tall enough (as seen from the camera) to hide the
         /// windows of the floor above that the rules hid. Painted Art/Poison/cargo_0..3 when they exist, else boxes.
         /// </summary>
-        static void Cargo(Transform root, Vector3 at, float roofH, List<Rect> upper, float fullTop, float facadeZ, float frontZ, float w, int order, int items)
+        static void Cargo(Transform root, Vector3 at, float roofH, float roofLen, List<Rect> upper, float fullTop, float facadeZ, float frontZ, float w, int order, int items)
         {
             // the height the pile must reach in front of the facade, projected like the vehicle itself
             float need = fullTop + 0.2f;
@@ -181,7 +181,11 @@ namespace Sheytoonak.Prototype
             float pile = Mathf.Max(0.8f * items, need - roofH);
             float each = pile / items;
             float cx = 0f; foreach (var r in upper) cx += r.center.x; cx = upper.Count > 0 ? cx / upper.Count - at.x : 0f;
-            float y = roofH;
+            // ⚠️ run 206: the pile floated beside the bus at the hidden window's x and a little above the roof. It stands
+            // on the roof (the painted roof line is a little under the picture's top: 0.92) and never past its ends.
+            float halfLen = roofLen * 0.5f - 0.9f;
+            cx = Mathf.Clamp(cx, -Mathf.Max(0f, halfLen), Mathf.Max(0f, halfLen));
+            float y = roofH * 0.92f;
             for (int i = 0; i < items; i++)
             {
                 float jitter = (i % 2 == 0 ? 0.25f : -0.3f);

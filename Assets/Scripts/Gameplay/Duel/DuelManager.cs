@@ -660,15 +660,21 @@ namespace Sheytoonak
         {
             var rects = mapper.WindowRects;
             if (p.Windows.Length == 0) return new Rect();
-            float x = 0f, wMax = 0f, low = float.MaxValue;
-            foreach (int w in p.Windows) { x += rects[w].center.x; wMax = Mathf.Max(wMax, rects[w].width); low = Mathf.Min(low, rects[w].yMin); }
-            x /= p.Windows.Length;
+            // ⚠️ run 206: the rug took the width of the widest window it covered (the bakery front) and was 4 m wide. It is
+            // as wide as the column's narrowest window plus a margin, and hangs on the top window's axis.
+            float x = 0f, wMin = float.MaxValue, low = float.MaxValue, topY = float.MinValue;
+            foreach (int w in p.Windows)
+            {
+                wMin = Mathf.Min(wMin, rects[w].width); low = Mathf.Min(low, rects[w].yMin);
+                if (rects[w].center.y > topY) { topY = rects[w].center.y; x = rects[w].center.x; }
+            }
+            float wMax = wMin;
             // ⚠️ RoofHeight is set before the stage rescales the painting (the rects grow, it does not): it is only
             // trusted when it lies just above the top windows, otherwise the rug starts a little over the highest window
             float topMax = 0f; foreach (var r in rects) topMax = Mathf.Max(topMax, r.yMax);
             float roof = mapper.RoofHeight;
             if (roof < topMax + 0.2f || roof > topMax + 2.5f) roof = topMax + 0.6f;
-            return new Rect(x - wMax * 0.7f, low - 0.15f, wMax * 1.4f, roof - (low - 0.15f));
+            return new Rect(x - wMax * 0.65f, low - 0.15f, wMax * 1.3f, roof - (low - 0.15f));
         }
 
         // ------------------------------------------------------------------ kicks
