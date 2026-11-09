@@ -196,6 +196,35 @@ namespace Sheytoonak.Tests
         }
 
         [Test]
+        public void An_antidote_lifts_a_poison_one_level_up_but_not_two()
+        {
+            // levels (SCENARIO §8, 2026-11-09): upgrading the antidote has to matter
+            foreach (int poisonLevel in new[] { 2, 3 })
+            {
+                var r = Make();
+                r.Start(Side.Left); r.BeginKick(Side.Left); r.EndKick(Side.Left, -1);
+                var p = StarterHeroes.Get("rima").Poison; p.Power = poisonLevel;
+                r.Poison(Side.Right, p, new[] { 4 });
+                if (r.Current == Side.Right) r.Pass(Side.Right);
+                int before = r.ActionsLeft;
+                var a = StarterHeroes.Get("fulla").Antidote; a.Power = 1;
+                var got = r.Antidote(Side.Left, a);
+                if (poisonLevel == 2) { Assert.AreEqual(ActionReject.None, got); Assert.IsFalse(r.IsClosed(4)); }
+                else { Assert.AreEqual(ActionReject.TooWeak, got); Assert.IsTrue(r.IsClosed(4)); Assert.AreEqual(before, r.ActionsLeft, "a refused antidote costs nothing"); }
+            }
+        }
+
+        [Test]
+        public void Higher_levels_hit_harder_but_never_kill_the_kick()
+        {
+            Assert.AreEqual(0.15f, KickModifiers.Intercept(1), 1e-5);
+            Assert.AreEqual(0.55f, KickModifiers.Intercept(5), 1e-5);
+            Assert.Greater(KickModifiers.StrengthLeft(5), 0.4f, "a level-5 puddle still lets the ball reach the wall");
+            for (int i = 1; i <= 5; i++) Assert.Less(KickModifiers.StrengthLeft(i), KickModifiers.StrengthLeft(i - 1));
+            Assert.AreEqual(new[] { 1, 1, 2, 2, 3 }, new[] { KickModifiers.CloseCount(1), KickModifiers.CloseCount(2), KickModifiers.CloseCount(3), KickModifiers.CloseCount(4), KickModifiers.CloseCount(5) });
+        }
+
+        [Test]
         public void A_window_antidote_with_nothing_to_clear_does_not_spend_the_action()
         {
             var r = Make();

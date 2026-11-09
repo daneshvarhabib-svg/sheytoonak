@@ -101,6 +101,10 @@ namespace Sheytoonak.Prototype
                         {
                             float w0 = Time.realtimeSinceStartup + 25f;
                             while (Time.realtimeSinceStartup < w0 && !duel.PlayerMayKick) yield return null;
+                            // levels (SCENARIO §8): the shots show level 3, so the flock, the cargo on the vehicle and the
+                            // bigger puddle are on the picture, not only the level-1 look
+                            var mine = duel.Rules.Heroes[(int)duel.Me];
+                            mine[i].Poison.Power = 3;
                             if (duel.PlayerMayKick) duel.Poison(i);
                             yield return Shot("07-poison-" + i, 1.4f);
                         }
@@ -115,6 +119,9 @@ namespace Sheytoonak.Prototype
                         yield return Shot("12-bags", 0.5f);
                         boot.Duel.TapBag(0);
                         yield return Shot("13-loot", 0.4f);
+                        boot.Duel.ScreenshotLevels();
+                        boot.ShowHeroesFromScript();
+                        yield return Shot("14-heroes", 0.6f);
                     }
                     else
                     {

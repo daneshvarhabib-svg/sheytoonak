@@ -15,7 +15,7 @@ namespace Sheytoonak.Core.Duel
         Missed
     }
 
-    public enum ActionReject { None, NotYourTurn, NoActionsLeft, BallInFlight, PoisonWouldCloseEverything, Finished, NoRage, NoTarget }
+    public enum ActionReject { None, NotYourTurn, NoActionsLeft, BallInFlight, PoisonWouldCloseEverything, Finished, NoRage, NoTarget, TooWeak }
 
     /// <summary>A poison sitting on the shared stage.</summary>
     public sealed class ActivePoison
@@ -29,13 +29,19 @@ namespace Sheytoonak.Core.Duel
     /// <summary>What the stage does to the next kick of one side, after that side's antidotes.</summary>
     public struct KickModifiers
     {
-        public int Accuracy;   // 0..3 extra error steps
-        public int Reach;      // 0..3 reach loss steps
-        public int Chance;     // 0..3 intercept steps
+        public int Accuracy;   // 0..5 extra error steps (the poison's level minus the victim's antidote)
+        public int Reach;      // 0..5 reach loss steps
+        public int Chance;     // 0..5 intercept steps
         public bool Any => Accuracy > 0 || Reach > 0 || Chance > 0;
-        public static float ErrorDeg(int steps) => steps * 2f;          // SCENARIO §14
+        public static float ErrorDeg(int steps) => steps * 2f;          // SCENARIO §14; level 5 = 10°
         public static float ReturnLoss(int steps) => steps * 0.10f;
-        public static float Intercept(int steps) => steps == 0 ? 0f : 0.05f + steps * 0.10f; // 15/25/35 %
+        public static float Intercept(int steps) => steps == 0 ? 0f : Math.Min(0.6f, 0.05f + steps * 0.10f); // 15/25/35/45/55 %
+        /// <summary>What is left of the kick's strength. ⚠️ not 1 − 0.18·steps: at level 5 that left 10 % and the ball
+        /// could never reach the wall; the loss flattens out (18/30/40/48/55 %).</summary>
+        public static float StrengthLeft(int steps) => steps <= 0 ? 1f : 1f - StrengthLoss[Math.Min(steps, StrengthLoss.Length) - 1];
+        static readonly float[] StrengthLoss = { 0.18f, 0.30f, 0.40f, 0.48f, 0.55f };
+        /// <summary>How many windows a Close poison shuts at its level: 1, 1, 2, 2, 3.</summary>
+        public static int CloseCount(int level) => Math.Max(1, (level + 1) / 2);
     }
 
     /// <summary>
@@ -289,12 +295,17 @@ namespace Sheytoonak.Core.Duel
             // «دکمه پادزهر سنگ ریزه کاری نمی‌کنه و اثر نداره»). Now they clear the opponent's poison of their effect off the
             // windows right away, whatever its lifetime; with nothing to clear they refuse instead of wasting the action.
             bool windowEffect = antidote.Effect == Effect.Cover || antidote.Effect == Effect.Close;
-            if (windowEffect && !Poisons.Exists(p => p.By != s && p.Tool.Effect == antidote.Effect && antidote.Power >= p.Tool.Power))
+            // Levels (2026-11-09): an antidote lifts a poison up to one level stronger than itself; two levels weaker it
+            // cannot (TooWeak), so upgrading the antidote matters. ⚠️ a partial lift (fewer windows hidden) was tried on
+            // paper and dropped: the bus on the stage would still stand there in full.
+            if (windowEffect && !Poisons.Exists(p => p.By != s && p.Tool.Effect == antidote.Effect))
                 return ActionReject.NoTarget;
+            if (windowEffect && !Poisons.Exists(p => p.By != s && p.Tool.Effect == antidote.Effect && Lifts(antidote, p.Tool)))
+                return ActionReject.TooWeak;
             protections[(int)s].Add(new ActivePoison { Tool = antidote, By = s, TurnsLeft = 3 }); // own turn, opponent's, own next
             Poisons.RemoveAll(p =>
             {
-                bool sameEffect = p.Tool.Effect == antidote.Effect && antidote.Power >= p.Tool.Power;
+                bool sameEffect = p.Tool.Effect == antidote.Effect && Lifts(antidote, p.Tool);
                 bool lift = sameEffect && (p.Tool.Life == Lifetime.UntilAntidote || (windowEffect && p.By != s));
                 if (lift) PoisonExpired?.Invoke(p);
                 return lift;
@@ -304,6 +315,9 @@ namespace Sheytoonak.Core.Duel
             if (ActionsLeft <= 0) EndTurn();
             return ActionReject.None;
         }
+
+        /// <summary>An antidote lifts a poison of its effect that is at most one level above it.</summary>
+        public static bool Lifts(Tool antidote, Tool poison) => antidote.Power + 1 >= poison.Power;
 
         public ActionReject UseRage(Side s)
         {

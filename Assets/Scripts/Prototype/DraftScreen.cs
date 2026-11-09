@@ -24,7 +24,7 @@ namespace Sheytoonak.Prototype
         }
 
         /// <summary>Head and shoulders out of the painted standing pose (no separate portrait art yet).</summary>
-        static void Portrait(Rect r, string heroId)
+        internal static void Portrait(Rect r, string heroId)
         {
             var face = Load("Art/Heroes/" + heroId + "_face"); // painted head-and-shoulders portrait (2026-11-03)
             if (face != null) { GUI.DrawTexture(r, face, ScaleMode.ScaleAndCrop); return; }
@@ -36,7 +36,7 @@ namespace Sheytoonak.Prototype
             GUI.DrawTextureWithTexCoords(r, t, new Rect(0.5f - vw * 0.5f, 1f - vh - 0.01f, vw, vh));
         }
 
-        static void Badge(Rect r, string icon, Color bg)
+        internal static void Badge(Rect r, string icon, Color bg)
         {
             var o = GUI.color; GUI.color = bg; GUI.DrawTexture(r, Texture2D.whiteTexture);
             GUI.color = Color.white; var t = Load("Art/Icons/" + icon);

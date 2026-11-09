@@ -36,7 +36,7 @@ namespace Sheytoonak.Tests
             Assert.IsFalse(r.StartUnlock(1, T0), "one at a time");
             Assert.IsTrue(r.WaitsForWin(0), "no timer: the next win opens it (review 2026-11-07)"); r.WinUnlocks(); Assert.IsTrue(r.IsReady(0, T0));
             var c = r.Open(0, T0, Tools);
-            Assert.IsNotNull(c); Assert.Greater(c.Value.Shards, 0); Assert.AreEqual(1, c.Value.UpgradeCards.Length);
+            Assert.IsNotNull(c); Assert.Greater(c.Value.Shards, 0); Assert.AreEqual(BagRules.CardsIn(BagSize.Small), c.Value.UpgradeCards.Length);
             Assert.AreEqual(1.0, new BagRules(T0).ClockFactor(T0.AddDays(8)), 1e-9);
         }
 

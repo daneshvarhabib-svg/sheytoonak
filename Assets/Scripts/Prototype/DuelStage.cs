@@ -412,17 +412,29 @@ namespace Sheytoonak.Prototype
         }
 
         bool pigeonDown;
-        IEnumerator PigeonCrossing()
+        readonly List<GameObject> flock = new List<GameObject>();
+        /// <param name="birds">the poison's level (user 2026-11-09: «پرنده وقتی بیشتر شه تعداد پرنده بیشتر می‌شه»): the
+        /// first one is the bird the ball can hit, the others fly with it, a little behind and above or below.</param>
+        IEnumerator PigeonCrossing(int birds = 1)
         {
             if (pigeon == null) pigeon = PoisonProps.Pigeon();
             pigeon.SetActive(true);
             pigeonDown = false;
+            while (flock.Count < birds - 1) flock.Add(PoisonProps.Pigeon());
+            for (int i = 0; i < flock.Count; i++) flock[i].SetActive(i < birds - 1);
             float z = mapper.FacadeZ - 4f, y = 2.8f;
             for (float t = 0f; t < 1f && !pigeonDown; t += Time.deltaTime / 1.1f)
             {
                 pigeon.transform.position = new Vector3(Mathf.Lerp(-7f, 7f, t), y + Mathf.Sin(t * 20f) * 0.15f, z);
+                for (int i = 0; i < birds - 1 && i < flock.Count; i++)
+                {
+                    float lag = 0.55f * (i / 2 + 1), dy = (i % 2 == 0 ? 0.55f : -0.45f) * (i / 2 + 1);
+                    flock[i].transform.position = new Vector3(Mathf.Lerp(-7f, 7f, t) - lag, y + dy + Mathf.Sin(t * 20f + i * 1.7f) * 0.15f, z + 0.3f * (i + 1));
+                }
                 yield return null;
             }
+            // the rest of the flock flies on and away
+            if (birds > 1) StartCoroutine(FlockAway(birds - 1, y));
             // User (2026-11-05): «توپ وقتی می‌خوره به کبوتر، کبوتر نمی‌خوره زمین و به راهش ادامه می‌ده … باید بخوره زمین».
             // Hit: it tumbles to the road where the ball met it, lies there a moment, then walks off.
             if (pigeonDown)
@@ -444,6 +456,17 @@ namespace Sheytoonak.Prototype
             pigeon.transform.rotation = Quaternion.identity;
             pigeon.SetActive(false);
             pigeonDown = false;
+        }
+
+        IEnumerator FlockAway(int n, float y)
+        {
+            for (float t = 0f; t < 1.2f; t += Time.deltaTime)
+            {
+                for (int i = 0; i < n && i < flock.Count; i++)
+                    if (flock[i].activeSelf) flock[i].transform.position += new Vector3(12f, 1.5f, 0f) * Time.deltaTime;
+                yield return null;
+            }
+            for (int i = 0; i < n && i < flock.Count; i++) flock[i].SetActive(false);
         }
 
         IEnumerator PigeonCorpse(Transform corpse)
@@ -587,7 +610,7 @@ namespace Sheytoonak.Prototype
                     {
                         var rects = new Rect[p.Windows.Length];
                         for (int i = 0; i < rects.Length; i++) rects[i] = mapper.WindowRects[p.Windows[i]];
-                        list.Add(PoisonProps.Bus(this, rects, mapper.FacadeZ, p.Tool.Id));
+                        list.Add(PoisonProps.Bus(this, rects, mapper.FacadeZ, p.Tool.Id, p.Tool.Power));
                     }
                     break;
                 case Effect.Close:
@@ -595,11 +618,11 @@ namespace Sheytoonak.Prototype
                     break;
                 case Effect.Reach:
                     // a little towards the road: right at the ball it sat under the HUD turn line (run 30)
-                    list.Add(PoisonProps.Puddle(foot.StrikeSpot + new Vector3(0f, 0f, 2.6f)));
-                    if (p.Tool.Id == "rain") { var cloud = PoisonProps.Rain(this, new Vector3(0f, 4.2f, mapper.FacadeZ - 3f)); if (cloud != null) list.Add(cloud); }
+                    list.Add(PoisonProps.Puddle(foot.StrikeSpot + new Vector3(0f, 0f, 2.6f), p.Tool.Power));
+                    if (p.Tool.Id == "rain") { var cloud = PoisonProps.Rain(this, new Vector3(0f, 4.2f, mapper.FacadeZ - 3f), p.Tool.Power); if (cloud != null) list.Add(cloud); }
                     break;
                 case Effect.Accuracy:
-                    list.Add(PoisonProps.Wind(this, mapper.FacadeZ));
+                    list.Add(PoisonProps.Wind(this, mapper.FacadeZ, p.Tool.Power));
                     break;
                 case Effect.Chance:
                     StartCoroutine(PigeonsWhile(p));
@@ -613,7 +636,7 @@ namespace Sheytoonak.Prototype
         {
             while (duel.Rules != null && duel.Rules.Poisons.Contains(p))
             {
-                yield return PigeonCrossing();
+                yield return PigeonCrossing(Mathf.Clamp(p.Tool.Power, 1, 5));
                 yield return new WaitForSeconds(0.6f);
             }
         }

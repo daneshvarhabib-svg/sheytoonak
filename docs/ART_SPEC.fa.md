@@ -459,3 +459,10 @@ Stability ~۴۰. هر خط یک فایل → `Audio/Heroes/<id>/kick_01..03`. م
 - `Props/sweeper.png` (نمای جانبی، رو به چپ، رویِ سبزِ #00FF00): `Cut-out for a game, side view facing left, on a flat solid bright green background #00FF00, no ground, no shadow, no scene. Painted in the same realistic hand-painted style as a weathered Beirut street painting. A small old municipal street-sweeper truck, dusty orange and white with a faded city emblem, an operator in an orange vest visible in the cab, a round rotating side brush under the front bumper, a water tank and a hopper behind. Whole vehicle visible, wheels included. No text, no watermark.`
 - `Props/sweeper_brush.png` (اختیاری، برایِ چرخیدن): `Same style, on green #00FF00: only the round street-sweeper side brush seen from the side, a disc of stiff dark bristles with a metal hub, flat and centred, nothing else.`
 - `Audio/Fx/pigeon_01..02` (ElevenLabs Sound Effects، ~۱ ثانیه): `A pigeon hit by a football mid-air: a sharp startled coo-squawk, a burst of wing flaps and a soft thud on asphalt, 1 second, no music.`
+
+### بار روی سقفِ ماشین‌ها (لول‌های ۲ تا ۵ِ اتوبوس/کامیون/گاری، ۱۹ آبان)
+هر لول یک تکه بار روی سقف می‌نشیند و پنجره‌ی طبقه‌ی بالا را می‌پوشاند. تا تصویر نرسیده جعبه‌ی ساده‌ی رنگی کشیده می‌شود. هر کدام جدا، روی سبزِ #00FF00، رو به دوربین، کامل در کادر:
+- `Poison/cargo_0.png`: `Cut-out for a game, on a flat solid bright green background #00FF00, no ground, no shadow. Same realistic hand-painted style as a weathered Beirut street painting. A stack of three battered cardboard boxes tied with rope, seen from the front, slightly uneven. No text, no logos.`
+- `Poison/cargo_1.png`: `Same style and background: two old leather suitcases strapped on top of each other, one red-brown and one faded blue, with stickers worn off, seen from the front. No text.`
+- `Poison/cargo_2.png`: `Same style and background: a pile of stuffed jute sacks and a bundle wrapped in a patterned blanket, tied with rope, seen from the front. No text.`
+- `Poison/cargo_3.png`: `Same style and background: a rolled striped mattress and a plastic chair tied on top of a wooden crate, seen from the front. No text.`

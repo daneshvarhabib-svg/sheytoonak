@@ -59,6 +59,12 @@ namespace Sheytoonak
         public const string ServeHint = "اسحب من الطابة صوب الشبّاك"; // 2026-11-09: the kick is a swipe, not a tap
         public const string VibrateOn = "هزّة: أيوه";
         public const string NothingToClear = "ما في شي يشيلو";
+        /// <summary>The antidote is two levels or more below the poison (SCENARIO §8).</summary>
+        public const string TooWeak = "الترياق أضعف من السمّ";
+        public const string Upgrade = "قوّي";
+        public const string Heroes = "الأبطال";
+        public const string MaxLevel = "أقوى شي";
+        public static string Lv(int l) => "مستوى " + N(l);
         public const string VibrateOff = "هزّة: لأ";
         public const string Smashed = "+١  كسرت الشباك!";
         public const string BounceFirst = "خلّيها تنطّ مرّة أول";

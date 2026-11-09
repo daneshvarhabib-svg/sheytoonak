@@ -1648,7 +1648,11 @@ namespace Sheytoonak.Prototype
                         new GUIStyle(label) { alignment = TextAnchor.MiddleCenter }, TextAnchor.MiddleCenter);
             }
 
-            if (showStart && duel)
+            if (showStart && duel && showHeroes)
+            {
+                HeroesScreen(u, big);
+            }
+            else if (showStart && duel)
             {
                 HomeScreen(u, big); // its own full-screen backdrop: the street behind it is not shown
             }
@@ -1758,7 +1762,14 @@ namespace Sheytoonak.Prototype
             // side buttons: what is planned (docs/RESEARCH.fa.md queue), honest about not being there yet
             float sbw = Mathf.Min(200 * u, Screen.width * 0.15f), sbh = sbw * 0.62f;
             SideSoon(new Rect(pad, top + barH + 30 * u, sbw, sbh), "btn_green", "pick", "مهمّات", u);
-            SideSoon(new Rect(Screen.width - pad - sbw, top + barH + 30 * u, sbw, sbh), "btn_red", "duel", "الأبطال", u);
+            // the heroes screen: levels of every poison and antidote (SCENARIO §8). A dot when something can be upgraded now.
+            var heroesR = new Rect(Screen.width - pad - sbw, top + barH + 30 * u, sbw, sbh);
+            if (BigButton(heroesR, "btn_red", "duel", Ar.Heroes, true, u)) { showHeroes = true; heroesScroll = Vector2.zero; touch?.IgnoreFor(0.4f); }
+            if (AnyUpgradeReady())
+            {
+                var o = GUI.color; GUI.color = new Color(0.95f, 0.2f, 0.15f);
+                GUI.DrawTexture(new Rect(heroesR.xMax - 26 * u, heroesR.y - 6 * u, 26 * u, 26 * u), DotTex()); GUI.color = o;
+            }
             SideSoon(new Rect(pad, Screen.height - sbh - pad, sbw, sbh), "btn_orange", "shards", "دكّان", u);
             SideSoon(new Rect(Screen.width - pad - sbw, Screen.height - sbh - pad, sbw, sbh), "btn_blue", "trophy", "الحارة", u);
 
@@ -1770,6 +1781,120 @@ namespace Sheytoonak.Prototype
         }
 
         static Texture2D homeBg, heroesCardTex; static bool homeBgLooked, heroesCardLooked;
+
+        // ------------------------------------------------------------------ heroes: levels (SCENARIO §8)
+
+        bool showHeroes; Vector2 heroesScroll;
+        public void ShowHeroesFromScript() { showStart = true; showHeroes = true; }
+
+        bool AnyUpgradeReady()
+        {
+            var lv = duelGame.Levels;
+            foreach (var h in Sheytoonak.Core.Duel.StarterHeroes.All)
+                if (lv.CanUpgrade(h.Poison.Id, duelGame.ShardBank) == Sheytoonak.Core.Bags.ToolLevels.Reject.None
+                    || lv.CanUpgrade(h.Antidote.Id, duelGame.ShardBank) == Sheytoonak.Core.Bags.ToolLevels.Reject.None) return true;
+            return false;
+        }
+
+        static Texture2D dotTex;
+        static Texture2D DotTex()
+        {
+            if (dotTex != null) return dotTex;
+            const int n = 32; dotTex = new Texture2D(n, n, TextureFormat.RGBA32, false);
+            for (int y = 0; y < n; y++) for (int x = 0; x < n; x++)
+            { float d = Vector2.Distance(new Vector2(x + 0.5f, y + 0.5f), new Vector2(n / 2f, n / 2f)); dotTex.SetPixel(x, y, new Color(1f, 1f, 1f, Mathf.Clamp01(n / 2f - d))); }
+            dotTex.Apply(); return dotTex;
+        }
+
+        /// <summary>
+        /// User (2026-11-09): «از توی کیسه یسری شانس بالقوه برای قوی‌تر کردن هر سم یا پادسم … برای بالفعل کردنش باید خرده
+        /// شیشه خرج کنه». One card per hero: the portrait, then its poison (red) and antidote (green), each with its level,
+        /// a bar of the cards in hand against the cards the next level needs, and the upgrade button with its shard price
+        /// (grey while either is short). No paragraphs: numbers and pictures.
+        /// </summary>
+        void HeroesScreen(float u, GUIStyle big)
+        {
+            HomeBackdrop();
+            float pad = 14 * u, top = pad + SafeTop(), barH = 58 * u;
+            var num = new GUIStyle(big) { fontSize = Mathf.RoundToInt(26 * u), alignment = TextAnchor.MiddleCenter };
+            var small = new GUIStyle(num) { fontSize = Mathf.RoundToInt(18 * u), fontStyle = FontStyle.Normal };
+            // top bar: back on the left, title in the middle, shards on the right
+            var backR = new Rect(pad, top, Mathf.Min(170 * u, Screen.width * 0.15f), barH);
+            Plank(backR);
+            if (GUI.Button(backR, Ar.T("رجوع"), num)) { showHeroes = false; touch?.IgnoreFor(0.4f); return; }
+            float barW = Mathf.Min(250 * u, Screen.width * 0.2f);
+            var shardsR = new Rect(Screen.width - pad - barW, top, barW, barH);
+            Plank(shardsR);
+            DuelHud.DrawIcon(new Rect(shardsR.xMax - barH * 0.95f, top + barH * 0.12f, barH * 0.76f, barH * 0.76f), "shards", Color.white);
+            GUI.Label(new Rect(shardsR.x + 10 * u, top, shardsR.width - barH, barH), Ar.N(duelGame.ShardBank), num);
+            var titleR = new Rect((Screen.width - 300 * u) * 0.5f, top, 300 * u, barH);
+            Plank(titleR); GUI.Label(titleR, Ar.T(Ar.Heroes), num);
+
+            var heroes = Sheytoonak.Core.Duel.StarterHeroes.All;
+            int cols = 4, rowsN = (heroes.Length + cols - 1) / cols;
+            float areaY = top + barH + 12 * u, areaH = Screen.height - areaY - pad;
+            float gap = 12 * u, cw = (Screen.width - pad * 2 - gap * (cols - 1)) / cols, chh = Mathf.Max(areaH / rowsN - gap, 300 * u);
+            var view = new Rect(0, 0, Screen.width - pad * 2 - 4, rowsN * (chh + gap));
+            heroesScroll = GUI.BeginScrollView(new Rect(pad, areaY, Screen.width - pad * 2, areaH), heroesScroll, view, GUIStyle.none, GUIStyle.none);
+            var panel = DuelHud.Kit("panel");
+            for (int i = 0; i < heroes.Length; i++)
+            {
+                // right-to-left: the first hero top right
+                int c = cols - 1 - i % cols, r = i / cols;
+                var card = new Rect(c * (cw + gap), r * (chh + gap), cw, chh);
+                if (panel != null) GUI.DrawTexture(card, panel, ScaleMode.StretchToFill);
+                else { var o = GUI.color; GUI.color = new Color(0f, 0f, 0f, 0.55f); GUI.DrawTexture(card, Texture2D.whiteTexture); GUI.color = o; }
+                var h = heroes[i];
+                float ph = chh * 0.34f;
+                DraftScreen.Portrait(new Rect(card.center.x - ph * 0.5f, card.y + 10 * u, ph, ph), h.Id);
+                GUI.Label(new Rect(card.x, card.y + 12 * u + ph, card.width, 30 * u), Ar.T(h.NameAr), small);
+                float ry = card.y + 46 * u + ph, rh = (card.yMax - ry - 10 * u) / 2f;
+                ToolRow(new Rect(card.x + 10 * u, ry, card.width - 20 * u, rh - 6 * u), h.Poison, DuelHud.PoisonRed, u, small);
+                ToolRow(new Rect(card.x + 10 * u, ry + rh, card.width - 20 * u, rh - 6 * u), h.Antidote, DuelHud.AntidoteGreen, u, small);
+            }
+            GUI.EndScrollView();
+        }
+
+        void ToolRow(Rect r, Sheytoonak.Core.Duel.Tool t, Color tint, float u, GUIStyle small)
+        {
+            var lv = duelGame.Levels;
+            int level = lv.Level(t.Id), have = lv.Cards(t.Id), need = lv.CardsNeeded(t.Id), price = lv.ShardsNeeded(t.Id);
+            float s = Mathf.Min(r.height, 64 * u);
+            DraftScreen.Badge(new Rect(r.xMax - s, r.y, s, s), t.Id, tint);
+            // level pips under the icon
+            for (int k = 0; k < Sheytoonak.Core.Bags.ToolLevels.MaxLevel; k++)
+            {
+                var o = GUI.color; GUI.color = k < level ? new Color(1f, 0.82f, 0.2f) : new Color(1f, 1f, 1f, 0.25f);
+                float d = s / 6f; GUI.DrawTexture(new Rect(r.xMax - s + k * (s / 5f) + (s / 5f - d) * 0.5f, r.y + s + 2 * u, d, d), DotTex()); GUI.color = o;
+            }
+            float tx = r.x, tw = r.width - s - 8 * u;
+            var lab = new GUIStyle(small) { alignment = TextAnchor.MiddleRight };
+            GUI.Label(new Rect(tx, r.y, tw, s * 0.45f), Ar.T(t.NameAr + "  " + Ar.Lv(level)), lab);
+            if (need == 0) { GUI.Label(new Rect(tx, r.y + s * 0.45f, tw, s * 0.55f), Ar.T(Ar.MaxLevel), lab); return; }
+            // the cards bar: latent upgrades in hand / needed for the next level
+            var bar = new Rect(tx, r.y + s * 0.5f, tw * 0.55f, s * 0.3f);
+            var old = GUI.color;
+            GUI.color = new Color(0f, 0f, 0f, 0.55f); GUI.DrawTexture(bar, Texture2D.whiteTexture);
+            GUI.color = have >= need ? new Color(0.3f, 0.85f, 0.35f) : new Color(0.35f, 0.6f, 1f);
+            GUI.DrawTexture(new Rect(bar.x, bar.y, bar.width * Mathf.Clamp01(have / (float)need), bar.height), Texture2D.whiteTexture);
+            GUI.color = old;
+            GUI.Label(bar, Ar.N(Mathf.Min(have, need)) + " / " + Ar.N(need), new GUIStyle(small) { fontSize = Mathf.RoundToInt(15 * u) });
+            // the upgrade button with its price
+            bool can = lv.CanUpgrade(t.Id, duelGame.ShardBank) == Sheytoonak.Core.Bags.ToolLevels.Reject.None;
+            var br = new Rect(bar.xMax + 6 * u, r.y + s * 0.4f, tw - bar.width - 6 * u, s * 0.55f);
+            var kit = DuelHud.Kit(can ? "btn_green" : "btn_blue");
+            GUI.color = can ? Color.white : new Color(0.5f, 0.5f, 0.5f, 0.9f);
+            if (kit != null) GUI.DrawTexture(br, kit, ScaleMode.StretchToFill);
+            else { GUI.color = can ? new Color(0.2f, 0.6f, 0.3f) : new Color(0.3f, 0.3f, 0.3f); GUI.DrawTexture(br, Texture2D.whiteTexture); }
+            GUI.color = old;
+            DuelHud.DrawIcon(new Rect(br.xMax - br.height * 0.9f, br.y + br.height * 0.1f, br.height * 0.8f, br.height * 0.8f), "shards", duelGame.ShardBank >= price ? Color.white : new Color(1f, 0.45f, 0.45f));
+            GUI.Label(new Rect(br.x, br.y, br.width - br.height * 0.8f, br.height), Ar.N(price), new GUIStyle(small) { fontSize = Mathf.RoundToInt(16 * u) });
+            if (can && GUI.Button(br, GUIContent.none, GUIStyle.none))
+            {
+                duelGame.UpgradeTool(t.Id);
+                touch?.IgnoreFor(0.3f);
+            }
+        }
         /// <summary>
         /// User (2026-11-07): «صفحه بک گراند اولیه خیلی زشته و شبیه لوگوی شبکه ۴ه … عوضش کنیم». The generated blue
         /// star carpet is gone. The lobby now sits on a painting: Art/UI/home.png when it exists (prompt in

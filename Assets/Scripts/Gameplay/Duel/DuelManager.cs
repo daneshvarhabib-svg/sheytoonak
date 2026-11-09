@@ -136,6 +136,31 @@ namespace Sheytoonak
         public event Action<int, int, int> BagOpened;
         void SaveBags() { PlayerPrefs.SetString(PrefBags, Bags.Serialize()); PlayerPrefs.SetInt(PrefShards, ShardBank); PlayerPrefs.Save(); }
 
+        const string PrefLevels = "sheytoonak.levels";
+        ToolLevels levels;
+        /// <summary>Levels and latent cards of every tool. The cards of builds before the levels (a comma list) are moved in once.</summary>
+        public ToolLevels Levels
+        {
+            get
+            {
+                if (levels != null) return levels;
+                levels = ToolLevels.Parse(PlayerPrefs.GetString(PrefLevels, ""));
+                var old = PlayerPrefs.GetString(PrefCards, "");
+                if (old.Length > 0) { levels.AddCards(old.Split(',')); PlayerPrefs.DeleteKey(PrefCards); SaveLevels(); }
+                return levels;
+            }
+        }
+        void SaveLevels() { PlayerPrefs.SetString(PrefLevels, Levels.Serialize()); PlayerPrefs.SetInt(PrefShards, ShardBank); PlayerPrefs.Save(); }
+
+        /// <summary>Spends cards and shards to raise one tool a level (the heroes screen).</summary>
+        public ToolLevels.Reject UpgradeTool(string id)
+        {
+            int bank = ShardBank;
+            var r = Levels.Upgrade(id, ref bank);
+            if (r == ToolLevels.Reject.None) { ShardBank = bank; SaveLevels(); }
+            return r;
+        }
+
         static string[] ToolIds()
         {
             var ids = new System.Collections.Generic.List<string>();
@@ -152,10 +177,9 @@ namespace Sheytoonak
                 var c = Bags.Open(slot, now, ToolIds());
                 if (c == null) return false;
                 ShardBank += c.Value.Shards;
-                // ⚠️ upgrade cards are only counted for now: the tool-upgrade screen comes later (SCENARIO §8)
-                var cards = PlayerPrefs.GetString(PrefCards, "");
-                foreach (var id in c.Value.UpgradeCards) cards += (cards.Length > 0 ? "," : "") + id;
-                PlayerPrefs.SetString(PrefCards, cards);
+                // latent upgrades: counted per tool; the heroes screen makes them real with shards (SCENARIO §8)
+                Levels.AddCards(c.Value.UpgradeCards);
+                SaveLevels();
                 SaveBags();
                 BagOpened?.Invoke(slot, c.Value.Shards, c.Value.UpgradeCards.Length);
                 return true;
@@ -163,6 +187,18 @@ namespace Sheytoonak
             bool started = Bags.StartUnlock(slot, now);
             if (started) SaveBags();
             return started;
+        }
+
+        /// <summary>CI screenshots only: a few tools with cards in hand, one ready to upgrade, one at level 3.</summary>
+        public void ScreenshotLevels()
+        {
+            var ids = new System.Collections.Generic.List<string>();
+            for (int i = 0; i < 10; i++) ids.Add("pigeon");
+            for (int i = 0; i < 6; i++) ids.Add("bus");
+            for (int i = 0; i < 30; i++) ids.Add("wind");
+            Levels.AddCards(ids);
+            Levels.SetLevel("wind", 3);
+            ShardBank = Mathf.Max(ShardBank, 600);
         }
 
         /// <summary>CI screenshots only: three bags, one counting down and one ready to open.</summary>
@@ -174,7 +210,7 @@ namespace Sheytoonak
             if (Bags.Rack[0] != null) { Bags.Rack[0].UnlockStartTicks = now.Ticks - 1; Bags.Rack[0].ReadyTicks = now.Ticks - 1; }
         }
 
-        public int UpgradeCardCount { get { var s = PlayerPrefs.GetString(PrefCards, ""); return s.Length == 0 ? 0 : s.Split(',').Length; } }
+        public int UpgradeCardCount { get { int n = 0; foreach (var id in ToolIds()) n += Levels.Cards(id); return n; } }
 
         public bool PlayChallenge()
         {
@@ -313,6 +349,17 @@ namespace Sheytoonak
             yield return new WaitForSeconds(0.8f);
             var left = new HeroDef[3]; var right = new HeroDef[3];
             for (int i = 0; i < 3; i++) { left[i] = StarterHeroes.Get(Draft.Picked[0][i]); right[i] = StarterHeroes.Get(Draft.Picked[1][i]); }
+            // levels (SCENARIO §8): my tools at the levels I bought; the bot is matched to the mean of mine, so an
+            // upgrade is felt against an equal opponent, not wiped out by a bot that is always level 1 or always level 5
+            var mine = Me == Side.Left ? left : right; var his = Me == Side.Left ? right : left;
+            int sum = 0;
+            for (int i = 0; i < 3; i++)
+            {
+                mine[i].Poison.Power = Levels.Level(mine[i].Poison.Id); mine[i].Antidote.Power = Levels.Level(mine[i].Antidote.Id);
+                sum += mine[i].Poison.Power + mine[i].Antidote.Power;
+            }
+            int botLevel = Mathf.Clamp(Mathf.RoundToInt(sum / 6f), 1, ToolLevels.MaxLevel);
+            for (int i = 0; i < 3; i++) { his[i].Poison.Power = botLevel; his[i].Antidote.Power = botLevel; }
             BeginDuel(left, right, Draft.First);
         }
 
@@ -506,6 +553,7 @@ namespace Sheytoonak
                 var r = Rules.Antidote(s, h.Antidote);
                 if (r == ActionReject.None) { Rules.NoteActivity(s); Pop?.Invoke(h.Antidote.Id, s, PopKind.Antidote); }
                 else if (r == ActionReject.NoTarget && s == Me) Toast?.Invoke(Ar.NothingToClear, 1.3f);
+                else if (r == ActionReject.TooWeak && s == Me) Toast?.Invoke(Ar.TooWeak, 1.6f);
                 return r;
             }
         }
@@ -539,6 +587,19 @@ namespace Sheytoonak
                     for (int j = i; j < low.Count && mapper.WindowRects[low[j]].center.x - mapper.WindowRects[low[i]].center.x <= reach; j++) run.Add(low[j]);
                     if (run.Count > best.Count) best = run;
                 }
+                // levels (user 2026-11-09): «بعضی ها ارتفاع می‌گیرن مثل اتوبوس و کامیون و گاری، یسری جعبه و بسته و چمدون
+                // میاد روشون». Each level above 1 stacks cargo on the roof that hides one more window of the floor above,
+                // the ones straight over the vehicle first.
+                if (best.Count > 0 && poison.Power > 1)
+                {
+                    float cx = 0f; foreach (int w in best) cx += mapper.WindowRects[w].center.x; cx /= best.Count;
+                    float lowTop = 0f; foreach (int w in best) lowTop = Mathf.Max(lowTop, mapper.WindowRects[w].yMax);
+                    var above = list.FindAll(w => !best.Contains(w) && mapper.WindowRects[w].yMin >= lowTop - 0.3f);
+                    float aboveMin = float.MaxValue; foreach (int w in above) aboveMin = Mathf.Min(aboveMin, mapper.WindowRects[w].yMin);
+                    above = above.FindAll(w => mapper.WindowRects[w].yMin <= aboveMin + 1.5f); // only the next floor up
+                    above.Sort((a, b) => Mathf.Abs(mapper.WindowRects[a].center.x - cx).CompareTo(Mathf.Abs(mapper.WindowRects[b].center.x - cx)));
+                    for (int i = 0; i < above.Count && i < poison.Power - 1; i++) best.Add(above[i]);
+                }
                 int keep = Mathf.Min(best.Count, list.Count - 1);
                 return best.GetRange(0, Mathf.Max(0, keep)).ToArray();
             }
@@ -552,7 +613,9 @@ namespace Sheytoonak
                 return row.GetRange(0, Mathf.Max(0, take)).ToArray();
             }
             list.Sort((a, b) => Rules.ShownValue(b).CompareTo(Rules.ShownValue(a)));
-            return list.Count > 1 ? new[] { list[0] } : new int[0];
+            // Close shuts 1/1/2/2/3 windows by level, never the last breakable one
+            int shut = Mathf.Min(KickModifiers.CloseCount(poison.Power), list.Count - 1);
+            return shut > 0 ? list.GetRange(0, shut).ToArray() : new int[0];
         }
 
         // ------------------------------------------------------------------ kicks
@@ -593,7 +656,7 @@ namespace Sheytoonak
             var mods = Rules.ModifiersFor(s);
             // Poison physics: wind scatters the aim, a puddle takes the power out of the kick
             if (mods.Accuracy > 0) g.Aim += Random.Range(-1f, 1f) * KickModifiers.ErrorDeg(mods.Accuracy) / Mathf.Max(1f, config.kick.MaxAimYawDeg);
-            if (mods.Reach > 0) g.Strength01 *= 1f - 0.18f * mods.Reach;
+            if (mods.Reach > 0) g.Strength01 *= KickModifiers.StrengthLeft(mods.Reach);
             Vector3 b = PlaceBallAtCentre();
             float quality = 1f;
             var res = KickSolver.SolveAtWall(g, 0f, quality, config.kick, Random.Range(-1f, 1f), Random.Range(-1f, 1f),
@@ -614,7 +677,7 @@ namespace Sheytoonak
         {
             var mods = Rules.ModifiersFor(s);
             if (mods.Accuracy > 0) g.Aim += Random.Range(-1f, 1f) * KickModifiers.ErrorDeg(mods.Accuracy) / Mathf.Max(1f, config.kick.MaxAimYawDeg);
-            if (mods.Reach > 0) g.Strength01 *= 1f - 0.18f * mods.Reach;
+            if (mods.Reach > 0) g.Strength01 *= KickModifiers.StrengthLeft(mods.Reach);
             Vector3 b = ball.transform.position;
             // ⚠️ the kid runs to the rebound, so the ball's distance from his standing spot is not a bad contact. Measuring
             // it gave q 0.22-0.27 and up to 12 degrees of side error on every rebound hit (CI rally probe, run 198), so an

@@ -33,7 +33,11 @@ namespace Sheytoonak.Core.Bags
         public const int Slots = 4, CursesPerBag = 20;
         public static readonly int[] Hours = { 2, 6, 12, 18 };
         static readonly int[] ShardsMin = { 20, 60, 150, 300 }, ShardsMax = { 40, 110, 260, 500 };
-        static readonly int[] Cards = { 1, 2, 4, 6 };
+        // User (2026-11-09, levels): level 2 of a tool inside a week at ~5 wins a day. 1/2/4/6 cards spread over 16 tools gave
+        // one tool a card every ~30 wins; 4/8/16/24 give each tool ~1.7 cards a day (ToolLevelsTests keeps the calendar).
+        static readonly int[] Cards = { 4, 8, 16, 24 };
+        /// <summary>Cards per bag size, for the level calendar.</summary>
+        public static int CardsIn(BagSize s) => Cards[(int)s];
 
         /// <summary>40 steps: M at 5,10,15,20,25,30,35,39 (8), L at 19 and 38 (2), the rest S (30).</summary>
         public static readonly BagSize[] Cycle = BuildCycle();

@@ -87,10 +87,20 @@ namespace Sheytoonak.Prototype
         // ------------------------------------------------------------------ bus (Cover)
 
         /// <summary>A tall city bus that drives in and parks in front of the covered windows.</summary>
-        public static GameObject Bus(MonoBehaviour host, Rect[] covered, float facadeZ, string id = "bus")
+        public static GameObject Bus(MonoBehaviour host, Rect[] covered, float facadeZ, string id = "bus", int level = 1)
         {
-            float xMin = float.MaxValue, xMax = float.MinValue, top = 0f;
-            foreach (var r in covered) { xMin = Mathf.Min(xMin, r.xMin); xMax = Mathf.Max(xMax, r.xMax); top = Mathf.Max(top, r.yMax); }
+            // the vehicle stands in front of the ground floor; windows of the floor above (levels 2..5) are hidden by
+            // the cargo stacked on its roof (DuelManager.TargetsFor), so the vehicle's size comes from the ground floor only
+            float low = float.MaxValue; foreach (var r in covered) low = Mathf.Min(low, r.yMin);
+            float xMin = float.MaxValue, xMax = float.MinValue, top = 0f, fullTop = 0f;
+            var upper = new List<Rect>();
+            foreach (var r in covered)
+            {
+                fullTop = Mathf.Max(fullTop, r.yMax);
+                if (r.yMin > low + 1.5f) { upper.Add(r); continue; }
+                xMin = Mathf.Min(xMin, r.xMin); xMax = Mathf.Max(xMax, r.xMax); top = Mathf.Max(top, r.yMax);
+            }
+            if (xMin > xMax) { foreach (var r in covered) { xMin = Mathf.Min(xMin, r.xMin); xMax = Mathf.Max(xMax, r.xMax); top = Mathf.Max(top, r.yMax); } }
             // a vehicle keeps its real length (bus 11, lorry 8.5, cart 3.5 m) even in front of a shop front wider than
             // itself: it parks on the middle of the covered glass (the rules count the window as hidden by its centre)
             float realLen = id == "cart" ? 3.5f : id == "truck" ? 8.5f : 11f;
@@ -123,6 +133,7 @@ namespace Sheytoonak.Prototype
                 var r = Spr(busArt, root, new Vector3(0f, 0f, -w * 0.5f), h);
                 r.flipX = busArt.name.StartsWith("bus");
                 Vector3 at = new Vector3((xMin + xMax) * 0.5f, 0f, facadeZ - w * 0.5f - 0.6f);
+                if (level > 1) Cargo(root, at, h, upper, fullTop, facadeZ, frontZ, w, r.sortingOrder, level - 1);
                 root.position = at + Vector3.left * 30f;
                 host.StartCoroutine(Slide(root, at, 1.1f));
                 return root.gameObject;
@@ -143,6 +154,48 @@ namespace Sheytoonak.Prototype
             root.position = park + Vector3.left * 30f;
             host.StartCoroutine(Slide(root, park, 1.1f));
             return root.gameObject;
+        }
+
+        /// <summary>
+        /// Levels of a vehicle poison (user 2026-11-09): «ارتفاع می‌گیرن … یسری جعبه و بسته و چمدون و این چیزها میاد روشون».
+        /// <paramref name="items"/> pieces of luggage piled on the roof, tall enough (as seen from the camera) to hide the
+        /// windows of the floor above that the rules hid. Painted Art/Poison/cargo_0..3 when they exist, else boxes.
+        /// </summary>
+        static void Cargo(Transform root, Vector3 at, float roofH, List<Rect> upper, float fullTop, float facadeZ, float frontZ, float w, int order, int items)
+        {
+            // the height the pile must reach in front of the facade, projected like the vehicle itself
+            float need = fullTop + 0.2f;
+            var cam = Camera.main;
+            if (cam != null)
+            {
+                Vector3 c = cam.transform.position;
+                float dFacade = facadeZ - c.z, dFront = frontZ - c.z;
+                if (dFacade > 0.5f && dFront > 0.5f) need = c.y + (fullTop + 0.2f - c.y) * dFront / dFacade;
+            }
+            float pile = Mathf.Max(0.8f * items, need - roofH);
+            float each = pile / items;
+            float cx = 0f; foreach (var r in upper) cx += r.center.x; cx = upper.Count > 0 ? cx / upper.Count - at.x : 0f;
+            float y = roofH;
+            for (int i = 0; i < items; i++)
+            {
+                float jitter = (i % 2 == 0 ? 0.25f : -0.3f);
+                var local = new Vector3(cx + jitter, y, -w * 0.5f - 0.05f);
+                var art = Art("cargo_" + (i % 4));
+                if (art != null)
+                {
+                    var sr = Spr(art, root, local, each * 1.05f);
+                    sr.sortingOrder = order;
+                }
+                else
+                {
+                    Color[] tint = { new Color(0.62f, 0.45f, 0.26f), new Color(0.6f, 0.15f, 0.12f), new Color(0.8f, 0.72f, 0.5f), new Color(0.25f, 0.35f, 0.6f) };
+                    float bw = Mathf.Lerp(1.3f, 2.1f, (i * 0.37f) % 1f);
+                    Part(PrimitiveType.Cube, root, local + Vector3.up * each * 0.5f, new Vector3(bw, each * 0.95f, 1.2f), M("cargo" + (i % 4), tint[i % 4]), new Vector3(0f, 0f, jitter * 6f));
+                    // a strap so it reads as luggage, not a block
+                    Part(PrimitiveType.Cube, root, local + new Vector3(0f, each * 0.5f, -0.61f), new Vector3(0.12f, each * 0.97f, 0.02f), M("strap", new Color(0.15f, 0.1f, 0.06f)));
+                }
+                y += each;
+            }
         }
 
         static IEnumerator Slide(Transform t, Vector3 to, float seconds)
@@ -228,10 +281,12 @@ namespace Sheytoonak.Prototype
 
         // ------------------------------------------------------------------ puddle (Reach)
 
-        public static GameObject Puddle(Vector3 at)
+        /// <param name="level">a deeper, wider puddle at each level (and the antidote plank must be as strong)</param>
+        public static GameObject Puddle(Vector3 at, int level = 1)
         {
             var root = new GameObject("Poison puddle").transform;
             root.position = at;
+            root.localScale = Vector3.one * (1f + 0.22f * (Mathf.Clamp(level, 1, 5) - 1));
             var pa = Art("puddle", 0.5f);
             if (pa != null) { Spr(pa, root, new Vector3(0f, 0.012f, 0f), 1.4f, true); return root.gameObject; }
             var water = M("water", new Color(0.35f, 0.55f, 0.75f, 0.7f), 0.95f);
@@ -243,13 +298,13 @@ namespace Sheytoonak.Prototype
         // ------------------------------------------------------------------ rain (Reach, bubakr)
 
         /// <summary>A rain cloud over the street in front of the house, bobbing, while the rain poison lasts (with a puddle).</summary>
-        public static GameObject Rain(MonoBehaviour host, Vector3 at)
+        public static GameObject Rain(MonoBehaviour host, Vector3 at, int level = 1)
         {
             var art = Art("rain", 0.5f);
             if (art == null) return null;
             var root = new GameObject("Poison rain").transform;
             root.position = at;
-            var r = Spr(art, root, Vector3.zero, 2.4f);
+            var r = Spr(art, root, Vector3.zero, 2.4f * (1f + 0.2f * (Mathf.Clamp(level, 1, 5) - 1)));
             host.StartCoroutine(Bob(root));
             return root.gameObject;
         }
@@ -263,13 +318,14 @@ namespace Sheytoonak.Prototype
         // ------------------------------------------------------------------ wind (Accuracy)
 
         /// <summary>White streaks blowing across in front of the facade while the wind poison lasts.</summary>
-        public static GameObject Wind(MonoBehaviour host, float facadeZ)
+        public static GameObject Wind(MonoBehaviour host, float facadeZ, int level = 1)
         {
             var root = new GameObject("Poison wind").transform;
             var streak = M("streak", new Color(1f, 1f, 1f, 0.45f));
             var list = new List<Transform>();
             // run 30: 14 streaks up to 9 m high cluttered the whole frame and the HUD band; keep a few, close to the wall
-            for (int i = 0; i < 7; i++)
+            // more streaks at each level (7 … 19): the wind you see is the wind the kick gets
+            for (int i = 0; i < 7 + 3 * (Mathf.Clamp(level, 1, 5) - 1); i++)
             {
                 var s = Part(PrimitiveType.Cube, root, Vector3.zero, new Vector3(Random.Range(0.8f, 1.6f), 0.03f, 0.03f), streak).transform;
                 s.position = new Vector3(Random.Range(-6f, 6f), Random.Range(1.6f, 5.5f), Random.Range(facadeZ - 2f, facadeZ - 0.6f));
