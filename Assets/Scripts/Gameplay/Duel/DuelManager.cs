@@ -652,6 +652,9 @@ namespace Sheytoonak
             return best;
         }
 
+        /// <summary>CI screenshots only: the windows a level-3 rug would hide now (no rules involved).</summary>
+        public ActivePoison CarpetForShot() => new ActivePoison { Tool = new Tool("carpet", "", Effect.Close, 3), Windows = CarpetColumn(3) };
+
         /// <summary>How far down the rug of this poison hangs: the bottom of the lowest window of its column within its level.</summary>
         public Rect CarpetSpan(ActivePoison p)
         {

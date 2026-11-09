@@ -108,6 +108,8 @@ namespace Sheytoonak.Prototype
                             if (duel.PlayerMayKick) duel.Poison(i);
                             yield return Shot("07-poison-" + i, 1.4f);
                         }
+                        var stageC = FindObjectOfType<DuelStage>();
+                        if (stageC != null) { stageC.CarpetForShot(); yield return Shot("07c-carpet-mid", 0.9f); yield return Shot("07d-carpet-down", 1.6f); }
                         yield return Shot("08-bot-turn", 4.0f);
                         yield return Shot("09-later", 5.0f);
                         // the challenge: a duel dealt at random (no draft), then home with the run under its button

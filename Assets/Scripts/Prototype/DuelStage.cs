@@ -612,6 +612,13 @@ namespace Sheytoonak.Prototype
             duel.BallReturned();
         }
 
+        /// <summary>CI screenshots only: hangs a level-3 rug as the poison would, without touching the rules.</summary>
+        public void CarpetForShot()
+        {
+            var p = duel.CarpetForShot();
+            if (p.Windows.Length > 0) PoisonProps.Carpet(this, duel.CarpetSpan(p), mapper.FacadeZ);
+        }
+
         void OnPoison(Side by, ActivePoison p)
         {
             var list = new List<GameObject>();
