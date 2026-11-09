@@ -576,8 +576,12 @@ namespace Sheytoonak
                 // and the "whole window inside the reach" test rejected the shop, so no vehicle ever had a target. Now
                 // the ground floor is every window whose sill is within 1.5 m of the lowest sill, and a vehicle counts a
                 // window as hidden when its centre is within the reach (it parks in front of a wide shop and hides it).
+                // ⚠️ user (2026-11-09): «گاری حتماً باید بیاد جلوی یه پنجره نشکسته؛ همینطور اتوبوس و فرش و کامیون». The
+                // ground floor used to be found among the *breakable* windows only: with the real ground floor all broken
+                // the first floor became "the lowest row", the vehicle parked on the road in front of broken glass and the
+                // rules hid first-floor windows it does not reach. The ground floor is now the house's, whatever is broken.
                 float lowest = float.MaxValue;
-                foreach (int w in list) lowest = Mathf.Min(lowest, mapper.WindowRects[w].yMin);
+                for (int w = 0; w < Rules.WindowCount; w++) if (w != Rules.SealedWindow) lowest = Mathf.Min(lowest, mapper.WindowRects[w].yMin);
                 var low = list.FindAll(w => mapper.WindowRects[w].yMin <= lowest + 1.5f);
                 low.Sort((a, b) => mapper.WindowRects[a].x.CompareTo(mapper.WindowRects[b].x));
                 float reach = VehicleReach(poison.Id);

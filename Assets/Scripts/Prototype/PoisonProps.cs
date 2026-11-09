@@ -132,7 +132,13 @@ namespace Sheytoonak.Prototype
                 h = Mathf.Clamp(h, real, real * 1.2f);
                 var r = Spr(busArt, root, new Vector3(0f, 0f, -w * 0.5f), h);
                 r.flipX = busArt.name.StartsWith("bus");
-                Vector3 at = new Vector3((xMin + xMax) * 0.5f, 0f, facadeZ - w * 0.5f - 0.6f);
+                // parked on a hidden (unbroken) window: the middle of the covered run can fall on broken glass between two
+                // covered windows, so the covered window nearest that middle is the parking spot
+                float mid = (xMin + xMax) * 0.5f, parkX = mid, bestD = float.MaxValue;
+                foreach (var cr in covered) if (cr.yMin <= low + 1.5f && Mathf.Abs(cr.center.x - mid) < bestD) { bestD = Mathf.Abs(cr.center.x - mid); parkX = cr.center.x; }
+                if (id == "cart") mid = parkX; // a cart is shorter than most windows: it stands squarely in front of one
+                else mid = Mathf.Lerp(mid, parkX, 0.5f);
+                Vector3 at = new Vector3(mid, 0f, facadeZ - w * 0.5f - 0.6f);
                 if (level > 1) Cargo(root, at, h, upper, fullTop, facadeZ, frontZ, w, r.sortingOrder, level - 1);
                 root.position = at + Vector3.left * 30f;
                 host.StartCoroutine(Slide(root, at, 1.1f));
@@ -292,40 +298,71 @@ namespace Sheytoonak.Prototype
             var root = new GameObject("Poison carpet").transform;
             root.position = new Vector3(span.center.x, span.yMax, facadeZ - 0.06f); // pivot at the roof edge
             var tex = Resources.Load<Texture2D>("Art/Poison/carpet");
-            Transform body;
-            if (tex != null)
-            {
-                float wantRatio = span.height / Mathf.Max(0.01f, span.width);           // height / width on the wall
-                float texRatio = tex.height / (float)tex.width;
-                float shownH = Mathf.Min(tex.height, tex.width * wantRatio);            // pixels of the painting shown
-                var sp = Sprite.Create(tex, new Rect(0, 0, tex.width, shownH), new Vector2(0.5f, 1f), 100f);
-                var r = new GameObject("rug").AddComponent<SpriteRenderer>(); r.sprite = sp;
-                body = r.transform; body.SetParent(root, false);
-                body.localScale = new Vector3(span.width / sp.bounds.size.x, span.height / sp.bounds.size.y, 1f);
-            }
-            else
-            {
-                body = new GameObject("rug").transform; body.SetParent(root, false);
-                var red = M("rug", new Color(0.62f, 0.12f, 0.12f)); var gold = M("rugstripe", new Color(0.85f, 0.65f, 0.25f));
-                Part(PrimitiveType.Cube, body, new Vector3(0f, -0.5f, 0f), new Vector3(1f, 1f, 0.02f), red);
-                for (int i = 1; i < 6; i++) Part(PrimitiveType.Cube, body, new Vector3(0f, -i / 6f, -0.012f), new Vector3(0.9f, 0.025f, 0.01f), gold);
-                body.localScale = new Vector3(span.width, span.height, 1f);
-            }
-            host.StartCoroutine(Unroll(body));
+            if (tex != null) { host.StartCoroutine(Unroll(root, tex, span)); return root.gameObject; }
+            var body = new GameObject("rug").transform; body.SetParent(root, false);
+            var red = M("rug", new Color(0.62f, 0.12f, 0.12f)); var gold = M("rugstripe", new Color(0.85f, 0.65f, 0.25f));
+            Part(PrimitiveType.Cube, body, new Vector3(0f, -0.5f, 0f), new Vector3(1f, 1f, 0.02f), red);
+            for (int i = 1; i < 6; i++) Part(PrimitiveType.Cube, body, new Vector3(0f, -i / 6f, -0.012f), new Vector3(0.9f, 0.025f, 0.01f), gold);
+            body.localScale = new Vector3(span.width, span.height, 1f);
             return root.gameObject;
         }
 
-        static IEnumerator Unroll(Transform body)
+        /// <summary>
+        /// User (2026-11-09): «فرش باید فرآیند پهن شدن داشته باشه، عین یه فرش لوله شده که از بالای پشت بوم پهن میشه و تو دو
+        /// ثانیه کل پنجره رو بگیره … میتونی چند صدتا کات بدی از فرش و فرایند انیمیشنی بسازی». 120 cuts of the painting
+        /// (one sprite each, all sharing the one texture): the part already hanging grows from the roof down at its true
+        /// scale (never squashed), and under its lower edge rides the roll -- the next band of the rug pressed into a
+        /// cylinder, darker at its rim, thinner as it unwinds. The fringe, at the end of the rug, comes out last.
+        /// Smooth (ease-in-out, 2 s), no jumps: every frame picks the cut for its exact length.
+        /// </summary>
+        static IEnumerator Unroll(Transform root, Texture2D tex, Rect span)
         {
-            if (body == null) yield break;
-            Vector3 full = body.localScale;
-            for (float t = 0f; t < 1f && body != null; t += Time.deltaTime / 0.7f)
+            const int Cuts = 120; const float Seconds = 2f;
+            float scale = span.width / (tex.width / 100f);              // painting pixels → metres (same both ways)
+            float shownPx = Mathf.Min(tex.height, span.height / scale * 100f); // the part of the rug that will hang
+            var cuts = new Sprite[Cuts + 1];
+            for (int i = 1; i <= Cuts; i++)
             {
-                float e = 1f - (1f - t) * (1f - t);
-                body.localScale = new Vector3(full.x, full.y * Mathf.Max(0.02f, e), full.z);
+                float h = Mathf.Max(1f, shownPx * i / Cuts);
+                cuts[i] = Sprite.Create(tex, new Rect(0, tex.height - h, tex.width, h), new Vector2(0.5f, 1f), 100f);
+            }
+            var hang = new GameObject("rug").AddComponent<SpriteRenderer>();
+            hang.transform.SetParent(root, false); hang.transform.localScale = Vector3.one * scale;
+            var roll = new GameObject("roll").AddComponent<SpriteRenderer>();
+            roll.transform.SetParent(root, false);
+            roll.sortingOrder = hang.sortingOrder + 1;
+            var rim = new GameObject("rim").AddComponent<SpriteRenderer>();
+            rim.transform.SetParent(roll.transform, false);
+            rim.sortingOrder = roll.sortingOrder + 1;
+            rim.sprite = Sprite.Create(Texture2D.whiteTexture, new Rect(0, 0, 4, 4), new Vector2(0.5f, 0.5f), 4f);
+            rim.color = new Color(0f, 0f, 0f, 0.35f);
+            float diam0 = Mathf.Clamp(span.width * 0.32f, 0.25f, 0.6f); // the rolled rug's thickness on the roof
+            for (float t = 0f; ; t += Time.deltaTime / Seconds)
+            {
+                if (root == null) yield break;
+                float k = Mathf.Clamp01(t), e = k * k * (3f - 2f * k);  // smoothstep: it starts slow, rolls, settles
+                int i = Mathf.Clamp(Mathf.RoundToInt(e * Cuts), 1, Cuts);
+                hang.sprite = cuts[i];
+                float hungPx = shownPx * i / Cuts, left = shownPx - hungPx;
+                float diam = diam0 * Mathf.Sqrt(left / shownPx);           // what is still rolled up
+                if (left > 1f && diam > 0.02f)
+                {
+                    // the roll: the band right under the hanging part, pressed to the roll's thickness
+                    float band = Mathf.Min(left, Mathf.Max(8f, tex.height * 0.06f));
+                    if (roll.sprite != null) Object.Destroy(roll.sprite);
+                    roll.sprite = Sprite.Create(tex, new Rect(0, tex.height - hungPx - band, tex.width, band), new Vector2(0.5f, 0.5f), 100f);
+                    roll.transform.localPosition = new Vector3(0f, -hungPx / 100f * scale - diam * 0.35f, -0.03f);
+                    roll.transform.localScale = new Vector3(scale * 1.02f, diam / (band / 100f), 1f);
+                    roll.color = new Color(0.8f, 0.76f, 0.74f);
+                    rim.transform.localScale = new Vector3(tex.width / 100f, band / 100f * 0.18f, 1f);
+                    rim.transform.localPosition = new Vector3(0f, -band / 100f * 0.42f, -0.01f);
+                    roll.enabled = rim.enabled = true;
+                }
+                else roll.enabled = rim.enabled = false;
+                if (k >= 1f) break;
                 yield return null;
             }
-            if (body != null) body.localScale = full;
+            if (roll != null) Object.Destroy(roll.gameObject);
         }
 
         // ------------------------------------------------------------------ puddle (Reach)
