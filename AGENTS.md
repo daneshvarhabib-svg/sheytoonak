@@ -18,3 +18,7 @@ Sheytoonak is a **Unity** mobile game (portrait, Android first, iOS later). Read
   unavoidable, say so plainly.
 - Small, reviewable changes, each on its own branch.
 - Commit `.meta` files together with their assets.
+- **Prompts (art, sound, voice) always go in the chat message itself, each in its own code block** with the
+  target file name just above it, so the owner can copy it with one tap on the phone. Owner (2026-11-09):
+  «پرامپت چیزهایی که لازم داری … این‌جا یه جوری که بتونم اتوماتیک کپی کنم بذار؛ این رو راجع به همه پرامپت‌ها
+  بذار». Writing them only into `docs/ART_SPEC.fa.md` is not enough; keep them there too.
