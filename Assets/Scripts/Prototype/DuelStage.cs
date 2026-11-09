@@ -626,7 +626,8 @@ namespace Sheytoonak.Prototype
                     }
                     break;
                 case Effect.Close:
-                    foreach (int w in p.Windows) list.Add(PoisonProps.OpenWindow(mapper.WindowRects[w], mapper.FacadeZ));
+                    if (p.Tool.Id == "carpet") { if (p.Windows.Length > 0) list.Add(PoisonProps.Carpet(this, duel.CarpetSpan(p), mapper.FacadeZ)); }
+                    else foreach (int w in p.Windows) list.Add(PoisonProps.OpenWindow(mapper.WindowRects[w], mapper.FacadeZ));
                     break;
                 case Effect.Reach:
                     // a little towards the road: right at the ball it sat under the HUD turn line (run 30)

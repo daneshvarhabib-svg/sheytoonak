@@ -39,7 +39,7 @@ namespace Sheytoonak.Prototype
         internal static void Badge(Rect r, string icon, Color bg)
         {
             var o = GUI.color; GUI.color = bg; GUI.DrawTexture(r, Texture2D.whiteTexture);
-            GUI.color = Color.white; var t = Load("Art/Icons/" + icon);
+            GUI.color = Color.white; var t = DuelHud.Icon(icon); // with the stand-ins of icons not painted yet
             if (t != null) GUI.DrawTexture(new Rect(r.x + r.width * 0.14f, r.y + r.height * 0.14f, r.width * 0.72f, r.height * 0.72f), t, ScaleMode.ScaleToFit);
             GUI.color = o;
         }

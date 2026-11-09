@@ -279,6 +279,55 @@ namespace Sheytoonak.Prototype
             return root.gameObject;
         }
 
+        // ------------------------------------------------------------------ carpet (Close, rima)
+
+        /// <summary>
+        /// A rug thrown over the parapet, unrolling down the facade over <paramref name="span"/> (roof to just under the
+        /// lowest covered window). Art/Poison/carpet.png is a long hanging rug, fringe at the bottom: the part that shows
+        /// is cut from its bottom up (the rest is "still on the roof"), so the fringe always ends the rug; only when the
+        /// span is longer than the painting is it stretched. Until it is painted, a striped red rug.
+        /// </summary>
+        public static GameObject Carpet(MonoBehaviour host, Rect span, float facadeZ)
+        {
+            var root = new GameObject("Poison carpet").transform;
+            root.position = new Vector3(span.center.x, span.yMax, facadeZ - 0.06f); // pivot at the roof edge
+            var tex = Resources.Load<Texture2D>("Art/Poison/carpet");
+            Transform body;
+            if (tex != null)
+            {
+                float wantRatio = span.height / Mathf.Max(0.01f, span.width);           // height / width on the wall
+                float texRatio = tex.height / (float)tex.width;
+                float shownH = Mathf.Min(tex.height, tex.width * wantRatio);            // pixels of the painting shown
+                var sp = Sprite.Create(tex, new Rect(0, 0, tex.width, shownH), new Vector2(0.5f, 1f), 100f);
+                var r = new GameObject("rug").AddComponent<SpriteRenderer>(); r.sprite = sp;
+                body = r.transform; body.SetParent(root, false);
+                body.localScale = new Vector3(span.width / sp.bounds.size.x, span.height / sp.bounds.size.y, 1f);
+            }
+            else
+            {
+                body = new GameObject("rug").transform; body.SetParent(root, false);
+                var red = M("rug", new Color(0.62f, 0.12f, 0.12f)); var gold = M("rugstripe", new Color(0.85f, 0.65f, 0.25f));
+                Part(PrimitiveType.Cube, body, new Vector3(0f, -0.5f, 0f), new Vector3(1f, 1f, 0.02f), red);
+                for (int i = 1; i < 6; i++) Part(PrimitiveType.Cube, body, new Vector3(0f, -i / 6f, -0.012f), new Vector3(0.9f, 0.025f, 0.01f), gold);
+                body.localScale = new Vector3(span.width, span.height, 1f);
+            }
+            host.StartCoroutine(Unroll(body));
+            return root.gameObject;
+        }
+
+        static IEnumerator Unroll(Transform body)
+        {
+            if (body == null) yield break;
+            Vector3 full = body.localScale;
+            for (float t = 0f; t < 1f && body != null; t += Time.deltaTime / 0.7f)
+            {
+                float e = 1f - (1f - t) * (1f - t);
+                body.localScale = new Vector3(full.x, full.y * Mathf.Max(0.02f, e), full.z);
+                yield return null;
+            }
+            if (body != null) body.localScale = full;
+        }
+
         // ------------------------------------------------------------------ puddle (Reach)
 
         /// <param name="level">a deeper, wider puddle at each level (and the antidote plank must be as strong)</param>

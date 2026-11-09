@@ -63,7 +63,11 @@ namespace Sheytoonak.Core.Duel
             new HeroDef("rima", "ريما الشرشوحة الصيداوية",
                 // ⚠️ until 2026-11-04 the neighbour stayed until an antidote (pebble). User: «اون سه تا شیشه‌ای که بازه چیه؟ … نباید بعد از
                 // یکی دو نوبت خودش بسته شه؟» -- with every other window broken the duel could not end. Now she shuts it after two turns.
-                new Tool("open_window", "الجار فتح الشباك", Effect.Close, 1, Lifetime.OneTurn) /* two turns until the human test (review 2026-11-07 §2.4) */,
+                // User (2026-11-09): «تصویر زنی که پنجره رو باز می‌کنه خیلی نمی‌خوره به کادر … به جای زنی که پنجره رو باز می‌کنه یه
+                // فرش از پشت بوم آویزون کنیم روی پنجره‌ای که طبقه بالا هست … هرچی قدرتش بیشتر شد طول فرش بیشتر بشه و بیاد
+                // تعداد پنجره‌های پایینترش رو هم بگیره». The neighbour is gone; a rug hung from the roof covers one column of
+                // windows from the top, one more window down at each level (DuelManager.TargetsFor).
+                new Tool("carpet", "سجّادة عالسطح", Effect.Close, 1, Lifetime.OneTurn),
                 new Tool("plank", "لوح عالجورة", Effect.Reach, 1)),
             new HeroDef("toni", "طوني الزعران البيروتي",
                 new Tool("puddle", "جورة مي", Effect.Reach, 1, Lifetime.OneTurn),

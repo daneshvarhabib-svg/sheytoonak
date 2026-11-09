@@ -147,6 +147,7 @@ namespace Sheytoonak
                 levels = ToolLevels.Parse(PlayerPrefs.GetString(PrefLevels, ""));
                 var old = PlayerPrefs.GetString(PrefCards, "");
                 if (old.Length > 0) { levels.AddCards(old.Split(',')); PlayerPrefs.DeleteKey(PrefCards); SaveLevels(); }
+                if (levels.Rename("open_window", "carpet")) SaveLevels();
                 return levels;
             }
         }
@@ -612,10 +613,55 @@ namespace Sheytoonak
                 int take = Mathf.Min(row.Count, list.Count - 1);
                 return row.GetRange(0, Mathf.Max(0, take)).ToArray();
             }
+            if (poison.Id == "carpet") return CarpetColumn(poison.Power);
             list.Sort((a, b) => Rules.ShownValue(b).CompareTo(Rules.ShownValue(a)));
             // Close shuts 1/1/2/2/3 windows by level, never the last breakable one
             int shut = Mathf.Min(KickModifiers.CloseCount(poison.Power), list.Count - 1);
             return shut > 0 ? list.GetRange(0, shut).ToArray() : new int[0];
+        }
+
+        /// <summary>
+        /// The rug hangs from the roof down one column of windows: the top window at level 1, one more window down at each
+        /// level. The column hiding the most breakable windows is chosen; a broken window under the rug still counts for
+        /// its length (the rug hangs over it) but only breakable ones are targets. Never the last breakable window.
+        /// </summary>
+        int[] CarpetColumn(int level)
+        {
+            var rects = mapper.WindowRects;
+            var cols = new System.Collections.Generic.List<System.Collections.Generic.List<int>>();
+            for (int w = 0; w < rects.Length; w++)
+            {
+                if (w == Rules.SealedWindow) continue;
+                var col = cols.Find(c => Mathf.Abs(rects[c[0]].center.x - rects[w].center.x) < Mathf.Max(rects[c[0]].width, rects[w].width) * 0.6f);
+                if (col == null) cols.Add(new System.Collections.Generic.List<int> { w }); else col.Add(w);
+            }
+            int breakable = Rules.BreakableCount();
+            int[] best = new int[0];
+            foreach (var col in cols)
+            {
+                col.Sort((a, b) => rects[b].center.y.CompareTo(rects[a].center.y)); // top first
+                var hid = new System.Collections.Generic.List<int>();
+                for (int i = 0; i < col.Count && i < level; i++) if (Rules.IsBreakable(col[i])) hid.Add(col[i]);
+                while (hid.Count > 0 && hid.Count >= breakable) hid.RemoveAt(hid.Count - 1);
+                if (hid.Count > best.Length) best = hid.ToArray();
+            }
+            return best;
+        }
+
+        /// <summary>How far down the rug of this poison hangs: the bottom of the lowest window of its column within its level.</summary>
+        public Rect CarpetSpan(ActivePoison p)
+        {
+            var rects = mapper.WindowRects;
+            if (p.Windows.Length == 0) return new Rect();
+            float x = 0f, wMax = 0f, low = float.MaxValue;
+            foreach (int w in p.Windows) { x += rects[w].center.x; wMax = Mathf.Max(wMax, rects[w].width); low = Mathf.Min(low, rects[w].yMin); }
+            x /= p.Windows.Length;
+            // ⚠️ RoofHeight is set before the stage rescales the painting (the rects grow, it does not): it is only
+            // trusted when it lies just above the top windows, otherwise the rug starts a little over the highest window
+            float topMax = 0f; foreach (var r in rects) topMax = Mathf.Max(topMax, r.yMax);
+            float roof = mapper.RoofHeight;
+            if (roof < topMax + 0.2f || roof > topMax + 2.5f) roof = topMax + 0.6f;
+            return new Rect(x - wMax * 0.7f, low - 0.15f, wMax * 1.4f, roof - (low - 0.15f));
         }
 
         // ------------------------------------------------------------------ kicks

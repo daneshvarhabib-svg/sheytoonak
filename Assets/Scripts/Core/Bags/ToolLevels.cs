@@ -59,6 +59,15 @@ namespace Sheytoonak.Core.Bags
             return Reject.None;
         }
 
+        /// <summary>A tool was renamed (open_window → carpet, 2026-11-09): its level and cards move with it.</summary>
+        public bool Rename(string from, string to)
+        {
+            if (!level.ContainsKey(from) && !cards.ContainsKey(from)) return false;
+            level[to] = Math.Max(Level(from), Level(to)); cards[to] = Cards(from) + Cards(to);
+            level.Remove(from); cards.Remove(from);
+            return true;
+        }
+
         /// <summary>Tests and screenshots only.</summary>
         public void SetLevel(string id, int l) { level[id] = Math.Max(1, Math.Min(MaxLevel, l)); }
 

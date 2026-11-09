@@ -466,3 +466,7 @@ Stability ~۴۰. هر خط یک فایل → `Audio/Heroes/<id>/kick_01..03`. م
 - `Poison/cargo_1.png`: `Same style and background: two old leather suitcases strapped on top of each other, one red-brown and one faded blue, with stickers worn off, seen from the front. No text.`
 - `Poison/cargo_2.png`: `Same style and background: a pile of stuffed jute sacks and a bundle wrapped in a patterned blanket, tied with rope, seen from the front. No text.`
 - `Poison/cargo_3.png`: `Same style and background: a rolled striped mattress and a plastic chair tied on top of a wooden crate, seen from the front. No text.`
+
+### فرشِ ریما (به‌جای همسایه‌ی پنجره‌باز، ۱۹ آبان)
+- `Poison/carpet.png` (عمودی و بلند، حدود ۱ به ۴): `Cut-out for a game, on a flat solid bright green background #00FF00, no ground, no shadow, no wall, no rope. Same realistic hand-painted style as a weathered Beirut street painting. A long, narrow, old Persian-style rug hanging straight down, seen flat from the front, deep red with dark blue and cream patterns, worn and slightly faded, long fringe at the bottom end only, the top edge cut off by the top of the frame. Very tall and narrow, about 1:4. No text.`
+- `Icons/carpet.png` (مربع): `Game icon, on a flat solid bright green background #00FF00: a small red patterned rug hanging over the edge of a flat roof, seen from the front, bold simple shapes, same painted style as the other icons, no text.`
