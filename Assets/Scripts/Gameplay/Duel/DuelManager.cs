@@ -640,10 +640,44 @@ namespace Sheytoonak
             float spread = Mathf.Min(0.15f, house != null ? house.returnSpreadX : 0.15f);
             float x = Mathf.Clamp(foot.X + Random.Range(-1f, 1f) * spread, -config.laneHalfWidth, config.laneHalfWidth);
             float z = foot.Z + Random.Range(config.returnLandingDepth.x, config.returnLandingDepth.y);
-            var d = KickSolver.BallisticVelocity(new Vec3(from.x, from.y, from.z), new Vec3(x, ball.Radius, z), house != null ? house.returnFlightTime : 1.6f, -Physics.gravity.y);
+            float flight = house != null ? house.returnFlightTime : 1.6f;
+            if (rallyHits + 1 >= HitsPerBall)
+            {
+                // User (2026-11-09): «اگر نشد و خورد به دیوار از همون جایی که خورده به دیوار با سرعت کمتر برگرده سمت بازیکن».
+                // The last hit has no follow-up, so its rebound is not shaped for the foot: it drops off the wall slower and
+                // lands well short of the kicker, bounces twice there and rolls the rest of the way (no vanishing: it used to
+                // land at the foot, bounce on past him into the kill zone behind and get re-placed in front).
+                z = foot.Z + Random.Range(3.2f, 4.6f);
+                flight *= 1.15f;
+                real *= 0.5f;
+            }
+            var d = KickSolver.BallisticVelocity(new Vec3(from.x, from.y, from.z), new Vec3(x, ball.Radius, z), flight, -Physics.gravity.y);
             ball.SetVelocity(Vector3.Lerp(real, new Vector3(d.X, d.Y, d.Z), config.returnAssist));
             returning = true; bouncesSinceWall = 0;
         }
+
+        /// <summary>True while a swipe now would kick: my turn with the ball at the foot, or a live rebound I may still hit.</summary>
+        public bool CanAimNow
+        {
+            get
+            {
+                if (Rules == null || Rules.Finished || Rules.Current != Me) return false;
+                if (kickActive) return kicker == Me && returning && ball != null && ball.InPlay && rallyHits + 1 < HitsPerBall;
+                return BallSettled && KickArmed;
+            }
+        }
+
+        /// <summary>The launch a gesture would give right now, without the random contact error (for the aim arc).</summary>
+        public Vector3 PreviewLaunch(KickGesture g, out Vector3 from)
+        {
+            FitAimToHouse();
+            from = kickActive && ball != null ? ball.transform.position : foot.StrikeSpot + Vector3.up * ball.Radius;
+            var res = KickSolver.SolveAtWall(g, 0f, 1f, config.kick, 0f, 0f, mapper.FacadeZ - from.z, from.y, mapper.MaxTargetHeight, mapper.MinTargetHeight(config.kick.MinTargetHeight));
+            return new Vector3(res.Velocity.X, res.Velocity.Y, res.Velocity.Z);
+        }
+
+        /// <summary>The glass that ends the duel just broke (the stage slows it down).</summary>
+        public event Action<Vector3> FinalBlow;
 
         IEnumerator Intercept(float after)
         {
@@ -744,7 +778,8 @@ namespace Sheytoonak
 
         /// <summary>Hits already made on this ball in the current action (first kick + rekicks).</summary>
         public int HitsUsed => kickActive || hitsToCome ? rallyHits + 1 : 0;
-        public const int HitsPerBall = 3;
+        // User (2026-11-09): «به جز ضربه اول ۳ ضربه داریم» -- the kick plus three hits on the rebound.
+        public const int HitsPerBall = 4;
         bool hitsToCome; // the ball is rolling back to the foot and the same action goes on with another hit
 
         void FinishKick()
@@ -862,6 +897,7 @@ namespace Sheytoonak
                 if (Rules.IsBreakable(w))
                 {
                     ball.Hide();
+                    if (Rules.Windows[(int)kicker] + Rules.WindowValue[w] >= Rules.Majority) FinalBlow?.Invoke(point);
                     GameEvents.RaiseWindowBroken(w, point);
                     if (resolveRoutine == null) resolveRoutine = StartCoroutine(ResolveAfter(1.0f));
                     return;

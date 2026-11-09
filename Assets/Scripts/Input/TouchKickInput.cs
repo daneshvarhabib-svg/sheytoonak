@@ -41,7 +41,7 @@ namespace Sheytoonak
         float ignoreUntil;
 
         /// <summary>A UI button was just tapped: do not read that same press/release as a kick.</summary>
-        public void IgnoreFor(float seconds) { ignoreUntil = Time.unscaledTime + seconds; pressing = false; }
+        public void IgnoreFor(float seconds) { ignoreUntil = Time.unscaledTime + seconds; pressing = false; Dragging = false; }
 
         /// <summary>
         /// Height of the strip along the bottom of the screen that is UI, in pixels: a press that starts there is never a
@@ -64,24 +64,21 @@ namespace Sheytoonak
                 // Now only the button blocks at the strip's left and right ends are dead.
                 bool onButtons = pos.y <= DeadZoneHeight && (pos.x <= DeadZoneLeft || pos.x >= Screen.width - DeadZoneRight);
                 if (ptr.press.wasPressedThisFrame && Time.unscaledTime >= ignoreUntil && !onButtons) { pressing = true; pressPos = pos; pressTime = Time.unscaledTime; }
+                // the swipe so far, for the aim arc (AimArc) -- same rule as the kick fired on release
+                KickGesture live = default;
+                Dragging = pressing && GestureFor(pos - pressPos, out live);
+                if (Dragging) Live = live;
                 if (pressing && moveWithFinger) Lateral = Mathf.Clamp((pressPos.x / Mathf.Max(1, Screen.width)) * 2f - 1f, -1f, 1f);
                 if (pressing && ptr.press.wasReleasedThisFrame)
                 {
-                    pressing = false;
+                    pressing = false; Dragging = false;
                     // User (2026-11-08): «فرد موقع زدن توپ انگشتش رو بکشه روی صفحه از مبدأ توپ به سمت پنجره‌ها؛ هرچی بیشتر بکشه
                     // شدتش بیشتر می‌شه؛ جهتش هم مهمه». The kick is the swipe: its length is the power (a swipe of 55 % of the
                     // screen height = full), its angle from straight up is the aim (45 degrees = full yaw). A tap or a
                     // downward flick is not a kick. The rebound is hit the same way.
                     // User (2026-11-08, second pass): «الگوش باید ساده باشه؛ دستش رو می‌ذاره نزدیک توپ و به یه سمتی حرکت می‌ده،
                     // انگشتش رو که برداشت باید ضربه فایر شه». No time limit, any direction except back toward the player.
-                    Vector2 d = pos - pressPos;
-                    float h = Mathf.Max(1f, Screen.height);
-                    if (d.y > -0.3f * Mathf.Abs(d.x) && d.magnitude > h * minSwipe)
-                    {
-                        float power = Mathf.Clamp01((d.magnitude - h * minSwipe) / (h * (fullSwipe - minSwipe)));
-                        float aim = Mathf.Clamp(Mathf.Atan2(d.x, d.y) * Mathf.Rad2Deg / fullAimDeg, -1f, 1f);
-                        Kicked?.Invoke(new KickGesture(power, aim, 0f));
-                    }
+                    if (GestureFor(pos - pressPos, out var g)) Kicked?.Invoke(g);
                 }
             }
 
@@ -99,5 +96,20 @@ namespace Sheytoonak
         }
 
         public void Recenter() => Lateral = 0f;
+
+        /// <summary>True while a finger is down and its swipe would already be a kick; <see cref="Live"/> is that kick.</summary>
+        public bool Dragging { get; private set; }
+        public KickGesture Live { get; private set; }
+
+        bool GestureFor(Vector2 d, out KickGesture g)
+        {
+            g = default;
+            float h = Mathf.Max(1f, Screen.height);
+            if (!(d.y > -0.3f * Mathf.Abs(d.x) && d.magnitude > h * minSwipe)) return false;
+            float power = Mathf.Clamp01((d.magnitude - h * minSwipe) / (h * (fullSwipe - minSwipe)));
+            float aim = Mathf.Clamp(Mathf.Atan2(d.x, d.y) * Mathf.Rad2Deg / fullAimDeg, -1f, 1f);
+            g = new KickGesture(power, aim, 0f);
+            return true;
+        }
     }
 }

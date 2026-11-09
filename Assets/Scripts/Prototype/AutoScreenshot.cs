@@ -46,7 +46,9 @@ namespace Sheytoonak.Prototype
                 StartCoroutine(Watchdog());
                 var boot = FindFirstObjectByType<PrototypeBootstrap>();
                 Debug.Log("SHEYTOONAK SHOTS bootstrap " + (boot != null ? "found" : "missing"));
-                yield return Shot("01-start", 1.5f);
+                yield return Shot("00-splash", 1.4f);            // logo has dropped, loading bar half way
+                while (SplashOverlay.Showing) yield return null;  // the lobby only after the bar is full
+                yield return Shot("01-start", 0.3f);
                 if (boot != null)
                 {
                     var duel = boot.Duel;

@@ -90,14 +90,9 @@ namespace Sheytoonak.Prototype
 
         // Splash (user 2026-11-07: «بذار رو بازی، نوشته بیاد بالای اسپلش»): the painted alley (Art/UI/splash) with the tin
         // sign logo (Art/UI/logo) hanging over it for a few seconds after boot; a tap skips it.
-        Texture2D splashTex, logoTex; float splashUntil;
-        const float SplashSeconds = 3.2f;
 
         void Awake()
         {
-            splashTex = Resources.Load<Texture2D>("Art/UI/splash");
-            logoTex = Resources.Load<Texture2D>("Art/UI/logo");
-            splashUntil = splashTex != null ? Time.realtimeSinceStartup + SplashSeconds : 0f;
             EnsureMaterials();
             BuildCameraAndLight();
             BuildStreet();
@@ -333,6 +328,9 @@ namespace Sheytoonak.Prototype
             gameGo.AddComponent<ProceduralSfx>();
             gameGo.AddComponent<CurseVoice>();
             gameGo.AddComponent<MusicPlayer>();
+            gameGo.AddComponent<SplashOverlay>();
+            var arc = gameGo.AddComponent<AimArc>(); arc.duel = duelGame; arc.touch = touch;
+            var feel = gameGo.AddComponent<KickFeel>(); feel.duel = duelGame; feel.shake = shake;
             gameGo.AddComponent<HeroVoice>();
             gameGo.AddComponent<StreetLife>();
             if (!duel)
@@ -1246,6 +1244,7 @@ namespace Sheytoonak.Prototype
         void OnWindowBroken(int i, Vector3 point)
         {
             if (i < 0 || i >= windowRenderers.Length) return;
+            StartCoroutine(PaneFlash(windowRenderers[i].transform.position, windowRenderers[i].transform.lossyScale));
             windowRenderers[i].enabled = true; // the pane shows the dark room with a web of cracks (its material is set at build time)
             if (ownPanes) OwnHoleWhereHit(i, point);
             else if (duel && !paintedBroken) HoleWhereHit(i, point);
@@ -1333,6 +1332,17 @@ namespace Sheytoonak.Prototype
         /// The neighbour cut out of her painting (Art/Poison/granny: only the woman, no frame, so the window itself is not
         /// changed) rises in the smashed window, shakes her fist, a curse bubble pops over her head, then she ducks back.
         /// </summary>
+        /// <summary>Research proposal 18: a white flash on the pane for ~120 ms of real time (the hit stop slows game time).</summary>
+        IEnumerator PaneFlash(Vector3 at, Vector3 size)
+        {
+            var q = GameObject.CreatePrimitive(PrimitiveType.Quad); Strip(q);
+            q.transform.position = at + new Vector3(0f, 0f, -0.05f);
+            q.transform.localScale = new Vector3(size.x * 1.08f, size.y * 1.08f, 1f);
+            var m = new Material(Shader.Find("Sprites/Default")); q.GetComponent<Renderer>().sharedMaterial = m;
+            for (float t = 0f; t < 0.12f; t += Time.unscaledDeltaTime) { m.color = new Color(1f, 1f, 0.95f, 0.85f * (1f - t / 0.12f)); yield return null; }
+            Destroy(q);
+        }
+
         int brokenThisRound, nextResidentAt = 2, lastResident = -1;
         void OnRoundStarted() { brokenThisRound = 0; nextResidentAt = 2; }
 
@@ -1614,35 +1624,8 @@ namespace Sheytoonak.Prototype
 
         // ------------------------------------------------------------------ HUD (spoken Levantine Arabic, see Ar.cs)
 
-        bool DrawSplash()
-        {
-            if (splashTex == null || Time.realtimeSinceStartup >= splashUntil) return false;
-            if (Input.touchCount > 0 || Input.GetMouseButton(0)) { splashUntil = 0f; return false; }
-            float left = splashUntil - Time.realtimeSinceStartup;
-            float a = Mathf.Clamp01(left / 0.5f); // fades out in the last half second
-            // cover the whole screen, keep the aspect
-            float sw = Screen.width, sh = Screen.height;
-            float k = Mathf.Max(sw / splashTex.width, sh / splashTex.height);
-            float w = splashTex.width * k, h = splashTex.height * k;
-            var old = GUI.color;
-            GUI.color = new Color(1f, 1f, 1f, a);
-            GUI.DrawTexture(new Rect((sw - w) * 0.5f, (sh - h) * 0.5f, w, h), splashTex, ScaleMode.StretchToFill);
-            if (logoTex != null)
-            {
-                // the sign drops in from above during the first 0.6 s and settles top-centre, ~46 % of the width
-                float t = Mathf.Clamp01((SplashSeconds - left) / 0.6f);
-                float drop = (1f - t) * (1f - t) * sh * 0.5f;
-                // run 155: at 46 % the sign hid the kids' heads; 34 %, hung from the top edge, leaves the painting readable
-                float lw = sw * 0.34f, lh = lw * logoTex.height / logoTex.width;
-                GUI.DrawTexture(new Rect((sw - lw) * 0.5f, -lh * 0.06f - drop, lw, lh), logoTex, ScaleMode.StretchToFill);
-            }
-            GUI.color = old;
-            return true;
-        }
-
         void OnGUI()
         {
-            if (DrawSplash()) return;
             float u = Mathf.Max(1f, Screen.height / 900f);
             var font = Ar.Font;
             var label = new GUIStyle(GUI.skin.label) { fontSize = Mathf.RoundToInt(24 * u), normal = { textColor = Color.white }, font = font };
@@ -1721,6 +1704,10 @@ namespace Sheytoonak.Prototype
             var titleR = new Rect(pad, top, Mathf.Min(330 * u, Screen.width * 0.3f), barH);
             Plank(titleR);
             GUI.Label(titleR, Ar.T(Ar.Title), num);
+            // research proposal 18: the buzz on a broken window can be switched off
+            var vibR = new Rect(titleR.xMax + 12 * u, top, Mathf.Min(170 * u, Screen.width * 0.14f), barH);
+            Plank(vibR);
+            if (GUI.Button(vibR, Ar.T(KickFeel.VibrateOn ? Ar.VibrateOn : Ar.VibrateOff), small)) { KickFeel.VibrateOn = !KickFeel.VibrateOn; touch?.IgnoreFor(0.4f); }
 
             // arena card in the middle
             float cw = Mathf.Min(430 * u, Screen.width * 0.34f), ch = cw * 0.56f;

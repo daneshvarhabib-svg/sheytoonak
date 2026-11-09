@@ -53,10 +53,12 @@ namespace Sheytoonak
         public static string Reward(int shards, int curseDelta, int curses) => "زجاج: +" + N(shards) + "   فحش: " + (curseDelta >= 0 ? "+" : "−") + N(Math.Abs(curseDelta)) + " (" + N(curses) + ")";
         public static string Timer(int seconds) => N(seconds) + " ث";
         public const string Title = "مدينة فاجعة";
-        public const string Intro = "كبّ الطابة عالشبابيك! دقّ عالشاشة وين ما بدك تخبط الطابة: تحت الشاشة = الشبابيك التحتانية، فوق = الشبابيك الفوقانية. لما ترجع الطابة من الحيط لازم تنطّ عالأرض مرّة وحدة بس قبل ما تضربها.";
+        public const string Intro = "كبّ الطابة عالشبابيك! حطّ إصبعك جنب الطابة واسحب صوب الشبّاك وشيل إصبعك: كل ما سحبت أكتر بتروح أقوى وأعلى. لما ترجع الطابة من الحيط فيك تضربها كمان تلات مرّات، بس قبل ما تنطّ عالأرض مرّتين.";
         public const string Play = "يلا نلعب";
         public const string PlayAgain = "عيد اللعب";
-        public const string ServeHint = "دقّ وين بدك الطابة تخبط";
+        public const string ServeHint = "اسحب من الطابة صوب الشبّاك"; // 2026-11-09: the kick is a swipe, not a tap
+        public const string VibrateOn = "هزّة: أيوه";
+        public const string VibrateOff = "هزّة: لأ";
         public const string Smashed = "+١  كسرت الشباك!";
         public const string BounceFirst = "خلّيها تنطّ مرّة أول";
         public const string TooFar = "بعيدة عنك";
