@@ -189,6 +189,20 @@ namespace Sheytoonak.Prototype
         {
             var root = new GameObject("Poison open window").transform;
             root.position = new Vector3(r.center.x, r.center.y, facadeZ - 0.05f);
+            // User (2026-11-09): «تصویر زنی که پنجره رو باز کرده هنوز مسخره است». The cartoon casement (window_open_0/1) is
+            // retired: the neighbour who opened the window is one of the painted residents (the ones who curse), leaning
+            // out of a dark open frame, in the facades' own style.
+            string[] who = { "granny2", "resident_01", "resident_02", "resident_03", "resident_04", "resident_05" };
+            var res = Art(who[Random.Range(0, who.Length)], 0f);
+            if (res != null)
+            {
+                Part(PrimitiveType.Cube, root, new Vector3(0f, 0f, 0.03f), new Vector3(r.width * 0.9f, r.height * 0.9f, 0.02f), M("room", new Color(0.08f, 0.07f, 0.07f)));
+                var sr = Spr(res, root, new Vector3(0f, -r.height * 0.5f, -0.02f), 1f);
+                float k = r.height * 1.05f / Mathf.Max(0.01f, res.bounds.size.y);
+                if (res.bounds.size.x * k > r.width * 1.1f) k = r.width * 1.1f / res.bounds.size.x;
+                sr.transform.localScale = Vector3.one * k;
+                return root.gameObject;
+            }
             var w0 = Art("window_open_0", 0.5f); var w1 = Art("window_open_1", 0.5f);
             if (w0 != null && w1 != null)
             {

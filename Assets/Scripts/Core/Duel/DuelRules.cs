@@ -50,6 +50,9 @@ namespace Sheytoonak.Core.Duel
         /// <summary>Half-turns after which the side with more windows wins (odd total: no tie). Review §2.3.</summary>
         public const int MaxTurns = 16;
         public const int RageEveryTurns = 3;
+        /// <summary>User (2026-11-09): «آتیش قدرت خیلی واضح نیست چی کار می‌کنه … برش داریم کلا؛ همیشه دو تا دو تا ضربه بزنن».
+        /// Off: no rage is ever gained, every turn is exactly two actions. Kept switchable for the tests.</summary>
+        public bool RageEnabled = false;
         public const int CurseWin = 5, CurseLose = 2;
 
         public readonly int[] WindowValue;      // 1 / 2 / 3 per window; the 3 is Hidden until it breaks
@@ -281,10 +284,18 @@ namespace Sheytoonak.Core.Duel
         {
             var r = CanAct(s);
             if (r != ActionReject.None) return r;
+            // ⚠️ until 2026-11-09 a Cover/Close antidote only added a "protection" that nothing ever read (IsCovered and
+            // IsClosed are about the shared stage, not a side), so pebble, nails and complaint did nothing at all (user:
+            // «دکمه پادزهر سنگ ریزه کاری نمی‌کنه و اثر نداره»). Now they clear the opponent's poison of their effect off the
+            // windows right away, whatever its lifetime; with nothing to clear they refuse instead of wasting the action.
+            bool windowEffect = antidote.Effect == Effect.Cover || antidote.Effect == Effect.Close;
+            if (windowEffect && !Poisons.Exists(p => p.By != s && p.Tool.Effect == antidote.Effect && antidote.Power >= p.Tool.Power))
+                return ActionReject.NoTarget;
             protections[(int)s].Add(new ActivePoison { Tool = antidote, By = s, TurnsLeft = 3 }); // own turn, opponent's, own next
             Poisons.RemoveAll(p =>
             {
-                bool lift = p.Tool.Life == Lifetime.UntilAntidote && p.Tool.Effect == antidote.Effect && antidote.Power >= p.Tool.Power;
+                bool sameEffect = p.Tool.Effect == antidote.Effect && antidote.Power >= p.Tool.Power;
+                bool lift = sameEffect && (p.Tool.Life == Lifetime.UntilAntidote || (windowEffect && p.By != s));
                 if (lift) PoisonExpired?.Invoke(p);
                 return lift;
             });
@@ -348,7 +359,7 @@ namespace Sheytoonak.Core.Duel
             if (Turn > MaxTurns) { Finish(Windows[0] >= Windows[1] ? Side.Left : Side.Right, "turn cap"); return; }
             ActionsLeft = 2;
             int c = (int)Current;
-            if (!RageReady[c] && --RageTimer[c] <= 0) { RageReady[c] = true; RageGained?.Invoke(Current); }
+            if (RageEnabled && !RageReady[c] && --RageTimer[c] <= 0) { RageReady[c] = true; RageGained?.Invoke(Current); }
             TurnStarted?.Invoke(Current, Turn, ActionsLeft);
         }
 

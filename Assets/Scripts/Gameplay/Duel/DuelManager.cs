@@ -505,6 +505,7 @@ namespace Sheytoonak
             {
                 var r = Rules.Antidote(s, h.Antidote);
                 if (r == ActionReject.None) { Rules.NoteActivity(s); Pop?.Invoke(h.Antidote.Id, s, PopKind.Antidote); }
+                else if (r == ActionReject.NoTarget && s == Me) Toast?.Invoke(Ar.NothingToClear, 1.3f);
                 return r;
             }
         }
@@ -601,6 +602,7 @@ namespace Sheytoonak
             ball.Launch(v, res.SpinY, 0f);
             kicker = s; kickActive = true; hitWindow = -1; groundBounces = 0; kickStarted = Time.time;
             returning = false; bouncesSinceWall = 0; rallyHits = hitsSoFar;
+            Rally($"kick {s} from {b} v={v}");
             GameEvents.RaiseKicked(g, quality, v);
             KickLaunched?.Invoke(s, target);
             float intercept = KickModifiers.Intercept(mods.Chance);
@@ -622,6 +624,7 @@ namespace Sheytoonak
             ball.Launch(v, res.SpinY, 0f);
             if (resolveRoutine != null) { StopCoroutine(resolveRoutine); resolveRoutine = null; }
             returning = false; bouncesSinceWall = 0; groundBounces = 0; hitWindow = -1; rallyHits++;
+            Rally($"rekick#{rallyHits} {s} from {b} q={quality:0.00} v={v}");
             Rules.NoteActivity(s);
             GameEvents.RaiseKicked(g, quality, v);
             Rekicked?.Invoke(s);
@@ -657,6 +660,10 @@ namespace Sheytoonak
         }
 
         /// <summary>True while a swipe now would kick: my turn with the ball at the foot, or a live rebound I may still hit.</summary>
+        public int RallyHits => rallyHits;
+        public int BouncesSinceWall => bouncesSinceWall;
+        static void Rally(string what) => Debug.Log("RALLY " + Time.time.ToString("0.00") + " " + what);
+
         public bool CanAimNow
         {
             get
@@ -743,7 +750,7 @@ namespace Sheytoonak
                 var move = Bot.Next(Rules, bot);
                 switch (move.What)
                 {
-                    case BotMove.Kind.Antidote: Act(bot, move.Hero, false); break;
+                    case BotMove.Kind.Antidote: if (Act(bot, move.Hero, false) != ActionReject.None) Rules.Pass(bot); break; // a window antidote with nothing to clear refuses: pass, never loop
                     case BotMove.Kind.Poison:
                         // its own target guess may differ from TargetsFor (a vehicle with nothing left to hide): pass, never loop
                         if (Act(bot, move.Hero, true) != ActionReject.None) Rules.Pass(bot);
@@ -802,7 +809,12 @@ namespace Sheytoonak
             // User (2026-11-08): «تو ضربه سوم حتماً دوبار زمین بخوره و بیاد سمت بازیکن … نه این که توپی که دو ثانیه پیش شوت
             // کردیم یهویی قل بخوره». A ball that already bounced twice on its own is not re-dropped with fake hops: it
             // rolls on from where it really is (DeadBallRolls); the hops are only for a ball killed out of play.
-            DeadBallRolls = bouncesSinceWall >= 2 || groundBounces >= 2;
+            // and any ball that is already low and in sight rolls home from where it is: re-placing it elsewhere is the
+            // "vanishes, then comes from another part of the screen" the user keeps seeing (2026-11-09)
+            Vector3 bp = ball.transform.position;
+            bool inSight = bp.y < 0.6f && bp.z > foot.Z - 0.3f && bp.z < mapper.FacadeZ - 0.5f && Mathf.Abs(bp.x) < config.laneHalfWidth + 2.5f;
+            DeadBallRolls = bouncesSinceWall >= 2 || groundBounces >= 2 || inSight;
+            Rally($"finish hits={rallyHits} window={hitWindow} rolls={DeadBallRolls} at {ball.transform.position}");
             if (ball.InPlay && BallDead != null) { BallSettled = false; BallDead.Invoke(DeadBallRolls ? RollingBallSpot() : DeadBallSpot()); }
             else PlaceBallAtCentre();
         }
@@ -856,6 +868,7 @@ namespace Sheytoonak
 
         public void OnBallGround(Vector3 point)
         {
+            Rally($"ground {point} active={kickActive} returning={returning} bounces={bouncesSinceWall}");
             if (!kickActive) return;
             if (returning)
             {
@@ -873,7 +886,7 @@ namespace Sheytoonak
             if (groundBounces >= 2 && resolveRoutine == null) resolveRoutine = StartCoroutine(ResolveAfter(0.3f));
         }
 
-        public void OnBallRolling(Vector3 point) { if (kickActive && resolveRoutine == null) resolveRoutine = StartCoroutine(ResolveAfter(0.1f)); }
+        public void OnBallRolling(Vector3 point) { Rally($"rolling {point}"); if (kickActive && resolveRoutine == null) resolveRoutine = StartCoroutine(ResolveAfter(0.1f)); }
 
         /// <summary>The bot "runs" to its rebound: hits it again now and then, aiming at the best window.</summary>
         bool BotRehits()
@@ -889,6 +902,7 @@ namespace Sheytoonak
 
         public void OnBallFacade(Vector3 point)
         {
+            Rally($"facade {point} active={kickActive} returning={returning} hitWindow={hitWindow} window={(mapper != null ? mapper.FindWindow(point, ball.Radius) : -9)}");
             if (!kickActive || hitWindow >= 0 || returning) { GameEvents.RaiseWallHit(point); return; }
             int w = mapper.FindWindow(point, ball.Radius);
             if (w >= 0)
@@ -911,7 +925,7 @@ namespace Sheytoonak
             SendBack();
         }
 
-        public void OnBallKilled(LossReason reason) { if (kickActive && resolveRoutine == null) resolveRoutine = StartCoroutine(ResolveAfter(0.1f)); }
+        public void OnBallKilled(LossReason reason) { Rally($"killed {reason} at {ball.transform.position}"); if (kickActive && resolveRoutine == null) resolveRoutine = StartCoroutine(ResolveAfter(0.1f)); }
 
         // ------------------------------------------------------------------ world
 

@@ -58,6 +58,7 @@ namespace Sheytoonak
         public const string PlayAgain = "عيد اللعب";
         public const string ServeHint = "اسحب من الطابة صوب الشبّاك"; // 2026-11-09: the kick is a swipe, not a tap
         public const string VibrateOn = "هزّة: أيوه";
+        public const string NothingToClear = "ما في شي يشيلو";
         public const string VibrateOff = "هزّة: لأ";
         public const string Smashed = "+١  كسرت الشباك!";
         public const string BounceFirst = "خلّيها تنطّ مرّة أول";

@@ -12,7 +12,7 @@ namespace Sheytoonak
     /// </summary>
     public class SplashOverlay : MonoBehaviour
     {
-        public const float LoadSeconds = 3.4f;
+        public const float LoadSeconds = 4.0f;
         Texture2D splash, logo, ball;
         float start;
         public static bool Showing { get; private set; } = true;
@@ -50,10 +50,12 @@ namespace Sheytoonak
             GUI.DrawTexture(new Rect((sw - splash.width * k) * 0.5f, (sh - splash.height * k) * 0.5f, splash.width * k, splash.height * k), splash, ScaleMode.StretchToFill);
             if (logo != null)
             {
-                // first the picture alone for 0.35 s, then the sign falls from above the screen into its place
+                // first the picture alone for 0.4 s, then the sign comes down slowly from above the screen and settles
+                // (user 2026-11-09: «از بالای صفحه بیاد آروم آروم روی تصویر»; the bouncing drop of the day before was too quick)
                 float lw = sw * 0.34f, lh = lw * logo.height / logo.width, restY = -lh * 0.06f;
-                float t = Mathf.Clamp01((now - 0.35f) / 0.9f);
-                float y = Mathf.Lerp(-lh * 1.1f, restY, Bounce(t));
+                float t = Mathf.Clamp01((now - 0.4f) / 2.4f);
+                float e = 1f - Mathf.Pow(1f - t, 3f); // ease-out: fast start, long soft landing
+                float y = Mathf.Lerp(-lh * 1.1f, restY, e) + Mathf.Sin(now * 1.6f) * lh * 0.006f * t; // a slight sway on its chains
                 GUI.DrawTexture(new Rect((sw - lw) * 0.5f, y, lw, lh), logo, ScaleMode.StretchToFill);
             }
             // loading bar along the bottom; a tiny football rolls along its filled edge
@@ -65,7 +67,7 @@ namespace Sheytoonak
             GUI.color = new Color(1f, 0.82f, 0.35f, a); GUI.DrawTexture(new Rect(bx, by, bw * fill, bh), Texture2D.whiteTexture);
             if (ball != null)
             {
-                float bs = bh * 2.2f, cx = bx + bw * fill, cy = by + bh * 0.5f;
+                float bs = bh * 3.6f, cx = bx + bw * fill, cy = by + bh * 0.5f;
                 var m = GUI.matrix;
                 GUIUtility.RotateAroundPivot(now * 540f, new Vector2(cx, cy));
                 GUI.color = new Color(1f, 1f, 1f, a);

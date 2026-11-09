@@ -182,9 +182,45 @@ namespace Sheytoonak.Tests
         }
 
         [Test]
+        public void A_window_antidote_clears_the_opponents_window_poison()
+        {
+            // user (2026-11-09): «دکمه پادزهر سنگ ریزه کاری داره نمی‌کنه در بازی و اثر نداره»
+            var r = Make();
+            r.Start(Side.Left); r.BeginKick(Side.Left); r.EndKick(Side.Left, -1);
+            r.Poison(Side.Right, StarterHeroes.Get("rima").Poison, new[] { 4 }); // the neighbour opens window 4 (close, one turn)
+            if (r.Current == Side.Right) r.Pass(Side.Right);
+            Assert.AreEqual(Side.Left, r.Current);
+            Assert.IsTrue(r.IsClosed(4));
+            Assert.AreEqual(ActionReject.None, r.Antidote(Side.Left, StarterHeroes.Get("fulla").Antidote)); // pebble: close 1
+            Assert.IsFalse(r.IsClosed(4), "the pebble clears the neighbour off the window at once");
+        }
+
+        [Test]
+        public void A_window_antidote_with_nothing_to_clear_does_not_spend_the_action()
+        {
+            var r = Make();
+            r.Start(Side.Left);
+            int before = r.ActionsLeft;
+            Assert.AreEqual(ActionReject.NoTarget, r.Antidote(Side.Left, StarterHeroes.Get("fulla").Antidote));
+            Assert.AreEqual(before, r.ActionsLeft);
+        }
+
+        [Test]
+        public void No_rage_in_the_game_every_turn_is_two_actions()
+        {
+            // user (2026-11-09): «آتیش قدرت … برش داریم کلا و کاری نکنه همیشه دو تا دو تا ضربه بزنن»
+            var r = Make();
+            r.Start(Side.Left);
+            for (int i = 0; i < 8; i++) { r.Pass(Side.Left); r.Pass(Side.Right); }
+            Assert.IsFalse(r.RageReady[0]);
+            Assert.AreEqual(2, r.ActionsLeft);
+        }
+
+        [Test]
         public void Rage_arrives_every_third_turn_and_restarts_when_spent()
         {
             var r = Make();
+            r.RageEnabled = true; // off in the game since 2026-11-09; the mechanism is kept
             r.Start(Side.Left);
             Assert.IsFalse(r.RageReady[0]);
             r.Pass(Side.Left); r.Pass(Side.Right);   // L turn 2 → timer 2

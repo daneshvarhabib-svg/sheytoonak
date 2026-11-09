@@ -41,8 +41,16 @@ namespace Sheytoonak.Prototype
                     Debug.Log($"SHEYTOONAK SHOTS frame {frames} t={Time.realtimeSinceStartup:0.0}s focus={Application.isFocused}");
             }
 
+            System.IO.StreamWriter rally;
+            void OnLog(string msg, string stack, LogType t)
+            {
+                if (!msg.StartsWith("RALLY")) return;
+                try { if (rally == null) rally = new System.IO.StreamWriter(Path.Combine(dir, "rally.txt")) { AutoFlush = true }; rally.WriteLine(msg); } catch { }
+            }
+
             IEnumerator Start()
             {
+                Application.logMessageReceived += OnLog;
                 StartCoroutine(Watchdog());
                 var boot = FindFirstObjectByType<PrototypeBootstrap>();
                 Debug.Log("SHEYTOONAK SHOTS bootstrap " + (boot != null ? "found" : "missing"));
@@ -71,9 +79,21 @@ namespace Sheytoonak.Prototype
                         float a0 = Time.realtimeSinceStartup + 4f;
                         while (Time.realtimeSinceStartup < a0 && !duel.KickArmed) yield return null;
                         yield return Shot("03b-at-ball", 0.2f);
-                        boot.Router?.Inject(new KickGesture(0.85f, 0.05f, 0f));
+                        // rally probe (user 2026-11-09: the hits on the rebound «ناکارآمده»): a low kick that hits the wall,
+                        // two low hits on the rebound, then a real shot at a window as the third rebound hit. Every ball event
+                        // is logged as "RALLY …" into rally.txt next to the pictures.
+                        boot.Router?.Inject(new KickGesture(0.0f, 0.6f, 0f));
                         yield return Shot("04-kick-air", 0.45f);
                         yield return Shot("05-kick-hit", 0.6f);
+                        for (int n = 1; n <= 3; n++)
+                        {
+                            float r0 = Time.realtimeSinceStartup + 6f;
+                            while (Time.realtimeSinceStartup < r0 && !(duel.CanAimNow && duel.BouncesSinceWall >= 1)) yield return null;
+                            if (!duel.CanAimNow) { Debug.Log("RALLY probe: no live rebound before hit " + n); break; }
+                            boot.Router?.Inject(n < 3 ? new KickGesture(0.0f, 0.6f, 0f) : new KickGesture(0.55f, 0.05f, 0f));
+                            yield return Shot("05r-hit" + n + "a", 0.35f);
+                            yield return Shot("05r-hit" + n + "b", 0.6f);
+                        }
                         yield return Shot("06-after", 2.0f);
                         // show every poison my heroes carry, one per action, so CI pictures all the props
                         for (int i = 0; i < 3 && duel.Rules != null && !duel.Rules.Finished; i++)
