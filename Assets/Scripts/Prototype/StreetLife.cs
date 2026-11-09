@@ -92,6 +92,19 @@ namespace Sheytoonak
         }
 
         static Texture2D bloodTex;
+        /// <summary>The soft red stain (also used under the pigeon the ball brings down).</summary>
+        public static Sprite BloodSprite()
+        {
+            if (bloodTex == null)
+            {
+                const int n = 32; bloodTex = new Texture2D(n, n, TextureFormat.RGBA32, false);
+                var px = new Color32[n * n];
+                for (int y = 0; y < n; y++) for (int x = 0; x < n; x++)
+                { float d = Vector2.Distance(new Vector2(x, y), new Vector2(15.5f, 15.5f)) / 15.5f; float a = Mathf.Clamp01(1.2f - d * d * 1.4f); px[y * n + x] = new Color32(150, 10, 10, (byte)(a * 255)); }
+                bloodTex.SetPixels32(px); bloodTex.Apply();
+            }
+            return Sprite.Create(bloodTex, new Rect(0, 0, 32, 32), new Vector2(0.5f, 0.5f), 100f);
+        }
         AudioSource sfx;
         /// <summary>Audio/Fx/victim_NN (the hit walker's cry) and Audio/Fx/siren (the van): random, never the same twice running.</summary>
         void PlayFx(string prefix, float volume, ref int last)
@@ -130,8 +143,10 @@ namespace Sheytoonak
             blood.sprite = Sprite.Create(bloodTex, new Rect(0, 0, 32, 32), new Vector2(0.5f, 0.5f), 100f);
             blood.transform.SetParent(t, false);
             float hTop = sr.sprite.bounds.size.y; // sprite units: pivot at the feet
-            blood.transform.localPosition = new Vector3(0f, hTop * 0.93f, -0.01f);
-            blood.sortingOrder = sr.sortingOrder + 1;
+            blood.transform.localPosition = new Vector3(0f, hTop * 0.93f, -0.002f);
+            // ⚠️ was sortingOrder + 1: sprite order beats depth, so the stain was painted over the ambulance parked in front
+            // of him (user 2026-11-09: «خون کسی که ریخته شده میاد روی آمبولانس»). Same order as the body, a hair in front.
+            blood.sortingOrder = sr.sortingOrder;
             for (float k = 0f; k < 0.5f; k += Time.deltaTime)
             {
                 if (t == null) yield break;

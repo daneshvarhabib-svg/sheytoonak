@@ -453,3 +453,9 @@ Stability ~۴۰. هر خط یک فایل → `Audio/Heroes/<id>/kick_01..03`. م
 | victim_03 | مرد مسن | `[groaning, winded, falling] أوووف… يا لطيف… وقعت…` |
 | victim_04 | زن | `[screaming for help] ساعدوني! حدا يتّصل بالإسعاف!` |
 | siren_01 | افکت | `Old Middle Eastern ambulance siren approaching on a narrow street, two-tone wail, slightly distorted horn, 4 seconds, no music.` |
+
+## کبوترِ زده‌شده و ماشینِ جاروی شهرداری (۱۹ آبان)
+کاربر: «وقتی توپ می‌خوره به پرنده باید یه صدایی داشته باشه … خونش ریخته بشه و بعدش ماشین تمیزکن شهرداری بیاد و جارو کنه و جنازه پرنده رو برداره». خون و صحنه در کد است (`DuelStage.PigeonCorpse`)؛ تا تصویر نرسد کبوتر فقط محو می‌شود.
+- `Props/sweeper.png` (نمای جانبی، رو به چپ، رویِ سبزِ #00FF00): `Cut-out for a game, side view facing left, on a flat solid bright green background #00FF00, no ground, no shadow, no scene. Painted in the same realistic hand-painted style as a weathered Beirut street painting. A small old municipal street-sweeper truck, dusty orange and white with a faded city emblem, an operator in an orange vest visible in the cab, a round rotating side brush under the front bumper, a water tank and a hopper behind. Whole vehicle visible, wheels included. No text, no watermark.`
+- `Props/sweeper_brush.png` (اختیاری، برایِ چرخیدن): `Same style, on green #00FF00: only the round street-sweeper side brush seen from the side, a disc of stiff dark bristles with a metal hub, flat and centred, nothing else.`
+- `Audio/Fx/pigeon_01..02` (ElevenLabs Sound Effects، ~۱ ثانیه): `A pigeon hit by a football mid-air: a sharp startled coo-squawk, a burst of wing flaps and a soft thud on asphalt, 1 second, no music.`

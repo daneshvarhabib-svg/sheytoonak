@@ -435,22 +435,86 @@ namespace Sheytoonak.Prototype
                     yield return null;
                 }
                 pigeon.transform.rotation = Quaternion.Euler(0f, 0f, 90f); // on its side
-                yield return new WaitForSeconds(0.9f);
-                pigeon.transform.rotation = Quaternion.identity;
-                Vector3 up = pigeon.transform.position;
-                for (float t = 0f; t < 1f; t += Time.deltaTime / 1.2f)
-                {
-                    pigeon.transform.position = up + new Vector3(t * 2.5f, Mathf.Abs(Mathf.Sin(t * 25f)) * 0.04f, 0f);
-                    yield return null;
-                }
+                // User (2026-11-09): «وقتی توپ می‌خوره به پرنده باید یه صدایی داشته باشه موقع سقوط و خونش ریخته بشه و بعدش
+                // ماشین تمیزکن شهرداری بیاد و جارو کنه و جنازه پرنده رو برداره». The bird no longer gets up: a copy stays
+                // dead on the road with a stain, the city sweeper comes for it; the live pigeon object is free again at once.
+                var corpse = Instantiate(pigeon);
+                StartCoroutine(PigeonCorpse(corpse.transform));
             }
+            pigeon.transform.rotation = Quaternion.identity;
             pigeon.SetActive(false);
             pigeonDown = false;
+        }
+
+        IEnumerator PigeonCorpse(Transform corpse)
+        {
+            var sr = corpse.GetComponentInChildren<SpriteRenderer>();
+            var blood = new GameObject("Pigeon blood").AddComponent<SpriteRenderer>();
+            blood.sprite = StreetLife.BloodSprite();
+            blood.transform.SetParent(corpse, true);
+            blood.transform.position = corpse.position + new Vector3(0.05f, -0.06f, 0.01f);
+            blood.transform.rotation = Quaternion.identity;
+            if (sr != null) blood.sortingOrder = sr.sortingOrder;
+            for (float t = 0f; t < 0.6f; t += Time.deltaTime) { blood.transform.localScale = Vector3.one * Mathf.Lerp(0.3f, 1.4f, t / 0.6f) / Mathf.Max(0.01f, corpse.lossyScale.x); yield return null; }
+            yield return new WaitForSeconds(1.2f);
+            var truckT = Resources.Load<Texture2D>("Art/Props/sweeper");
+            if (truckT == null)
+            {
+                // no sweeper picture yet: the bird just fades from the road
+                for (float t = 0f; t < 1f; t += Time.deltaTime) { foreach (var r in corpse.GetComponentsInChildren<SpriteRenderer>()) r.color = new Color(1f, 1f, 1f, 1f - t); yield return null; }
+                Destroy(corpse.gameObject);
+                yield break;
+            }
+            // painted facing left like the ambulance; it comes from the far side, stops with its brush over the bird, sweeps
+            bool fromLeft = corpse.position.x > 0f;
+            var sp = Sprite.Create(truckT, new Rect(0, 0, truckT.width, truckT.height), new Vector2(0.5f, 0f), 100f);
+            var truck = new GameObject("Sweeper").AddComponent<SpriteRenderer>();
+            truck.sprite = sp;
+            float k = 2.4f / Mathf.Max(0.01f, sp.bounds.size.y);
+            truck.transform.localScale = new Vector3(fromLeft ? -k : k, k, k);
+            float z = corpse.position.z - 0.6f;
+            float stopX = corpse.position.x + (fromLeft ? -1.2f : 1.2f); // the brush sits at the front end of the truck
+            float x0 = fromLeft ? -26f : 26f;
+            truck.transform.position = new Vector3(x0, 0f, z);
+            var brushT = Resources.Load<Texture2D>("Art/Props/sweeper_brush");
+            Transform brush = null;
+            if (brushT != null)
+            {
+                var b = new GameObject("Brush").AddComponent<SpriteRenderer>();
+                b.sprite = Sprite.Create(brushT, new Rect(0, 0, brushT.width, brushT.height), new Vector2(0.5f, 0.5f), 100f);
+                b.sortingOrder = truck.sortingOrder + 1; brush = b.transform;
+                brush.SetParent(truck.transform, false);
+                brush.localPosition = new Vector3(-sp.bounds.size.x * 0.42f, sp.bounds.size.y * 0.1f, -0.01f);
+            }
+            for (float t = 0f; t < 1f; t += Time.deltaTime / 2.2f)
+            {
+                truck.transform.position = new Vector3(Mathf.Lerp(x0, stopX, 1f - (1f - t) * (1f - t)), 0f, z);
+                if (brush != null) brush.Rotate(0f, 0f, 720f * Time.deltaTime);
+                yield return null;
+            }
+            for (float t = 0f; t < 1.2f; t += Time.deltaTime)
+            {
+                if (brush != null) brush.Rotate(0f, 0f, 900f * Time.deltaTime);
+                if (corpse != null && t > 0.5f) { Destroy(corpse.gameObject); corpse = null; }
+                yield return null;
+            }
+            float xe = fromLeft ? 26f : -26f;
+            for (float t = 0f; t < 1f; t += Time.deltaTime / 2.4f)
+            {
+                truck.transform.position = new Vector3(Mathf.Lerp(stopX, xe, t * t), 0f, z);
+                if (brush != null) brush.Rotate(0f, 0f, 720f * Time.deltaTime);
+                yield return null;
+            }
+            Destroy(truck.gameObject);
         }
 
         void OnPigeonHit(Vector3 at)
         {
             if (pigeon == null || !pigeon.activeSelf) return;
+            // the bird's cry as it falls: Audio/Fx/pigeon_* (any number, random)
+            var cries = new List<AudioClip>();
+            foreach (var c in Resources.LoadAll<AudioClip>("Audio/Fx")) if (c.name.StartsWith("pigeon")) cries.Add(c);
+            if (cries.Count > 0 && Camera.main != null) AudioSource.PlayClipAtPoint(cries[Random.Range(0, cries.Count)], Camera.main.transform.position, 0.9f);
             pigeon.transform.position = new Vector3(at.x, Mathf.Max(0.5f, at.y), pigeon.transform.position.z);
             pigeonDown = true;
         }
