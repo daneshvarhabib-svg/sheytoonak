@@ -701,7 +701,7 @@ namespace Sheytoonak.Prototype
             {
                 pusher = new GameObject("Rug pusher").AddComponent<SpriteRenderer>();
                 pusher.sprite = Sprite.Create(f0, new Rect(0, 0, f0.width, f0.height), new Vector2(0.5f, 0f), 100f);
-                pusher.transform.position = top + new Vector3(0f, -0.15f, 0.02f);
+                pusher.transform.position = top + new Vector3(0f, -0.55f, -0.02f); // her hands (and the rug's edge in them) at the parapet
                 pusher.transform.localScale = Vector3.one * (1.5f / pusher.sprite.bounds.size.y);
                 pusher.sortingOrder = -1;
                 yield return new WaitForSeconds(0.35f);

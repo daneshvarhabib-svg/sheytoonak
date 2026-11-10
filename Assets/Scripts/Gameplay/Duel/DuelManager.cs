@@ -594,12 +594,17 @@ namespace Sheytoonak
                 var low = list.FindAll(w => mapper.WindowRects[w].yMin <= lowest + 1.5f);
                 low.Sort((a, b) => mapper.WindowRects[a].x.CompareTo(mapper.WindowRects[b].x));
                 float reach = VehicleReach(poison.Id);
+                // User (2026-11-10): «زهرها باید با اولویت راحت‌ترین شیشه باقی‌مانده که عمدتاً می‌شن شیشه‌های میانی اعمال بشن.
+                // الآن اتوبوس میاد رو یه پنجره‌ای قرار می‌گیره که اساساً زدنش ممکن نیست». The vehicle no longer takes the
+                // longest run of ground-floor windows (often the far end of the house): it parks on the easiest one
+                // (Difficulty) and hides what else its length reaches around it.
                 System.Collections.Generic.List<int> best = new System.Collections.Generic.List<int>();
-                for (int i = 0; i < low.Count; i++)
+                if (low.Count > 0)
                 {
-                    var run = new System.Collections.Generic.List<int>();
-                    for (int j = i; j < low.Count && mapper.WindowRects[low[j]].center.x - mapper.WindowRects[low[i]].center.x <= reach; j++) run.Add(low[j]);
-                    if (run.Count > best.Count) best = run;
+                    low.Sort((a, b) => Difficulty(a).CompareTo(Difficulty(b)));
+                    float ex = mapper.WindowRects[low[0]].center.x;
+                    best = low.FindAll(w => Mathf.Abs(mapper.WindowRects[w].center.x - ex) <= reach * 0.5f);
+                    best.Sort((a, b) => Difficulty(a).CompareTo(Difficulty(b)));
                 }
                 // levels (user 2026-11-09): «بعضی ها ارتفاع می‌گیرن مثل اتوبوس و کامیون و گاری، یسری جعبه و بسته و چمدون
                 // میاد روشون». Each level above 1 stacks cargo on the roof that hides one more window of the floor above,
@@ -627,7 +632,8 @@ namespace Sheytoonak
                 return row.GetRange(0, Mathf.Max(0, take)).ToArray();
             }
             if (poison.Id == "carpet") return CarpetColumn(poison.Power);
-            list.Sort((a, b) => Rules.ShownValue(b).CompareTo(Rules.ShownValue(a)));
+            // the easiest windows first (2026-11-10), then value (all 1 today)
+            list.Sort((a, b) => Rules.ShownValue(b) != Rules.ShownValue(a) ? Rules.ShownValue(b).CompareTo(Rules.ShownValue(a)) : Difficulty(a).CompareTo(Difficulty(b)));
             // Close shuts 1/1/2/2/3 windows by level, never the last breakable one
             int shut = Mathf.Min(KickModifiers.CloseCount(poison.Power), list.Count - 1);
             return shut > 0 ? list.GetRange(0, shut).ToArray() : new int[0];
@@ -649,20 +655,36 @@ namespace Sheytoonak
                 if (col == null) cols.Add(new System.Collections.Generic.List<int> { w }); else col.Add(w);
             }
             int breakable = Rules.BreakableCount();
-            int[] best = new int[0];
+            int[] best = new int[0]; float bestScore = float.MaxValue;
             foreach (var col in cols)
             {
                 col.Sort((a, b) => rects[b].center.y.CompareTo(rects[a].center.y)); // top first
                 var hid = new System.Collections.Generic.List<int>();
                 for (int i = 0; i < col.Count && i < level; i++) if (Rules.IsBreakable(col[i])) hid.Add(col[i]);
                 while (hid.Count > 0 && hid.Count >= breakable) hid.RemoveAt(hid.Count - 1);
-                if (hid.Count > best.Length) best = hid.ToArray();
+                if (hid.Count == 0) continue;
+                // the column whose hidden windows are the easiest to hit (2026-11-10); more windows only breaks a tie
+                float score = 0f; foreach (int w in hid) score += Difficulty(w); score /= hid.Count;
+                score -= hid.Count * 0.01f;
+                if (score < bestScore) { bestScore = score; best = hid.ToArray(); }
             }
             return best;
         }
 
         /// <summary>CI screenshots only: the windows a level-3 rug would hide now (no rules involved).</summary>
         public ActivePoison CarpetForShot() => new ActivePoison { Tool = new Tool("carpet", "", Effect.Close, 3), Windows = CarpetColumn(3) };
+
+        /// <summary>
+        /// How hard a window is to hit from the ball: sideways distance from the ball's line counts fully, height away
+        /// from the middle of the house's windows half (a high or low window is easier than a far-off one). Lower = easier.
+        /// </summary>
+        float Difficulty(int w)
+        {
+            var rects = mapper.WindowRects;
+            float yMid = 0f; foreach (var r in rects) yMid += r.center.y; yMid /= Mathf.Max(1, rects.Length);
+            float bx = foot != null ? foot.StrikeSpot.x : 0f;
+            return Mathf.Abs(rects[w].center.x - bx) + 0.5f * Mathf.Abs(rects[w].center.y - yMid);
+        }
 
         /// <summary>How far down the rug of this poison hangs: the bottom of the lowest window of its column within its level.</summary>
         public Rect CarpetSpan(ActivePoison p)
