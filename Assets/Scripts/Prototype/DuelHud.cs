@@ -226,6 +226,7 @@ namespace Sheytoonak.Prototype
         {
             // painted since 2026-11-04; kept for any later hero whose icon is still missing
             { "carpet", "open_window" }, // until the rug icon is painted
+            { "rug_push", "pebble" },    // until its own icon is painted
         };
 
         internal static Texture2D Icon(string id)
@@ -314,7 +315,7 @@ namespace Sheytoonak.Prototype
 
         /// <summary>Icons that are painted (full colour, from the ChatGPT sheet) are never tinted, only faded.</summary>
         static readonly System.Collections.Generic.HashSet<string> Painted = new System.Collections.Generic.HashSet<string>
-            { "pigeon","bus","wind","open_window","carpet","puddle","nails","vane","pebble","plank","fart","rage","pass","surrender","window","shards","curse","clock","replay",
+            { "pigeon","bus","wind","open_window","carpet","rug_push","puddle","nails","vane","pebble","plank","fart","rage","pass","surrender","window","shards","curse","clock","replay",
               "truck","cart","rain","complaint","umbrella","flashlight" };
 
         internal static void DrawIcon(Rect r, string id, Color tint)

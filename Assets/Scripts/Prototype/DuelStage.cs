@@ -613,11 +613,14 @@ namespace Sheytoonak.Prototype
         }
 
         /// <summary>CI screenshots only: hangs a level-3 rug as the poison would, without touching the rules.</summary>
+        GameObject shotCarpet;
         public void CarpetForShot()
         {
             var p = duel.CarpetForShot();
-            if (p.Windows.Length > 0) PoisonProps.Carpet(this, duel.CarpetSpan(p), mapper.FacadeZ);
+            if (p.Windows.Length > 0) shotCarpet = PoisonProps.Carpet(this, duel.CarpetSpan(p), mapper.FacadeZ);
         }
+        /// <summary>CI screenshots only: the antidote pushes that rug off the roof.</summary>
+        public void PushCarpetForShot() { if (shotCarpet != null) StartCoroutine(RugFall(shotCarpet)); }
 
         void OnPoison(Side by, ActivePoison p)
         {
@@ -677,9 +680,70 @@ namespace Sheytoonak.Prototype
                 if (go != null)
                 {
                     if (go.name == "Poison bus") StartCoroutine(DriveOff(go)); // bus, lorry and cart all build under this name
+                    // turns still left = an antidote lifted it: the rug is pushed off the roof; run out = rolled back up
+                    else if (go.name == "Poison carpet") StartCoroutine(p.TurnsLeft > 0 ? RugFall(go) : RugUp(go));
                     else Destroy(go);
                 }
             props.Remove(p);
+        }
+
+        /// <summary>
+        /// The antidote of the rug (user 2026-11-10): «این هل بده فرش رو از پشت بوم و بندازه رو زمین». Someone appears on the
+        /// roof over the rug (Art/Poison/rug_pusher_0/1 when painted: leaning, then shoving), the rug lets go, drops with
+        /// gravity, tips a little, slumps on the pavement and fades.
+        /// </summary>
+        IEnumerator RugFall(GameObject go)
+        {
+            var t = go.transform; Vector3 top = t.position;
+            var f0 = Resources.Load<Texture2D>("Art/Poison/rug_pusher_0"); var f1 = Resources.Load<Texture2D>("Art/Poison/rug_pusher_1");
+            SpriteRenderer pusher = null;
+            if (f0 != null)
+            {
+                pusher = new GameObject("Rug pusher").AddComponent<SpriteRenderer>();
+                pusher.sprite = Sprite.Create(f0, new Rect(0, 0, f0.width, f0.height), new Vector2(0.5f, 0f), 100f);
+                pusher.transform.position = top + new Vector3(0f, -0.15f, 0.02f);
+                pusher.transform.localScale = Vector3.one * (1.5f / pusher.sprite.bounds.size.y);
+                pusher.sortingOrder = -1;
+                yield return new WaitForSeconds(0.35f);
+                if (f1 != null && pusher != null) pusher.sprite = Sprite.Create(f1, new Rect(0, 0, f1.width, f1.height), new Vector2(0.5f, 0f), 100f);
+            }
+            yield return new WaitForSeconds(0.15f);
+            float v = 0f, tilt = Random.Range(-8f, 8f);
+            // its length: from its top (the pivot, at the roof) to the lowest painted pixel
+            float len = 0f;
+            foreach (var r in go.GetComponentsInChildren<Renderer>()) len = Mathf.Max(len, top.y - r.bounds.min.y);
+            len = Mathf.Max(0.5f, len);
+            while (t != null && t.position.y - len > 0.02f) // falls until its bottom edge meets the street
+            {
+                v += 9.8f * Time.deltaTime;
+                t.position += Vector3.down * v * Time.deltaTime + Vector3.back * 0.6f * Time.deltaTime;
+                t.rotation = Quaternion.Euler(0f, 0f, Mathf.MoveTowards(t.eulerAngles.z > 180f ? t.eulerAngles.z - 360f : t.eulerAngles.z, tilt, 20f * Time.deltaTime));
+                yield return null;
+            }
+            // slumps: it was hanging from its top, now it lies in a heap
+            for (float k = 0f; k < 1f && t != null; k += Time.deltaTime / 0.35f)
+            {
+                float sy = 1f - 0.8f * k;                         // the top comes down onto the bottom, which stays on the street
+                t.localScale = new Vector3(1f + 0.15f * k, sy, 1f);
+                t.position = new Vector3(t.position.x, len * sy + 0.02f, t.position.z);
+                yield return null;
+            }
+            if (pusher != null) Destroy(pusher.gameObject);
+            yield return new WaitForSeconds(1.2f);
+            for (float k = 0f; k < 1f && t != null; k += Time.deltaTime / 0.6f)
+            {
+                foreach (var r in t.GetComponentsInChildren<SpriteRenderer>()) r.color = new Color(1f, 1f, 1f, 1f - k);
+                yield return null;
+            }
+            if (go != null) Destroy(go);
+        }
+
+        /// <summary>The rug's time ran out: it is pulled back up onto the roof (its hanging part shrinks upward).</summary>
+        IEnumerator RugUp(GameObject go)
+        {
+            var t = go.transform;
+            for (float k = 0f; k < 1f && t != null; k += Time.deltaTime / 0.9f) { t.localScale = new Vector3(1f, Mathf.Max(0.02f, 1f - k * k), 1f); yield return null; }
+            if (go != null) Destroy(go);
         }
 
         IEnumerator DriveOff(GameObject go)

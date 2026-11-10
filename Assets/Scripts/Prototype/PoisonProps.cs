@@ -138,6 +138,18 @@ namespace Sheytoonak.Prototype
                 foreach (var cr in covered) if (cr.yMin <= low + 1.5f && Mathf.Abs(cr.center.x - mid) < bestD) { bestD = Mathf.Abs(cr.center.x - mid); parkX = cr.center.x; }
                 if (id == "cart") mid = parkX; // a cart is shorter than most windows: it stands squarely in front of one
                 else mid = Mathf.Lerp(mid, parkX, 0.5f);
+                // ⚠️ user (2026-11-10, screenshot): «این گاری هنوز نمیاد جلوی پنجره». The vehicle stands ~3.5 m in front of the
+                // wall, so from the camera anything off-centre looks further out than the window at the same x (the cart
+                // on the far left showed a whole window's width to the left of its window). It is placed where the line
+                // from the camera to the window's centre crosses the vehicle's plane.
+                float camX = 0f, k = 1f;
+                if (cam != null)
+                {
+                    Vector3 c = cam.transform.position;
+                    float dF = facadeZ - c.z, dV = frontZ - c.z;
+                    if (dF > 0.5f && dV > 0.5f) { camX = c.x; k = dV / dF; }
+                }
+                mid = camX + (mid - camX) * k;
                 Vector3 at = new Vector3(mid, 0f, facadeZ - w * 0.5f - 0.6f);
                 if (level > 1) Cargo(root, at, h, r.bounds.size.x, upper, fullTop, facadeZ, frontZ, w, r.sortingOrder, level - 1);
                 root.position = at + Vector3.left * 30f;
@@ -180,7 +192,15 @@ namespace Sheytoonak.Prototype
             }
             float pile = Mathf.Max(0.8f * items, need - roofH);
             float each = pile / items;
-            float cx = 0f; foreach (var r in upper) cx += r.center.x; cx = upper.Count > 0 ? cx / upper.Count - at.x : 0f;
+            float cx = 0f; foreach (var r in upper) cx += r.center.x;
+            float camX = 0f, k = 1f;
+            if (cam != null)
+            {
+                Vector3 c = cam.transform.position;
+                float dF = facadeZ - c.z, dV = frontZ - c.z;
+                if (dF > 0.5f && dV > 0.5f) { camX = c.x; k = dV / dF; }
+            }
+            cx = upper.Count > 0 ? camX + (cx / upper.Count - camX) * k - at.x : 0f; // same parallax as the vehicle
             // ⚠️ run 206: the pile floated beside the bus at the hidden window's x and a little above the roof. It stands
             // on the roof (the painted roof line is a little under the picture's top: 0.92) and never past its ends.
             float halfLen = roofLen * 0.5f - 0.9f;
@@ -481,6 +501,7 @@ namespace Sheytoonak.Prototype
         public static GameObject Antidote(Tool a, Vector3 heroPos, float facadeZ)
         {
             var root = new GameObject("Antidote " + a.Id).transform;
+            if (a.Id == "rug_push") { root.position = heroPos; return root.gameObject; } // the stage pushes the rug off the roof (DuelStage.RugFall)
             var art = Art(a.Id, a.Id == "fart" || a.Id == "nails" || a.Id == "plank" || a.Id == "complaint" || a.Id == "flashlight" ? 0.5f : 0f);
             if (art != null)
             {

@@ -476,3 +476,7 @@ Stability ~۴۰. هر خط یک فایل → `Audio/Heroes/<id>/kick_01..03`. م
 ### فرشِ ریما (به‌جای همسایه‌ی پنجره‌باز، ۱۹ آبان)
 - `Poison/carpet.png` (عمودی و بلند، حدود ۱ به ۴): `Cut-out for a game, on a flat solid bright green background #00FF00, no ground, no shadow, no wall, no rope. Same realistic hand-painted style as a weathered Beirut street painting. A long, narrow, old Persian-style rug hanging straight down, seen flat from the front, deep red with dark blue and cream patterns, worn and slightly faded, long fringe at the bottom end only, the top edge cut off by the top of the frame. Very tall and narrow, about 1:4. No text.`
 - `Icons/carpet.png` (مربع): `Game icon, on a flat solid bright green background #00FF00: a small red patterned rug hanging over the edge of a flat roof, seen from the front, bold simple shapes, same painted style as the other icons, no text.`
+
+### پادزهرِ فرش: «زقّ السجّادة» (به‌جایِ سنگ‌ریزه‌ی فُلّة، ۲۰ آبان)
+- `Poison/rug_pusher_0.png` و `rug_pusher_1.png`: کسی روی لبه‌ی پشت‌بام، از پایین (کوچه) دیده می‌شود؛ ۰ = خم شده و دو دست روی فرش، ۱ = هل داده، دست‌ها جلو. روی سبزِ #00FF00.
+- `Icons/rug_push.png`: آیکونِ مربع.

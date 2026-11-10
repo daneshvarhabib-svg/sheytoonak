@@ -59,7 +59,9 @@ namespace Sheytoonak.Core.Duel
                 new Tool("vane", "دوّارة هوا", Effect.Accuracy, 1)),
             new HeroDef("fulla", "فُلّة الإسكندرانية",
                 new Tool("wind", "هوا قوي", Effect.Accuracy, 1, Lifetime.OneTurn),
-                new Tool("pebble", "حصوة عالشباك", Effect.Close, 1)),
+                // User (2026-11-10): «دکمه سنگ ریزه دیگه کاربرد نداره و باید بشه پادزهر آویزون کردن فرش. اگر کسی فرش آویزون کرد
+                // این هل بده فرش رو از پشت بوم و بندازه رو زمین». The pebble (it was thrown at the neighbour) is gone with her.
+                new Tool("rug_push", "زقّ السجّادة", Effect.Close, 1)),
             new HeroDef("rima", "ريما الشرشوحة الصيداوية",
                 // ⚠️ until 2026-11-04 the neighbour stayed until an antidote (pebble). User: «اون سه تا شیشه‌ای که بازه چیه؟ … نباید بعد از
                 // یکی دو نوبت خودش بسته شه؟» -- with every other window broken the duel could not end. Now she shuts it after two turns.

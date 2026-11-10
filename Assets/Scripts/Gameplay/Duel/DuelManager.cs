@@ -156,7 +156,7 @@ namespace Sheytoonak
                 levels = ToolLevels.Parse(PlayerPrefs.GetString(PrefLevels, ""));
                 var old = PlayerPrefs.GetString(PrefCards, "");
                 if (old.Length > 0) { levels.AddCards(old.Split(',')); PlayerPrefs.DeleteKey(PrefCards); SaveLevels(); }
-                if (levels.Rename("open_window", "carpet")) SaveLevels();
+                if (levels.Rename("open_window", "carpet") | levels.Rename("pebble", "rug_push")) SaveLevels();
                 return levels;
             }
         }
