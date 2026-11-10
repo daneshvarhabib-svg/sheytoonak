@@ -171,6 +171,47 @@ namespace Sheytoonak
             return r;
         }
 
+        // ------------------------------------------------------------------ the shop (dukkan, 2026-11-11)
+
+        const string PrefShop = "sheytoonak.shop", PrefShopBags = "sheytoonak.shopbags";
+        ShopRules shop;
+        public ShopRules Shop => shop ?? (shop = ShopRules.Parse(PlayerPrefs.GetString(PrefShop, "")));
+        /// <summary>The shop's day turns at Tehran midnight.</summary>
+        public static DateTime ShopDay => DateTime.UtcNow.AddHours(3.5).Date;
+        public DailyOffer[] TodaysOffers => ShopRules.OffersFor(ShopDay, ToolIds());
+
+        /// <summary>Buys one of today's piles: shards out, cards into the tools, then the same reveal as a bag.</summary>
+        public ShopRules.Reject BuyOffer(int slot)
+        {
+            int bank = ShardBank;
+            var r = Shop.Buy(ShopDay, slot, ToolIds(), ref bank, out var offer);
+            if (r != ShopRules.Reject.None) return r;
+            ShardBank = bank;
+            var cards = new string[offer.Count];
+            for (int i = 0; i < cards.Length; i++) cards[i] = offer.ToolId;
+            Levels.AddCards(cards);
+            PlayerPrefs.SetString(PrefShop, Shop.Serialize());
+            SaveLevels();
+            BagOpened?.Invoke(-1, 0, cards);
+            return r;
+        }
+
+        /// <summary>Buys a bag for shards: it opens at once (no timer, no rack slot).</summary>
+        public bool BuyBag(BagSize size)
+        {
+            int price = ShopRules.BagPrice(size);
+            if (ShardBank < price) return false;
+            ShardBank -= price;
+            int n = PlayerPrefs.GetInt(PrefShopBags, 0) + 1;
+            PlayerPrefs.SetInt(PrefShopBags, n);
+            var c = BagRules.ContentsOf(new Bag { Size = size, CycleIndex = -100000 - n }, ToolIds());
+            ShardBank += c.Shards;
+            Levels.AddCards(c.UpgradeCards);
+            SaveLevels();
+            BagOpened?.Invoke(-1, c.Shards, c.UpgradeCards);
+            return true;
+        }
+
         static string[] ToolIds()
         {
             var ids = new System.Collections.Generic.List<string>();

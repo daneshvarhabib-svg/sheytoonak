@@ -1652,6 +1652,10 @@ namespace Sheytoonak.Prototype
             {
                 HeroesScreen(u, big);
             }
+            else if (showStart && duel && showShop)
+            {
+                ShopScreen(u, big);
+            }
             else if (showStart && duel)
             {
                 HomeScreen(u, big); // its own full-screen backdrop: the street behind it is not shown
@@ -1772,7 +1776,14 @@ namespace Sheytoonak.Prototype
                 var o = GUI.color; GUI.color = new Color(0.95f, 0.2f, 0.15f);
                 GUI.DrawTexture(new Rect(heroesR.xMax - 26 * u, heroesR.y - 6 * u, 26 * u, 26 * u), DotTex()); GUI.color = o;
             }
-            SideSoon(new Rect(pad, Screen.height - sbh - pad, sbw, sbh), "btn_orange", "shards", "دكّان", u);
+            // the shop (2026-11-11): a red dot while today's free pile is still there
+            var shopR = new Rect(pad, Screen.height - sbh - pad, sbw, sbh);
+            if (BigButton(shopR, "btn_orange", "shards", "دكّان", true, u)) { showShop = true; shopScroll = Vector2.zero; touch?.IgnoreFor(0.4f); }
+            if (!duelGame.Shop.Bought(DuelManager.ShopDay, 0))
+            {
+                var o = GUI.color; GUI.color = new Color(0.95f, 0.2f, 0.15f);
+                GUI.DrawTexture(new Rect(shopR.xMax - 26 * u, shopR.y - 6 * u, 26 * u, 26 * u), DotTex()); GUI.color = o;
+            }
             SideSoon(new Rect(Screen.width - pad - sbw, Screen.height - sbh - pad, sbw, sbh), "btn_blue", "trophy", "الحارة", u);
 
             // the bag rack sits in a dark panel along the bottom
@@ -1787,6 +1798,153 @@ namespace Sheytoonak.Prototype
         // ------------------------------------------------------------------ heroes: levels (SCENARIO §8)
 
         bool showHeroes; Vector2 heroesScroll;
+        bool showShop; Vector2 shopScroll;
+        public void ShowShopFromScript() { showStart = true; showHeroes = false; showShop = true; }
+
+        /// <summary>
+        /// The shop (user 2026-11-11, from a recording of the reference game: «بخش دکان رو از روی ویدیو الهام بگیری»). Two
+        /// panels, each a painted frame with a title, like the reference: «عروض اليوم» -- six piles of one tool's cards
+        /// (×N, the tool's icon, its progress toward the next level, the price in shards, the first one free), a «sold»
+        /// ribbon once bought and the time until they change at midnight -- and «أكياس» -- bags for shards that open at
+        /// once. Buying shows the same card reveal as a bag. No real money and no ads (SCENARIO §13).
+        /// </summary>
+        void ShopScreen(float u, GUIStyle big)
+        {
+            HomeBackdrop();
+            if (lootShown) { LootReveal(u); return; }
+            float pad = 14 * u, top = pad + SafeTop(), barH = 58 * u;
+            var num = new GUIStyle(big) { fontSize = Mathf.RoundToInt(26 * u), alignment = TextAnchor.MiddleCenter };
+            var small = new GUIStyle(num) { fontSize = Mathf.RoundToInt(18 * u), fontStyle = FontStyle.Normal };
+            var backR = new Rect(pad, top, Mathf.Min(170 * u, Screen.width * 0.15f), barH);
+            Plank(backR);
+            if (GUI.Button(backR, Ar.T("رجوع"), num)) { showShop = false; touch?.IgnoreFor(0.4f); return; }
+            float barW = Mathf.Min(250 * u, Screen.width * 0.2f);
+            var shardsR = new Rect(Screen.width - pad - barW, top, barW, barH);
+            Plank(shardsR);
+            DuelHud.DrawIcon(new Rect(shardsR.xMax - barH * 0.95f, top + barH * 0.12f, barH * 0.76f, barH * 0.76f), "shards", Color.white);
+            GUI.Label(new Rect(shardsR.x + 10 * u, top, shardsR.width - barH, barH), Ar.N(duelGame.ShardBank), num);
+            var titleR = new Rect((Screen.width - 300 * u) * 0.5f, top, 300 * u, barH);
+            Plank(titleR); GUI.Label(titleR, Ar.T("دكّان"), num);
+
+            float areaY = top + barH + 12 * u, areaH = Screen.height - areaY - pad, w = Screen.width - pad * 2;
+            float offersH = Mathf.Max(areaH * 0.62f, 330 * u), bagsH = Mathf.Max(areaH * 0.42f, 230 * u);
+            shopScroll = GUI.BeginScrollView(new Rect(pad, areaY, w, areaH), shopScroll, new Rect(0, 0, w - 4, offersH + bagsH + 14 * u), GUIStyle.none, GUIStyle.none);
+            var panel = DuelHud.Kit("panel");
+            var title = new GUIStyle(num) { fontSize = Mathf.RoundToInt(28 * u) }; title.normal.textColor = new Color(1f, 0.85f, 0.4f);
+
+            // --- today's offers
+            var or = new Rect(0, 0, w - 4, offersH);
+            if (panel != null) GUI.DrawTexture(or, panel, ScaleMode.StretchToFill);
+            GUI.Label(new Rect(or.x, or.y + 12 * u, or.width, 40 * u), Ar.T("عروض اليوم"), title);
+            var left = DuelManager.ShopDay.AddDays(1) - System.DateTime.UtcNow.AddHours(3.5);
+            var clock = new GUIStyle(small) { alignment = TextAnchor.MiddleLeft };
+            DuelHud.DrawIcon(new Rect(or.x + 28 * u, or.y + 18 * u, 26 * u, 26 * u), "clock", Color.white);
+            GUI.Label(new Rect(or.x + 60 * u, or.y + 16 * u, 160 * u, 30 * u), Ar.N(Mathf.Max(0, (int)left.TotalHours)) + ":" + Ar.N(Mathf.Max(0, left.Minutes)).PadLeft(2, '٠'), clock);
+            var offers = duelGame.TodaysOffers;
+            int n = offers.Length; float gap = 12 * u, cw = (or.width - 50 * u - gap * (n - 1)) / n, ch = or.height - 90 * u;
+            for (int i = 0; i < n; i++)
+            {
+                var o = offers[i];
+                var r = new Rect(or.xMax - 25 * u - (i + 1) * cw - i * gap, or.y + 64 * u, cw, ch); // right to left
+                bool sold = duelGame.Shop.Bought(DuelManager.ShopDay, i);
+                OfferCard(r, o, sold, u, small);
+                if (!sold && GUI.Button(r, GUIContent.none, GUIStyle.none))
+                {
+                    touch?.IgnoreFor(0.3f);
+                    if (duelGame.BuyOffer(i) == Sheytoonak.Core.Bags.ShopRules.Reject.NotEnoughShards) { shopShortUntil = Time.time + 1.4f; }
+                }
+            }
+            if (Time.time < shopShortUntil)
+            {
+                var warn = new GUIStyle(small); warn.normal.textColor = new Color(1f, 0.45f, 0.4f);
+                GUI.Label(new Rect(or.x, or.yMax - 30 * u, or.width, 26 * u), Ar.T("ما معك زجاج كفاية"), warn);
+            }
+
+            // --- bags for shards
+            var br = new Rect(0, offersH + 14 * u, w - 4, bagsH);
+            if (panel != null) GUI.DrawTexture(br, panel, ScaleMode.StretchToFill);
+            GUI.Label(new Rect(br.x, br.y + 12 * u, br.width, 40 * u), Ar.T("أكياس"), title);
+            var bags = Sheytoonak.Core.Bags.ShopRules.BagsForSale;
+            float bw = Mathf.Min(220 * u, (br.width - 60 * u) / bags.Length - gap), bh = br.height - 80 * u;
+            float bx0 = (br.width - (bags.Length * bw + (bags.Length - 1) * gap)) * 0.5f;
+            for (int i = 0; i < bags.Length; i++)
+            {
+                var size = bags[i];
+                var r = new Rect(br.x + bx0 + (bags.Length - 1 - i) * (bw + gap), br.y + 58 * u, bw, bh);
+                var o = GUI.color; GUI.color = new Color(0f, 0f, 0f, 0.35f); GUI.DrawTexture(r, Texture2D.whiteTexture); GUI.color = o;
+                var bagTex = Resources.Load<Texture2D>("Art/Bags/bag_" + (int)size);
+                var ir = new Rect(r.center.x - r.height * 0.3f, r.y + 6 * u, r.height * 0.6f, r.height * 0.6f);
+                if (bagTex != null) GUI.DrawTexture(ir, bagTex, ScaleMode.ScaleToFit); else DuelHud.DrawIcon(ir, "bag", BagTint[(int)size]);
+                GUI.Label(new Rect(r.x, r.y + r.height * 0.62f, r.width, 26 * u), Ar.T(size == Sheytoonak.Core.Bags.BagSize.Large ? "كيس كبير" : "كيس وسط") + "  ×" + Ar.N(Sheytoonak.Core.Bags.BagRules.CardsIn(size)), small);
+                int price = Sheytoonak.Core.Bags.ShopRules.BagPrice(size);
+                PriceButton(new Rect(r.x + 10 * u, r.yMax - 40 * u, r.width - 20 * u, 34 * u), price, duelGame.ShardBank >= price, u, small);
+                if (GUI.Button(r, GUIContent.none, GUIStyle.none))
+                {
+                    touch?.IgnoreFor(0.3f);
+                    if (!duelGame.BuyBag(size)) shopShortUntil = Time.time + 1.4f;
+                }
+            }
+            GUI.EndScrollView();
+        }
+        float shopShortUntil;
+
+        void OfferCard(Rect r, Sheytoonak.Core.Bags.DailyOffer o, bool sold, float u, GUIStyle small)
+        {
+            var old = GUI.color;
+            GUI.color = new Color(0.98f, 0.93f, 0.85f, sold ? 0.45f : 1f); GUI.DrawTexture(r, Texture2D.whiteTexture); GUI.color = old;
+            bool poison = false; string name = o.ToolId;
+            foreach (var h in Sheytoonak.Core.Duel.StarterHeroes.All)
+            {
+                if (h.Poison.Id == o.ToolId) { poison = true; name = h.Poison.NameAr; }
+                else if (h.Antidote.Id == o.ToolId) name = h.Antidote.NameAr;
+            }
+            float s = Mathf.Min(r.width * 0.75f, r.height * 0.45f);
+            DraftScreen.Badge(new Rect(r.center.x - s * 0.5f, r.y + 8 * u, s, s), o.ToolId, poison ? DuelHud.PoisonRed : DuelHud.AntidoteGreen);
+            var cnt = new GUIStyle(small) { fontSize = Mathf.RoundToInt(22 * u), fontStyle = FontStyle.Bold, alignment = TextAnchor.MiddleRight };
+            cnt.normal.textColor = new Color(0.2f, 0.75f, 0.25f);
+            GUI.Label(new Rect(r.x, r.y + 4 * u, r.width - 8 * u, 28 * u), "×" + Ar.N(o.Count), cnt);
+            var ink = new GUIStyle(small) { fontSize = Mathf.RoundToInt(15 * u) }; ink.normal.textColor = new Color(0.3f, 0.16f, 0.08f);
+            GUI.Label(new Rect(r.x + 2 * u, r.y + 12 * u + s, r.width - 4 * u, 24 * u), Ar.T(name), ink);
+            // progress toward the next level, like the reference's card
+            var lv = duelGame.Levels; int need = lv.CardsNeeded(o.ToolId), have = lv.Cards(o.ToolId);
+            var bar = new Rect(r.x + 8 * u, r.y + 40 * u + s, r.width - 16 * u, 18 * u);
+            GUI.color = new Color(0.1f, 0.12f, 0.2f); GUI.DrawTexture(bar, Texture2D.whiteTexture);
+            GUI.color = need > 0 && have + o.Count >= need ? new Color(0.3f, 0.85f, 0.35f) : new Color(0.25f, 0.55f, 0.95f);
+            GUI.DrawTexture(new Rect(bar.x, bar.y, need > 0 ? bar.width * Mathf.Clamp01(have / (float)need) : bar.width, bar.height), Texture2D.whiteTexture);
+            GUI.color = old;
+            GUI.Label(bar, need > 0 ? Ar.N(have) + " / " + Ar.N(need) : Ar.T(Ar.MaxLevel), new GUIStyle(small) { fontSize = Mathf.RoundToInt(13 * u) });
+            var pr = new Rect(r.x + 6 * u, r.yMax - 38 * u, r.width - 12 * u, 32 * u);
+            if (o.Price == 0)
+            {
+                var free = new GUIStyle(small) { fontStyle = FontStyle.Bold }; free.normal.textColor = new Color(0.15f, 0.6f, 0.2f);
+                GUI.Label(pr, Ar.T("ببلاش!"), free);
+            }
+            else PriceButton(pr, o.Price, duelGame.ShardBank >= o.Price, u, small);
+            if (sold)
+            {
+                // the red «sold» ribbon across the card
+                var m = GUI.matrix;
+                GUIUtility.RotateAroundPivot(-20f, r.center);
+                GUI.color = new Color(0.8f, 0.15f, 0.12f, 0.95f);
+                var rib = new Rect(r.x - 10 * u, r.center.y - 18 * u, r.width + 20 * u, 36 * u);
+                GUI.DrawTexture(rib, Texture2D.whiteTexture); GUI.color = old;
+                var w = new GUIStyle(small) { fontStyle = FontStyle.Bold }; w.normal.textColor = Color.white;
+                GUI.Label(rib, Ar.T("انباع"), w);
+                GUI.matrix = m;
+            }
+        }
+
+        static void PriceButton(Rect r, int price, bool can, float u, GUIStyle small)
+        {
+            var kit = DuelHud.Kit("btn_orange");
+            var old = GUI.color; GUI.color = can ? Color.white : new Color(0.6f, 0.6f, 0.6f, 0.9f);
+            if (kit != null) GUI.DrawTexture(r, kit, ScaleMode.StretchToFill);
+            else { GUI.color = can ? new Color(0.95f, 0.6f, 0.15f) : new Color(0.4f, 0.4f, 0.4f); GUI.DrawTexture(r, Texture2D.whiteTexture); }
+            GUI.color = old;
+            DuelHud.DrawIcon(new Rect(r.xMax - r.height * 0.95f, r.y + r.height * 0.1f, r.height * 0.8f, r.height * 0.8f), "shards", can ? Color.white : new Color(1f, 0.5f, 0.5f));
+            var st = new GUIStyle(small) { fontSize = Mathf.RoundToInt(16 * u), fontStyle = FontStyle.Bold }; st.normal.textColor = Color.white;
+            GUI.Label(new Rect(r.x, r.y, r.width - r.height * 0.8f, r.height), Ar.N(price), st);
+        }
         public void ShowHeroesFromScript() { showStart = true; showHeroes = true; }
 
         bool AnyUpgradeReady()
@@ -1983,7 +2141,8 @@ namespace Sheytoonak.Prototype
             // group the cards by tool, in the order they came
             var ids = new System.Collections.Generic.List<string>(); var counts = new System.Collections.Generic.Dictionary<string, int>();
             foreach (var id in lootCards) { if (!counts.ContainsKey(id)) { counts[id] = 0; ids.Add(id); } counts[id]++; }
-            int n = ids.Count + 1;
+            int shardCards = lootShards > 0 ? 1 : 0; // a shop pile brings no shards: no empty shards card
+            int n = ids.Count + shardCards;
             float cw = Mathf.Min(190 * u, (Screen.width - 60 * u) / Mathf.Max(1, n) - 14 * u), ch = cw * 1.45f, gap = 14 * u;
             float x0 = (Screen.width - (n * cw + (n - 1) * gap)) * 0.5f, y = Screen.height * 0.5f - ch * 0.5f;
             var panel = DuelHud.Kit("panel");
@@ -1998,14 +2157,14 @@ namespace Sheytoonak.Prototype
                 else { GUI.color = new Color(0.2f, 0.18f, 0.16f); GUI.DrawTexture(rr, Texture2D.whiteTexture); GUI.color = old; }
                 if (t < 1f) continue;
                 float s = cw * 0.55f;
-                if (k == 0)
+                if (k == 0 && shardCards == 1)
                 {
                     DuelHud.DrawIcon(new Rect(r.center.x - s * 0.5f, r.y + ch * 0.14f, s, s), "shards", Color.white);
                     GUI.Label(new Rect(r.x, r.y + ch * 0.6f, r.width, 40 * u), "+" + Ar.N(lootShards), big);
                     GUI.Label(new Rect(r.x, r.y + ch * 0.75f, r.width, 30 * u), Ar.T("زجاج"), lab);
                     continue;
                 }
-                string tid = ids[k - 1];
+                string tid = ids[k - shardCards];
                 bool poison = false; string name = tid;
                 foreach (var h in Sheytoonak.Core.Duel.StarterHeroes.All)
                 {
