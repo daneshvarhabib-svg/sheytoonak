@@ -32,14 +32,14 @@ namespace Sheytoonak.Tests
             Assert.Greater(a.EndsUtc, t); Assert.LessOrEqual((a.EndsUtc - t).TotalDays, ShopCatalog.SpecialDays);
             var b = ShopCatalog.SpecialNow(a.EndsUtc.AddMinutes(1));
             Assert.AreNotEqual(a.Sku, b.Sku);
-            Assert.LessOrEqual(a.PriceToman * 2, a.FullToman + 1000);
+            Assert.LessOrEqual(a.PriceCents * 2, a.FullCents + 2);
         }
 
         [Test]
         public void Bigger_lira_packs_are_cheaper_per_lira()
         {
             for (int i = 1; i < ShopCatalog.LiraPacks.Length; i++)
-                Assert.Less(ShopCatalog.LiraPacks[i].PriceToman / (double)ShopCatalog.LiraPacks[i].Lira, ShopCatalog.LiraPacks[i - 1].PriceToman / (double)ShopCatalog.LiraPacks[i - 1].Lira);
+                Assert.Less(ShopCatalog.LiraPacks[i].PriceCents / (double)ShopCatalog.LiraPacks[i].Lira, ShopCatalog.LiraPacks[i - 1].PriceCents / (double)ShopCatalog.LiraPacks[i - 1].Lira);
         }
     }
 }

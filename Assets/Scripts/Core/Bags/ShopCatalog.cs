@@ -5,7 +5,7 @@ using System.Text;
 namespace Sheytoonak.Core.Bags
 {
     /// <summary>A pack of the premium currency (ليرات) for real money.</summary>
-    public struct LiraPack { public string Sku; public string NameAr; public int Lira; public int PriceToman; }
+    public struct LiraPack { public string Sku; public string NameAr; public int Lira; public int PriceCents; }
     /// <summary>A pile of shards for lira.</summary>
     public struct ShardPack { public string NameAr; public int Shards; public int Lira; }
 
@@ -13,19 +13,24 @@ namespace Sheytoonak.Core.Bags
     /// The rest of the reference game's shop (user 2026-11-11: «نه اونا رو هم بساز همین حالا دیگه»): a premium currency
     /// (ليرة, the reference's gems) bought for money, shard piles and bags bought with it, a rotating half-price special
     /// offer, a «watch an ad» pile and prize codes. The money and the ads go through providers in the game layer
-    /// (StorePayments / RewardedAds) that do nothing until a store account (Cafe Bazaar / Myket / Google Play) and an ad
+    /// (StorePayments / RewardedAds) that do nothing until a store account (Google Play, later the App Store) and an ad
     /// network are set up by the owner -- nothing here can charge anyone.
     /// ⚠️ All prices are placeholders until the economy is tested.
     /// </summary>
     public static class ShopCatalog
     {
+        // User (2026-11-11): «ارز مشترک بین ارزهای عربی چیه؟ دلاره؟ نباید تومن باشه به هرحال؛ این بازی قراره در جهان عرب لانچ
+        // بشه». There is no common Arab currency: the base price is in US cents (the store's price tier), and the shop
+        // shows the store's own localized price (SAR, AED, EGP …) once a store is connected; until then «$0.99».
+        public static string Usd(int cents) => "$" + (cents / 100) + "." + (cents % 100).ToString("00");
+
         public static readonly LiraPack[] LiraPacks =
         {
-            new LiraPack { Sku = "lira_200",   NameAr = "قبضة",   Lira = 200,   PriceToman = 14900 },
-            new LiraPack { Sku = "lira_500",   NameAr = "كمشة",   Lira = 500,   PriceToman = 29900 },
-            new LiraPack { Sku = "lira_1200",  NameAr = "كيس",    Lira = 1200,  PriceToman = 59900 },
-            new LiraPack { Sku = "lira_2500",  NameAr = "صندوق",  Lira = 2500,  PriceToman = 119900 },
-            new LiraPack { Sku = "lira_6500",  NameAr = "خزنة",   Lira = 6500,  PriceToman = 299900 },
+            new LiraPack { Sku = "lira_200",   NameAr = "قبضة",   Lira = 200,   PriceCents = 99 },
+            new LiraPack { Sku = "lira_500",   NameAr = "كمشة",   Lira = 500,   PriceCents = 199 },
+            new LiraPack { Sku = "lira_1200",  NameAr = "كيس",    Lira = 1200,  PriceCents = 399 },
+            new LiraPack { Sku = "lira_2500",  NameAr = "صندوق",  Lira = 2500,  PriceCents = 799 },
+            new LiraPack { Sku = "lira_6500",  NameAr = "خزنة",   Lira = 6500,  PriceCents = 1999 },
         };
 
         public static readonly ShardPack[] ShardPacks =
@@ -40,12 +45,12 @@ namespace Sheytoonak.Core.Bags
 
         // ------------------------------------------------------------------ the special offer (half price, 3 days)
 
-        public struct Special { public string Sku; public BagSize Bag; public int Shards; public int PriceToman, FullToman; public DateTime EndsUtc; }
+        public struct Special { public string Sku; public BagSize Bag; public int Shards; public int PriceCents, FullCents; public DateTime EndsUtc; }
         public const int SpecialDays = 3;
         static readonly Special[] Specials =
         {
-            new Special { Sku = "special_a", Bag = BagSize.Huge,  Shards = 13000, PriceToman = 149900, FullToman = 300000 },
-            new Special { Sku = "special_b", Bag = BagSize.Large, Shards = 8000,  PriceToman = 99900,  FullToman = 200000 },
+            new Special { Sku = "special_a", Bag = BagSize.Huge,  Shards = 13000, PriceCents = 999, FullCents = 1999 },
+            new Special { Sku = "special_b", Bag = BagSize.Large, Shards = 8000,  PriceCents = 499, FullCents = 999 },
         };
 
         /// <summary>The offer running now: one of two, three days each, the same for everyone at the same time.</summary>

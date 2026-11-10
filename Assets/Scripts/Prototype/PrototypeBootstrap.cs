@@ -1854,11 +1854,11 @@ namespace Sheytoonak.Prototype
             var tag = new GUIStyle(title) { fontSize = Mathf.RoundToInt(30 * u) }; tag.normal.textColor = new Color(1f, 0.35f, 0.25f);
             GUI.Label(new Rect(sr.x + 30 * u, sy, 300 * u, 44 * u), Ar.T("تخفيض ٥٠٪"), tag);
             var strike = new GUIStyle(small); strike.normal.textColor = new Color(1f, 1f, 1f, 0.6f);
-            GUI.Label(new Rect(sr.x + 30 * u, sy + 46 * u, 300 * u, 28 * u), Ar.N(sp.FullToman) + " " + Ar.T("تومان"), strike);
+            GUI.Label(new Rect(sr.x + 30 * u, sy + 46 * u, 300 * u, 28 * u), Sheytoonak.Gameplay.Store.StorePayments.PriceText(sp.Sku + "_full", sp.FullCents), strike);
             var old = GUI.color; GUI.color = new Color(1f, 1f, 1f, 0.6f); GUI.DrawTexture(new Rect(sr.x + 110 * u, sy + 60 * u, 140 * u, 2 * u), Texture2D.whiteTexture); GUI.color = old;
             bool spDone = duelGame.SpecialBought(sp);
             var spBtn = new Rect(sr.x + 30 * u, sy + 84 * u, 300 * u, 50 * u);
-            MoneyButton(spBtn, spDone ? Ar.T("انشرى") : Ar.N(sp.PriceToman) + " " + Ar.T("تومان"), !spDone, u, small);
+            MoneyButton(spBtn, spDone ? Ar.T("انشرى") : Sheytoonak.Gameplay.Store.StorePayments.PriceText(sp.Sku, sp.PriceCents), !spDone, u, small);
             if (!spDone && GUI.Button(spBtn, GUIContent.none, GUIStyle.none)) { touch?.IgnoreFor(0.3f); duelGame.BuySpecial(); }
             y += hSpecial + g;
 
@@ -1922,7 +1922,7 @@ namespace Sheytoonak.Prototype
                 var big2 = new GUIStyle(small) { fontSize = Mathf.RoundToInt(22 * u), fontStyle = FontStyle.Bold }; big2.normal.textColor = new Color(1f, 0.85f, 0.35f);
                 GUI.Label(new Rect(r.x, r.y + 40 * u + cs, r.width, 30 * u), Ar.N(pk.Lira), big2);
                 var pr = new Rect(r.x + 8 * u, r.yMax - 40 * u, r.width - 16 * u, 34 * u);
-                MoneyButton(pr, Ar.N(pk.PriceToman) + " " + Ar.T("تومان"), true, u, small);
+                MoneyButton(pr, Sheytoonak.Gameplay.Store.StorePayments.PriceText(pk.Sku, pk.PriceCents), true, u, small);
                 if (GUI.Button(r, GUIContent.none, GUIStyle.none)) { touch?.IgnoreFor(0.3f); duelGame.BuyLira(k); }
             });
             y += hRow + g;
