@@ -202,6 +202,19 @@ namespace Sheytoonak
             int price = ShopRules.BagPrice(size);
             if (ShardBank < price) return false;
             ShardBank -= price;
+            GrantBag(size);
+            return true;
+        }
+
+        // ------------------------------------------------------------------ lira (premium), the rest of the shop (2026-11-11)
+
+        const string PrefLira = "sheytoonak.lira", PrefCodes = "sheytoonak.codes", PrefSpecial = "sheytoonak.special";
+        public int LiraBank { get => PlayerPrefs.GetInt(PrefLira, 0); private set { PlayerPrefs.SetInt(PrefLira, value); PlayerPrefs.Save(); } }
+        /// <summary>A short message for the shop (bought / not enough / soon / code wrong).</summary>
+        public event Action<string> ShopNote;
+
+        void GrantBag(BagSize size)
+        {
             int n = PlayerPrefs.GetInt(PrefShopBags, 0) + 1;
             PlayerPrefs.SetInt(PrefShopBags, n);
             var c = BagRules.ContentsOf(new Bag { Size = size, CycleIndex = -100000 - n }, ToolIds());
@@ -209,6 +222,58 @@ namespace Sheytoonak
             Levels.AddCards(c.UpgradeCards);
             SaveLevels();
             BagOpened?.Invoke(-1, c.Shards, c.UpgradeCards);
+        }
+
+        public bool BuyShardPack(int i)
+        {
+            var p = ShopCatalog.ShardPacks[i];
+            if (LiraBank < p.Lira) { ShopNote?.Invoke(Ar.NotEnoughLira); return false; }
+            LiraBank -= p.Lira; ShardBank += p.Shards; SaveLevels();
+            BagOpened?.Invoke(-1, p.Shards, new string[0]);
+            return true;
+        }
+
+        public bool BuyBagWithLira(BagSize size)
+        {
+            int price = ShopCatalog.BagLira(size);
+            if (LiraBank < price) { ShopNote?.Invoke(Ar.NotEnoughLira); return false; }
+            LiraBank -= price; GrantBag(size);
+            return true;
+        }
+
+        /// <summary>Real money: only through the store; with no store connected it says «soon» and grants nothing.</summary>
+        public void BuyLira(int i)
+        {
+            var p = ShopCatalog.LiraPacks[i];
+            if (!Sheytoonak.Gameplay.Store.StorePayments.Available) { ShopNote?.Invoke(Ar.PaySoon); return; }
+            Sheytoonak.Gameplay.Store.StorePayments.Buy(p.Sku, paid => { if (paid) { LiraBank += p.Lira; ShopNote?.Invoke("+" + Ar.N(p.Lira)); } });
+        }
+
+        public bool SpecialBought(ShopCatalog.Special s) => PlayerPrefs.GetString(PrefSpecial, "") == s.Sku + s.EndsUtc.Ticks;
+        public void BuySpecial()
+        {
+            var s = ShopCatalog.SpecialNow(DateTime.UtcNow);
+            if (SpecialBought(s)) return;
+            if (!Sheytoonak.Gameplay.Store.StorePayments.Available) { ShopNote?.Invoke(Ar.PaySoon); return; }
+            Sheytoonak.Gameplay.Store.StorePayments.Buy(s.Sku, paid =>
+            {
+                if (!paid) return;
+                PlayerPrefs.SetString(PrefSpecial, s.Sku + s.EndsUtc.Ticks);
+                ShardBank += s.Shards; GrantBag(s.Bag);
+            });
+        }
+
+        public bool RedeemCode(string code)
+        {
+            var used = new System.Collections.Generic.HashSet<string>(PlayerPrefs.GetString(PrefCodes, "").Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries));
+            var p = ShopCatalog.Redeem(code, used);
+            if (p == null) { ShopNote?.Invoke(Ar.CodeWrong); return false; }
+            PlayerPrefs.SetString(PrefCodes, string.Join(",", used));
+            if (p.Value.Lira > 0) LiraBank += p.Value.Lira;
+            if (p.Value.Shards > 0) { ShardBank += p.Value.Shards; SaveLevels(); }
+            if (p.Value.Bag.HasValue) GrantBag(p.Value.Bag.Value);
+            else BagOpened?.Invoke(-1, p.Value.Shards, new string[0]);
+            if (p.Value.Lira > 0) ShopNote?.Invoke("+" + Ar.N(p.Value.Lira) + " " + Ar.Lira);
             return true;
         }
 

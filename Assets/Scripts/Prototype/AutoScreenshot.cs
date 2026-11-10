@@ -126,6 +126,9 @@ namespace Sheytoonak.Prototype
                         yield return Shot("14-heroes", 0.6f);
                         boot.ShowShopFromScript();
                         yield return Shot("15-shop", 0.6f);
+                        boot.ScrollShopForShot(100000f);
+                        yield return Shot("15b-shop-bottom", 0.5f);
+                        boot.ScrollShopForShot(0f);
                         boot.Duel.BuyOffer(1);
                         yield return Shot("16-shop-bought", 1.4f);
                     }

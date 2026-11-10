@@ -61,6 +61,10 @@ namespace Sheytoonak
         public const string NothingToClear = "ما في شي يشيلو";
         /// <summary>The antidote is two levels or more below the poison (SCENARIO §8).</summary>
         public const string TooWeak = "الترياق أضعف من السمّ";
+        public const string Lira = "ليرة";
+        public const string NotEnoughLira = "ما معك ليرات كفاية";
+        public const string PaySoon = "الدفع قريباً";
+        public const string CodeWrong = "الكود غلط أو مستعمل";
         public const string Upgrade = "قوّي";
         public const string Heroes = "الأبطال";
         public const string MaxLevel = "أقوى شي";
