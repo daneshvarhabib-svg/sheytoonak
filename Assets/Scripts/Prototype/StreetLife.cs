@@ -91,6 +91,12 @@ namespace Sheytoonak
             }
         }
 
+        /// <summary>
+        /// ⚠️ Off since 2026-11-11 (docs/STORE_RISK.fa.md §2 #6, applied at the user's word «اونا رو هم اعمال کنیم با اولویت
+        /// بالا»): blood lifts the store age rating. The victim still reels, falls and is carried off; the pigeon still
+        /// falls and is swept up -- only the stains are not drawn. The code stays so the rating decision can be undone.
+        /// </summary>
+        public static bool ShowBlood = false;
         static Texture2D bloodTex;
         /// <summary>The soft red stain (also used under the pigeon the ball brings down).</summary>
         public static Sprite BloodSprite()
@@ -147,6 +153,7 @@ namespace Sheytoonak
             // ⚠️ was sortingOrder + 1: sprite order beats depth, so the stain was painted over the ambulance parked in front
             // of him (user 2026-11-09: «خون کسی که ریخته شده میاد روی آمبولانس»). Same order as the body, a hair in front.
             blood.sortingOrder = sr.sortingOrder;
+            blood.enabled = ShowBlood;
             for (float k = 0f; k < 0.5f; k += Time.deltaTime)
             {
                 if (t == null) yield break;

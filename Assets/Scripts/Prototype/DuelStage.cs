@@ -478,6 +478,7 @@ namespace Sheytoonak.Prototype
             blood.transform.position = corpse.position + new Vector3(0.05f, -0.06f, 0.01f);
             blood.transform.rotation = Quaternion.identity;
             if (sr != null) blood.sortingOrder = sr.sortingOrder;
+            blood.enabled = StreetLife.ShowBlood;
             for (float t = 0f; t < 0.6f; t += Time.deltaTime) { blood.transform.localScale = Vector3.one * Mathf.Lerp(0.3f, 1.4f, t / 0.6f) / Mathf.Max(0.01f, corpse.lossyScale.x); yield return null; }
             yield return new WaitForSeconds(1.2f);
             var truckT = Resources.Load<Texture2D>("Art/Props/sweeper");

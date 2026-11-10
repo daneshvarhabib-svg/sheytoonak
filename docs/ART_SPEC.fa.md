@@ -425,22 +425,22 @@ Cut-out character for a game, portrait 3:4, on a flat solid bright green backgro
 |---|---|---|
 | 1 | مرد | `[furious, shouting from an upstairs window] ولك شو عم تعمل؟! ها؟!` |
 | 2 | مرد | `[enraged, yelling] يا حيوان! كسرتلي الشبّاك!` |
-| 3 | زن | `[old woman, screaming hoarsely] الله يقطعك يا ولد! الله يقطعك!` |
+| 3 | زن | `[old woman, screaming hoarsely] يا قليل الأدب! يا قليل الأدب!` (۲۱ آبان: بی‌نامِ خدا) |
 | 4 | مرد | `[angry, barking an order] ولاك روح من هون! يلّا!` |
 | 5 | زن | `[shrieking, outraged] يا مجنون! شو هالمصيبة؟!` |
-| 6 | مرد | `[furious, voice cracking] الله ياخدك يا زلمة!` |
-| 7 | مرد | `[growling, then shouting] يلعن أبو هالشغلة! يلعن أبوها!` |
+| 6 | مرد | `[furious, voice cracking] يا زفت! شو عملت؟!` (۲۱ آبان) |
+| 7 | مرد | `[growling, then shouting] يا خراب بيتي! يا خراب بيتي!` (۲۱ آبان) |
 | 8 | زن | `[threatening, sharp] بدّي خبّر أبوك، فهمت؟! بدّي خبّرو!` |
 | 9 | زن | `[screaming at the top of her lungs] ولااااك! تعا لهون!` |
-| 10 | مرد | `[exasperated, shouting] يا ربّي! كل يوم نفس القصّة!` |
+| 10 | مرد | `[exasperated, shouting] كل يوم نفس القصّة! كل يوم!` (۲۱ آبان) |
 
 ### خطِ قهرمان‌ها برای ElevenLabs v3 (هیجان‌زده)
 Stability ~۴۰. هر خط یک فایل → `Audio/Heroes/<id>/kick_01..03`. مرد = Ahmed (یا یک مردِ جوانِ عربی برایِ جوان‌ها)، زن = صدای زنِ جوانِ عربی.
 
 | id | صدا | ۱ | ۲ | ۳ |
 |---|---|---|---|---|
-| abu_shahata | مرد، خشن | `[gruff, excited shout] خود هالشحّاطة!` | `[excited] يا الله شوف!` | `[shouting, triumphant] ولك طير!` |
-| zaatar | مرد، جوان، شاد | `[cheerful, excited] بسم الله!` | `[excited, laughing] شوفوا هالضربة!` | `[triumphant shout] هيك بتنكسر!` |
+| abu_shahata | مرد، خشن | `[gruff, excited shout] خود هالشحّاطة!` | `[excited] يا عيني شوف!` | `[shouting, triumphant] ولك طير!` |
+| zaatar | مرد، جوان، شاد | `[cheerful, excited] يلّا يا شباب!` | `[excited, laughing] شوفوا هالضربة!` | `[triumphant shout] هيك بتنكسر!` |
 | fulla | زن، جوان، پرانرژی | `[excited, playful] خدها يا بابا!` | `[cheering] أيوه كده!` | `[shouting, excited] يلّا يا شبّاك!` |
 | rima | زن، میان‌سال، بلند | `[shouting, fierce] يا ويلك!` | `[excited, urging] هيّا هيّا!` | `[triumphant] هيدي من ريما!` |
 | toni | مرد، جوان، زورگو | `[aggressive shout] ولك رووح!` | `[cocky, excited] هيدي إلك!` | `[laughing, shouting] شو هالكفّ!` |
@@ -455,7 +455,7 @@ Stability ~۴۰. هر خط یک فایل → `Audio/Heroes/<id>/kick_01..03`. م
 | # | صدا | متن |
 |---|---|---|
 | victim_01 | مرد | `[sudden pained yelp, then dazed] آآخ! … راسي… راسي!` |
-| victim_02 | زن | `[shrieks in pain and shock] آآآي! يا عدرا! شو صار؟!` |
+| victim_02 | زن | `[shrieks in pain and shock] آآآي! يا ويلي! شو صار؟!` |
 | victim_03 | مرد مسن | `[groaning, winded, falling] أوووف… يا لطيف… وقعت…` |
 | victim_04 | زن | `[screaming for help] ساعدوني! حدا يتّصل بالإسعاف!` |
 | siren_01 | افکت | `Old Middle Eastern ambulance siren approaching on a narrow street, two-tone wail, slightly distorted horn, 4 seconds, no music.` |

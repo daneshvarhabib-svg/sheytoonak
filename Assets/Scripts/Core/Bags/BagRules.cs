@@ -38,6 +38,9 @@ namespace Sheytoonak.Core.Bags
         static readonly int[] Cards = { 4, 8, 16, 24 };
         /// <summary>Cards per bag size, for the level calendar.</summary>
         public static int CardsIn(BagSize s) => Cards[(int)s];
+        /// <summary>What a bag of this size holds, said up front (store rules on random rewards: docs/STORE_RISK.fa.md §2 #8).</summary>
+        public static int ShardsMinIn(BagSize s) => ShardsMin[(int)s];
+        public static int ShardsMaxIn(BagSize s) => ShardsMax[(int)s];
 
         /// <summary>40 steps: M at 5,10,15,20,25,30,35,39 (8), L at 19 and 38 (2), the rest S (30).</summary>
         public static readonly BagSize[] Cycle = BuildCycle();

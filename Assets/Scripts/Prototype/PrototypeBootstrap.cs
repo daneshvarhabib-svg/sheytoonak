@@ -1894,6 +1894,9 @@ namespace Sheytoonak.Prototype
                 if (bt != null) GUI.DrawTexture(ir, bt, ScaleMode.ScaleToFit); else DuelHud.DrawIcon(ir, "bag", BagTint[(int)size]);
                 string nm = size == Sheytoonak.Core.Bags.BagSize.Huge ? "كيس ضخم" : size == Sheytoonak.Core.Bags.BagSize.Large ? "كيس كبير" : "كيس وسط";
                 GUI.Label(new Rect(r.x, r.y + r.height * 0.6f, r.width, 26 * u), Ar.T(nm) + "  ×" + Ar.N(Sheytoonak.Core.Bags.BagRules.CardsIn(size)), small);
+                // the odds, said up front: N cards of tools picked at random (every tool the same chance) + a shard range
+                var odds = new GUIStyle(small) { fontSize = Mathf.RoundToInt(13 * u) }; odds.normal.textColor = new Color(1f, 1f, 1f, 0.75f);
+                GUI.Label(new Rect(r.x, r.y + r.height * 0.6f + 24 * u, r.width, 22 * u), Ar.T("كروت عشوائية") + "  " + Ar.N(Sheytoonak.Core.Bags.BagRules.ShardsMinIn(size)) + "–" + Ar.N(Sheytoonak.Core.Bags.BagRules.ShardsMaxIn(size)), odds);
                 var pr = new Rect(r.x + 10 * u, r.yMax - 40 * u, r.width - 20 * u, 34 * u);
                 if (size == Sheytoonak.Core.Bags.BagSize.Huge)
                 {
