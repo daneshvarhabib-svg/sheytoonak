@@ -174,3 +174,6 @@
 - **هزینه:** کم. **ریسک:** بازیکن کارتی را خرد کند که بعداً پشیمان شود؛ تأییدِ دوضربه‌ای و نشان‌دادنِ «چند لول از دست می‌دهی».
 
 منابع: [Supercell – December update 2025](https://supercell.com/en/games/clashroyale/blog/release-notes/december-update-2025)، [Supercell – coming in the next update](https://supercell.com/en/games/clashroyale/blog/news/coming-in-the-next-update)، [Hearthstone wiki – Disenchant](https://hearthstone.wiki.gg/wiki/Disenchant)، [Hearthstone wiki – Crafting](https://hearthstone.wiki.gg/wiki/Crafting)، [CardGamer – Hearthstone economy](https://cardgamer.com/games/digital-card-games/hearthstone/hearthstone-economy-explained-understanding-gold-and-dust/).
+
+### پ۲۳ (از کاربر، ۲۰ آبان). درخواستِ کارت در گروه
+روزی یک درخواست؛ هر هم‌گروهی تا ۳ کارت، سقف ۷؛ دهنده به‌ازایِ هر کارت خرده‌شیشه می‌گیرد، گیرنده رایگان. ثبت در SCENARIO §۱۱؛ با فازِ آنلاین/گروه («الحارة») ساخته می‌شود، نه حالا.
