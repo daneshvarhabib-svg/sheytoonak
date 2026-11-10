@@ -72,7 +72,7 @@ namespace Sheytoonak.Prototype
         float wind;
         BackdropWindowMapper windowMapper;
         string toast = "";
-        int lootShards, lootCards; float lootUntil; // the last opened bag, shown over the home screen
+        int lootShards; string[] lootCards; bool lootShown; float lootAt; // the last opened bag, shown over the home screen until tapped
         float toastUntil;
         string endTitle;
         int endScore, endBest, endMedals;
@@ -311,7 +311,7 @@ namespace Sheytoonak.Prototype
                 hud.onHome = () => { duelGame.ToHome(); showStart = true; };
                 var draft = gameGo.AddComponent<DraftScreen>();
                 draft.duel = duelGame; draft.touch = touch;
-                duelGame.BagOpened += (slot, shards, cards) => { lootShards = shards; lootCards = cards; lootUntil = Time.time + 2.8f; };
+                duelGame.BagOpened += (slot, shards, cards) => { lootShards = shards; lootCards = cards ?? new string[0]; lootShown = true; lootAt = Time.time; };
                 duelGame.Toast += (t, sec) => { }; // the hud shows toasts; the bootstrap keeps its own for the rally only
             }
             else
@@ -1692,6 +1692,8 @@ namespace Sheytoonak.Prototype
         void HomeScreen(float u, GUIStyle big)
         {
             HomeBackdrop();
+            // the loot of the bag just opened covers the lobby until tapped; nothing under it may take the tap
+            if (lootShown) { LootReveal(u); return; }
             float pad = 14 * u, top = pad + SafeTop();
             var num = new GUIStyle(big) { fontSize = Mathf.RoundToInt(28 * u), alignment = TextAnchor.MiddleCenter };
             var small = new GUIStyle(num) { fontSize = Mathf.RoundToInt(20 * u) };
@@ -1963,6 +1965,71 @@ namespace Sheytoonak.Prototype
             GUI.Label(tr, Ar.T("قريباً"), tag);
         }
 
+        /// <summary>
+        /// User (2026-11-10): «کیسه رو که باز می‌کنی باید آیکون‌هایی که بردی رو نشونت بده، در قالب یه کارتی چیزی. الآن من نمی‌فهمم
+        /// چی بردم». Each card turns over one after another: the shards first, then one card per tool with its icon, its
+        /// name, how many came, and how far that tool now is toward its next level. It stays until tapped.
+        /// </summary>
+        void LootReveal(float u)
+        {
+            var all = new Rect(0, 0, Screen.width, Screen.height);
+            var old = GUI.color; GUI.color = new Color(0f, 0f, 0f, 0.82f); GUI.DrawTexture(all, Texture2D.whiteTexture); GUI.color = old;
+            var title = new GUIStyle(GUI.skin.label) { font = Ar.Font, fontSize = Mathf.RoundToInt(34 * u), alignment = TextAnchor.MiddleCenter, fontStyle = FontStyle.Bold };
+            title.normal.textColor = new Color(1f, 0.85f, 0.4f);
+            var lab = new GUIStyle(title) { fontSize = Mathf.RoundToInt(20 * u), fontStyle = FontStyle.Normal }; lab.normal.textColor = Color.white;
+            var big = new GUIStyle(title) { fontSize = Mathf.RoundToInt(30 * u) }; big.normal.textColor = Color.white;
+            GUI.Label(new Rect(0, Screen.height * 0.1f, Screen.width, 50 * u), Ar.T("شو طلع من الكيس"), title);
+
+            // group the cards by tool, in the order they came
+            var ids = new System.Collections.Generic.List<string>(); var counts = new System.Collections.Generic.Dictionary<string, int>();
+            foreach (var id in lootCards) { if (!counts.ContainsKey(id)) { counts[id] = 0; ids.Add(id); } counts[id]++; }
+            int n = ids.Count + 1;
+            float cw = Mathf.Min(190 * u, (Screen.width - 60 * u) / Mathf.Max(1, n) - 14 * u), ch = cw * 1.45f, gap = 14 * u;
+            float x0 = (Screen.width - (n * cw + (n - 1) * gap)) * 0.5f, y = Screen.height * 0.5f - ch * 0.5f;
+            var panel = DuelHud.Kit("panel");
+            for (int k = 0; k < n; k++)
+            {
+                // flips in one by one (0.25 s apart), right to left
+                float t = Mathf.Clamp01((Time.time - lootAt - k * 0.25f) / 0.3f);
+                if (t <= 0f) continue;
+                var r = new Rect(x0 + (n - 1 - k) * (cw + gap), y, cw, ch);
+                var rr = new Rect(r.center.x - r.width * 0.5f * t, r.y, r.width * t, r.height);
+                if (panel != null) GUI.DrawTexture(rr, panel, ScaleMode.StretchToFill);
+                else { GUI.color = new Color(0.2f, 0.18f, 0.16f); GUI.DrawTexture(rr, Texture2D.whiteTexture); GUI.color = old; }
+                if (t < 1f) continue;
+                float s = cw * 0.55f;
+                if (k == 0)
+                {
+                    DuelHud.DrawIcon(new Rect(r.center.x - s * 0.5f, r.y + ch * 0.14f, s, s), "shards", Color.white);
+                    GUI.Label(new Rect(r.x, r.y + ch * 0.6f, r.width, 40 * u), "+" + Ar.N(lootShards), big);
+                    GUI.Label(new Rect(r.x, r.y + ch * 0.75f, r.width, 30 * u), Ar.T("زجاج"), lab);
+                    continue;
+                }
+                string tid = ids[k - 1];
+                bool poison = false; string name = tid;
+                foreach (var h in Sheytoonak.Core.Duel.StarterHeroes.All)
+                {
+                    if (h.Poison.Id == tid) { poison = true; name = h.Poison.NameAr; }
+                    else if (h.Antidote.Id == tid) name = h.Antidote.NameAr;
+                }
+                DraftScreen.Badge(new Rect(r.center.x - s * 0.5f, r.y + ch * 0.1f, s, s), tid, poison ? DuelHud.PoisonRed : DuelHud.AntidoteGreen);
+                GUI.Label(new Rect(r.x, r.y + ch * 0.1f + s + 4 * u, r.width, 34 * u), "×" + Ar.N(counts[tid]), big);
+                GUI.Label(new Rect(r.x + 6 * u, r.y + ch * 0.1f + s + 40 * u, r.width - 12 * u, 28 * u), Ar.T(name), lab);
+                // how close the tool is now to its next level
+                var lv = duelGame.Levels; int need = lv.CardsNeeded(tid), have = lv.Cards(tid);
+                var bar = new Rect(r.x + 14 * u, r.yMax - 34 * u, r.width - 28 * u, 16 * u);
+                GUI.color = new Color(0f, 0f, 0f, 0.6f); GUI.DrawTexture(bar, Texture2D.whiteTexture);
+                GUI.color = need > 0 && have >= need ? new Color(0.3f, 0.85f, 0.35f) : new Color(0.35f, 0.6f, 1f);
+                GUI.DrawTexture(new Rect(bar.x, bar.y, need > 0 ? bar.width * Mathf.Clamp01(have / (float)need) : bar.width, bar.height), Texture2D.whiteTexture);
+                GUI.color = old;
+                GUI.Label(new Rect(bar.x, bar.y - 24 * u, bar.width, 22 * u), need > 0 ? Ar.N(Mathf.Min(have, need)) + " / " + Ar.N(need) : Ar.T(Ar.MaxLevel), new GUIStyle(lab) { fontSize = Mathf.RoundToInt(15 * u) });
+            }
+            if (Time.time - lootAt > n * 0.25f + 0.4f)
+                GUI.Label(new Rect(0, Screen.height * 0.84f, Screen.width, 40 * u), Ar.T("دوس لتكمّل"), lab);
+            // tap anywhere to close (not in the first half second: the tap that opened the bag must not close it)
+            if (Time.time - lootAt > 0.5f && GUI.Button(all, GUIContent.none, GUIStyle.none)) { lootShown = false; touch?.IgnoreFor(0.3f); }
+        }
+
         static readonly Color[] BagTint =
         {
             new Color(0.55f, 0.75f, 0.45f), new Color(0.40f, 0.65f, 1f), new Color(0.75f, 0.45f, 1f), new Color(1f, 0.8f, 0.25f)
@@ -1997,21 +2064,16 @@ namespace Sheytoonak.Prototype
                 if (GUI.Button(r, GUIContent.none, GUIStyle.none)) { touch?.IgnoreFor(0.5f); duelGame.TapBag(i); }
                 var lr = new Rect(r.x, r.yMax + 4 * u, r.width, 30 * u);
                 if (ready) DuelHud.DrawIcon(new Rect(lr.center.x - 15 * u, lr.y, 30 * u, 30 * u), "pick", new Color(0.4f, 1f, 0.5f));
-                else if (b.Unlocking) DuelHud.DrawIcon(new Rect(lr.center.x - 15 * u, lr.y, 30 * u, 30 * u), "window", new Color(1f, 0.85f, 0.4f)); // opens with the next win (review 2026-11-07 §2.6)
-                else DuelHud.DrawIcon(new Rect(lr.center.x - 15 * u, lr.y, 30 * u, 30 * u), "clock", Color.white);
-            }
-            if (Time.time < lootUntil)
-            {
-                var big = new GUIStyle(num) { fontSize = Mathf.RoundToInt(44 * u) };
-                float cy = Screen.height * 0.5f;
-                var old = GUI.color; GUI.color = new Color(0f, 0f, 0f, 0.7f);
-                GUI.DrawTexture(new Rect(Screen.width * 0.5f - 200 * u, cy - 70 * u, 400 * u, 140 * u), Texture2D.whiteTexture); GUI.color = old;
-                DuelHud.DrawIcon(new Rect(Screen.width * 0.5f - 170 * u, cy - 30 * u, 60 * u, 60 * u), "shards", Color.white);
-                GUI.Label(new Rect(Screen.width * 0.5f - 110 * u, cy - 30 * u, 110 * u, 60 * u), "+" + lootShards, big);
-                if (lootCards > 0)
+                else
                 {
-                    DuelHud.DrawIcon(new Rect(Screen.width * 0.5f + 20 * u, cy - 30 * u, 60 * u, 60 * u), "card", new Color(1f, 0.85f, 0.4f));
-                    GUI.Label(new Rect(Screen.width * 0.5f + 80 * u, cy - 30 * u, 100 * u, 60 * u), "+" + lootCards, big);
+                    // the time it takes (closed) or what is left (opening): user 2026-11-10, at least an hour
+                    var span = b.Unlocking ? rack.TimeLeft(i, now) : rack.UnlockTime(b.Size, now);
+                    int mins = Mathf.Max(1, Mathf.CeilToInt((float)span.TotalMinutes));
+                    string t = mins >= 60 ? Ar.N(mins / 60) + ":" + Ar.N(mins % 60).PadLeft(2, '٠') : Ar.N(mins) + "'";
+                    var st = new GUIStyle(num) { fontSize = Mathf.RoundToInt(19 * u), alignment = TextAnchor.MiddleLeft };
+                    if (b.Unlocking) st.normal.textColor = new Color(1f, 0.85f, 0.4f);
+                    DuelHud.DrawIcon(new Rect(lr.center.x - 38 * u, lr.y + 2 * u, 26 * u, 26 * u), "clock", b.Unlocking ? new Color(1f, 0.85f, 0.4f) : Color.white);
+                    GUI.Label(new Rect(lr.center.x - 10 * u, lr.y, 60 * u, 30 * u), t, st);
                 }
             }
         }

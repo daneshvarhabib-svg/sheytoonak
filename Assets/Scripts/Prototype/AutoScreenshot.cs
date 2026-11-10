@@ -120,7 +120,7 @@ namespace Sheytoonak.Prototype
                         boot.Duel.ScreenshotBags();
                         yield return Shot("12-bags", 0.5f);
                         boot.Duel.TapBag(0);
-                        yield return Shot("13-loot", 0.4f);
+                        yield return Shot("13-loot", 2.2f);
                         boot.Duel.ScreenshotLevels();
                         boot.ShowHeroesFromScript();
                         yield return Shot("14-heroes", 0.6f);

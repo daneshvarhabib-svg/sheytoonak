@@ -131,9 +131,18 @@ namespace Sheytoonak
         const string PrefBags = "sheytoonak.bags", PrefCards = "sheytoonak.cards";
         BagRules bags;
         /// <summary>Four slots; created on first use with the install time (the first-week clock counts from it).</summary>
-        public BagRules Bags => bags ?? (bags = BagRules.Parse(PlayerPrefs.GetString(PrefBags, "")) ?? new BagRules(DateTime.UtcNow));
+        public BagRules Bags
+        {
+            get
+            {
+                if (bags != null) return bags;
+                bags = BagRules.Parse(PlayerPrefs.GetString(PrefBags, "")) ?? new BagRules(DateTime.UtcNow);
+                bags.FixWaitingForWin(DateTime.UtcNow);
+                return bags;
+            }
+        }
         /// <summary>slot, shards, cards — raised when a bag is opened so the HUD can show the loot.</summary>
-        public event Action<int, int, int> BagOpened;
+        public event Action<int, int, string[]> BagOpened;
         void SaveBags() { PlayerPrefs.SetString(PrefBags, Bags.Serialize()); PlayerPrefs.SetInt(PrefShards, ShardBank); PlayerPrefs.Save(); }
 
         const string PrefLevels = "sheytoonak.levels";
@@ -182,7 +191,7 @@ namespace Sheytoonak
                 Levels.AddCards(c.Value.UpgradeCards);
                 SaveLevels();
                 SaveBags();
-                BagOpened?.Invoke(slot, c.Value.Shards, c.Value.UpgradeCards.Length);
+                BagOpened?.Invoke(slot, c.Value.Shards, c.Value.UpgradeCards);
                 return true;
             }
             bool started = Bags.StartUnlock(slot, now);
@@ -488,7 +497,7 @@ namespace Sheytoonak
             }
             // a bag comes from a win (any duel, challenge too), not from time; a full rack gets nothing.
             // Review 2026-11-07 §2.6: no timers — the bag you tapped opens with your next win.
-            if (winner == Me) { Bags.WinUnlocks(); Bags.AddFromWin(); }
+            if (winner == Me) Bags.AddFromWin();
             SaveBags();
             ball.Hide();
             Finished?.Invoke(winner, winner == Me);

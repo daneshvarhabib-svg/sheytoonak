@@ -34,10 +34,16 @@ namespace Sheytoonak.Tests
             r.AddFromWin(); r.AddFromWin();
             Assert.IsTrue(r.StartUnlock(0, T0));
             Assert.IsFalse(r.StartUnlock(1, T0), "one at a time");
-            Assert.IsTrue(r.WaitsForWin(0), "no timer: the next win opens it (review 2026-11-07)"); r.WinUnlocks(); Assert.IsTrue(r.IsReady(0, T0));
-            var c = r.Open(0, T0, Tools);
+            // user (2026-11-10): at least an hour, even on the first day
+            Assert.IsFalse(r.IsReady(0, T0.AddMinutes(59)), "never under an hour");
+            Assert.IsTrue(r.IsReady(0, T0.AddHours(1)));
+            Assert.IsNull(r.Open(1, T0.AddHours(1), Tools), "the other bag was never started");
+            var c = r.Open(0, T0.AddHours(1), Tools);
             Assert.IsNotNull(c); Assert.Greater(c.Value.Shards, 0); Assert.AreEqual(BagRules.CardsIn(BagSize.Small), c.Value.UpgradeCards.Length);
             Assert.AreEqual(1.0, new BagRules(T0).ClockFactor(T0.AddDays(8)), 1e-9);
+            var big = new BagRules(T0);
+            Assert.AreEqual(8.0, big.UnlockTime(BagSize.Large, T0.AddDays(10)).TotalHours, 1e-9);
+            Assert.AreEqual(1.0, big.UnlockTime(BagSize.Medium, T0).TotalHours, 1e-9, "the first-week clock never goes under an hour");
         }
 
         [Test]

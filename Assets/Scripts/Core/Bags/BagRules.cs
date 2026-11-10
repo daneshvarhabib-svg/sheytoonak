@@ -92,27 +92,31 @@ namespace Sheytoonak.Core.Bags
 
         public bool AnyUnlocking(DateTime nowUtc) { foreach (var b in Rack) if (b != null && b.Unlocking && nowUtc.Ticks < b.ReadyTicks) return true; return false; }
 
-        // Design review 2026-11-07 §2.6: the 2/6/12/18 h timers were Clash Royale 2017 and nobody likes them. A tapped bag
-        // is "unlocking" until the player's next win, which opens it (WinUnlocks); Hours/ClockFactor stay only as data.
+        // ⚠️ The clock is back (user 2026-11-10): «زمان باز شدن هر کیسه نباید اینقدر کم باشه. بهتره حداقل ۱ ساعت طول بکشه».
+        // Review 2026-11-07 §2.6 had replaced the timers with "the next win opens it", which opened a bag every few
+        // minutes. Now 1 / 3 / 8 / 12 hours by size; the first-week clock still speeds the big ones up but never under
+        // an hour (MinHours).
+        public const double MinHours = 1.0;
+        public static readonly double[] OpenHours = { 1, 3, 8, 12 };
+
+        /// <summary>How long this bag takes to open if started now.</summary>
+        public TimeSpan UnlockTime(BagSize size, DateTime nowUtc)
+            => TimeSpan.FromHours(Math.Max(MinHours, OpenHours[(int)size] / ClockFactor(nowUtc)));
+
         public bool StartUnlock(int slot, DateTime nowUtc)
         {
             var b = Rack[slot];
             if (b == null || b.Unlocking || AnyUnlocking(nowUtc)) return false;
             b.UnlockStartTicks = nowUtc.Ticks;
-            b.ReadyTicks = long.MaxValue; // a win, not the clock, sets it
+            b.ReadyTicks = (nowUtc + UnlockTime(b.Size, nowUtc)).Ticks;
             return true;
         }
 
-        /// <summary>A win opens the bag that was waiting (returns its slot, or -1).</summary>
-        public int WinUnlocks()
+        /// <summary>Saves of the "next win opens it" builds: a bag still waiting for a win gets its real timer from now.</summary>
+        public void FixWaitingForWin(DateTime nowUtc)
         {
-            for (int i = 0; i < Slots; i++)
-                if (Rack[i] != null && Rack[i].Unlocking && Rack[i].ReadyTicks == long.MaxValue) { Rack[i].ReadyTicks = 0; return i; }
-            return -1;
+            foreach (var b in Rack) if (b != null && b.Unlocking && b.ReadyTicks == long.MaxValue) b.ReadyTicks = (nowUtc + UnlockTime(b.Size, nowUtc)).Ticks;
         }
-
-        /// <summary>True while a bag waits for the next win.</summary>
-        public bool WaitsForWin(int slot) => Rack[slot] != null && Rack[slot].Unlocking && Rack[slot].ReadyTicks == long.MaxValue;
 
         public bool IsReady(int slot, DateTime nowUtc) => Rack[slot] != null && Rack[slot].Unlocking && nowUtc.Ticks >= Rack[slot].ReadyTicks;
 
