@@ -72,7 +72,8 @@ namespace Sheytoonak.Prototype
                 // «deception» reports); a small grey tag under its bar
                 if (side != (int)duel.Me)
                 {
-                    var tr = new Rect(left ? bx : bx + bw - 56 * u, by + 12 * u, 56 * u, 24 * u);
+                    // beside the score (run 218: under the bar the poison badges covered it)
+                    var tr = new Rect(left ? x + isz0 + 70 * u : x - 180 * u, top + 8 * u, 56 * u, 24 * u);
                     var o = GUI.color; GUI.color = new Color(0f, 0f, 0f, 0.55f); GUI.DrawTexture(tr, Texture2D.whiteTexture); GUI.color = o;
                     var bt = new GUIStyle(small) { alignment = TextAnchor.MiddleCenter, fontSize = Mathf.RoundToInt(16 * u) }; bt.normal.textColor = new Color(0.85f, 0.85f, 0.85f);
                     GUI.Label(tr, Ar.T("بوت"), bt);

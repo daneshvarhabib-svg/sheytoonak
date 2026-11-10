@@ -1992,7 +1992,7 @@ namespace Sheytoonak.Prototype
         {
             DuelHud.DrawIcon(new Rect(r.x, r.y + 2 * u, 26 * u, 26 * u), "clock", Color.white);
             var st = new GUIStyle(small) { alignment = TextAnchor.MiddleLeft };
-            string t = left.TotalHours >= 24 ? Ar.N((int)left.TotalDays) + "d " + Ar.N(left.Hours) + "h" : Ar.N(Mathf.Max(0, (int)left.TotalHours)) + ":" + Ar.N(Mathf.Max(0, left.Minutes)).PadLeft(2, '٠');
+            string t = left.TotalHours >= 24 ? Ar.T(Ar.N((int)left.TotalDays) + " يوم " + Ar.N(left.Hours) + " ساعة") : Ar.N(Mathf.Max(0, (int)left.TotalHours)) + ":" + Ar.N(Mathf.Max(0, left.Minutes)).PadLeft(2, '٠');
             GUI.Label(new Rect(r.x + 32 * u, r.y, r.width - 32 * u, r.height), t, st);
         }
 
