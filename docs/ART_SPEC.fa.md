@@ -1,4 +1,4 @@
-# مشخصاتِ تصویرها (آرت) — مدينة فاجعة
+# مشخصاتِ تصویرها (آرت) — مدينة الفاجعة
 
 ⚠️ **به‌روزرسانیِ ۵ آبان ۱۴۰۵:** شهرِ این مرحله **بیروت** است. ساختمان‌های ۱ تا ۴ قبل از این تصمیم ساخته شده‌اند
 (اروپایی‌اند) و فعلاً می‌مانند؛ خانه‌های ۵ تا ۸ و همه‌ی چیزهای تازه با حال‌وهوایِ بیروت ساخته می‌شوند و بعداً می‌شود
@@ -348,12 +348,12 @@ Ultra-wide street-level view of a single present-day Beirut house facade, aspect
 ⚠️ مدل‌های تصویر در شمردن ضعیف‌اند: اگر خروجی ۱۴ یا ۱۶ شد، پنجره‌ها را از رویِ خودِ تصویر می‌شمارم و اگر زوج بود یکی را در کد مهر می‌کنم (کرکره)، پس عددِ دقیق حیاتی نیست؛ ولی «EXACTLY n» و «Count the windows» کمک می‌کند.
 
 ## لوگو، آیکون و اسپلش (۱۷ آبان)
-⚠️ مدل‌های تصویر حروفِ عربی را خراب می‌کنند. دو راه: (الف) با متن بگیر و اگر حروف درست بود همان؛ (ب) **تابلو را بی‌متن بگیر** (`logo_plate.png`) و خودِ بازی «مدينة فاجعة» را با فونت رویش می‌نویسد. (ب) امن‌تر است؛ هر دو را بگیر.
+⚠️ مدل‌های تصویر حروفِ عربی را خراب می‌کنند. دو راه: (الف) با متن بگیر و اگر حروف درست بود همان؛ (ب) **تابلو را بی‌متن بگیر** (`logo_plate.png`) و خودِ بازی «مدينة الفاجعة» را با فونت رویش می‌نویسد. (ب) امن‌تر است؛ هر دو را بگیر.
 فایل‌ها: `UI/logo.png` (لوگو با متن، رویِ سبزِ #00FF00 برای برش)، `UI/logo_plate.png` (همان بی‌متن)، `UI/app_icon.png` (۱:۱، ۱۰۲۴×۱۰۲۴، بی‌متن)، `UI/splash.png` (۱۶:۹، ۲۰۴۸×۱۱۵۲، افقی).
 
 ### لوگو (با متن)
 ```
-Game logo for a mobile game, hand-painted illustration, on a flat solid bright green background #00FF00 for cut-out. A battered rectangular tin shop sign hanging from two rusty chains, cobalt blue enamel paint chipped and rusted at the edges, a few bullet pockmarks, one corner bent. On the sign, big bold Arabic hand-lettered title «مدينة فاجعة» in cream white with a red drop shadow, letters slightly uneven like a street sign painter; one letter's paint dripping. A small worn leather street ball breaking through the sign's corner with radiating cracks. Warm dusty afternoon light, Beirut street feel. No other text, no watermark.
+Game logo for a mobile game, hand-painted illustration, on a flat solid bright green background #00FF00 for cut-out. A battered rectangular tin shop sign hanging from two rusty chains, cobalt blue enamel paint chipped and rusted at the edges, a few bullet pockmarks, one corner bent. On the sign, big bold Arabic hand-lettered title «مدينة الفاجعة» in cream white with a red drop shadow, letters slightly uneven like a street sign painter; one letter's paint dripping. A small worn leather street ball breaking through the sign's corner with radiating cracks. Warm dusty afternoon light, Beirut street feel. No other text, no watermark.
 ```
 ### تابلویِ بی‌متن
 همان پرامپت، به‌جایِ جمله‌ی «On the sign, big bold Arabic …» بنویس: `The sign is blank, empty cream-white enamel panel in the middle, nothing written on it.`

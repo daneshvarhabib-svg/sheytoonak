@@ -52,7 +52,7 @@ namespace Sheytoonak
         public static string WindowsLine(int mine, int theirs, int majority) => "شبابيك " + N(mine) + " – " + N(theirs) + "  (الربح من " + N(majority) + ")";
         public static string Reward(int shards, int curseDelta, int curses) => "زجاج: +" + N(shards) + "   فحش: " + (curseDelta >= 0 ? "+" : "−") + N(Math.Abs(curseDelta)) + " (" + N(curses) + ")";
         public static string Timer(int seconds) => N(seconds) + " ث";
-        public const string Title = "مدينة فاجعة";
+        public const string Title = "مدينة الفاجعة";
         public const string Intro = "كبّ الطابة عالشبابيك! حطّ إصبعك جنب الطابة واسحب صوب الشبّاك وشيل إصبعك: كل ما سحبت أكتر بتروح أقوى وأعلى. لما ترجع الطابة من الحيط فيك تضربها كمان تلات مرّات، بس قبل ما تنطّ عالأرض مرّتين.";
         public const string Play = "يلا نلعب";
         public const string PlayAgain = "عيد اللعب";

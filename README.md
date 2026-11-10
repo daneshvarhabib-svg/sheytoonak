@@ -1,4 +1,4 @@
-# مدينة فاجعة (repo: sheytoonak)
+# مدينة الفاجعة (repo: sheytoonak)
 
 A landscape mobile game for Android and iOS, built with **Unity**, UI in spoken Levantine Arabic. First-person on a
 sunny Beirut street, you kick a striped plastic ball at the windows of the building across the road: tap the

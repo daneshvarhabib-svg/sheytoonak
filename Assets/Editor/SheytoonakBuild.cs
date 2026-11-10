@@ -47,7 +47,7 @@ namespace Sheytoonak.EditorTools
         public static void ApplyPlayerSettings()
         {
             PlayerSettings.companyName = "Sheytoonak";
-            PlayerSettings.productName = "مدينة فاجعة"; // the game was renamed on 2026-10-27 (user); repo and identifier keep the old name
+            PlayerSettings.productName = "مدينة الفاجعة"; // the game was renamed on 2026-10-27 (user); repo and identifier keep the old name
             PlayerSettings.SetApplicationIdentifier(NamedBuildTarget.Android, PackageId);
             PlayerSettings.defaultInterfaceOrientation = UIOrientation.LandscapeLeft;
             // IL2CPP + ARM64: required by Google Play, and some recent phones no longer run 32-bit apps.
