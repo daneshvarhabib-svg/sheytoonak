@@ -1801,6 +1801,8 @@ namespace Sheytoonak.Prototype
         bool showShop; Vector2 shopScroll;
         public void ShowShopFromScript() { showStart = true; showHeroes = false; showShop = true; }
         public void ScrollShopForShot(float y) { shopScroll = new Vector2(0f, y); }
+        /// <summary>CI only: the loot reveal waits for a tap that never comes in the screenshot run.</summary>
+        public void DismissLootForShot() { lootShown = false; }
 
         /// <summary>
         /// The shop (user 2026-11-11, from a recording of the reference game: «بخش دکان رو از روی ویدیو الهام بگیری»). Two

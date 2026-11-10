@@ -124,6 +124,7 @@ namespace Sheytoonak.Prototype
                         boot.Duel.ScreenshotLevels();
                         boot.ShowHeroesFromScript();
                         yield return Shot("14-heroes", 0.6f);
+                        boot.DismissLootForShot();
                         boot.ShowShopFromScript();
                         yield return Shot("15-shop", 0.6f);
                         boot.ScrollShopForShot(100000f);
