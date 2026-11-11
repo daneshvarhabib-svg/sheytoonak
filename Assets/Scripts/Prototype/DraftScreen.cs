@@ -64,7 +64,8 @@ namespace Sheytoonak.Prototype
             var ink = new GUIStyle(label) { fontSize = Mathf.RoundToInt(24 * u) }; ink.normal.textColor = new Color(0.35f, 0.18f, 0.08f);
             GUI.Label(new Rect(rib.x, rib.y + rib.height * 0.05f, rib.width, rib.height * 0.6f), Ar.T(h.NameAr), ink);
             // full standing figure, as tall as the panel allows
-            var idle = Load("Art/Heroes/" + h.Id + "_idle");
+            // the cartoon heroes (2026-11-11) have a front view for cards; the old ones only the back-turned idle
+            var idle = Load("Art/Heroes/" + h.Id + "_front") ?? Load("Art/Heroes/" + h.Id + "_idle");
             float figH = r.height - rib.height - 120 * u, figW = idle != null ? figH * idle.width / idle.height : figH * 0.5f;
             figW = Mathf.Min(figW, r.width * 0.55f); if (idle != null) figH = figW * idle.height / idle.width;
             var fr = new Rect(r.xMax - r.width * 0.06f - figW, rib.yMax + 4 * u, figW, figH);
