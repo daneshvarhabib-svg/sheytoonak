@@ -488,3 +488,9 @@ Stability ~۴۰. هر خط یک فایل → `Audio/Heroes/<id>/kick_01..03`. م
 - `Art/UI/balloon_0..3.png` (چهار رنگ: قرمز، زرد، آبی، سبز): `Cut-out for a mobile game UI, on a flat solid bright green background #00FF00, no shadow, no scene. Hand-painted cartoon style matching a warm, weathered Middle-Eastern street game. One shiny party balloon, {red|yellow|blue|green}, slightly oval, a soft white highlight on the upper left, a small tied knot at the bottom, a short curly white string. Centered, whole balloon visible. No text, no logo, no watermark.`
 - `Art/UI/ribbon_0..1.png`: `Same style, on green #00FF00: one long curly party streamer ribbon hanging vertically, glossy {gold|pink} paper, three loose spirals, centered. No text.`
 - `Audio/Fx/levelup_01` (ElevenLabs Sound Effects یا Suno، ۲ ثانیه): `Short cheerful level-up fanfare for a mobile game, bright brass and a hand drum, a little Middle-Eastern flavour (oud pluck at the end), happy and triumphant, 2 seconds, no voice.`
+
+## قهرمانِ آزمایشیِ سبکِ کارتونی: أبو شحّاطة (۲۱ آبان، مرحله‌ی ۳ و ۴)
+کاربر: «پرامپت قهرمان آزمایشی رو بده». هدف: یک قهرمان در سبکِ کارتونیِ اغراق‌شده با خطِ دورِ ضخیم (الهام از حس‌وحالِ بازیِ مرجع، نه کپیِ شخصیت یا نقاشیِ آن). اگر پسندیده شد، بقیه با همین پیشوند. فایل‌ها رویِ سبزِ #00FF00؛ من جدا می‌کنم.
+- `Art/Heroes/abu_shahata_toon_idle.png`: ایستاده، سه‌رخِ پشت، رو به راست (همان زاویه‌ی فعلی).
+- `Art/Heroes/abu_shahata_toon_front.png`: همان شخصیت از روبه‌رو (برایِ کارت و انتخاب).
+- `Art/Heroes/abu_shahata_parts.png`: همان شخصیت تکه‌تکه برایِ اسکلتِ متحرک (مرحله‌ی ۴).
