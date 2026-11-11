@@ -20,22 +20,25 @@ namespace Sheytoonak.Prototype
             public Part(string n, string p, float px, float py, float lx, float ly, int o) { Name = n; Parent = p; Pivot = new Vector2(px, py); Local = new Vector2(lx, ly); Order = o; }
         }
 
-        // abu_shahata (sheet 2026-11-11). Origin = between the feet; units = sheet pixels / 100.
+        // abu_shahata (second sheet, 2026-11-11). Origin = between the feet; units = sheet pixels / 100.
+        // ⚠️ The first sheet was wrong (user: «جهت پا، پشت و جلو بودنش، شیوه اتصالش»): feet splayed like a front view,
+        // no near/far limbs, flat cut joints. This one has both feet pointing right, round caps at the joints, and the
+        // screen-left limbs are the far ones (drawn behind the torso and the shorts).
         static readonly Dictionary<string, Part[]> Tables = new Dictionary<string, Part[]>
         {
             ["abu_shahata"] = new[]
             {
-                new Part("shorts", null, 0.4922f, 0.9558f, 0.070f, 6.250f, 5),
-                new Part("thigh_l", "shorts", 0.5000f, 0.8324f, -1.220f, -2.400f, 2),
-                new Part("shin_l", "thigh_l", 0.7393f, 0.9766f, 0.000f, -1.350f, 1),
-                new Part("thigh_r", "shorts", 0.5161f, 0.8201f, 1.130f, -2.400f, 2),
-                new Part("shin_r", "thigh_r", 0.3143f, 0.9603f, 0.000f, -1.450f, 1),
-                new Part("torso", "shorts", 0.5015f, 0.0322f, 0.000f, -0.100f, 7),
-                new Part("head", "torso", 0.4282f, 0.0482f, -0.040f, 3.400f, 6),
-                new Part("upper_arm_l", "torso", 0.8137f, 0.7260f, -1.220f, 2.800f, 4),
-                new Part("forearm_l", "upper_arm_l", 0.2460f, 0.9042f, -1.270f, -1.150f, 8),
-                new Part("upper_arm_r", "torso", 0.1875f, 0.7453f, 1.030f, 2.800f, 4),
-                new Part("forearm_r", "upper_arm_r", 0.7474f, 0.9091f, 1.250f, -1.200f, 8),
+                new Part("shorts", null, 0.4981f, 0.9590f, -0.050f, 5.420f, 7),
+                new Part("thigh_l", "shorts", 0.4690f, 0.7612f, -0.580f, -1.800f, 2),
+                new Part("shin_l", "thigh_l", 0.5781f, 0.9884f, -0.100f, -1.050f, 1),
+                new Part("thigh_r", "shorts", 0.4912f, 0.7692f, 0.670f, -1.800f, 6),
+                new Part("shin_r", "thigh_r", 0.2648f, 1.0000f, 0.150f, -1.100f, 5),
+                new Part("torso", "shorts", 0.4933f, 0.0549f, 0.000f, -0.100f, 8),
+                new Part("head", "torso", 0.4517f, 0.0484f, -0.050f, 2.250f, 9),
+                new Part("upper_arm_l", "torso", 0.8039f, 0.7785f, -0.850f, 1.800f, 3),
+                new Part("forearm_l", "upper_arm_l", 0.2452f, 0.8368f, -0.900f, -0.950f, 4),
+                new Part("upper_arm_r", "torso", 0.2838f, 0.7750f, 0.650f, 1.950f, 10),
+                new Part("forearm_r", "upper_arm_r", 0.7595f, 0.8413f, 0.800f, -1.000f, 11),
             },
         };
 
