@@ -51,6 +51,9 @@ namespace Sheytoonak.Prototype
         };
         Dictionary<string, float> rest = new Dictionary<string, float>();
 
+        /// <summary>Height of each puppet from the feet to the top of the head, in its own units (reference px / 100).</summary>
+        static readonly Dictionary<string, float> Heights = new Dictionary<string, float> { ["abu_shahata"] = 14.39f };
+
         public static bool Has(string id) => id != null && Tables.ContainsKey(id) && Resources.Load<Texture2D>("Art/Heroes/" + id + "_rig/torso") != null;
 
         /// <summary>Builds the puppet under <paramref name="painted"/> (hidden from then on). Null if the hero has no rig.</summary>
@@ -66,7 +69,7 @@ namespace Sheytoonak.Prototype
         Transform flipRoot;
         readonly Dictionary<string, Transform> bones = new Dictionary<string, Transform>();
         readonly Dictionary<string, SpriteRenderer> skins = new Dictionary<string, SpriteRenderer>();
-        Vector3 rootRest;
+        Vector3 rootRest; float rigScale = 1f;
         float phase, kickT = -1f, seed;
         Vector3 lastPos; float speed;
 
@@ -95,6 +98,12 @@ namespace Sheytoonak.Prototype
                 bones[p.Name] = go.transform;
             }
             rootRest = bones["shorts"].localPosition;
+            // ⚠️ The host's scale comes from its standing picture, and on Android every hero picture is imported at
+            // 512 px (on the CI Linux player at full size), so that picture is ~3x smaller there and the host ~3x larger.
+            // User (2026-11-11, on the phone): «سایزش درست نیست، باید کوچیک شه اندازه بقیه» -- the puppet was a giant.
+            // The puppet now takes the host's picture height as its own height, whatever size it was imported at.
+            float h = Heights.TryGetValue(id, out var hh) ? hh : 14f;
+            rigScale = host.sprite != null ? host.sprite.bounds.size.y / h : 1f;
             host.enabled = false;
             lastPos = transform.position;
         }
@@ -115,7 +124,7 @@ namespace Sheytoonak.Prototype
         {
             if (host == null) return;
             host.enabled = false;
-            flipRoot.localScale = new Vector3(host.flipX ? -1f : 1f, 1f, 1f);
+            flipRoot.localScale = new Vector3(host.flipX ? -rigScale : rigScale, rigScale, 1f);
             foreach (var kv in skins) kv.Value.color = host.color;
 
             float dt = Time.deltaTime;
