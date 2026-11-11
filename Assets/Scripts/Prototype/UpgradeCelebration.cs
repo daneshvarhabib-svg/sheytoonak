@@ -78,13 +78,13 @@ namespace Sheytoonak.Prototype
                 float bw = 120f * u, bh = bw * 1.25f;
                 float x = sw * Xs[i] - bw * 0.5f + Mathf.Sin(t * 1.8f + i * 1.7f) * 14f * u;
                 float y = Mathf.Lerp(-bh * 1.4f, sh * (i % 2 == 0 ? 0.12f : 0.2f), e) + Mathf.Sin(t * 2.4f + i) * 6f * u;
-                // the string
-                GUI.color = new Color(1f, 1f, 1f, 0.8f * fade);
-                for (int k = 0; k < 10; k++) GUI.DrawTexture(new Rect(x + bw * 0.5f + Mathf.Sin(t * 3f + k * 0.6f + i) * 4f * u, y + bh + k * 9f * u, 2f * u, 9f * u), Texture2D.whiteTexture);
                 var tex = balloons[i];
-                if (tex != null) { GUI.color = new Color(1f, 1f, 1f, fade); GUI.DrawTexture(new Rect(x, y, bw, bh), tex, ScaleMode.ScaleToFit); }
+                // the painted balloons (user, 2026-11-11) carry their own curly string: drawn at their own aspect
+                if (tex != null) { GUI.color = new Color(1f, 1f, 1f, fade); GUI.DrawTexture(new Rect(x, y, bw, bw * tex.height / tex.width), tex, ScaleMode.StretchToFill); }
                 else
                 {
+                    GUI.color = new Color(1f, 1f, 1f, 0.8f * fade);
+                    for (int k = 0; k < 10; k++) GUI.DrawTexture(new Rect(x + bw * 0.5f + Mathf.Sin(t * 3f + k * 0.6f + i) * 4f * u, y + bh + k * 9f * u, 2f * u, 9f * u), Texture2D.whiteTexture);
                     var c = Hues[i];
                     GUI.color = new Color(c.r, c.g, c.b, fade); GUI.DrawTexture(new Rect(x, y, bw, bh), disc);
                     GUI.color = new Color(1f, 1f, 1f, 0.45f * fade); GUI.DrawTexture(new Rect(x + bw * 0.22f, y + bh * 0.14f, bw * 0.22f, bh * 0.2f), disc);
