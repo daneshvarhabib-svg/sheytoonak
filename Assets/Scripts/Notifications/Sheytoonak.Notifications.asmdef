@@ -1,0 +1,19 @@
+{
+    "name": "Sheytoonak.Notifications",
+    "rootNamespace": "Sheytoonak",
+    "references": [
+        "Sheytoonak.Game",
+        "Unity.Notifications.Android"
+    ],
+    "includePlatforms": [
+        "Android"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

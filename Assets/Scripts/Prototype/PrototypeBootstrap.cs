@@ -1718,6 +1718,10 @@ namespace Sheytoonak.Prototype
             var vibR = new Rect(titleR.xMax + 12 * u, top, Mathf.Min(170 * u, Screen.width * 0.14f), barH);
             Plank(vibR);
             if (GUI.Button(vibR, Ar.T(KickFeel.VibrateOn ? Ar.VibrateOn : Ar.VibrateOff), small)) { KickFeel.VibrateOn = !KickFeel.VibrateOn; touch?.IgnoreFor(0.4f); }
+            // research proposal 25: «كيسك جاهز!» on the phone while the game is closed; switched off here
+            var notR = new Rect(vibR.xMax + 12 * u, top, vibR.width, barH);
+            Plank(notR);
+            if (GUI.Button(notR, Ar.T(Sheytoonak.Gameplay.Store.BagNotifier.On ? Ar.NotifyOn : Ar.NotifyOff), small)) { Sheytoonak.Gameplay.Store.BagNotifier.On = !Sheytoonak.Gameplay.Store.BagNotifier.On; touch?.IgnoreFor(0.4f); }
 
             // arena card in the middle
             float cw = Mathf.Min(430 * u, Screen.width * 0.34f), ch = cw * 0.56f;

@@ -57,7 +57,8 @@ compile() { # dir-label assembly-name rsp args...   (output keeps the real assem
 find "$PM/BuiltInPackages/com.unity.ugui/Runtime/UGUI" -name '*.cs' > "$OUT/ugui.rsp"
 find "$WORK/is/package/InputSystem" -name '*.cs' -not -path '*/Plugins/InputForUI/*' > "$OUT/is.rsp"
 find "$PROJ/Assets/Scripts/Core" -name '*.cs' > "$OUT/core.rsp"
-find "$PROJ/Assets/Scripts" -name '*.cs' -not -path '*/Core/*' > "$OUT/game.rsp"
+find "$PROJ/Assets/Scripts" -name '*.cs' -not -path '*/Core/*' -not -path '*/Notifications/*' > "$OUT/game.rsp"
+# Scripts/Notifications is its own Android-only assembly on com.unity.mobile.notifications (not in this toolchain): CI compiles it.
 find "$PROJ/Assets/Editor" -name '*.cs' > "$OUT/editor.rsp"
 find "$PROJ/Assets/Tests/EditMode" -name '*.cs' > "$OUT/tests.rsp"
 NUNIT_DIR=$PM/BuiltInPackages/com.unity.ext.nunit/net40/unity-custom

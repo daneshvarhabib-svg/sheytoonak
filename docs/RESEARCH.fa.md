@@ -199,3 +199,5 @@
 - **هزینه:** کم. **ریسک:** تقویمِ لول‌ها خرده‌شیشه را می‌شمارد؛ عدد با `ToolLevelsTests` تنظیم شود.
 
 منابع: [esports.net – Brawl Stars win streak](https://www.esports.net/news/mobile-games/brawl-stars-win-streak-explained/)، [Supercell – trophy season rework](https://supercell.com/en/games/brawlstars/blog/news/trophy-season-rework-is-coming)، [Clash Royale wiki – Notifications](https://clashroyale.fandom.com/wiki/Notifications)، [Game Developer – Deconstructing Clash Royale](https://www.gamedeveloper.com/business/deconstructing-clash-royale)، [Hearthstone wiki – Quest (2013–2020)](https://hearthstone.wiki.gg/wiki/Quest/2013-2020_system)، [Icy Veins – Hearthstone gold guide](https://www.icy-veins.com/hearthstone/gold-guide).
+
+**وضعیتِ روزِ ۸ (۲۱ آبان):** کاربر: «پ۲۵ اجرا بشه باقیش نه». پ۲۵ ساخته شد؛ پ۲۴ و پ۲۶ کنار رفتند.

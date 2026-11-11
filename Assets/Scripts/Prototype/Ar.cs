@@ -70,6 +70,8 @@ namespace Sheytoonak
         public const string MaxLevel = "أقوى شي";
         public static string Lv(int l) => "مستوى " + N(l);
         public const string VibrateOff = "هزّة: لأ";
+        public const string NotifyOn = "تنبيه: أيوه";
+        public const string NotifyOff = "تنبيه: لأ";
         public const string Smashed = "+١  كسرت الشباك!";
         public const string BounceFirst = "خلّيها تنطّ مرّة أول";
         public const string TooFar = "بعيدة عنك";

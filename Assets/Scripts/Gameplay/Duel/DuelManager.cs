@@ -141,6 +141,10 @@ namespace Sheytoonak
                 return bags;
             }
         }
+        // research proposal 25: the phone says «كيسك جاهز!» while the game is closed (BagNotifier); cancelled on return
+        void OnApplicationPause(bool paused) { if (paused) Sheytoonak.Gameplay.Store.BagNotifier.Leaving(Bags); else Sheytoonak.Gameplay.Store.BagNotifier.Back(); }
+        void OnApplicationQuit() => Sheytoonak.Gameplay.Store.BagNotifier.Leaving(Bags);
+
         /// <summary>slot, shards, cards — raised when a bag is opened so the HUD can show the loot.</summary>
         public event Action<int, int, string[]> BagOpened;
         void SaveBags() { PlayerPrefs.SetString(PrefBags, Bags.Serialize()); PlayerPrefs.SetInt(PrefShards, ShardBank); PlayerPrefs.Save(); }
@@ -301,7 +305,7 @@ namespace Sheytoonak
                 return true;
             }
             bool started = Bags.StartUnlock(slot, now);
-            if (started) SaveBags();
+            if (started) { SaveBags(); Sheytoonak.Gameplay.Store.BagNotifier.BagStarted(); }
             return started;
         }
 
