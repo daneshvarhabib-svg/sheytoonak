@@ -42,6 +42,17 @@ namespace Sheytoonak.Prototype
             },
         };
 
+        /// <summary>
+        /// Rest angle of a joint (degrees, counter-clockwise), where the sheet's piece is not drawn in the standing pose.
+        /// User (2026-11-11) on the second sheet: «جهت دست ها درست نیست» -- its arms were still drawn akimbo with the fist
+        /// in front of the belly; turned here so they hang beside the body like the reference picture.
+        /// </summary>
+        static readonly Dictionary<string, Dictionary<string, float>> Rest = new Dictionary<string, Dictionary<string, float>>
+        {
+            ["abu_shahata"] = new Dictionary<string, float> { ["upper_arm_l"] = 32f, ["forearm_l"] = -67f, ["upper_arm_r"] = -28f, ["forearm_r"] = 67f },
+        };
+        Dictionary<string, float> rest = new Dictionary<string, float>();
+
         public static bool Has(string id) => id != null && Tables.ContainsKey(id) && Resources.Load<Texture2D>("Art/Heroes/" + id + "_rig/torso") != null;
 
         /// <summary>Builds the puppet under <paramref name="painted"/> (hidden from then on). Null if the hero has no rig.</summary>
@@ -64,6 +75,7 @@ namespace Sheytoonak.Prototype
         void Assemble(SpriteRenderer painted, Part[] table, string id)
         {
             host = painted;
+            if (Rest.TryGetValue(id, out var r0)) rest = r0;
             seed = Random.value * 10f;
             flipRoot = new GameObject("Rig").transform;
             flipRoot.SetParent(transform, false);
@@ -94,7 +106,12 @@ namespace Sheytoonak.Prototype
         public bool Kicking => kickT >= 0f && kickT < KickSeconds;
         const float KickSeconds = 0.55f;
 
-        void Rot(string bone, float deg) { if (bones.TryGetValue(bone, out var b)) b.localRotation = Quaternion.Euler(0f, 0f, deg); }
+        void Rot(string bone, float deg)
+        {
+            if (!bones.TryGetValue(bone, out var b)) return;
+            rest.TryGetValue(bone, out float r0);
+            b.localRotation = Quaternion.Euler(0f, 0f, r0 + deg);
+        }
 
         void LateUpdate()
         {
