@@ -32,8 +32,10 @@ namespace Sheytoonak.Prototype
                 float sign = side == 0 ? -1f : 1f;
                 for (int i = 0; i < 3; i++)
                 {
-                    // smaller and a little ahead of the ball so the facade stays the centre of the picture (run 26 had them filling the frame)
-                    float x = sign * (1.1f + i * 0.7f);
+                    // User (2026-11-11), comparing with the reference game's recordings: «هم سایز بازیکنا … شبیه‌تر بشه». The kids
+                    // are much taller now (heroHeight) and stand apart toward the two corners, so the middle of the street (the
+                    // ball, the ground-floor windows) stays clear. ⚠️ Run 26 once had them filling the frame from the middle.
+                    float x = sign * (2.3f + i * 1.35f);
                     // run 38: the painted kids stood with their legs under the bottom button strip; a step towards the wall lifts them above it
                     var pos = new Vector3(x, 0f, foot.Z + 2.1f - i * 0.25f);
                     homes[side][i] = pos;
@@ -79,7 +81,7 @@ namespace Sheytoonak.Prototype
         /// Drawn facing right, three-quarter back view with about a third of the face showing (user: «یک سوم از صورت
         /// قهرمان رو ببینیم، کامل از پشت نباشه»); the right side is mirrored so both teams face the middle.
         /// No file yet = nothing is drawn for that hero (no placeholder).</summary>
-        public float heroHeight = 1.6f; // a bit over real kid height so they read on a phone
+        public float heroHeight = 2.5f; // 2026-11-11: 1.6 → 2.5 (a third of the screen, like the reference game's fighters)
         readonly Dictionary<string, Sprite> sprites = new Dictionary<string, Sprite>();
         readonly SpriteRenderer[][] painted = { new SpriteRenderer[3], new SpriteRenderer[3] };
         readonly string[][] lookIds = { new string[3], new string[3] };
@@ -231,7 +233,7 @@ namespace Sheytoonak.Prototype
         /// <summary>Behind and to the side of the ball (right-footers stand left of it), so the ball itself stays visible.</summary>
         Vector3 Spot(Side side)
         {
-            float off = side == Side.Left ? -0.45f : 0.45f;
+            float off = side == Side.Left ? -0.75f : 0.75f; // 0.45 → 0.75 with the taller kids (2026-11-11), so the ball stays in sight
             Vector3 b = foot.StrikeSpot; // both kickers hold their line; ballX is only for the shadow/ring marks
             return new Vector3(b.x + off, 0f, b.z - 0.35f);
         }

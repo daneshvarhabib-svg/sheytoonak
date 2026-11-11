@@ -110,8 +110,13 @@ namespace Sheytoonak.Prototype
                         }
                         var stageC = FindObjectOfType<DuelStage>();
                         if (stageC != null) { stageC.CarpetForShot(); yield return Shot("07c-carpet-mid", 0.9f); yield return Shot("07d-carpet-down", 1.6f); stageC.PushCarpetForShot(); yield return Shot("07e-carpet-falling", 0.75f); yield return Shot("07f-carpet-down-street", 1.0f); }
+                        // the turn banner (2026-11-11): passing hands the turn over, the plank drops in
+                        if (duel.Rules != null && !duel.Rules.Finished && duel.PlayerMayKick) { duel.Pass(); yield return Shot("08a-turn-banner", 0.35f); }
                         yield return Shot("08-bot-turn", 4.0f);
                         yield return Shot("09-later", 5.0f);
+                        // the result board (2026-11-11)
+                        if (duel.Rules != null && !duel.Rules.Finished) duel.Surrender();
+                        yield return Shot("09b-result", 0.9f);
                         // the challenge: a duel dealt at random (no draft), then home with the run under its button
                         boot.StartChallengeFromScript();
                         yield return Shot("10-challenge", 2.5f);

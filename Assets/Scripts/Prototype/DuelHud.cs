@@ -16,15 +16,79 @@ namespace Sheytoonak.Prototype
         string toast = ""; float toastUntil;
         bool ended; bool won; float surrenderArmedUntil;
 
-        void OnEnable() { duel.Toast += OnToast; duel.Pop += OnPop; duel.Finished += OnFinished; duel.DuelStarted += () => { ended = false; duel.Rules.WindowTaken += OnTaken; }; }
-        void OnDisable() { duel.Toast -= OnToast; duel.Pop -= OnPop; duel.Finished -= OnFinished; }
+        void OnEnable() { duel.Toast += OnToast; duel.Pop += OnPop; duel.Finished += OnFinished; duel.TurnChanged += OnTurn; duel.DuelStarted += () => { ended = false; duel.Rules.WindowTaken += OnTaken; }; }
+        void OnDisable() { duel.Toast -= OnToast; duel.Pop -= OnPop; duel.Finished -= OnFinished; duel.TurnChanged -= OnTurn; }
+
+        // ------------------------------------------------------------------ the turn banner and the result board
+        // User (2026-11-11), with two screen recordings of the reference game: «دیزاین بازی … بهتره شبیه‌تر بشه به این».
+        // Every change of turn drops a big painted plank «دورك» / «دور الخصم» from the top (1.3 s), and the end of a duel
+        // is a board that bounces in over a darkened street instead of a line of text.
+        const float BannerSeconds = 1.3f;
+        float bannerAt = -10f; bool bannerMine; float endedAt;
+        void OnTurn(Side s) { if (ended) return; bannerAt = Time.time; bannerMine = s == duel.Me; }
+
+        void TurnBanner(float u, GUIStyle big)
+        {
+            float t = Time.time - bannerAt;
+            if (t < 0f || t > BannerSeconds) return;
+            float inT = Mathf.Clamp01(t / 0.28f), outT = Mathf.Clamp01((BannerSeconds - t) / 0.25f);
+            float drop = 1f - Mathf.Pow(1f - inT, 3f);
+            float bw = Mathf.Min(560f * u, Screen.width * 0.42f), bh = bw * 0.254f;
+            float y = Mathf.Lerp(-bh, Screen.height * 0.17f, drop) - (1f - outT) * bh * 0.4f;
+            float sc = inT < 1f ? 1f : 1f + 0.06f * Mathf.Sin(Mathf.Clamp01((t - 0.28f) / 0.25f) * Mathf.PI);
+            var r = new Rect(Screen.width * 0.5f - bw * sc * 0.5f, y, bw * sc, bh * sc);
+            var old = GUI.color; GUI.color = new Color(1f, 1f, 1f, outT);
+            var plank = Kit("ribbon");
+            if (plank != null) GUI.DrawTexture(r, plank, ScaleMode.StretchToFill);
+            else { GUI.color = new Color(0.35f, 0.2f, 0.1f, 0.9f * outT); GUI.DrawTexture(r, Texture2D.whiteTexture); }
+            var st = new GUIStyle(big) { fontSize = Mathf.RoundToInt(bh * 0.36f) };
+            st.normal.textColor = bannerMine ? new Color(0.25f, 0.55f, 0.2f, outT) : new Color(0.65f, 0.15f, 0.1f, outT);
+            GUI.Label(new Rect(r.x, r.y - r.height * 0.06f, r.width, r.height), Ar.T(bannerMine ? Ar.YourTurn : Ar.TheirTurn), st);
+            GUI.color = old;
+        }
+
+        /// <summary>The result board: rays, the painted plank with «ربحت! / خسرت» bouncing in, two pennants.</summary>
+        float ResultBoard(float u, GUIStyle big)
+        {
+            float t = Time.time - endedAt;
+            float pop = Mathf.Clamp01(t / 0.45f);
+            float sc = pop < 1f ? Mathf.Lerp(0.3f, 1.12f, 1f - Mathf.Pow(1f - pop, 3f)) : 1f + 0.12f * Mathf.Exp(-(t - 0.45f) * 6f);
+            float bw = Mathf.Min(620f * u, Screen.width * 0.46f), bh = bw * 0.254f, cx = Screen.width * 0.5f, cy = Screen.height * 0.22f;
+            var old = GUI.color;
+            // slow-turning rays behind the plank (gold for a win, red for a loss)
+            var ray = won ? new Color(1f, 0.82f, 0.3f, 0.22f) : new Color(0.9f, 0.2f, 0.15f, 0.22f);
+            var m = GUI.matrix;
+            for (int k = 0; k < 10; k++)
+            {
+                GUIUtility.RotateAroundPivot(t * 12f + k * 36f, new Vector2(cx, cy));
+                GUI.color = ray; GUI.DrawTexture(new Rect(cx - 9f * u, cy - bw * 0.62f, 18f * u, bw * 0.62f), Texture2D.whiteTexture);
+                GUI.matrix = m;
+            }
+            // two pennants on poles
+            for (int sgn = -1; sgn <= 1; sgn += 2)
+            {
+                float px = cx + sgn * bw * 0.52f * sc, wave = Mathf.Sin(t * 5f + sgn) * 6f * u;
+                GUI.color = new Color(0.35f, 0.22f, 0.1f); GUI.DrawTexture(new Rect(px - 3f * u, cy - bh * 1.3f, 6f * u, bh * 1.4f), Texture2D.whiteTexture);
+                GUI.color = won ? new Color(0.85f, 0.15f, 0.12f) : new Color(0.3f, 0.3f, 0.35f);
+                GUI.DrawTexture(new Rect(px + (sgn < 0 ? -46f * u : 3f * u), cy - bh * 1.3f + wave, 43f * u, 30f * u), Texture2D.whiteTexture);
+            }
+            var r = new Rect(cx - bw * sc * 0.5f, cy - bh * sc * 0.5f, bw * sc, bh * sc);
+            GUI.color = Color.white;
+            var plank = Kit("ribbon");
+            if (plank != null) GUI.DrawTexture(r, plank, ScaleMode.StretchToFill);
+            var st = new GUIStyle(big) { fontSize = Mathf.RoundToInt(bh * 0.4f * sc) };
+            st.normal.textColor = won ? new Color(0.2f, 0.5f, 0.15f) : new Color(0.6f, 0.12f, 0.08f);
+            GUI.Label(new Rect(r.x, r.y - r.height * 0.06f, r.width, r.height), Ar.T(won ? Ar.Won : Ar.Lost), st);
+            GUI.color = old;
+            return cy + bh * 0.7f;
+        }
         const float PopSeconds = 1.4f;
         string popIcon; Side popSide; DuelManager.PopKind popKind; float popUntil;
         int gainWindow = -1, gainValue; Side gainSide; float gainUntil;
         void OnTaken(Side side, int w, int v) { gainWindow = w; gainValue = v; gainSide = side; gainUntil = Time.time + 1.3f; }
         void OnPop(string icon, Side side, DuelManager.PopKind kind) { popIcon = icon; popSide = side; popKind = kind; popUntil = Time.time + PopSeconds; }
         void OnToast(string t, float s) { toast = t; toastUntil = Time.time + s; }
-        void OnFinished(Side winner, bool iWon) { ended = true; won = iWon; }
+        void OnFinished(Side winner, bool iWon) { ended = true; won = iWon; endedAt = Time.time; bannerAt = -10f; }
 
         void OnGUI()
         {
@@ -196,13 +260,15 @@ namespace Sheytoonak.Prototype
                 if (rules.RageReady[0] && IconButton(new Rect(xr, yb, sz, sz), "rage", new Color(0.85f, 0.4f, 0.1f), true, null)) { touch?.IgnoreFor(0.4f); duel.Rage(); }
             }
 
+            TurnBanner(u, big);
+
             if (ended)
             {
                 var old = GUI.color; GUI.color = new Color(0f, 0f, 0f, 0.65f);
                 GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), Texture2D.whiteTexture); GUI.color = old;
                 // the result in pictures: windows, shards won, curses gained or lost (or, in a challenge, the run so far)
-                float cx = Screen.width * 0.5f, y0 = Screen.height * 0.2f, esz = 56 * u;
-                Shadowed(new Rect(0, y0, Screen.width, 60 * u), Ar.T(won ? Ar.Won : Ar.Lost), big);
+                float cx = Screen.width * 0.5f, esz = 56 * u;
+                float y0 = ResultBoard(u, big) - 20 * u;
                 var enumSt = new GUIStyle(big) { fontSize = Mathf.RoundToInt(34 * u), alignment = TextAnchor.MiddleLeft };
                 float ey = y0 + 90 * u;
                 if (duel.InChallenge && duel.Challenge != null)
