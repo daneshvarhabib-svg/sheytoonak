@@ -236,6 +236,16 @@ namespace Sheytoonak.Prototype
         {
             float off = side == Side.Left ? -0.75f : 0.75f; // 0.45 → 0.75 with the taller kids (2026-11-11), so the ball stays in sight
             Vector3 b = foot.StrikeSpot; // both kickers hold their line; ballX is only for the shadow/ring marks
+            // a puppet stands so its toe, at the contact angle, touches the back of the ball (HeroRig.FootOffset), on the
+            // ball's own depth (user 2026-11-11: «توپ … باید بخوره حتماً به پای بازیکن … چند سانت اون طرف‌تره»)
+            var pr = painted[(int)side][K(side)];
+            var rig = pr != null ? pr.GetComponent<HeroRig>() : null;
+            if (rig != null)
+            {
+                Vector3 fo = rig.FootOffset(HeroRig.ContactDeg);
+                float r = duel.ball != null ? duel.ball.Radius : 0.11f;
+                return new Vector3(b.x - fo.x - Mathf.Sign(fo.x) * r * 0.7f, 0f, b.z - 0.04f);
+            }
             return new Vector3(b.x + off, 0f, b.z - 0.35f);
         }
 
@@ -252,6 +262,8 @@ namespace Sheytoonak.Prototype
                 yield return null;
             }
             if (frames || HasRun(side, slot)) SetPose(side, slot, "idle");
+            var readyRig = painted[(int)side][slot] != null ? painted[(int)side][slot].GetComponent<HeroRig>() : null;
+            if (readyRig != null) readyRig.Ready = true; // wound up behind the ball until the kick
             duel.KickerArrived(side);
             // waits behind the ball, follows it (my finger moves the ball spot; the rebound moves the ball)
             while (true)
@@ -270,6 +282,8 @@ namespace Sheytoonak.Prototype
             if (striking[(int)side] != null) { StopCoroutine(striking[(int)side]); striking[(int)side] = null; }
             var pr = painted[(int)side][slot];
             if (pr != null) { pr.transform.localPosition = Vector3.zero; pr.transform.localRotation = Quaternion.identity; }
+            var homeRig = pr != null ? pr.GetComponent<HeroRig>() : null;
+            if (homeRig != null) homeRig.Ready = false;
             bool frames = HasFrames(side);
             Vector3 from = hero.position, home = homes[(int)side][slot];
             for (float k = 0f; k < 1f; k += Time.deltaTime * 2.6f)

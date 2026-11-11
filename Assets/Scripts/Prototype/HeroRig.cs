@@ -182,7 +182,31 @@ namespace Sheytoonak.Prototype
         }
 
         /// <summary>DuelStage calls this when the ball leaves the foot.</summary>
-        public void Kick() { kickT = 0f; }
+        public void Kick() { kickT = 0f; Ready = false; }
+
+        /// <summary>Standing at the ball, waiting for the kick: the kicking leg is drawn back (the wind-up), so the kick
+        /// itself starts at the contact and the ball leaves the foot on the very frame it is launched.</summary>
+        public bool Ready;
+        float ready;
+
+        /// <summary>Leg angle at which the foot meets the ball (the first frame of the kick).</summary>
+        public const float ContactDeg = 8f;
+
+        /// <summary>
+        /// Where the toe of the kicking foot is, relative to this transform, with the leg at <paramref name="legDeg"/>.
+        /// User (2026-11-11): «توپ رو موقع شوت کردن باید بخوره حتماً به پای بازیکن. الآن نمیخوره و چند سانت اون طرف‌تره»
+        /// -- the kicker stood at a fixed 0.75 from the ball whatever the length of his legs; DuelStage now stands him
+        /// so this point is on the ball.
+        /// </summary>
+        public Vector3 FootOffset(float legDeg)
+        {
+            if (!skins.TryGetValue("leg_near", out var sr) || sr.sprite == null) return Vector3.zero;
+            var b = sr.sprite.bounds;
+            var tip = new Vector3(b.max.x - b.size.x * 0.12f, b.min.y + b.size.y * 0.04f, 0f);
+            var p = rootRest + bones["leg_near"].localPosition + Quaternion.Euler(0f, 0f, legDeg) * tip;
+            p.x *= host.flipX ? -rigScale : rigScale; p.y *= rigScale;
+            return transform.TransformVector(p);
+        }
         public bool Kicking => kickT >= 0f && kickT < KickSeconds;
         const float KickSeconds = 0.55f;
 
@@ -218,14 +242,18 @@ namespace Sheytoonak.Prototype
             float torso = walk * 2f * c + breathe * 0.6f, head = -breathe * 1.2f + walk * 1.5f * sn;
             float bob = walk * 0.16f * Mathf.Abs(c);
 
+            ready = Mathf.MoveTowards(ready, Ready ? 1f : 0f, dt * 3f);
+            if (ready > 0f && kickT < 0f) { legNear = Mathf.Lerp(legNear, -20f, ready); armFar -= 6f * ready; armNear += 5f * ready; torso += 2f * ready; }
+
             if (kickT >= 0f)
             {
-                // the near leg kicks: back, snap through the ball, follow-through, settle
+                // ⚠️ the ball is launched on the first frame of the kick (DuelManager), so the kick STARTS at the contact
+                // (the wind-up is the Ready stance before it); it used to wind up 0.14 s and meet the ball after it had gone
                 kickT += dt;
                 float k = kickT / KickSeconds, leg;
-                if (k < 0.25f) leg = Mathf.Lerp(0f, -22f, k / 0.25f);
-                else if (k < 0.5f) { float q = (k - 0.25f) / 0.25f; leg = Mathf.Lerp(-22f, 36f, q * q); }
-                else leg = Mathf.Lerp(36f, 0f, Mathf.Clamp01((k - 0.5f) / 0.5f));
+                if (k < 0.2f) { float q = k / 0.2f; leg = Mathf.Lerp(ContactDeg, 36f, 1f - (1f - q) * (1f - q)); }
+                else if (k < 0.4f) leg = 36f;
+                else leg = Mathf.Lerp(36f, 0f, Mathf.Clamp01((k - 0.4f) / 0.6f));
                 legNear = leg; legFar = -leg * 0.15f;
                 armFar = -Mathf.Abs(leg) * 0.35f; armNear = Mathf.Abs(leg) * 0.28f; torso = -leg * 0.08f; head = leg * 0.04f;
                 bob = Mathf.Max(0f, Mathf.Sin(Mathf.Clamp01(k * 2f - 0.6f) * Mathf.PI)) * 0.2f;
