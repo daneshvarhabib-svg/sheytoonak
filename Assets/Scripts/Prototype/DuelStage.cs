@@ -117,6 +117,7 @@ namespace Sheytoonak.Prototype
                     go.transform.localScale = Vector3.one * (heroHeight / Mathf.Max(0.01f, idle.bounds.size.y));
                     baseY[r] = go.transform.localScale.y; breathPhase[r] = Random.value * Mathf.PI * 2f;
                     painted[side][i] = r;
+                    HeroRig.Build(r, id); // step 4 (2026-11-11): a jointed puppet where the hero has a rig sheet
                     if (i == kickSlot[side]) kickerScale[side] = go.transform.localScale;
                 }
         }
@@ -360,6 +361,15 @@ namespace Sheytoonak.Prototype
         /// <summary>Crouch, swing (kick pose, lean into the shot, a little hop), settle back to idle.</summary>
         IEnumerator Strike(Transform hero, Side side)
         {
+            var rig = painted[(int)side][K(side)] != null ? painted[(int)side][K(side)].GetComponent<HeroRig>() : null;
+            if (rig != null)
+            {
+                // the puppet kicks with its own joints (HeroRig); no frame swapping, no squash of the whole picture
+                rig.Kick();
+                while (rig != null && rig.Kicking) yield return null;
+                striking[(int)side] = null;
+                yield break;
+            }
             if (HasFrames(side))
             {
                 // painted sequence (user: «پنج تا تصویر رو به شکل کمیک از زدن یه توپ»): plant, wind-up, contact, land
