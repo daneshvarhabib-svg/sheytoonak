@@ -38,6 +38,79 @@ namespace Sheytoonak.Prototype
                 new Part("leg_far", "shorts", 0.5745f, 0.9565f, -1.200f, -1.850f, 1),
                 new Part("leg_near", "shorts", 0.3858f, 0.9592f, 1.400f, -1.850f, 2),
             },
+            // The other seven (2026-11-11), cut by the same recipe from their cartoon back views (rig7/build.py in the
+            // session scratchpad; polygons per hero). ⚠️ Long robes (um_arabiyat, hamada): the leg turns at the knee just
+            // above the hem, not at the hip -- from the hip the whole hidden shin swung out beside the robe like a plank.
+            ["rima"] = new[]
+            {
+                new Part("shorts", null, 0.4817f, 0.5635f, 0.190f, 5.760f, 4),
+                new Part("torso", "shorts", 0.4815f, -0.0211f, 0.000f, 0.000f, 6),
+                new Part("head", "torso", 0.5852f, 0.1020f, -0.200f, 4.750f, 3),
+                new Part("arm_far", "torso", 0.5856f, 0.8768f, -1.700f, 3.800f, 5),
+                new Part("arm_near", "torso", 0.2183f, 0.8614f, 1.100f, 3.900f, 7),
+                new Part("leg_far", "shorts", 0.7018f, 0.9630f, -0.800f, -0.350f, 1),
+                new Part("leg_near", "shorts", 0.2484f, 0.9644f, 0.800f, -0.350f, 2),
+            },
+            ["zaatar"] = new[]
+            {
+                new Part("shorts", null, 0.4849f, 0.6809f, -0.015f, 6.770f, 4),
+                new Part("torso", "shorts", 0.4437f, 0.0000f, 0.000f, 0.000f, 6),
+                new Part("head", "torso", 0.4747f, 0.1070f, -0.100f, 4.400f, 3),
+                new Part("arm_far", "torso", 0.6032f, 0.8851f, -1.800f, 3.200f, 5),
+                new Part("arm_near", "torso", 0.2772f, 0.8761f, 0.900f, 3.400f, 7),
+                new Part("leg_far", "shorts", 0.6901f, 0.9666f, -0.800f, -0.700f, 1),
+                new Part("leg_near", "shorts", 0.2805f, 0.9682f, 0.800f, -0.700f, 2),
+            },
+            ["fulla"] = new[]
+            {
+                new Part("shorts", null, 0.5022f, 0.9128f, -0.125f, 8.320f, 4),
+                new Part("torso", "shorts", 0.6486f, 0.0000f, 0.000f, 0.000f, 6),
+                new Part("head", "torso", 0.5348f, 0.1008f, 0.200f, 2.600f, 3),
+                new Part("arm_far", "torso", 0.6983f, 0.8462f, -1.200f, 0.500f, 5),
+                new Part("arm_near", "torso", 0.2239f, 0.8929f, 1.000f, 1.950f, 7),
+                new Part("leg_far", "shorts", 0.7570f, 0.9723f, -0.700f, -0.950f, 1),
+                new Part("leg_near", "shorts", 0.2553f, 0.9736f, 0.900f, -0.950f, 2),
+            },
+            ["toni"] = new[]
+            {
+                new Part("shorts", null, 0.4770f, 0.7573f, 0.015f, 6.740f, 4),
+                new Part("torso", "shorts", 0.4606f, -0.0117f, 0.000f, 0.000f, 6),
+                new Part("head", "torso", 0.5232f, 0.1277f, -0.050f, 4.250f, 3),
+                new Part("arm_far", "torso", 0.6305f, 0.8767f, -1.750f, 3.250f, 5),
+                new Part("arm_near", "torso", 0.2140f, 0.9020f, 0.950f, 3.550f, 7),
+                new Part("leg_far", "shorts", 0.6653f, 0.9642f, -0.850f, -1.050f, 1),
+                new Part("leg_near", "shorts", 0.3268f, 0.9661f, 0.950f, -1.050f, 2),
+            },
+            ["um_arabiyat"] = new[]
+            {
+                new Part("shorts", null, 0.4921f, 0.9332f, -0.040f, 8.170f, 4),
+                new Part("torso", "shorts", 0.5751f, 0.0000f, 0.000f, 0.000f, 6),
+                new Part("head", "torso", 0.6405f, 0.1321f, 0.600f, 3.100f, 3),
+                new Part("arm_far", "torso", 0.6749f, 0.8849f, -1.700f, 1.800f, 5),
+                new Part("arm_near", "torso", 0.1569f, 0.8743f, 1.000f, 1.900f, 7),
+                new Part("leg_far", "shorts", 0.7455f, 0.9361f, -0.800f, -5.000f, 1),
+                new Part("leg_near", "shorts", 0.1628f, 0.9408f, 1.000f, -5.000f, 2),
+            },
+            ["hamada"] = new[]
+            {
+                new Part("shorts", null, 0.4858f, 0.9188f, -0.210f, 7.910f, 4),
+                new Part("torso", "shorts", 0.5051f, 0.0000f, 0.000f, 0.000f, 6),
+                new Part("head", "torso", 0.4817f, 0.1178f, 0.100f, 3.250f, 3),
+                new Part("arm_far", "torso", 0.6173f, 0.8639f, -1.600f, 2.000f, 5),
+                new Part("arm_near", "torso", 0.2317f, 0.8732f, 1.100f, 2.300f, 7),
+                new Part("leg_far", "shorts", 0.6816f, 0.9492f, -0.800f, -3.900f, 1),
+                new Part("leg_near", "shorts", 0.1704f, 0.9526f, 1.000f, -3.900f, 2),
+            },
+            ["bubakr"] = new[]
+            {
+                new Part("shorts", null, 0.5181f, 0.7630f, -0.025f, 6.160f, 4),
+                new Part("torso", "shorts", 0.5182f, -0.0098f, 0.000f, 0.000f, 6),
+                new Part("head", "torso", 0.4817f, 0.1568f, 0.200f, 5.100f, 3),
+                new Part("arm_far", "torso", 0.5455f, 0.8759f, -2.000f, 3.600f, 5),
+                new Part("arm_near", "torso", 0.2542f, 0.8785f, 1.200f, 3.800f, 7),
+                new Part("leg_far", "shorts", 0.6652f, 0.9599f, -0.800f, -1.100f, 1),
+                new Part("leg_near", "shorts", 0.3723f, 0.9620f, 1.000f, -1.100f, 2),
+            },
         };
 
         /// <summary>
@@ -52,7 +125,7 @@ namespace Sheytoonak.Prototype
         Dictionary<string, float> rest = new Dictionary<string, float>();
 
         /// <summary>Height of each puppet from the feet to the top of the head, in its own units (reference px / 100).</summary>
-        static readonly Dictionary<string, float> Heights = new Dictionary<string, float> { ["abu_shahata"] = 14.39f };
+        static readonly Dictionary<string, float> Heights = new Dictionary<string, float> { ["abu_shahata"] = 14.39f, ["rima"] = 14.49f, ["zaatar"] = 14.6f, ["fulla"] = 14.5f, ["toni"] = 14.62f, ["um_arabiyat"] = 14.5f, ["hamada"] = 14.54f, ["bubakr"] = 14.39f };
 
         public static bool Has(string id) => id != null && Tables.ContainsKey(id) && Resources.Load<Texture2D>("Art/Heroes/" + id + "_rig/torso") != null;
 
