@@ -96,10 +96,66 @@ namespace Sheytoonak.Prototype
             if (t != null) GUI.DrawTexture(new Rect(r.x + r.width * 0.15f, r.y + r.height * 0.2f, r.width * 0.7f, r.width * 0.7f), t, ScaleMode.ScaleToFit);
         }
 
+        // ------------------------------------------------------------------ the reference game's draft feel (2026-11-11)
+        // User, with two screen recordings: «بهتره شبیه‌تر بشه به این». Each ban or pick throws the hero's card large into
+        // the middle with a glow and «اختيارك / اختيار الخصم / شلت / الخصم شال» for a second, the step has a header with
+        // a countdown, and when my countdown runs out the game acts for me (no draft can hang on an idle player).
+        public const float StepSeconds = 20f;
+        DraftRules seen; int seenStep = -1; float stepAt;
+        string flashHero; Side flashSide; DraftRules.Kind flashKind; float flashAt = -10f;
+        const float FlashSeconds = 1.1f;
+
+        void Watch(DraftRules d)
+        {
+            if (d != seen) { seen = d; seenStep = -1; d.Acted += (sd, k, h) => { flashHero = h; flashSide = sd; flashKind = k; flashAt = Time.time; }; }
+            if (d.StepIndex != seenStep) { seenStep = d.StepIndex; stepAt = Time.time; }
+        }
+
+        /// <summary>Seconds left in this step; at zero on my step the first allowed hero is taken for me.</summary>
+        float Countdown(DraftRules d, HeroDef[] all, bool myTurn)
+        {
+            float left = Mathf.Max(0f, StepSeconds - (Time.time - stepAt));
+            if (myTurn && left <= 0f && !d.Done)
+            {
+                foreach (var h in all)
+                {
+                    bool ok = d.Current.What == DraftRules.Kind.Ban ? d.CanBan(duel.Me, h.Id) : d.CanPick(duel.Me, h.Id);
+                    if (ok) { duel.DraftAct(h.Id); break; }
+                }
+                stepAt = Time.time; // never more than one try per frame if nothing was allowed
+            }
+            return left;
+        }
+
+        void Flash(float u, GUIStyle big)
+        {
+            float t = Time.time - flashAt;
+            if (flashHero == null || t < 0f || t > FlashSeconds) return;
+            float pop = Mathf.Clamp01(t / 0.25f), fade = Mathf.Clamp01((FlashSeconds - t) / 0.25f);
+            float sc = pop < 1f ? Mathf.Lerp(0.4f, 1.1f, pop) : 1f + 0.1f * Mathf.Exp(-(t - 0.25f) * 8f);
+            float cw = 230f * u * sc, ch = cw * 1.3f, cx = Screen.width * 0.5f, cy = Screen.height * 0.5f;
+            bool mine = flashSide == duel.Me, ban = flashKind == DraftRules.Kind.Ban;
+            var old = GUI.color;
+            // the glow: three soft layers in the side's colour
+            var glow = ban ? new Color(1f, 0.3f, 0.2f) : mine ? new Color(1f, 0.9f, 0.4f) : new Color(1f, 0.55f, 0.3f);
+            for (int k = 3; k >= 1; k--) { GUI.color = new Color(glow.r, glow.g, glow.b, 0.18f * fade); GUI.DrawTexture(new Rect(cx - cw * 0.5f - k * 14 * u, cy - ch * 0.5f - k * 14 * u, cw + k * 28 * u, ch + k * 28 * u), Texture2D.whiteTexture); }
+            GUI.color = new Color(1f, 0.97f, 0.88f, fade); GUI.DrawTexture(new Rect(cx - cw * 0.5f, cy - ch * 0.5f, cw, ch), Texture2D.whiteTexture);
+            GUI.color = new Color(1f, 1f, 1f, fade);
+            Portrait(new Rect(cx - cw * 0.5f + 8 * u, cy - ch * 0.5f + 8 * u, cw - 16 * u, ch - 16 * u), flashHero);
+            float m = cw * 0.4f;
+            Badge(new Rect(cx - m * 0.5f, cy + ch * 0.5f - m * 0.75f, m, m), ban ? "ban" : "pick", ban ? new Color(0.72f, 0.18f, 0.15f, fade) : new Color(0.2f, 0.6f, 0.25f, fade));
+            var st = new GUIStyle(big) { fontSize = Mathf.RoundToInt(44 * u) };
+            st.normal.textColor = new Color(1f, 1f, 1f, fade);
+            string what = ban ? (mine ? Ar.DraftYouBanned : Ar.DraftTheyBanned) : (mine ? Ar.DraftYourPick : Ar.DraftTheirPick);
+            GUI.Label(new Rect(0, cy - ch * 0.5f - 70 * u, Screen.width, 60 * u), Ar.T(what), st);
+            GUI.color = old;
+        }
+
         void OnGUI()
         {
             var d = duel.Draft;
             if (d == null || duel.Rules != null) return;
+            Watch(d);
             float u = Mathf.Max(1f, Screen.height / 900f);
             var font = Ar.Font;
             var label = new GUIStyle(GUI.skin.label) { fontSize = Mathf.RoundToInt(22 * u), normal = { textColor = Color.white }, font = font, alignment = TextAnchor.MiddleCenter };
@@ -118,6 +174,18 @@ namespace Sheytoonak.Prototype
             string stepIcon = d.Done ? "pick" : !myTurn ? "clock" : d.Current.What == DraftRules.Kind.Ban ? "ban" : "pick";
             float si = 64 * u;
             Badge(new Rect((Screen.width - si) * 0.5f, pad, si, si), stepIcon, myTurn && d.Current.What == DraftRules.Kind.Ban ? new Color(0.72f, 0.18f, 0.15f) : sideC);
+            // the step in words beside the icon and its countdown (2026-11-11)
+            float left = Countdown(d, StarterHeroes.All, myTurn);
+            if (!d.Done)
+            {
+                var hs = new GUIStyle(big) { fontSize = Mathf.RoundToInt(30 * u), alignment = TextAnchor.MiddleRight };
+                hs.normal.textColor = sideC;
+                string step = !myTurn ? Ar.DraftWait : d.Current.What == DraftRules.Kind.Ban ? Ar.DraftBanYou : Ar.DraftPickYou;
+                GUI.Label(new Rect(0, pad, (Screen.width - si) * 0.5f - 16 * u, si), Ar.T(step), hs);
+                var cs = new GUIStyle(big) { fontSize = Mathf.RoundToInt(40 * u), alignment = TextAnchor.MiddleLeft };
+                cs.normal.textColor = left < 5f ? new Color(1f, 0.35f, 0.3f) : Color.white;
+                GUI.Label(new Rect((Screen.width + si) * 0.5f + 16 * u, pad, 200 * u, si), Ar.N(Mathf.CeilToInt(left)), cs);
+            }
 
             var all = StarterHeroes.All;
             int n = all.Length;
@@ -181,6 +249,7 @@ namespace Sheytoonak.Prototype
                 var o = GUI.color; GUI.color = new Color(1f, 0.6f, 0.35f); GUI.DrawTexture(pr, Texture2D.whiteTexture); GUI.color = o;
                 Portrait(new Rect(pr.x + 3 * u, pr.y + 3 * u, pr.width - 6 * u, pr.height - 6 * u), theirs[k]);
             }
+            Flash(u, big);
         }
     }
 }

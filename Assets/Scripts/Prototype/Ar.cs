@@ -25,6 +25,10 @@ namespace Sheytoonak
         public const string DraftBanYou = "شيل بطل (بينشال من الكل)";
         public const string DraftPickYou = "اختار بطل";
         public const string DraftWait = "الخصم عم يختار...";
+        public const string DraftYourPick = "اختيارك";
+        public const string DraftTheirPick = "اختيار الخصم";
+        public const string DraftYouBanned = "شلت";
+        public const string DraftTheyBanned = "الخصم شال";
         public const string YouBan = "شلت:";
         public const string Sealed = "ما بتنكسر!"; // the sealed window took the ball (user: one window per round never breaks)
         public const string HitsLeft = "ضربات باقية"; // hits left on this ball (user: three per ball)
