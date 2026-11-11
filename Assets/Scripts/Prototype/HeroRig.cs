@@ -33,10 +33,10 @@ namespace Sheytoonak.Prototype
                 new Part("shorts", null, 0.4905f, 0.8994f, -0.200f, 6.450f, 4),
                 new Part("torso", "shorts", 0.4719f, 0.0090f, 0.000f, 0.000f, 6),
                 new Part("head", "torso", 0.4363f, 0.1634f, -0.100f, 4.150f, 3),
-                new Part("arm_far", "torso", 0.7361f, 0.8856f, -1.400f, 3.650f, 5),
+                new Part("arm_far", "torso", 0.7430f, 0.8856f, -1.400f, 3.650f, 5),
                 new Part("arm_near", "torso", 0.2299f, 0.9043f, 0.900f, 3.650f, 7),
-                new Part("leg_far", "shorts", 0.5745f, 1.1282f, -1.200f, -1.850f, 1),
-                new Part("leg_near", "shorts", 0.3858f, 1.1491f, 1.400f, -1.850f, 2),
+                new Part("leg_far", "shorts", 0.5745f, 0.9565f, -1.200f, -1.850f, 1),
+                new Part("leg_near", "shorts", 0.3858f, 0.9592f, 1.400f, -1.850f, 2),
             },
         };
 
@@ -130,7 +130,9 @@ namespace Sheytoonak.Prototype
             float sn = Mathf.Sin(phase), c = Mathf.Cos(phase);
             float breathe = Mathf.Sin(Time.time * 1.9f + seed);
             float legFar = walk * 20f * sn, legNear = -walk * 20f * sn;
-            float armFar = 2.5f * breathe - walk * 14f * sn, armNear = -2.5f * breathe + walk * 14f * sn;
+            // ⚠️ counter-clockwise swings the far (left) arm INTO the body and the near (right) arm away from it; each arm
+            // swings mostly outward and only a few degrees in (user 2026-11-11 on the kick: «دست چپش … اومده تو کونش»)
+            float armFar = 1.5f * breathe - walk * (6f + 6f * sn), armNear = -1.5f * breathe + walk * (6f - 6f * sn);
             float torso = walk * 2f * c + breathe * 0.6f, head = -breathe * 1.2f + walk * 1.5f * sn;
             float bob = walk * 0.16f * Mathf.Abs(c);
 
@@ -140,10 +142,10 @@ namespace Sheytoonak.Prototype
                 kickT += dt;
                 float k = kickT / KickSeconds, leg;
                 if (k < 0.25f) leg = Mathf.Lerp(0f, -22f, k / 0.25f);
-                else if (k < 0.5f) { float q = (k - 0.25f) / 0.25f; leg = Mathf.Lerp(-22f, 42f, q * q); }
-                else leg = Mathf.Lerp(42f, 0f, Mathf.Clamp01((k - 0.5f) / 0.5f));
+                else if (k < 0.5f) { float q = (k - 0.25f) / 0.25f; leg = Mathf.Lerp(-22f, 36f, q * q); }
+                else leg = Mathf.Lerp(36f, 0f, Mathf.Clamp01((k - 0.5f) / 0.5f));
                 legNear = leg; legFar = -leg * 0.15f;
-                armFar = leg * 0.5f; armNear = -leg * 0.4f; torso = -leg * 0.08f; head = leg * 0.04f;
+                armFar = -Mathf.Abs(leg) * 0.35f; armNear = Mathf.Abs(leg) * 0.28f; torso = -leg * 0.08f; head = leg * 0.04f;
                 bob = Mathf.Max(0f, Mathf.Sin(Mathf.Clamp01(k * 2f - 0.6f) * Mathf.PI)) * 0.2f;
                 if (kickT >= KickSeconds) kickT = -1f;
             }
