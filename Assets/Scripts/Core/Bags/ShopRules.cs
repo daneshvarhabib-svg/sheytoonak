@@ -23,11 +23,16 @@ namespace Sheytoonak.Core.Bags
     public sealed class ShopRules
     {
         public const int Slots = 6;
-        /// <summary>Cards in each slot and its price per card: slot 0 is the free pile.</summary>
-        static readonly int[] Counts = { 3, 10, 20, 10, 40, 20 };
+        /// <summary>
+        /// Cards in each slot: slot 0 is the free pile. User (2026-11-11): «توی دکان نباید ۱۰ تا امتیاز از یه کارت بدیم.
+        /// باید از هر کارت نهایتاً ۳ و حداقل یک امتیاز بدیم روزانه که چند روز طول بکشه ارتقاء». Each slot is a different
+        /// tool, so no tool gets more than 3 cards a day from the shop. ⚠️ It used to be 3/10/20/10/40/20: one shop visit
+        /// was a whole level 1→2 and broke ToolLevels' calendar.
+        /// </summary>
+        public static readonly int[] Counts = { 1, 1, 2, 2, 3, 3 };
+        public const int MaxCardsPerTool = 3;
         public const int ShardsPerCard = 25;
-        /// <summary>Bigger piles are a little cheaper per card.</summary>
-        public static int PriceFor(int count) => count >= 40 ? count * ShardsPerCard * 4 / 5 : count >= 20 ? count * ShardsPerCard * 9 / 10 : count * ShardsPerCard;
+        public static int PriceFor(int count) => count * ShardsPerCard;
 
         /// <summary>Bags for shards (opened at once, no timer): medium and large.</summary>
         public static readonly BagSize[] BagsForSale = { BagSize.Medium, BagSize.Large };

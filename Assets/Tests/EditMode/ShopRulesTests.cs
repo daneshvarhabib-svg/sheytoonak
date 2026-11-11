@@ -45,5 +45,22 @@ namespace Sheytoonak.Tests
             Assert.IsTrue(t.Bought(D, 3)); Assert.IsFalse(t.Bought(D, 2));
             Assert.IsFalse(ShopRules.Parse("junk").Bought(D, 0));
         }
+    
+        /// <summary>User 2026-11-11: no more than 3 and at least 1 card of a tool a day from the shop.</summary>
+        [Test]
+        public void One_to_three_cards_of_a_tool_a_day()
+        {
+            for (int d = 0; d < 30; d++)
+            {
+                var offers = ShopRules.OffersFor(D.AddDays(d), Tools);
+                var perTool = new System.Collections.Generic.Dictionary<string, int>();
+                foreach (var o in offers)
+                {
+                    Assert.That(o.Count, Is.InRange(1, ShopRules.MaxCardsPerTool));
+                    perTool[o.ToolId] = (perTool.TryGetValue(o.ToolId, out var n) ? n : 0) + o.Count;
+                }
+                foreach (var kv in perTool) Assert.LessOrEqual(kv.Value, ShopRules.MaxCardsPerTool, kv.Key);
+            }
+        }
     }
 }

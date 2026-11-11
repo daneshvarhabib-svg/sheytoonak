@@ -329,6 +329,7 @@ namespace Sheytoonak.Prototype
             gameGo.AddComponent<CurseVoice>();
             gameGo.AddComponent<MusicPlayer>();
             gameGo.AddComponent<SplashOverlay>();
+            gameGo.AddComponent<UpgradeCelebration>();
             var arc = gameGo.AddComponent<AimArc>(); arc.duel = duelGame; arc.touch = touch;
             var feel = gameGo.AddComponent<KickFeel>(); feel.duel = duelGame; feel.shake = shake;
             gameGo.AddComponent<HeroVoice>();
@@ -2197,7 +2198,8 @@ namespace Sheytoonak.Prototype
             GUI.Label(new Rect(br.x, br.y, br.width - br.height * 0.8f, br.height), Ar.N(price), new GUIStyle(small) { fontSize = Mathf.RoundToInt(16 * u) });
             if (can && GUI.Button(br, GUIContent.none, GUIStyle.none))
             {
-                duelGame.UpgradeTool(t.Id);
+                if (duelGame.UpgradeTool(t.Id) == Sheytoonak.Core.Bags.ToolLevels.Reject.None)
+                    UpgradeCelebration.Instance?.Play(t.Id, t.NameAr, lv.Level(t.Id));
                 touch?.IgnoreFor(0.3f);
             }
         }

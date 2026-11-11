@@ -124,6 +124,10 @@ namespace Sheytoonak.Prototype
                         boot.Duel.ScreenshotLevels();
                         boot.ShowHeroesFromScript();
                         yield return Shot("14-heroes", 0.6f);
+                        if (boot.Duel.UpgradeTool("pigeon") == Sheytoonak.Core.Bags.ToolLevels.Reject.None)
+                            UpgradeCelebration.Instance?.Play("pigeon", "حمامة", boot.Duel.Levels.Level("pigeon"));
+                        yield return Shot("14b-upgrade", 1.3f);
+                        yield return new WaitForSeconds(2.2f);
                         boot.DismissLootForShot();
                         boot.ShowShopFromScript();
                         yield return Shot("15-shop", 0.6f);

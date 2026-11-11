@@ -480,3 +480,9 @@ Stability ~۴۰. هر خط یک فایل → `Audio/Heroes/<id>/kick_01..03`. م
 ### پادزهرِ فرش: «زقّ السجّادة» (به‌جایِ سنگ‌ریزه‌ی فُلّة، ۲۰ آبان)
 - `Poison/rug_pusher_0.png` و `rug_pusher_1.png`: کسی روی لبه‌ی پشت‌بام، از پایین (کوچه) دیده می‌شود؛ ۰ = خم شده و دو دست روی فرش، ۱ = هل داده، دست‌ها جلو. روی سبزِ #00FF00.
 - `Icons/rug_push.png`: آیکونِ مربع.
+
+## جشنِ ارتقا: بادکنک، ربان، موزیک (۲۱ آبان)
+کاربر: «وقتی ارتقاء میدی یه چهارتا بادکنک و ربان از بالا بیاد و یه موزیکی که نشون بده خوشحالیم». در کد هست (`UpgradeCelebration.cs`) با بادکنکِ ساده و جینگلِ ساختگی؛ با این فایل‌ها واقعی می‌شود. هر تصویر جدا، روی سبزِ #00FF00.
+- `Art/UI/balloon_0..3.png` (چهار رنگ: قرمز، زرد، آبی، سبز): `Cut-out for a mobile game UI, on a flat solid bright green background #00FF00, no shadow, no scene. Hand-painted cartoon style matching a warm, weathered Middle-Eastern street game. One shiny party balloon, {red|yellow|blue|green}, slightly oval, a soft white highlight on the upper left, a small tied knot at the bottom, a short curly white string. Centered, whole balloon visible. No text, no logo, no watermark.`
+- `Art/UI/ribbon_0..1.png`: `Same style, on green #00FF00: one long curly party streamer ribbon hanging vertically, glossy {gold|pink} paper, three loose spirals, centered. No text.`
+- `Audio/Fx/levelup_01` (ElevenLabs Sound Effects یا Suno، ۲ ثانیه): `Short cheerful level-up fanfare for a mobile game, bright brass and a hand drum, a little Middle-Eastern flavour (oud pluck at the end), happy and triumphant, 2 seconds, no voice.`
