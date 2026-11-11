@@ -494,3 +494,76 @@ Stability ~۴۰. هر خط یک فایل → `Audio/Heroes/<id>/kick_01..03`. م
 - `Art/Heroes/abu_shahata_toon_idle.png`: ایستاده، سه‌رخِ پشت، رو به راست (همان زاویه‌ی فعلی).
 - `Art/Heroes/abu_shahata_toon_front.png`: همان شخصیت از روبه‌رو (برایِ کارت و انتخاب).
 - `Art/Heroes/abu_shahata_parts.png`: همان شخصیت تکه‌تکه برایِ اسکلتِ متحرک (مرحله‌ی ۴).
+
+## بقیه‌ی قهرمان‌ها در سبکِ کارتونی (۲۰ آبان)
+کاربر: «پرامپت بقیه قهرمانان رو بنویس». هر قهرمان دو تصویر: پشت با ژستِ خنثی (همان را برایِ عروسک تکه می‌کنم) + روبه‌رو. تصویرِ ابوشحاطه پیوست شود تا سبک و قد یکی بماند. ⚠️ لباسِ بلند تا وسطِ ساق، تا پا برایِ حرکت دیده شود؛ سنِ عددی برایِ بچه ننوشتم (فیلتر).
+
+#### ريما (`rima`)
+`Art/Heroes/rima_idle.png`
+```
+Original cartoon character for a mobile street game, in exactly the same bold caricature style as the attached Abu Shahata picture: thick dark brown outlines, big head (about 1/4 of body height), chunky hands and feet, warm saturated colours with soft cel shading. Character: Rima, a scrappy cartoon street girl from Saida, wild curly black hair in a loose ponytail, freckles, a sly grin, an oversized faded red football jersey, rolled-up blue jeans, scuffed white sneakers, a small plaster on one elbow. Full body, three-quarter BACK view, the whole body turned to the RIGHT: we see the back and the right third of the face. Neutral rig pose: standing straight, legs slightly apart, BOTH feet pointing to the right, the NEAR leg (closer to the viewer) slightly in front of the FAR leg, arms hanging down a little away from the body, hands open and relaxed, elbows and knees straight, nothing covering the legs below the knee. Same height and scale as the attached picture. On a flat solid bright green background #00FF00, no ground, no shadow, no scene. Whole body visible, centered, about 85% of the image height. No text, no logo, no flag, no watermark, no political symbols.
+```
+`Art/Heroes/rima_front.png`
+```
+The same original cartoon character as the previous picture (Rima, a scrappy cartoon street girl from Saida, wild curly black hair in a loose ponytail, freckles, a sly grin, an oversized faded red football jersey, rolled-up blue jeans, scuffed white sneakers, a small plaster on one elbow), same bold caricature style with thick dark brown outlines and cel shading, now FRONT view, full body, a confident pose with one foot on a worn leather football, showing personality. On a flat solid bright green background #00FF00, no ground, no shadow. Whole body visible, centered, about 85% of the image height. No text, no logo, no flag, no watermark, no political symbols.
+```
+
+#### زعتر (`zaatar`)
+`Art/Heroes/zaatar_idle.png`
+```
+Original cartoon character for a mobile street game, in exactly the same bold caricature style as the attached Abu Shahata picture: thick dark brown outlines, big head (about 1/4 of body height), chunky hands and feet, warm saturated colours with soft cel shading. Character: Zaatar, a young cartoon Damascus street kid, short curly brown hair, big bright eyes, a cheerful grin, an olive-green tracksuit with two white stripes on the sleeves and legs, grey sneakers. Full body, three-quarter BACK view, the whole body turned to the RIGHT: we see the back and the right third of the face. Neutral rig pose: standing straight, legs slightly apart, BOTH feet pointing to the right, the NEAR leg (closer to the viewer) slightly in front of the FAR leg, arms hanging down a little away from the body, hands open and relaxed, elbows and knees straight, nothing covering the legs below the knee. Same height and scale as the attached picture. On a flat solid bright green background #00FF00, no ground, no shadow, no scene. Whole body visible, centered, about 85% of the image height. No text, no logo, no flag, no watermark, no political symbols.
+```
+`Art/Heroes/zaatar_front.png`
+```
+The same original cartoon character as the previous picture (Zaatar, a young cartoon Damascus street kid, short curly brown hair, big bright eyes, a cheerful grin, an olive-green tracksuit with two white stripes on the sleeves and legs, grey sneakers), same bold caricature style with thick dark brown outlines and cel shading, now FRONT view, full body, a confident pose with one foot on a worn leather football, showing personality. On a flat solid bright green background #00FF00, no ground, no shadow. Whole body visible, centered, about 85% of the image height. No text, no logo, no flag, no watermark, no political symbols.
+```
+
+#### فُلّة (`fulla`)
+`Art/Heroes/fulla_idle.png`
+```
+Original cartoon character for a mobile street game, in exactly the same bold caricature style as the attached Abu Shahata picture: thick dark brown outlines, big head (about 1/4 of body height), chunky hands and feet, warm saturated colours with soft cel shading. Character: Fulla, a young cartoon girl from Alexandria, two long black braids tied with small white jasmine flowers, rosy cheeks, a determined smile, a sea-blue knee-length dress over dark leggings, white sneakers. Full body, three-quarter BACK view, the whole body turned to the RIGHT: we see the back and the right third of the face. Neutral rig pose: standing straight, legs slightly apart, BOTH feet pointing to the right, the NEAR leg (closer to the viewer) slightly in front of the FAR leg, arms hanging down a little away from the body, hands open and relaxed, elbows and knees straight, nothing covering the legs below the knee. Same height and scale as the attached picture. On a flat solid bright green background #00FF00, no ground, no shadow, no scene. Whole body visible, centered, about 85% of the image height. No text, no logo, no flag, no watermark, no political symbols.
+```
+`Art/Heroes/fulla_front.png`
+```
+The same original cartoon character as the previous picture (Fulla, a young cartoon girl from Alexandria, two long black braids tied with small white jasmine flowers, rosy cheeks, a determined smile, a sea-blue knee-length dress over dark leggings, white sneakers), same bold caricature style with thick dark brown outlines and cel shading, now FRONT view, full body, a confident pose with one foot on a worn leather football, showing personality. On a flat solid bright green background #00FF00, no ground, no shadow. Whole body visible, centered, about 85% of the image height. No text, no logo, no flag, no watermark, no political symbols.
+```
+
+#### طوني (`toni`)
+`Art/Heroes/toni_idle.png`
+```
+Original cartoon character for a mobile street game, in exactly the same bold caricature style as the attached Abu Shahata picture: thick dark brown outlines, big head (about 1/4 of body height), chunky hands and feet, warm saturated colours with soft cel shading. Character: Toni, a cocky cartoon Beirut street teenager, a baseball cap worn backwards, a smug half-smile, black sleeveless t-shirt, a thin gold chain, ripped denim shorts, red sneakers, and a sporty metal below-the-knee prosthetic leg on his NEAR leg (the leg closer to the viewer) with a red sneaker on it, clearly visible. Full body, three-quarter BACK view, the whole body turned to the RIGHT: we see the back and the right third of the face. Neutral rig pose: standing straight, legs slightly apart, BOTH feet pointing to the right, the NEAR leg (closer to the viewer) slightly in front of the FAR leg, arms hanging down a little away from the body, hands open and relaxed, elbows and knees straight, nothing covering the legs below the knee. Same height and scale as the attached picture. On a flat solid bright green background #00FF00, no ground, no shadow, no scene. Whole body visible, centered, about 85% of the image height. No text, no logo, no flag, no watermark, no political symbols.
+```
+`Art/Heroes/toni_front.png`
+```
+The same original cartoon character as the previous picture (Toni, a cocky cartoon Beirut street teenager, a baseball cap worn backwards, a smug half-smile, black sleeveless t-shirt, a thin gold chain, ripped denim shorts, red sneakers, and a sporty metal below-the-knee prosthetic leg on his NEAR leg (the leg closer to the viewer) with a red sneaker on it, clearly visible), same bold caricature style with thick dark brown outlines and cel shading, now FRONT view, full body, a confident pose with one foot on a worn leather football, showing personality. On a flat solid bright green background #00FF00, no ground, no shadow. Whole body visible, centered, about 85% of the image height. No text, no logo, no flag, no watermark, no political symbols.
+```
+
+#### أم العربيات (`um_arabiyat`)
+`Art/Heroes/um_arabiyat_idle.png`
+```
+Original cartoon character for a mobile street game, in exactly the same bold caricature style as the attached Abu Shahata picture: thick dark brown outlines, big head (about 1/4 of body height), chunky hands and feet, warm saturated colours with soft cel shading. Character: Um al-Arabiyat, a tough cartoon Baghdad grandmother, a dark red patterned headscarf with a fringed edge, a stern face with strong eyebrows, a long dark brown dress with sleeves rolled up, a red underskirt showing below the hem at mid-shin, brown leather sandals. Full body, three-quarter BACK view, the whole body turned to the RIGHT: we see the back and the right third of the face. Neutral rig pose: standing straight, legs slightly apart, BOTH feet pointing to the right, the NEAR leg (closer to the viewer) slightly in front of the FAR leg, arms hanging down a little away from the body, hands open and relaxed, elbows and knees straight, nothing covering the legs below the knee. Same height and scale as the attached picture. On a flat solid bright green background #00FF00, no ground, no shadow, no scene. Whole body visible, centered, about 85% of the image height. No text, no logo, no flag, no watermark, no political symbols.
+```
+`Art/Heroes/um_arabiyat_front.png`
+```
+The same original cartoon character as the previous picture (Um al-Arabiyat, a tough cartoon Baghdad grandmother, a dark red patterned headscarf with a fringed edge, a stern face with strong eyebrows, a long dark brown dress with sleeves rolled up, a red underskirt showing below the hem at mid-shin, brown leather sandals), same bold caricature style with thick dark brown outlines and cel shading, now FRONT view, full body, a confident pose with one foot on a worn leather football, showing personality. On a flat solid bright green background #00FF00, no ground, no shadow. Whole body visible, centered, about 85% of the image height. No text, no logo, no flag, no watermark, no political symbols.
+```
+
+#### حمادة (`hamada`)
+`Art/Heroes/hamada_idle.png`
+```
+Original cartoon character for a mobile street game, in exactly the same bold caricature style as the attached Abu Shahata picture: thick dark brown outlines, big head (about 1/4 of body height), chunky hands and feet, warm saturated colours with soft cel shading. Character: Hamada, a playful cartoon young Cairo street vendor, short curly black hair, a small white knitted cap, a big mischievous grin, a grey striped galabiya that ends at mid-shin, a stained cream apron tied at the waist, brown leather slippers. Full body, three-quarter BACK view, the whole body turned to the RIGHT: we see the back and the right third of the face. Neutral rig pose: standing straight, legs slightly apart, BOTH feet pointing to the right, the NEAR leg (closer to the viewer) slightly in front of the FAR leg, arms hanging down a little away from the body, hands open and relaxed, elbows and knees straight, nothing covering the legs below the knee. Same height and scale as the attached picture. On a flat solid bright green background #00FF00, no ground, no shadow, no scene. Whole body visible, centered, about 85% of the image height. No text, no logo, no flag, no watermark, no political symbols.
+```
+`Art/Heroes/hamada_front.png`
+```
+The same original cartoon character as the previous picture (Hamada, a playful cartoon young Cairo street vendor, short curly black hair, a small white knitted cap, a big mischievous grin, a grey striped galabiya that ends at mid-shin, a stained cream apron tied at the waist, brown leather slippers), same bold caricature style with thick dark brown outlines and cel shading, now FRONT view, full body, a confident pose with one foot on a worn leather football, showing personality. On a flat solid bright green background #00FF00, no ground, no shadow. Whole body visible, centered, about 85% of the image height. No text, no logo, no flag, no watermark, no political symbols.
+```
+
+#### بوبكر (`bubakr`)
+`Art/Heroes/bubakr_idle.png`
+```
+Original cartoon character for a mobile street game, in exactly the same bold caricature style as the attached Abu Shahata picture: thick dark brown outlines, big head (about 1/4 of body height), chunky hands and feet, warm saturated colours with soft cel shading. Character: Bubakr, a calm cartoon Tunisian fisherman, grey hair, a short white beard, a red chechia cap, a relaxed smile, a faded blue work jacket with sleeves rolled up, beige trousers rolled up to mid-shin, blue flip-flops. Full body, three-quarter BACK view, the whole body turned to the RIGHT: we see the back and the right third of the face. Neutral rig pose: standing straight, legs slightly apart, BOTH feet pointing to the right, the NEAR leg (closer to the viewer) slightly in front of the FAR leg, arms hanging down a little away from the body, hands open and relaxed, elbows and knees straight, nothing covering the legs below the knee. Same height and scale as the attached picture. On a flat solid bright green background #00FF00, no ground, no shadow, no scene. Whole body visible, centered, about 85% of the image height. No text, no logo, no flag, no watermark, no political symbols.
+```
+`Art/Heroes/bubakr_front.png`
+```
+The same original cartoon character as the previous picture (Bubakr, a calm cartoon Tunisian fisherman, grey hair, a short white beard, a red chechia cap, a relaxed smile, a faded blue work jacket with sleeves rolled up, beige trousers rolled up to mid-shin, blue flip-flops), same bold caricature style with thick dark brown outlines and cel shading, now FRONT view, full body, a confident pose with one foot on a worn leather football, showing personality. On a flat solid bright green background #00FF00, no ground, no shadow. Whole body visible, centered, about 85% of the image height. No text, no logo, no flag, no watermark, no political symbols.
+```
