@@ -65,9 +65,10 @@ namespace Sheytoonak.Prototype
                 float x = sw * (0.05f + 0.09f * i) + Mathf.Sin(lt * 3f + i) * 30f * u;
                 float y = -120f * u + lt * sh * 0.42f;
                 var col = Hues[i % 4];
-                GUI.color = new Color(col.r, col.g, col.b, fade);
                 var rib = ribbons[i % 2];
-                if (rib != null) GUI.DrawTexture(new Rect(x, y, 40 * u, 110 * u), rib, ScaleMode.ScaleToFit);
+                // painted streamers (gold, pink) keep their own colour; the stand-in strips take the balloon colours
+                GUI.color = rib != null ? new Color(1f, 1f, 1f, fade) : new Color(col.r, col.g, col.b, fade);
+                if (rib != null) { float rh = 190f * u; GUI.DrawTexture(new Rect(x, y, rh * rib.width / rib.height, rh), rib, ScaleMode.StretchToFill); }
                 else for (int k = 0; k < 9; k++) // a wavy strip of small squares
                         GUI.DrawTexture(new Rect(x + Mathf.Sin(lt * 6f + k * 0.8f) * 10f * u, y + k * 11f * u, 9 * u, 11 * u), Texture2D.whiteTexture);
             }
