@@ -567,3 +567,7 @@ Original cartoon character for a mobile street game, in exactly the same bold ca
 ```
 The same original cartoon character as the previous picture (Bubakr, a calm cartoon Tunisian fisherman, grey hair, a short white beard, a red chechia cap, a relaxed smile, a faded blue work jacket with sleeves rolled up, beige trousers rolled up to mid-shin, blue flip-flops), same bold caricature style with thick dark brown outlines and cel shading, now FRONT view, full body, a confident pose with one foot on a worn leather football, showing personality. On a flat solid bright green background #00FF00, no ground, no shadow. Whole body visible, centered, about 85% of the image height. No text, no logo, no flag, no watermark, no political symbols.
 ```
+
+## صفحه‌ی پیروزی/شکست و محیطِ فانتزی (۲۰ آبان)
+کاربر: «این گرافیک پیروزی … زشته» و «دیزاین خونه ها هم با بازیکنا نمیخوره، همینطور ماشین و رهگذرها و آسمون و آسفالت و پیاده رو». هر تصویر جدا؛ تصویرِ پشتِ ابوشحاطه را برایِ سبک پیوست کن. ⚠️ خانه‌ها: تصویرِ فعلیِ همان خانه را هم پیوست کن -- نقشه‌ی پنجره‌ها (محلِ برخوردِ توپ) از رویِ همان اندازه‌گیری شده و نباید جابه‌جا شود. متنِ عربی را بازی رویِ نوار می‌نویسد، نه تصویر.
+پرامپت‌ها عیناً در پیامِ چتِ همان روز آمده‌اند.
