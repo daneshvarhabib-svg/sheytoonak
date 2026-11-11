@@ -4,9 +4,9 @@ using UnityEngine;
 namespace Sheytoonak.Prototype
 {
     /// <summary>
-    /// Step 4 of the reference-game look (user 2026-11-11: «کیفیت انیمیشن و حرکت بازیکنا»): a hero cut into eleven pieces
+    /// Step 4 of the reference-game look (user 2026-11-11: «کیفیت انیمیشن و حرکت بازیکنا»): a hero cut into pieces
     /// (Art/Heroes/&lt;id&gt;_rig/*.png, from one painted rig sheet) and moved by joints in code -- breathing and a swaying
-    /// arm at rest, a walk cycle (thighs, knees, arms, a bob) whenever the hero moves, and a kick (wind-up, snap, follow
+    /// arm at rest, a walk cycle (legs, arms, a bob) whenever the hero moves, and a kick (wind-up, snap, follow
     /// through). Sits under the hero's painted SpriteRenderer, which stays as the size reference and is hidden; its
     /// flipX turns the whole puppet, so DuelStage's facing logic needs no change.
     /// ⚠️ The joint table is measured on the sheet (bundled in the comment of each row: pivot = the joint inside the
@@ -20,25 +20,23 @@ namespace Sheytoonak.Prototype
             public Part(string n, string p, float px, float py, float lx, float ly, int o) { Name = n; Parent = p; Pivot = new Vector2(px, py); Local = new Vector2(lx, ly); Order = o; }
         }
 
-        // abu_shahata (second sheet, 2026-11-11). Origin = between the feet; units = sheet pixels / 100.
-        // ⚠️ The first sheet was wrong (user: «جهت پا، پشت و جلو بودنش، شیوه اتصالش»): feet splayed like a front view,
-        // no near/far limbs, flat cut joints. This one has both feet pointing right, round caps at the joints, and the
-        // screen-left limbs are the far ones (drawn behind the torso and the shorts).
+        // abu_shahata, third try (2026-11-11). User: «باید مثل تصویر اصلیش بشه نه این‌جوری». Puppets assembled from a
+        // separate pieces sheet never looked like the hero (two sheets: wrong feet, extra joints on the shorts, arms
+        // akimbo). Now the REFERENCE picture itself (Art/Heroes/abu_shahata_rig_ref, standing straight) is cut along the
+        // joints into seven pieces -- head, tank top, shorts, two arms, two legs -- so at rest it IS the picture; each
+        // piece carries a little hidden flesh painted in around its own joint so a swing shows no hole.
+        // Origin = between the feet; units = reference pixels / 100. Screen-left arm and leg are the far ones.
         static readonly Dictionary<string, Part[]> Tables = new Dictionary<string, Part[]>
         {
             ["abu_shahata"] = new[]
             {
-                new Part("shorts", null, 0.4981f, 0.9590f, -0.050f, 5.420f, 7),
-                new Part("thigh_l", "shorts", 0.4690f, 0.7612f, -0.580f, -1.800f, 2),
-                new Part("shin_l", "thigh_l", 0.5781f, 0.9884f, -0.100f, -1.050f, 1),
-                new Part("thigh_r", "shorts", 0.4912f, 0.7692f, 0.670f, -1.800f, 6),
-                new Part("shin_r", "thigh_r", 0.2648f, 1.0000f, 0.150f, -1.100f, 5),
-                new Part("torso", "shorts", 0.4933f, 0.0549f, 0.000f, -0.100f, 8),
-                new Part("head", "torso", 0.4517f, 0.0484f, -0.050f, 2.250f, 9),
-                new Part("upper_arm_l", "torso", 0.8039f, 0.7785f, -0.850f, 1.800f, 3),
-                new Part("forearm_l", "upper_arm_l", 0.2452f, 0.8368f, -0.900f, -0.950f, 4),
-                new Part("upper_arm_r", "torso", 0.2838f, 0.7750f, 0.650f, 1.950f, 10),
-                new Part("forearm_r", "upper_arm_r", 0.7595f, 0.8413f, 0.800f, -1.000f, 11),
+                new Part("shorts", null, 0.4905f, 0.8994f, -0.200f, 6.450f, 4),
+                new Part("torso", "shorts", 0.4719f, 0.0090f, 0.000f, 0.000f, 6),
+                new Part("head", "torso", 0.4363f, 0.1634f, -0.100f, 4.150f, 3),
+                new Part("arm_far", "torso", 0.7361f, 0.8856f, -1.400f, 3.650f, 5),
+                new Part("arm_near", "torso", 0.2299f, 0.9043f, 0.900f, 3.650f, 7),
+                new Part("leg_far", "shorts", 0.5745f, 1.1282f, -1.200f, -1.850f, 1),
+                new Part("leg_near", "shorts", 0.3858f, 1.1491f, 1.400f, -1.850f, 2),
             },
         };
 
@@ -49,7 +47,7 @@ namespace Sheytoonak.Prototype
         /// </summary>
         static readonly Dictionary<string, Dictionary<string, float>> Rest = new Dictionary<string, Dictionary<string, float>>
         {
-            ["abu_shahata"] = new Dictionary<string, float> { ["upper_arm_l"] = 32f, ["forearm_l"] = -67f, ["upper_arm_r"] = -28f, ["forearm_r"] = 67f },
+            
         };
         Dictionary<string, float> rest = new Dictionary<string, float>();
 
@@ -128,35 +126,30 @@ namespace Sheytoonak.Prototype
             float walk = Mathf.Clamp01((speed - 0.15f) / 0.8f);
             phase += dt * Mathf.Lerp(1f, 9f, walk);
 
-            // rest: a slow sway; walking: the swing of a stride
-            float s = Mathf.Sin(phase), c = Mathf.Cos(phase);
+            // rest: a slow sway; walking: the swing of a stride (single-piece limbs from the hips and shoulders)
+            float sn = Mathf.Sin(phase), c = Mathf.Cos(phase);
             float breathe = Mathf.Sin(Time.time * 1.9f + seed);
-            float thighL = walk * 28f * s, thighR = -walk * 28f * s;
-            float shinL = -walk * 30f * Mathf.Max(0f, -s), shinR = -walk * 30f * Mathf.Max(0f, s);
-            float armL = 3f * breathe - walk * 22f * s, armR = -3f * breathe + walk * 22f * s;
-            float foreL = walk * -18f, foreR = walk * 18f;
-            float torso = walk * 3f * c + breathe * 0.8f, head = -breathe * 1.5f + walk * 2f * s;
-            float bob = walk * 0.18f * Mathf.Abs(c);
+            float legFar = walk * 20f * sn, legNear = -walk * 20f * sn;
+            float armFar = 2.5f * breathe - walk * 14f * sn, armNear = -2.5f * breathe + walk * 14f * sn;
+            float torso = walk * 2f * c + breathe * 0.6f, head = -breathe * 1.2f + walk * 1.5f * sn;
+            float bob = walk * 0.16f * Mathf.Abs(c);
 
             if (kickT >= 0f)
             {
-                // the kicking leg is the front (right) one: wind-up back, snap through the ball, follow-through, settle
+                // the near leg kicks: back, snap through the ball, follow-through, settle
                 kickT += dt;
-                float k = kickT / KickSeconds;
-                float th, sh;
-                if (k < 0.25f) { float a = k / 0.25f; th = Mathf.Lerp(0f, -38f, a); sh = Mathf.Lerp(0f, -55f, a); }
-                else if (k < 0.5f) { float a = (k - 0.25f) / 0.25f; th = Mathf.Lerp(-38f, 62f, a * a); sh = Mathf.Lerp(-55f, 5f, a); }
-                else { float a = Mathf.Clamp01((k - 0.5f) / 0.5f); th = Mathf.Lerp(62f, 0f, a); sh = Mathf.Lerp(5f, 0f, a); }
-                thighR = th; shinR = sh; thighL = -th * 0.15f; shinL = 0f;
-                armL = th * 0.45f; armR = -th * 0.35f; torso = -th * 0.08f; head = th * 0.05f;
-                bob = Mathf.Max(0f, Mathf.Sin(Mathf.Clamp01(k * 2f - 0.6f) * Mathf.PI)) * 0.25f;
+                float k = kickT / KickSeconds, leg;
+                if (k < 0.25f) leg = Mathf.Lerp(0f, -22f, k / 0.25f);
+                else if (k < 0.5f) { float q = (k - 0.25f) / 0.25f; leg = Mathf.Lerp(-22f, 42f, q * q); }
+                else leg = Mathf.Lerp(42f, 0f, Mathf.Clamp01((k - 0.5f) / 0.5f));
+                legNear = leg; legFar = -leg * 0.15f;
+                armFar = leg * 0.5f; armNear = -leg * 0.4f; torso = -leg * 0.08f; head = leg * 0.04f;
+                bob = Mathf.Max(0f, Mathf.Sin(Mathf.Clamp01(k * 2f - 0.6f) * Mathf.PI)) * 0.2f;
                 if (kickT >= KickSeconds) kickT = -1f;
             }
 
-            Rot("thigh_l", thighL); Rot("thigh_r", thighR);
-            Rot("shin_l", shinL); Rot("shin_r", shinR);
-            Rot("upper_arm_l", armL); Rot("upper_arm_r", armR);
-            Rot("forearm_l", foreL); Rot("forearm_r", foreR);
+            Rot("leg_far", legFar); Rot("leg_near", legNear);
+            Rot("arm_far", armFar); Rot("arm_near", armNear);
             Rot("torso", torso); Rot("head", head);
             bones["shorts"].localPosition = rootRest + new Vector3(0f, bob, 0f);
         }
