@@ -549,9 +549,10 @@ namespace Sheytoonak.Prototype
             float k = 2.4f / Mathf.Max(0.01f, sp.bounds.size.y);
             truck.transform.localScale = new Vector3(fromLeft ? -k : k, k, k);
             float z = corpse.position.z - 0.6f;
-            // the painted brush of sweeper.png (2026-11-09) sits at 11.8 % of the width from the front and 9 % up from the
-            // wheels' line, 22.5 % of the width wide; the separate sweeper_brush.png is laid exactly over it
-            var brushLocal = new Vector3(sp.bounds.size.x * (0.118f - 0.5f), sp.bounds.size.y * 0.09f, -0.01f);
+            // the painted brush of sweeper.png sits at 11.9 % of the width from the front and 13.4 % up from the wheels'
+            // line, 23.2 % of the width wide (cartoon repaint 2026-11-12, measured on the picture; was 11.8/9/22.5); the
+            // separate sweeper_brush.png is laid exactly over it
+            var brushLocal = new Vector3(sp.bounds.size.x * (0.119f - 0.5f), sp.bounds.size.y * 0.134f, -0.01f);
             float stopX = corpse.position.x - brushLocal.x * truck.transform.localScale.x; // brush right over the bird
             float x0 = fromLeft ? -26f : 26f;
             truck.transform.position = new Vector3(x0, 0f, z);
@@ -564,7 +565,7 @@ namespace Sheytoonak.Prototype
                 brushR.sortingOrder = truck.sortingOrder + 1;
                 brushR.transform.SetParent(truck.transform, false);
                 brushR.transform.localPosition = brushLocal;
-                brushR.transform.localScale = Vector3.one * (sp.bounds.size.x * 0.225f / Mathf.Max(0.01f, brushR.sprite.bounds.size.x));
+                brushR.transform.localScale = Vector3.one * (sp.bounds.size.x * 0.232f / Mathf.Max(0.01f, brushR.sprite.bounds.size.x));
             }
             // ⚠️ the brush is painted from the side (a cone of bristles), so turning the sprite would tip it over; it
             // "spins" by flipping its bristles and a slight wobble instead
