@@ -196,20 +196,24 @@ namespace Sheytoonak
                 // one, turning with the distance. Measured on the keyed 1473x821 picture: centres (195, 690) and (1105, 700), r 100.
                 var wheelTex = Resources.Load<Texture2D>("Art/Props/ambulance_wheel") ?? Resources.Load<Texture2D>("Art/Cars/wheel_1");
                 var wheels = new List<Transform>();
+                // ⚠️ 2026-11-12: the cartoon van (1515x845, rows padded below so the picture's bottom is the road) has empty
+                // arches; wheels centred (220, 723) and (1144, 723), r 122. The old realistic one painted its own wheels.
+                bool toon = closed.height == 845;
                 if (wheelTex != null && closed.width > 1400)
                 {
                     var wsp = Sprite.Create(wheelTex, new Rect(0, 0, wheelTex.width, wheelTex.height), new Vector2(0.5f, 0.5f), 100f);
-                    foreach (var c in new[] { new Vector2(195f, 690f), new Vector2(1105f, 700f) })
+                    foreach (var c in toon ? new[] { new Vector2(220f, 723f), new Vector2(1144f, 723f) } : new[] { new Vector2(195f, 690f), new Vector2(1105f, 700f) })
                     {
                         var w = new GameObject("Wheel").AddComponent<SpriteRenderer>();
                         w.sprite = wsp; w.sortingOrder = vr.sortingOrder + 1;
                         w.transform.SetParent(van, false);
                         w.transform.localPosition = new Vector3((c.x - closed.width * 0.5f) / 100f, (closed.height - c.y) / 100f, -0.01f);
-                        w.transform.localScale = Vector3.one * (200f / wheelTex.width);
+                        w.transform.localScale = Vector3.one * ((toon ? 244f : 200f) / wheelTex.width);
+                        if (toon) w.sortingOrder = vr.sortingOrder - 1; // the arches cover the tyres' tops
                         wheels.Add(w.transform);
                     }
                 }
-                float wheelR = 1f * Mathf.Abs(van.localScale.y); // 100 px at 100 ppu, scaled
+                float wheelR = (toon ? 1.22f : 1f) * Mathf.Abs(van.localScale.y); // the wheel's radius at 100 ppu, scaled
                 float x0 = van.position.x, x1 = t.position.x + side * 2.2f;
                 for (float k = 0f; k < 1f; k += Time.deltaTime / 2f)
                 {
