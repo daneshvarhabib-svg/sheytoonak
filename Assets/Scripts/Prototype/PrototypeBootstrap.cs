@@ -444,9 +444,11 @@ namespace Sheytoonak.Prototype
         HouseDefinition House40() => MakePaintedHouse("البيت ٤٠", "Art/house_40", 2172f, 724f, Wide3W,
             new[]
             {
-                R(304f, 38f, 390f, 124f), R(662f, 38f, 749f, 124f), R(939f, 38f, 1026f, 124f), R(1227f, 38f, 1314f, 124f), R(1509f, 38f, 1596f, 124f), R(1802f, 38f, 1889f, 124f),
-                R(282f, 206f, 434f, 336f), R(635f, 206f, 787f, 336f), R(895f, 206f, 1047f, 336f), R(1172f, 206f, 1324f, 336f), R(1460f, 206f, 1612f, 336f), R(1759f, 206f, 1911f, 336f),
-                R(179f, 445f, 352f, 635f), R(526f, 445f, 700f, 635f), R(787f, 439f, 1102f, 635f), R(1476f, 445f, 1639f, 635f), R(1835f, 445f, 2009f, 635f),
+                // 2026-11-12: the cartoon repaint (user: «دیزاین خونه ها هم با بازیکنا نمیخوره … فانتزی‌تر») kept the layout
+                // but its right half drifted up to 45 px, so the panes were measured again on the new picture
+                R(307f, 33f, 400f, 128f), R(665f, 33f, 755f, 128f), R(932f, 33f, 1021f, 128f), R(1222f, 33f, 1314f, 128f), R(1513f, 33f, 1605f, 128f), R(1833f, 33f, 1922f, 128f),
+                R(280f, 206f, 432f, 331f), R(633f, 206f, 785f, 331f), R(896f, 206f, 1048f, 331f), R(1187f, 206f, 1341f, 331f), R(1491f, 206f, 1642f, 331f), R(1808f, 206f, 1960f, 331f),
+                R(185f, 445f, 350f, 628f), R(529f, 445f, 695f, 628f), R(787f, 440f, 1119f, 630f), R(1504f, 445f, 1662f, 628f), R(1873f, 445f, 2029f, 628f),
             },
             0.25f, 1.95f, 0f, 1.2f, null, "Art/house_40_broken", R(1250f, 420f, 1450f, 600f));
 
