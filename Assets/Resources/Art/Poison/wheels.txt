@@ -1,0 +1,3 @@
+# picture wheelPicture wheelRadius centreX... (pixels of the picture, y down; the picture bottom is the road)
+# cartoon repaint 2026-11-12. A vehicle listed here has empty arches and its wheels turn as it drives.
+bus bus_wheel 124 373,559 1124,559

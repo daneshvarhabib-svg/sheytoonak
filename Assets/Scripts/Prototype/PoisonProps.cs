@@ -132,6 +132,7 @@ namespace Sheytoonak.Prototype
                 h = Mathf.Clamp(h, real, real * 1.2f);
                 var r = Spr(busArt, root, new Vector3(0f, 0f, -w * 0.5f), h);
                 r.flipX = busArt.name.StartsWith("bus");
+                AddWheels(r, busArt.name);
                 // parked on a hidden (unbroken) window: the middle of the covered run can fall on broken glass between two
                 // covered windows, so the covered window nearest that middle is the parking spot
                 float mid = (xMin + xMax) * 0.5f, parkX = mid, bestD = float.MaxValue;
@@ -225,6 +226,60 @@ namespace Sheytoonak.Prototype
                     Part(PrimitiveType.Cube, root, local + new Vector3(0f, each * 0.5f, -0.61f), new Vector3(0.12f, each * 0.97f, 0.02f), M("strap", new Color(0.15f, 0.1f, 0.06f)));
                 }
                 y += each;
+            }
+        }
+
+        /// <summary>
+        /// Loose wheels for a vehicle picture listed in Art/Poison/wheels.txt (picture with empty arches, a wheel picture,
+        /// the radius and the centres in the picture's pixels). User (2026-11-12): «اتوبوس و کامیون و گاری باید چرخشون
+        /// بچرخه مثل ماشین های گذری». A <see cref="WheelSpin"/> turns them by the distance the vehicle moves.
+        /// </summary>
+        static void AddWheels(SpriteRenderer body, string picture)
+        {
+            var txt = Resources.Load<TextAsset>("Art/Poison/wheels");
+            if (txt == null) return;
+            foreach (var line in txt.text.Split('\n'))
+            {
+                var f = line.Trim().Split(' ');
+                if (f.Length < 4 || f[0].StartsWith("#") || f[0] != picture) continue;
+                var wheel = Art(f[1], 0.5f);
+                if (wheel == null) return;
+                var inv = System.Globalization.CultureInfo.InvariantCulture;
+                float rad = float.Parse(f[2], inv);
+                var tex = body.sprite.texture;
+                var spin = body.gameObject.AddComponent<WheelSpin>();
+                spin.radius = rad / 100f * body.transform.lossyScale.y;
+                for (int i = 3; i < f.Length; i++)
+                {
+                    var c = f[i].Split(',');
+                    float cx = float.Parse(c[0], inv), cy = float.Parse(c[1], inv);
+                    var w = new GameObject("Wheel").AddComponent<SpriteRenderer>();
+                    w.sprite = wheel; w.sortingOrder = body.sortingOrder - 1; // the arches cover the tops of the tyres
+                    w.transform.SetParent(body.transform, false);
+                    float x = (cx - tex.width * 0.5f) / 100f;
+                    w.transform.localPosition = new Vector3(body.flipX ? -x : x, (tex.height - cy) / 100f, 0.01f);
+                    w.transform.localScale = Vector3.one * (2f * rad / wheel.rect.width);
+                    spin.wheels.Add(w.transform);
+                }
+                return;
+            }
+        }
+
+        /// <summary>Turns the loose wheels by the distance driven (rolling right = clockwise).</summary>
+        class WheelSpin : MonoBehaviour
+        {
+            public readonly List<Transform> wheels = new List<Transform>();
+            public float radius = 1f;
+            float lastX; bool started;
+            void LateUpdate()
+            {
+                float x = transform.position.x;
+                if (started && radius > 0.001f)
+                {
+                    float deg = (x - lastX) / radius * Mathf.Rad2Deg;
+                    foreach (var w in wheels) if (w != null) w.Rotate(0f, 0f, -deg, Space.Self);
+                }
+                lastX = x; started = true;
             }
         }
 
