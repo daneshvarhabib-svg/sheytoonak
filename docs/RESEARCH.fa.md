@@ -201,3 +201,21 @@
 منابع: [esports.net – Brawl Stars win streak](https://www.esports.net/news/mobile-games/brawl-stars-win-streak-explained/)، [Supercell – trophy season rework](https://supercell.com/en/games/brawlstars/blog/news/trophy-season-rework-is-coming)، [Clash Royale wiki – Notifications](https://clashroyale.fandom.com/wiki/Notifications)، [Game Developer – Deconstructing Clash Royale](https://www.gamedeveloper.com/business/deconstructing-clash-royale)، [Hearthstone wiki – Quest (2013–2020)](https://hearthstone.wiki.gg/wiki/Quest/2013-2020_system)، [Icy Veins – Hearthstone gold guide](https://www.icy-veins.com/hearthstone/gold-guide).
 
 **وضعیتِ روزِ ۸ (۲۱ آبان):** کاربر: «پ۲۵ اجرا بشه باقیش نه». پ۲۵ ساخته شد؛ پ۲۴ و پ۲۶ کنار رفتند.
+
+## پیشنهادهای روزِ ۹ (۲۲ آبان) — زاویه: احساسِ آخرِ دوئل و حرف‌زدن با حریف
+زمینه: کاربر (۲۱ آبان) گفت گرافیکِ پیروزی «حس موفقیت نمیده»؛ قهرمان‌ها حالا عروسکِ مفصل‌دارند (`HeroRig`)، پس ژست و حرکت تقریباً رایگان است.
+
+### پ۲۷. ژستِ برد و باختِ هر قهرمان رویِ خودِ صحنه
+- **در منبع:** Brawl Stars در صفحه‌ی آخر هر دو تیم را با ژستِ برد/باختِ خودِ هر بروالر نشان می‌دهد؛ نظرسنجیِ ۲۰۲۶ از «ژستِ جشنِ جایگزین» برایِ هر بروالر پرسید ([sportsdunia](https://www.sportsdunia.com/gaming/brawl-stars-skin-customization-survey-july-2026)، [EGW](https://egw.news/gaming/news/36049/brawl-stars-survey-hints-at-new-cosmetic-customiza-9k8iX_j0z)، [fandom: animations](https://tvtropes.org/pmwiki/pmwiki.php/Characters/BrawlStarsDamageDealers)).
+- **پیش ما:** وقتی دوئل تمام می‌شود، سه قهرمانِ برنده با همان مفصل‌ها می‌پرند، دست بالا می‌برند و یکی توپ را رویِ پا روپایی می‌کند؛ سه بازنده شانه می‌اندازند و سر پایین. یک ژست برای همه (ارزان)، بعداً شاید یکی ویژه برایِ هر قهرمان (مثلاً ابوشحاطه دمپایی‌اش را پرت می‌کند). با تابلوی تازه‌ی `win_board` جفت می‌شود.
+- **هزینه:** کم (سه زاویه‌نامه‌ی تازه در `HeroRig` + یک فراخوانی از `DuelStage` رویِ `Finished`). **ریسک:** کم.
+
+### پ۲۸. استیکرِ حرف در وسطِ دوئل (و ربات هم جواب می‌دهد)
+- **در منبع:** کلش رویال در نبرد چهار ایموتِ سریع دارد و با زدن رویِ برجِ حریف بی‌صدایش می‌کنی؛ راهنماها اسپم را بی‌ادبی می‌دانند ([gamingonphone](https://gamingonphone.com/miscellaneous/clash-royale-guide-list-of-top-20-best-emotes-that-you-can-try-in-the-game)، [مرورِ بازیکنی](https://datahklotto.it.com/tech/clash-royale-angry-emote.html) -- منبعِ ضعیف).
+- **پیش ما:** دکمه‌ی کوچکِ حباب کنارِ صورت‌ها → چهار استیکر با چهره‌ی همان قهرمانِ زننده: «ههه»، «ولك!»، «برافو»، «يا حرام». حباب بالایِ سرِ قهرمان رویِ صحنه ۱٫۵ ثانیه. ربات هم بعد از شکستنِ پنجره‌اش یا پنجره‌ی ما گاهی یکی می‌فرستد (حریف «زنده» به نظر می‌رسد، با این‌که آفلاینیم). هر ۳ ثانیه حداکثر یکی؛ کلیدِ «بی‌صدا کردنِ حریف».
+- **هزینه:** متوسط (چهار تصویرِ کوچک یا متنِ عربی + صدا؛ قاعده‌ی کول‌داون). **ریسک:** کم؛ متن‌ها بی‌فحشِ واقعی و بی‌نامِ خدا.
+
+### پ۲۹. صفحه‌ی «رو در رو» دو ثانیه پیش از دوئل
+- **در منبع:** Brawl Stars و کلش رویال پیش از نبرد هر دو طرف را کنارِ هم با اسم و سطح نشان می‌دهند تا نبرد «اتفاق» به نظر برسد، نه فقط بارگذاری.
+- **پیش ما:** بعد از درافت، دو ثانیه: سه چهره‌ی ما چپ، سه چهره‌ی حریف راست، «ضد» بزرگ وسط با صدای سوت، اسمِ حریف (یا «بوت»)؛ بعد صحنه. چهره‌ها همان `_face`ِ تازه‌ی مربعی.
+- **هزینه:** کم (یک صفحه‌ی IMGUI + یک صدا). **ریسک:** کم؛ دو ثانیه به «اولین دوئل زیرِ ۳۰ ثانیه» اضافه می‌کند -- با ضربه رد می‌شود.
