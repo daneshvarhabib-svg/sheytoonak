@@ -1,5 +1,5 @@
-# name wheel W H sillY wheelRadius archCentreX... (pixels, y down) -- tools: chat 2026-11-05
-taxi 1 560 176 174.0 41.4 130.0 459.5
-beetle 2 487 164 162.0 44.2 108.5 397.0
-pickup 3 516 169 167.0 40.9 126.5 431.0
-peugeot 4 514 155 153.0 40.5 121.0 422.5
+# name wheel W H sillY wheelRadius archCentreX... (pixels, y down) -- cartoon repaint 2026-11-12
+taxi 1 562 192 191.0 42.3 134.0 451.0
+beetle 2 504 186 185.0 43.5 107.5 411.0
+pickup 3 523 179 178.0 42.1 129.5 431.0
+peugeot 4 512 175 174.0 41.2 126.5 421.0
