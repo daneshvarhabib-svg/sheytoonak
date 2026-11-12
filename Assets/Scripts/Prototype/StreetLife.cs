@@ -188,7 +188,8 @@ namespace Sheytoonak
                 bool drivesRight = t.position.x > 0f; // comes from the far side so it passes in front of him before stopping
                 float side = drivesRight ? -1f : 1f;   // the van parks a little short of him on its own approach side
                 var sp = Sprite.Create(closed, new Rect(0, 0, closed.width, closed.height), new Vector2(0.5f, 0f), 100f);
-                var van = Make("Ambulance", sp, 2.5f, new Vector3(drivesRight ? -24f : 24f, 0f, roadZ + 1.4f));
+                float vEdge = OffScreenX(roadZ + 1.4f, 2.5f * closed.width / closed.height * 0.5f + 2.2f, 24f); // the open doors stick out
+                var van = Make("Ambulance", sp, 2.5f, new Vector3(drivesRight ? -vEdge : vEdge, 0f, roadZ + 1.4f));
                 PlayFx("siren", 0.6f, ref lastSiren);
                 var vr = van.GetComponent<SpriteRenderer>();
                 if (drivesRight) van.localScale = new Vector3(-van.localScale.x, van.localScale.y, van.localScale.z);
@@ -198,23 +199,31 @@ namespace Sheytoonak
                 var wheels = new List<Transform>();
                 // ⚠️ 2026-11-12: the cartoon van (1515x845, rows padded below so the picture's bottom is the road) has empty
                 // arches; wheels centred (220, 723) and (1144, 723), r 122. The old realistic one painted its own wheels.
-                bool toon = closed.height == 845;
-                if (wheelTex != null && closed.width > 1400)
+                // ⚠️ user's phone (2026-11-12): «چرخشون مچ نیست». Android imports pictures wider than 1024 smaller, so the
+                // van is recognised by its shape and every pixel below is scaled by the actual width over the original.
+                bool toon = Mathf.Abs(closed.width / (float)closed.height - 1515f / 845f) < 0.02f;
+                float ps = closed.width / (toon ? 1515f : 1473f);
+                if (wheelTex != null && closed.width / (float)closed.height > 1.6f)
                 {
                     var wsp = Sprite.Create(wheelTex, new Rect(0, 0, wheelTex.width, wheelTex.height), new Vector2(0.5f, 0.5f), 100f);
-                    foreach (var c in toon ? new[] { new Vector2(220f, 723f), new Vector2(1144f, 723f) } : new[] { new Vector2(195f, 690f), new Vector2(1105f, 700f) })
+                    foreach (var c0 in toon ? new[] { new Vector2(220f, 723f), new Vector2(1144f, 723f) } : new[] { new Vector2(195f, 690f), new Vector2(1105f, 700f) })
                     {
+                        var c = c0 * ps;
                         var w = new GameObject("Wheel").AddComponent<SpriteRenderer>();
                         w.sprite = wsp; w.sortingOrder = vr.sortingOrder + 1;
                         w.transform.SetParent(van, false);
                         w.transform.localPosition = new Vector3((c.x - closed.width * 0.5f) / 100f, (closed.height - c.y) / 100f, -0.01f);
-                        w.transform.localScale = Vector3.one * ((toon ? 244f : 200f) / wheelTex.width);
+                        w.transform.localScale = Vector3.one * ((toon ? 244f : 200f) * ps / wheelTex.width);
                         if (toon) w.sortingOrder = vr.sortingOrder - 1; // the arches cover the tyres' tops
                         wheels.Add(w.transform);
                     }
                 }
-                float wheelR = (toon ? 1.22f : 1f) * Mathf.Abs(van.localScale.y); // the wheel's radius at 100 ppu, scaled
+                float wheelR = (toon ? 1.22f : 1f) * ps * Mathf.Abs(van.localScale.y); // the wheel's radius at 100 ppu, scaled
                 float x0 = van.position.x, x1 = t.position.x + side * 2.2f;
+                // the cartoon van parks past him so the rear-door scene laid on its tail (below) puts the stretcher over him
+                bool hasScene = toon && Resources.Load<Texture2D>("Art/Props/medics_out_0") != null && Resources.Load<Texture2D>("Art/Props/medics_load_0") != null;
+                float vk = 2.5f / 845f, faceL = drivesRight ? -1f : 1f; // world per original van pixel; +1 = cab on the left
+                if (hasScene) x1 = t.position.x - faceL * (1923f - 757.5f) * vk;
                 for (float k = 0f; k < 1f; k += Time.deltaTime / 2f)
                 {
                     if (van == null) yield break;
@@ -231,25 +240,25 @@ namespace Sheytoonak
                 foreach (var tx in Resources.LoadAll<Texture2D>("Art/Props"))
                     if (tx.name.StartsWith("medics_out_")) outT.Add(tx); else if (tx.name.StartsWith("medics_load_")) loadT.Add(tx);
                 outT.Sort((p, q) => string.CompareOrdinal(p.name, q.name)); loadT.Sort((p, q) => string.CompareOrdinal(p.name, q.name));
-                if (outT.Count > 0 && loadT.Count > 0)
+                if (hasScene && outT.Count > 0 && loadT.Count > 0)
                 {
                     System.Func<Texture2D, Sprite> mk = tx => Sprite.Create(tx, new Rect(0, 0, tx.width, tx.height), new Vector2(0.5f, 0f), 100f);
-                    // the van in the frames is ~390 of 560 px tall: as tall as the parked van; the stretcher (x ≈ 380 of 600)
-                    // comes to rest over him
-                    float sh = 2.5f * 560f / 390f, kk = sh / 5.6f;
-                    float dirS = drivesRight ? -1f : 1f;
-                    var scene = Make("AmbulanceScene", mk(outT[0]), sh, new Vector3(t.position.x - dirS * 0.8f * kk, 0f, t.position.z + 0.35f));
+                    // ⚠️ user (2026-11-12, phone): «ماشین آمبولانس که میخواد درش باز شه نصفه میشه در صورتی که باید اون نصفه درست
+                    // بیفته روی بدنه کامل». The frames show only the van's tail (three-quarter, doors open), so the parked van
+                    // stays and the frame is laid on its rear. Fitted on the pictures: 1 frame px = 1.83 van px, the frame's
+                    // left edge (x 12) at van x 1250, its van bottom (y 407) on the van's bumper line (y 745). In world units
+                    // (van 845 px = 2.5): centre 1777 px from the van's left = +3.02 from its middle, bottom -0.53 under the road.
+                    float sh = 560f * 1.83f * vk;
+                    var scene = Make("AmbulanceScene", mk(outT[0]), sh, new Vector3(van.position.x + faceL * (1777f - 757.5f) * vk, (845f - 1025f) * vk, van.position.z - 0.05f));
                     var sr2 = scene.GetComponent<SpriteRenderer>();
+                    sr2.sortingOrder = vr.sortingOrder + 2;
                     if (drivesRight) scene.localScale = new Vector3(-scene.localScale.x, scene.localScale.y, scene.localScale.z);
-                    van.gameObject.SetActive(false);
                     foreach (var tx in outT) { sr2.sprite = mk(tx); yield return new WaitForSeconds(0.38f); }
                     if (t != null) Destroy(t.gameObject); // lifted onto the stretcher
                     foreach (var tx in loadT) { sr2.sprite = mk(tx); yield return new WaitForSeconds(0.38f); }
                     yield return new WaitForSeconds(0.3f);
                     Destroy(scene.gameObject);
-                    van.gameObject.SetActive(true);
-                    vr.sprite = sp;
-                    float xe2 = drivesRight ? 26f : -26f;
+                    float xe2 = drivesRight ? vEdge : -vEdge;
                     for (float k = 0f; k < 1f; k += Time.deltaTime / 2.4f)
                     {
                         if (van == null) yield break;
@@ -288,7 +297,7 @@ namespace Sheytoonak
                 vr.sprite = sp; // doors shut
                 foreach (var w in wheels) w.gameObject.SetActive(true);
                 yield return new WaitForSeconds(0.5f);
-                float xe = drivesRight ? 26f : -26f;
+                float xe = drivesRight ? vEdge : -vEdge;
                 for (float k = 0f; k < 1f; k += Time.deltaTime / 2.4f)
                 {
                     if (van == null) yield break;
@@ -360,7 +369,8 @@ namespace Sheytoonak
             float scale = carLength / (d.w / 100f);
             var root = new GameObject("Car").transform;
             root.SetParent(transform, false);
-            root.position = new Vector3(toRight ? -30f : 30f, 0f, roadZ);
+            float edge = OffScreenX(roadZ, carLength * 0.5f, 30f);
+            root.position = new Vector3(toRight ? -edge : edge, 0f, roadZ);
             root.localScale = new Vector3(toRight ? scale : -scale, scale, scale); // painted facing right
             var body = new GameObject("Body").AddComponent<SpriteRenderer>();
             body.sprite = d.body; body.transform.SetParent(root, false);
@@ -376,7 +386,7 @@ namespace Sheytoonak
                 wr.transform.localScale = Vector3.one * wsz;
                 ws[i] = wr.transform;
             }
-            movers.Add(new Mover { t = root, sr = body, frames = new List<Sprite> { d.body }, speed = toRight ? speed : -speed, endX = 30f,
+            movers.Add(new Mover { t = root, sr = body, frames = new List<Sprite> { d.body }, speed = toRight ? speed : -speed, endX = edge,
                                    wheels = ws, wheelRadius = d.radius / 100f * scale });
         }
 
@@ -436,8 +446,9 @@ namespace Sheytoonak
             {
                 nextPed = t + Random.Range(pedEvery.x, pedEvery.y) * (pedsOut == 0 ? 1f : 0.6f);
                 ++walkers;
-                if (walkers % 5 == 0 && SpawnWheelchair()) { }
-                else if (paintedCars.Count > 0 && walkers % 3 == 0) SpawnCyclist(peds[Random.Range(0, peds.Count)]);
+                // user (2026-11-12): «مرد ویلچری و دوچرخه‌سوار نباید باشن تو تصویر فعلا» -- switched off, code kept
+                if (RidersOn && walkers % 5 == 0 && SpawnWheelchair()) { }
+                else if (RidersOn && paintedCars.Count > 0 && walkers % 3 == 0) SpawnCyclist(peds[Random.Range(0, peds.Count)]);
                 else
                 {
                     // User (2026-11-05): «نباید دو رهگذر یک شکل هم‌زمان در تصویر باشن»: never the character already out
@@ -503,6 +514,23 @@ namespace Sheytoonak
         }
 
         int walkers;
+        const bool RidersOn = false;
+
+        /// <summary>
+        /// The x (absolute) just outside the picture at depth <paramref name="z"/> for something half
+        /// <paramref name="halfWidth"/> wide. ⚠️ user (2026-11-12, phone): «ادم ها و ماشین ها باید از گوشه گوشه کادر وارد و
+        /// خارج بشن». The fixed ±16 / ±30 were tuned on a 16:9 editor; the phone is ~20:9, so walkers popped in inside
+        /// the picture. Measured from the camera every time instead.
+        /// </summary>
+        public static float OffScreenX(float z, float halfWidth, float fallback)
+        {
+            var cam = Camera.main;
+            if (cam == null) return fallback;
+            float d = z - cam.transform.position.z;
+            if (d < 0.5f && !cam.orthographic) return fallback;
+            float l = cam.ViewportToWorldPoint(new Vector3(0f, 0.3f, d)).x, r = cam.ViewportToWorldPoint(new Vector3(1f, 0.3f, d)).x;
+            return Mathf.Max(Mathf.Abs(l), Mathf.Abs(r)) + halfWidth + 0.3f;
+        }
         /// <summary>
         /// The man in the wheelchair (user 2026-11-05): two painted poses of man-and-chair (hand forward, hand back) and
         /// a separate wheel laid over the painted one, rolling with the distance; the poses alternate like the cyclist's.
@@ -611,6 +639,7 @@ namespace Sheytoonak
         void Spawn(List<Sprite> frames, float height, float z, float speed, float halfRange, bool facesRight)
         {
             bool toRight = Random.value < 0.5f;
+            halfRange = OffScreenX(z, height * frames[0].bounds.size.x / Mathf.Max(0.01f, frames[0].bounds.size.y) * 0.5f, halfRange);
             var tr = Make("Passer-by", frames[0], height, new Vector3(toRight ? -halfRange : halfRange, 0f, z));
             if (toRight != facesRight) tr.localScale = new Vector3(-tr.localScale.x, tr.localScale.y, tr.localScale.z);
             movers.Add(new Mover { t = tr, sr = tr.GetComponent<SpriteRenderer>(), frames = frames, speed = toRight ? speed : -speed, endX = halfRange });

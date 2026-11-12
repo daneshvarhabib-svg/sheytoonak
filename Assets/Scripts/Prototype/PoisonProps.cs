@@ -241,21 +241,25 @@ namespace Sheytoonak.Prototype
             foreach (var line in txt.text.Split('\n'))
             {
                 var f = line.Trim().Split(' ');
-                if (f.Length < 4 || f[0].StartsWith("#") || f[0] != picture) continue;
+                if (f.Length < 5 || f[0].StartsWith("#") || f[0] != picture) continue;
                 var wheel = Art(f[1], 0.5f);
                 if (wheel == null) return;
                 var inv = System.Globalization.CultureInfo.InvariantCulture;
-                float rad = float.Parse(f[2], inv);
                 var tex = body.sprite.texture;
+                // ⚠️ user (2026-11-12, phone screenshots): «چرخشون مچ نیست». The numbers are pixels of the original picture,
+                // but Android imports pictures wider than 1024 smaller (TextureCompression), so every number is scaled by
+                // the actual width over the original width; in the editor the factor is 1 and nothing showed.
+                float sc = tex.width / float.Parse(f[3], inv);
+                float rad = float.Parse(f[2], inv) * sc;
                 var spin = body.gameObject.AddComponent<WheelSpin>();
                 spin.radius = rad / 100f * body.transform.lossyScale.y;
                 // "front": the wheels stand in front of the body (a cart's wheels are outside it); else the arches cover them
                 bool front = System.Array.IndexOf(f, "front") >= 0;
-                for (int i = 3; i < f.Length; i++)
+                for (int i = 4; i < f.Length; i++)
                 {
                     if (f[i] == "front") continue;
                     var c = f[i].Split(',');
-                    float cx = float.Parse(c[0], inv), cy = float.Parse(c[1], inv);
+                    float cx = float.Parse(c[0], inv) * sc, cy = float.Parse(c[1], inv) * sc;
                     var w = new GameObject("Wheel").AddComponent<SpriteRenderer>();
                     w.sprite = wheel; w.sortingOrder = body.sortingOrder + (front ? 1 : -1); // arches cover the tops of the tyres
                     w.transform.SetParent(body.transform, false);

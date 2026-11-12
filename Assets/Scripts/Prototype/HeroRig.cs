@@ -153,6 +153,21 @@ namespace Sheytoonak.Prototype
             seed = Random.value * 10f;
             flipRoot = new GameObject("Rig").transform;
             flipRoot.SetParent(transform, false);
+            // ⚠️ user (2026-11-12, phone): «بازیکنا حرکت میکنن بعد ضربه و میرن تو همدیگه». Every puppet drew its pieces at
+            // the same orders (100 + piece), so two overlapping kids interleaved (one's arm on the other's chest). A
+            // sorting group draws each puppet as one picture, nearer kid in front; the pieces keep their order inside it.
+            flipRoot.gameObject.AddComponent<UnityEngine.Rendering.SortingGroup>().sortingOrder = 100;
+            // ⚠️ user (2026-11-12, phone): «ام العربیات هنوز پاش مشکل داره». On the phone the skirt still came out shorter than
+            // on CI and the flat top of each leg (made to sit under it) showed. Each piece now keeps the size of its
+            // original picture (sizes.txt) whatever size the phone imported: its pixels per unit follow the import.
+            var origW = new Dictionary<string, float>();
+            var sizes = Resources.Load<TextAsset>("Art/Heroes/" + id + "_rig/sizes");
+            if (sizes != null)
+                foreach (var line in sizes.text.Split('\n'))
+                {
+                    var f = line.Trim().Split(' ');
+                    if (f.Length >= 3 && !f[0].StartsWith("#") && float.TryParse(f[1], System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out float ow) && ow > 0f) origW[f[0]] = ow;
+                }
             foreach (var p in table)
             {
                 var tex = Resources.Load<Texture2D>("Art/Heroes/" + id + "_rig/" + p.Name);
@@ -163,7 +178,8 @@ namespace Sheytoonak.Prototype
                 if (tex != null)
                 {
                     var r = go.AddComponent<SpriteRenderer>();
-                    r.sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), p.Pivot, 100f);
+                    float ppu = origW.TryGetValue(p.Name, out float ow) ? 100f * tex.width / ow : 100f;
+                    r.sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), p.Pivot, ppu);
                     // ⚠️ the pieces of one puppet sit in one plane: sortingOrder, not depth, says which covers which
                     r.sortingOrder = 100 + p.Order;
                     skins[p.Name] = r;

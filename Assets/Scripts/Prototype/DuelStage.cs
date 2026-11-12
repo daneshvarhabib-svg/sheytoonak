@@ -475,13 +475,16 @@ namespace Sheytoonak.Prototype
             while (flock.Count < birds - 1) flock.Add(PoisonProps.Pigeon());
             for (int i = 0; i < flock.Count; i++) flock[i].SetActive(i < birds - 1);
             float z = mapper.FacadeZ - 4f, y = 2.8f;
-            for (float t = 0f; t < 1f && !pigeonDown; t += Time.deltaTime / 1.1f)
+            // ⚠️ user (2026-11-12, phone): «کبوتر کامل حرکت نمیکنه». It flew -7..+7 m and popped in and out mid-picture;
+            // now it crosses edge to edge (same speed, so the same time over the kickers), the flock trailing it.
+            float edge = StreetLife.OffScreenX(z, 0.6f + 0.55f * ((birds + 1) / 2), 7f), secs = 1.1f * edge / 7f, waves = 20f * edge / 7f;
+            for (float t = 0f; t < 1f && !pigeonDown; t += Time.deltaTime / secs)
             {
-                pigeon.transform.position = new Vector3(Mathf.Lerp(-7f, 7f, t), y + Mathf.Sin(t * 20f) * 0.15f, z);
+                pigeon.transform.position = new Vector3(Mathf.Lerp(-edge, edge, t), y + Mathf.Sin(t * waves) * 0.15f, z);
                 for (int i = 0; i < birds - 1 && i < flock.Count; i++)
                 {
                     float lag = 0.55f * (i / 2 + 1), dy = (i % 2 == 0 ? 0.55f : -0.45f) * (i / 2 + 1);
-                    flock[i].transform.position = new Vector3(Mathf.Lerp(-7f, 7f, t) - lag, y + dy + Mathf.Sin(t * 20f + i * 1.7f) * 0.15f, z + 0.3f * (i + 1));
+                    flock[i].transform.position = new Vector3(Mathf.Lerp(-edge, edge, t) - lag, y + dy + Mathf.Sin(t * waves + i * 1.7f) * 0.15f, z + 0.3f * (i + 1));
                 }
                 yield return null;
             }
@@ -554,7 +557,8 @@ namespace Sheytoonak.Prototype
             // separate sweeper_brush.png is laid exactly over it
             var brushLocal = new Vector3(sp.bounds.size.x * (0.119f - 0.5f), sp.bounds.size.y * 0.134f, -0.01f);
             float stopX = corpse.position.x - brushLocal.x * truck.transform.localScale.x; // brush right over the bird
-            float x0 = fromLeft ? -26f : 26f;
+            float sEdge = StreetLife.OffScreenX(z, sp.bounds.size.x * k * 0.5f, 26f); // from the picture's edge (phone is wider)
+            float x0 = fromLeft ? -sEdge : sEdge;
             truck.transform.position = new Vector3(x0, 0f, z);
             var brushT = Resources.Load<Texture2D>("Art/Props/sweeper_brush");
             SpriteRenderer brushR = null;
@@ -575,16 +579,20 @@ namespace Sheytoonak.Prototype
             if (wheelT != null)
             {
                 var wsp = Sprite.Create(wheelT, new Rect(0, 0, wheelT.width, wheelT.height), new Vector2(0.5f, 0.5f), 100f);
-                foreach (var c in new[] { new Vector2(565f, 753f), new Vector2(1216f, 757f) })
+                // ⚠️ the centres are pixels of the original 1508-wide picture; the phone imports it at 1024 (user's phone
+                // screenshots 2026-11-12: «چرخشون مچ نیست»), so they are scaled by the actual width
+                float ps = truckT.width / 1508f;
+                foreach (var c0 in new[] { new Vector2(565f, 753f), new Vector2(1216f, 757f) })
                 {
                     var w = new GameObject("Wheel").AddComponent<SpriteRenderer>();
                     w.sprite = wsp; w.sortingOrder = truck.sortingOrder - 1; // the arches cover the tops of the tyres
                     w.transform.SetParent(truck.transform, false);
+                    var c = c0 * ps;
                     w.transform.localPosition = new Vector3((c.x - truckT.width * 0.5f) / 100f, (truckT.height - c.y) / 100f, 0.01f);
-                    w.transform.localScale = Vector3.one * (276f / wheelT.width);
+                    w.transform.localScale = Vector3.one * (276f * ps / wheelT.width);
                     wheels.Add(w.transform);
                 }
-                wheelR = 1.38f * k; // 138 px at 100 ppu, in world units
+                wheelR = 1.38f * ps * k; // 138 original px at 100 ppu, in world units
             }
             System.Action<float, float> roll = (from, to) =>
             {
@@ -612,7 +620,7 @@ namespace Sheytoonak.Prototype
                 if (corpse != null && t > 0.5f) { Destroy(corpse.gameObject); corpse = null; }
                 yield return null;
             }
-            float xe = fromLeft ? 26f : -26f;
+            float xe = fromLeft ? sEdge : -sEdge;
             for (float t = 0f; t < 1f; t += Time.deltaTime / 2.4f)
             {
                 float nx1 = Mathf.Lerp(stopX, xe, t * t); roll(truck.transform.position.x, nx1);

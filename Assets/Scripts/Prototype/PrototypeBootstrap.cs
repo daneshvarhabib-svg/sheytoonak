@@ -735,7 +735,18 @@ namespace Sheytoonak.Prototype
             sky.transform.localScale = new Vector3(Mathf.Max(w, viewHalfWidth * 2f + 1f) * 1.2f, above, 1f);
             // ⚠️ The painted sky is blue only in its top ~40 % of rows (user 2026-11-06: «تیکه آبی داشته باشه اون بالا»); the
             // quad runs from the roof to just past the screen top, so v 0.45..1.0 puts the blue under the HUD and the haze at the roof.
-            skyMat.mainTextureScale = new Vector2(1f, 0.55f); skyMat.mainTextureOffset = new Vector2(0f, 0.45f);
+            // ⚠️ user (2026-11-12, phone): «آسمون زیاد کشیده شده و پرنده های آسمون خیلی بزرگن». The whole picture was spread over
+            // the ~40 m quad while only ~3 m of its height showed: 3-4x wider than tall. Now the same rows keep the picture's
+            // own proportions and it repeats sideways mirrored (seamless: each copy meets its own mirror image).
+            var skyTex = skyMat.mainTexture;
+            float tilesX = 1f;
+            if (skyTex != null && skyTex.height > 0)
+            {
+                skyTex.wrapModeU = TextureWrapMode.Mirror;
+                float tileW = above * skyTex.width / (skyTex.height * 0.55f);
+                tilesX = sky.transform.localScale.x / Mathf.Max(0.5f, tileW);
+            }
+            skyMat.mainTextureScale = new Vector2(tilesX, 0.55f); skyMat.mainTextureOffset = new Vector2(0.5f - tilesX * 0.5f, 0.45f);
             sky.GetComponent<Renderer>().sharedMaterial = skyMat;
             // Neighbours: painted blank walls (Art/wall_left, Art/wall_right: houses without visible windows,
             // user 2026-10-27) when they exist, otherwise a darker shade of this painting's brick.
