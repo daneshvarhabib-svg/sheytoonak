@@ -249,12 +249,15 @@ namespace Sheytoonak.Prototype
                 var tex = body.sprite.texture;
                 var spin = body.gameObject.AddComponent<WheelSpin>();
                 spin.radius = rad / 100f * body.transform.lossyScale.y;
+                // "front": the wheels stand in front of the body (a cart's wheels are outside it); else the arches cover them
+                bool front = System.Array.IndexOf(f, "front") >= 0;
                 for (int i = 3; i < f.Length; i++)
                 {
+                    if (f[i] == "front") continue;
                     var c = f[i].Split(',');
                     float cx = float.Parse(c[0], inv), cy = float.Parse(c[1], inv);
                     var w = new GameObject("Wheel").AddComponent<SpriteRenderer>();
-                    w.sprite = wheel; w.sortingOrder = body.sortingOrder - 1; // the arches cover the tops of the tyres
+                    w.sprite = wheel; w.sortingOrder = body.sortingOrder + (front ? 1 : -1); // arches cover the tops of the tyres
                     w.transform.SetParent(body.transform, false);
                     float x = (cx - tex.width * 0.5f) / 100f;
                     w.transform.localPosition = new Vector3(body.flipX ? -x : x, (tex.height - cy) / 100f, 0.01f);
