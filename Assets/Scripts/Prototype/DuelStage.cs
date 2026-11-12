@@ -271,7 +271,10 @@ namespace Sheytoonak.Prototype
                 // User (2026-11-07): «بازیکنان وقتی پشت توپن بعد از ضربه الکی به راست و چپ حرکت می‌کنن». The kicker no
                 // longer chases the ball's x during the rally (the rebound now lands on the kicker's own line, see
                 // DuelManager.SendBack); he only drifts to his spot, slowly.
-                hero.position = Vector3.MoveTowards(hero.position, Spot(side), 1.5f * Time.deltaTime);
+                // ⚠️ not while kicking: a rebound kick moves him to the ball, and drifting back mid-kick slid the foot off it
+                var kr = painted[(int)side][slot] != null ? painted[(int)side][slot].GetComponent<HeroRig>() : null;
+                if (kr == null || !kr.Kicking)
+                    hero.position = Vector3.MoveTowards(hero.position, Spot(side), 1.5f * Time.deltaTime);
                 yield return null;
             }
         }
@@ -303,6 +306,7 @@ namespace Sheytoonak.Prototype
             // the chosen hero is already at the ball (a kick needs it); a kick without one (tests) uses the current slot
             if (stepping[(int)side] == null) OnKickerChosen(side, K(side));
             var hero = Heroes[(int)side][K(side)];
+            ToeToBall(side, hero); // the ball may not be exactly where the kicker was walking to
             if (striking[(int)side] != null) StopCoroutine(striking[(int)side]);
             striking[(int)side] = StartCoroutine(Strike(hero, side));
             if (duel.Rules.ModifiersFor(side).Chance > 0) StartCoroutine(PigeonCrossing());
@@ -373,13 +377,16 @@ namespace Sheytoonak.Prototype
         }
 
         /// <summary>Crouch, swing (kick pose, lean into the shot, a little hop), settle back to idle.</summary>
+        readonly float[] kickFrom = { HeroRig.ContactDeg, HeroRig.ContactDeg };
+
         IEnumerator Strike(Transform hero, Side side)
         {
             var rig = painted[(int)side][K(side)] != null ? painted[(int)side][K(side)].GetComponent<HeroRig>() : null;
             if (rig != null)
             {
                 // the puppet kicks with its own joints (HeroRig); no frame swapping, no squash of the whole picture
-                rig.Kick();
+                rig.Kick(kickFrom[(int)side]);
+                kickFrom[(int)side] = HeroRig.ContactDeg;
                 while (rig != null && rig.Kicking) yield return null;
                 striking[(int)side] = null;
                 yield break;
@@ -429,10 +436,29 @@ namespace Sheytoonak.Prototype
             striking[(int)side] = null;
         }
 
+        /// <summary>
+        /// Stands the kicking puppet so its toe meets the ball where the ball is now, at the ball's own height, and picks
+        /// the leg angle the kick starts from. User (2026-11-12): «ضربه دوم و سوم و چهارم رو هم درست کن بخوره به پاش
+        /// حتماً» -- a rebound left from wherever the ball was while the hero kicked from his old spot.
+        /// </summary>
+        void ToeToBall(Side side, Transform hero)
+        {
+            var pr = painted[(int)side][K(side)];
+            var rig = pr != null ? pr.GetComponent<HeroRig>() : null;
+            if (rig == null || duel.ball == null) return;
+            Vector3 b = duel.ball.transform.position;
+            float r = duel.ball.Radius;
+            float deg = rig.ContactAngleFor(b);
+            Vector3 fo = rig.FootOffset(deg);
+            hero.position = new Vector3(b.x - fo.x - Mathf.Sign(fo.x) * r * 0.7f, hero.position.y, b.z - 0.04f);
+            kickFrom[(int)side] = deg;
+        }
+
         void OnRekick(Side side)
         {
             var hero = Heroes[(int)side][K(side)];
             if (hero == null) return;
+            ToeToBall(side, hero); // the rebound is struck where it is (the kid runs to it)
             if (striking[(int)side] != null) StopCoroutine(striking[(int)side]);
             striking[(int)side] = StartCoroutine(Strike(hero, side));
         }

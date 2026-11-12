@@ -182,7 +182,23 @@ namespace Sheytoonak.Prototype
         }
 
         /// <summary>DuelStage calls this when the ball leaves the foot.</summary>
-        public void Kick() { kickT = 0f; Ready = false; }
+        public void Kick(float fromDeg = ContactDeg) { kickT = 0f; Ready = false; kickFrom = fromDeg; }
+        float kickFrom = ContactDeg;
+
+        /// <summary>
+        /// The leg angle at which the toe is at the height of a ball at <paramref name="ballWorld"/>: a rebound is hit
+        /// where it is, often off the ground (user 2026-11-12: «ضربه دوم و سوم و چهارم رو هم درست کن بخوره به پاش حتماً»).
+        /// </summary>
+        public float ContactAngleFor(Vector3 ballWorld)
+        {
+            float best = ContactDeg, err = float.MaxValue;
+            for (float d = 0f; d <= 75f; d += 1.5f)
+            {
+                float e = Mathf.Abs(transform.position.y + FootOffset(d).y - ballWorld.y);
+                if (e < err) { err = e; best = d; }
+            }
+            return best;
+        }
 
         /// <summary>Standing at the ball, waiting for the kick: the kicking leg is drawn back (the wind-up), so the kick
         /// itself starts at the contact and the ball leaves the foot on the very frame it is launched.</summary>
@@ -251,9 +267,10 @@ namespace Sheytoonak.Prototype
                 // (the wind-up is the Ready stance before it); it used to wind up 0.14 s and meet the ball after it had gone
                 kickT += dt;
                 float k = kickT / KickSeconds, leg;
-                if (k < 0.2f) { float q = k / 0.2f; leg = Mathf.Lerp(ContactDeg, 36f, 1f - (1f - q) * (1f - q)); }
-                else if (k < 0.4f) leg = 36f;
-                else leg = Mathf.Lerp(36f, 0f, Mathf.Clamp01((k - 0.4f) / 0.6f));
+                float top = Mathf.Max(36f, kickFrom + 20f); // a high rebound: the follow-through goes on above the contact
+                if (k < 0.2f) { float q = k / 0.2f; leg = Mathf.Lerp(kickFrom, top, 1f - (1f - q) * (1f - q)); }
+                else if (k < 0.4f) leg = top;
+                else leg = Mathf.Lerp(top, 0f, Mathf.Clamp01((k - 0.4f) / 0.6f));
                 legNear = leg; legFar = -leg * 0.15f;
                 armFar = -Mathf.Abs(leg) * 0.35f; armNear = Mathf.Abs(leg) * 0.28f; torso = -leg * 0.08f; head = leg * 0.04f;
                 bob = Mathf.Max(0f, Mathf.Sin(Mathf.Clamp01(k * 2f - 0.6f) * Mathf.PI)) * 0.2f;
