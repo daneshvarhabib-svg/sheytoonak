@@ -64,13 +64,32 @@ namespace Sheytoonak.Prototype
                 GUI.color = ray; GUI.DrawTexture(new Rect(cx - 9f * u, cy - bw * 0.62f, 18f * u, bw * 0.62f), Texture2D.whiteTexture);
                 GUI.matrix = m;
             }
-            // two pennants on poles
-            for (int sgn = -1; sgn <= 1; sgn += 2)
+            // two pennants on poles (only around the old plank; the painted emblem has its own laurels)
+            bool painted = Resources.Load<Texture2D>(won ? "Art/UI/win_board" : "Art/UI/lose_board") != null;
+            for (int sgn = -1; sgn <= 1 && !painted; sgn += 2)
             {
                 float px = cx + sgn * bw * 0.52f * sc, wave = Mathf.Sin(t * 5f + sgn) * 6f * u;
                 GUI.color = new Color(0.35f, 0.22f, 0.1f); GUI.DrawTexture(new Rect(px - 3f * u, cy - bh * 1.3f, 6f * u, bh * 1.4f), Texture2D.whiteTexture);
                 GUI.color = won ? new Color(0.85f, 0.15f, 0.12f) : new Color(0.3f, 0.3f, 0.35f);
                 GUI.DrawTexture(new Rect(px + (sgn < 0 ? -46f * u : 3f * u), cy - bh * 1.3f + wave, 43f * u, 30f * u), Texture2D.whiteTexture);
+            }
+            // the painted emblem (user 2026-11-12, after «این گرافیک پیروزی … حس موفقیت نمیده و زشته»): a gold star with
+            // the ball and laurels for a win, a dented shield with a deflated ball under a rain cloud for a loss; the
+            // word is written on its empty ribbon. Without the picture, the old plank below.
+            var board = Resources.Load<Texture2D>(won ? "Art/UI/win_board" : "Art/UI/lose_board");
+            if (board != null)
+            {
+                float h = Screen.height * 0.40f * sc, w = h * board.width / board.height;
+                var br = new Rect(cx - w * 0.5f, Screen.height * 0.035f + Screen.height * 0.40f * (1f - sc) * 0.5f, w, h);
+                GUI.color = Color.white; GUI.DrawTexture(br, board, ScaleMode.ScaleToFit);
+                var bs = new GUIStyle(big) { fontSize = Mathf.RoundToInt(h * 0.085f) };
+                bs.normal.textColor = won ? new Color(1f, 0.93f, 0.55f) : new Color(0.92f, 0.95f, 1f);
+                var ribbon = new Rect(br.x + w * 0.2f, br.y + h * 0.53f, w * 0.6f, h * 0.13f);
+                var shadow = new GUIStyle(bs); shadow.normal.textColor = new Color(0.25f, 0.1f, 0.05f, 0.9f);
+                GUI.Label(new Rect(ribbon.x + 2f * u, ribbon.y + 3f * u, ribbon.width, ribbon.height), Ar.T(won ? Ar.Won : Ar.Lost), shadow);
+                GUI.Label(ribbon, Ar.T(won ? Ar.Won : Ar.Lost), bs);
+                GUI.color = old;
+                return Screen.height * 0.035f + Screen.height * 0.40f - 20f * u;
             }
             var r = new Rect(cx - bw * sc * 0.5f, cy - bh * sc * 0.5f, bw * sc, bh * sc);
             GUI.color = Color.white;
