@@ -567,6 +567,30 @@ namespace Sheytoonak.Prototype
                 brushR.transform.localPosition = brushLocal;
                 brushR.transform.localScale = Vector3.one * (sp.bounds.size.x * 0.232f / Mathf.Max(0.01f, brushR.sprite.bounds.size.x));
             }
+            // the wheels turn with the distance driven (user 2026-11-12: «چرخ های جاروکش هم باید بچرخه … هر ماشینی هست باید
+            // چرخش بچرخه»): sweeper.png has empty arches, sweeper_wheel.png sits in each, centres measured on the picture
+            var wheelT = Resources.Load<Texture2D>("Art/Props/sweeper_wheel");
+            var wheels = new List<Transform>();
+            float wheelR = 1f;
+            if (wheelT != null)
+            {
+                var wsp = Sprite.Create(wheelT, new Rect(0, 0, wheelT.width, wheelT.height), new Vector2(0.5f, 0.5f), 100f);
+                foreach (var c in new[] { new Vector2(565f, 753f), new Vector2(1216f, 757f) })
+                {
+                    var w = new GameObject("Wheel").AddComponent<SpriteRenderer>();
+                    w.sprite = wsp; w.sortingOrder = truck.sortingOrder - 1; // the arches cover the tops of the tyres
+                    w.transform.SetParent(truck.transform, false);
+                    w.transform.localPosition = new Vector3((c.x - truckT.width * 0.5f) / 100f, (truckT.height - c.y) / 100f, 0.01f);
+                    w.transform.localScale = Vector3.one * (276f / wheelT.width);
+                    wheels.Add(w.transform);
+                }
+                wheelR = 1.38f * k; // 138 px at 100 ppu, in world units
+            }
+            System.Action<float, float> roll = (from, to) =>
+            {
+                float deg = (to - from) / Mathf.Max(0.01f, wheelR) * Mathf.Rad2Deg;
+                foreach (var w in wheels) w.Rotate(0f, 0f, -deg * Mathf.Sign(truck.transform.localScale.x), Space.Self); // rolling left = counter-clockwise; the mirrored truck mirrors it
+            };
             // ⚠️ the brush is painted from the side (a cone of bristles), so turning the sprite would tip it over; it
             // "spins" by flipping its bristles and a slight wobble instead
             System.Action<float> spin = speed =>
@@ -577,7 +601,8 @@ namespace Sheytoonak.Prototype
             };
             for (float t = 0f; t < 1f; t += Time.deltaTime / 2.2f)
             {
-                truck.transform.position = new Vector3(Mathf.Lerp(x0, stopX, 1f - (1f - t) * (1f - t)), 0f, z);
+                float nx0 = Mathf.Lerp(x0, stopX, 1f - (1f - t) * (1f - t)); roll(truck.transform.position.x, nx0);
+                truck.transform.position = new Vector3(nx0, 0f, z);
                 spin(14f);
                 yield return null;
             }
@@ -590,7 +615,8 @@ namespace Sheytoonak.Prototype
             float xe = fromLeft ? 26f : -26f;
             for (float t = 0f; t < 1f; t += Time.deltaTime / 2.4f)
             {
-                truck.transform.position = new Vector3(Mathf.Lerp(stopX, xe, t * t), 0f, z);
+                float nx1 = Mathf.Lerp(stopX, xe, t * t); roll(truck.transform.position.x, nx1);
+                truck.transform.position = new Vector3(nx1, 0f, z);
                 spin(14f);
                 yield return null;
             }

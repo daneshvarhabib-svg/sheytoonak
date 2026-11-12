@@ -194,7 +194,7 @@ namespace Sheytoonak
                 if (drivesRight) van.localScale = new Vector3(-van.localScale.x, van.localScale.y, van.localScale.z);
                 // User (2026-11-08): «ماشین آمبولانس چرخش می‌چرخه جدا؟». Same trick as the cars: a loose wheel over each painted
                 // one, turning with the distance. Measured on the keyed 1473x821 picture: centres (195, 690) and (1105, 700), r 100.
-                var wheelTex = Resources.Load<Texture2D>("Art/Cars/wheel_1");
+                var wheelTex = Resources.Load<Texture2D>("Art/Props/ambulance_wheel") ?? Resources.Load<Texture2D>("Art/Cars/wheel_1");
                 var wheels = new List<Transform>();
                 if (wheelTex != null && closed.width > 1400)
                 {
@@ -220,6 +220,43 @@ namespace Sheytoonak
                     van.position = new Vector3(nx, 0f, van.position.z); yield return null;
                 }
                 yield return new WaitForSeconds(0.4f);
+                // the cartoon scene at the van (user 2026-11-12, two sheets of six): the van seen from behind with its doors
+                // open, the medics pull the empty stretcher out (medics_out_*), then wheel him in under the sheet
+                // (medics_load_*). The frames were aligned on the van, so it stands still while they move.
+                var outT = new List<Texture2D>(); var loadT = new List<Texture2D>();
+                foreach (var tx in Resources.LoadAll<Texture2D>("Art/Props"))
+                    if (tx.name.StartsWith("medics_out_")) outT.Add(tx); else if (tx.name.StartsWith("medics_load_")) loadT.Add(tx);
+                outT.Sort((p, q) => string.CompareOrdinal(p.name, q.name)); loadT.Sort((p, q) => string.CompareOrdinal(p.name, q.name));
+                if (outT.Count > 0 && loadT.Count > 0)
+                {
+                    System.Func<Texture2D, Sprite> mk = tx => Sprite.Create(tx, new Rect(0, 0, tx.width, tx.height), new Vector2(0.5f, 0f), 100f);
+                    // the van in the frames is ~390 of 560 px tall: as tall as the parked van; the stretcher (x ≈ 380 of 600)
+                    // comes to rest over him
+                    float sh = 2.5f * 560f / 390f, kk = sh / 5.6f;
+                    float dirS = drivesRight ? -1f : 1f;
+                    var scene = Make("AmbulanceScene", mk(outT[0]), sh, new Vector3(t.position.x - dirS * 0.8f * kk, 0f, t.position.z + 0.35f));
+                    var sr2 = scene.GetComponent<SpriteRenderer>();
+                    if (drivesRight) scene.localScale = new Vector3(-scene.localScale.x, scene.localScale.y, scene.localScale.z);
+                    van.gameObject.SetActive(false);
+                    foreach (var tx in outT) { sr2.sprite = mk(tx); yield return new WaitForSeconds(0.38f); }
+                    if (t != null) Destroy(t.gameObject); // lifted onto the stretcher
+                    foreach (var tx in loadT) { sr2.sprite = mk(tx); yield return new WaitForSeconds(0.38f); }
+                    yield return new WaitForSeconds(0.3f);
+                    Destroy(scene.gameObject);
+                    van.gameObject.SetActive(true);
+                    vr.sprite = sp;
+                    float xe2 = drivesRight ? 26f : -26f;
+                    for (float k = 0f; k < 1f; k += Time.deltaTime / 2.4f)
+                    {
+                        if (van == null) yield break;
+                        float nx = Mathf.Lerp(x1, xe2, k * k);
+                        float deg = (nx - van.position.x) / Mathf.Max(0.01f, wheelR) * Mathf.Rad2Deg * (drivesRight ? 1f : -1f);
+                        foreach (var w in wheels) w.Rotate(0f, 0f, -deg, Space.Self);
+                        van.position = new Vector3(nx, 0f, van.position.z); yield return null;
+                    }
+                    Destroy(van.gameObject);
+                    yield break;
+                }
                 foreach (var w in wheels) w.gameObject.SetActive(false); // the open picture is a three-quarter view: its own wheels
                 vr.sprite = Sprite.Create(open, new Rect(0, 0, open.width, open.height), new Vector2(0.5f, 0f), 100f);
                 yield return new WaitForSeconds(0.5f);
