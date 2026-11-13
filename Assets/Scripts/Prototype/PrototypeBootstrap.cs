@@ -1378,7 +1378,8 @@ namespace Sheytoonak.Prototype
             return all[k];
         }
 
-        // granny2 and resident_03 (bathrobe), resident_05 (abaya) are women; the rest are men and the boy
+        // granny2 (red scarf), resident_03 (towel and face mask), resident_05 (headscarf, hands on cheeks) are women; the rest are
+        // men and the boy (cartoon set 2026-11-13: 01 boy, 02 beads, 04 cane, 06 slipper)
         static readonly HashSet<string> FemaleResidents = new HashSet<string> { "granny2", "resident_03", "resident_05" };
 
         IEnumerator GrannyCurses(Vector3 at, Vector3 size, Texture2D chosen = null)
