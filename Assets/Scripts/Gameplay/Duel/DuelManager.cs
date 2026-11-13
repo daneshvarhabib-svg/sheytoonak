@@ -54,6 +54,8 @@ namespace Sheytoonak
         public DuelBot Bot { get; private set; }
         public Side Me => Side.Left;
         public float TurnTimeLeft { get; private set; }
+        /// <summary>The whole duel's clock (DuelRules.MatchSeconds); the duel ends when it runs out and the ball is at rest.</summary>
+        public float MatchTimeLeft { get; private set; }
         bool autoKick;
         public int LastHitWindow { get; private set; } = -1;
         public bool PlayerMayKick => Rules != null && Rules.CanAct(Me) == ActionReject.None;
@@ -493,6 +495,7 @@ namespace Sheytoonak
             for (int i = 0; i < n; i++) shards[i] = Mathf.Max(5, Mathf.RoundToInt(shardsPerWindow * (mapper.WindowRects[i].width * mapper.WindowRects[i].height) / Mathf.Max(0.01f, meanArea)));
             var rowMap = new int[n]; for (int i = 0; i < n; i++) rowMap[i] = RowOf(i);
             Rules = new DuelRules(rows, shards, left, right, randomSeed, rowMap);
+            MatchTimeLeft = DuelRules.MatchSeconds;
             Bot = new DuelBot(randomSeed);
             Rules.TurnStarted += OnTurnStarted;
             Rules.WindowTaken += (s, w, v) => { if (v > 1) Toast?.Invoke(Ar.N(v) + " ★", 1.6f); };
@@ -548,6 +551,9 @@ namespace Sheytoonak
         void Update()
         {
             if (Rules == null || Rules.Finished) return;
+            MatchTimeLeft = Mathf.Max(0f, MatchTimeLeft - Time.deltaTime);
+            // time up: the kick in the air still lands (its window counts), then the duel ends
+            if (MatchTimeLeft <= 0f && !Rules.KickInFlight && !kickActive && BallSettled && !hitsToCome) { Rules.TimeUp(); return; }
             if (!Rules.KickInFlight)
             {
                 // the resting ball moves with the kicker (my finger walks the kicker along the pavement); before, it stayed

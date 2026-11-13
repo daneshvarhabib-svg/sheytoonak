@@ -264,6 +264,11 @@ namespace Sheytoonak.Prototype
                 // the actual width over the original width; in the editor the factor is 1 and nothing showed.
                 float sc = tex.width / float.Parse(f[3], inv);
                 float rad = float.Parse(f[2], inv) * sc;
+                // ⚠️ user (2026-11-13): «چرخ کامیون و اتوبوس و گاری می‌افته پشت پای رهگذر در صورتی که بدنه‌شون جلوشه». The wheels
+                // sat one order under the body (so the arches cover the tyres) -- and so under everything else at order 0, a
+                // passer-by behind the vehicle too. A sorting group draws body and wheels as one picture, by distance; the
+                // order inside it still puts the arches over the tyres.
+                if (body.GetComponent<UnityEngine.Rendering.SortingGroup>() == null) body.gameObject.AddComponent<UnityEngine.Rendering.SortingGroup>().sortingOrder = body.sortingOrder;
                 var spin = body.gameObject.AddComponent<WheelSpin>();
                 spin.radius = rad / 100f * body.transform.lossyScale.y;
                 // "front": the wheels stand in front of the body (a cart's wheels are outside it); else the arches cover them

@@ -14,6 +14,20 @@ namespace Sheytoonak.Tests
             return new DuelRules(rows, shards, new[] { h[0], h[1], h[2] }, new[] { h[3], h[4], h[0] }, seed);
         }
 
+        // User (2026-11-13): «تایم کلی بازی ۴ دقیقه تنظیم شه و ما تایمر رو هم ببینیم».
+        [Test]
+        public void The_match_clock_is_four_minutes_and_time_up_ends_the_duel()
+        {
+            Assert.AreEqual(240, DuelRules.MatchSeconds);
+            Assert.AreEqual(20, DuelRules.TurnSeconds);
+            Assert.Greater(DuelRules.MaxTurns * DuelRules.TurnSeconds, DuelRules.MatchSeconds, "the turn cap must not end a duel before the clock");
+            var r = Make();
+            r.Start(Side.Left);
+            r.TimeUp();
+            Assert.IsTrue(r.Finished);
+            Assert.AreEqual("time up", r.FinishReason);
+        }
+
         [Test]
         public void A_timeout_never_ends_a_turn_while_the_ball_is_in_the_air()
         {

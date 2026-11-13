@@ -54,7 +54,10 @@ namespace Sheytoonak.Core.Duel
         // missed turn is a weak automatic kick (DuelManager), not a lost turn.
         public const int TurnSeconds = 20;
         /// <summary>Half-turns after which the side with more windows wins (odd total: no tie). Review §2.3.</summary>
-        public const int MaxTurns = 16;
+        // User (2026-11-13): «تایم کلی بازی ۴ دقیقه تنظیم شه و ما تایمر رو هم ببینیم». The match clock (DuelManager counts it,
+        // the HUD shows it) decides now; the turn cap went 16 -> 40 so it is only a safety net behind the clock.
+        public const int MatchSeconds = 240;
+        public const int MaxTurns = 40;
         public const int RageEveryTurns = 3;
         /// <summary>User (2026-11-09): «آتیش قدرت خیلی واضح نیست چی کار می‌کنه … برش داریم کلا؛ همیشه دو تا دو تا ضربه بزنن».
         /// Off: no rage is ever gained, every turn is exactly two actions. Kept switchable for the tests.</summary>
@@ -375,6 +378,13 @@ namespace Sheytoonak.Core.Duel
             int c = (int)Current;
             if (RageEnabled && !RageReady[c] && --RageTimer[c] <= 0) { RageReady[c] = true; RageGained?.Invoke(Current); }
             TurnStarted?.Invoke(Current, Turn, ActionsLeft);
+        }
+
+        /// <summary>The 4-minute match clock ran out: the side with more windows wins (a tie goes the same way as the turn cap).</summary>
+        public void TimeUp()
+        {
+            if (Finished) return;
+            Finish(Windows[0] >= Windows[1] ? Side.Left : Side.Right, "time up");
         }
 
         /// <summary>A real turn was played (not timed out): resets the timeout streak of that side.</summary>

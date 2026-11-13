@@ -556,6 +556,7 @@ namespace Sheytoonak.Prototype
             // line, 23.2 % of the width wide (cartoon repaint 2026-11-12, measured on the picture; was 11.8/9/22.5); the
             // separate sweeper_brush.png is laid exactly over it
             var brushLocal = new Vector3(sp.bounds.size.x * (0.119f - 0.5f), sp.bounds.size.y * 0.134f, -0.01f);
+            truck.gameObject.AddComponent<UnityEngine.Rendering.SortingGroup>(); // body, brush and wheels as one picture by distance (user 2026-11-13)
             float stopX = corpse.position.x - brushLocal.x * truck.transform.localScale.x; // brush right over the bird
             float sEdge = StreetLife.OffScreenX(z, sp.bounds.size.x * k * 0.5f, 26f); // from the picture's edge (phone is wider)
             float x0 = fromLeft ? -sEdge : sEdge;

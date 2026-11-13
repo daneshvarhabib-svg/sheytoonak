@@ -218,6 +218,9 @@ namespace Sheytoonak
                         wheels.Add(w.transform);
                     }
                 }
+                // body and wheels drawn as one picture by distance (the wheels sit under the body's order): a walker behind the
+                // van is hidden by its tyres too (user 2026-11-13)
+                van.gameObject.AddComponent<UnityEngine.Rendering.SortingGroup>().sortingOrder = vr.sortingOrder;
                 float wheelR = (toon ? 1.22f : 1f) * ps * Mathf.Abs(van.localScale.y); // the wheel's radius at 100 ppu, scaled
                 float x0 = van.position.x, x1 = t.position.x + side * 2.2f;
                 // ⚠️ user (2026-11-13): «تصویر باز و بسته کردن آمبولانس رو باید روی این تصویر بسازی نه روی اونی که عموده تصویر
@@ -389,9 +392,11 @@ namespace Sheytoonak
                 wr.transform.SetParent(root, false);
                 // a hair behind the body so the arch edge overlaps the tyre (distance sorting, not sortingOrder)
                 wr.transform.localPosition = new Vector3((d.xs[i] - d.w * 0.5f) / 100f, d.wheelY / 100f, 0.02f / scale);
+                wr.sortingOrder = -1; // inside the car's sorting group: under the body, the arch edge overlaps the tyre
                 wr.transform.localScale = Vector3.one * wsz;
                 ws[i] = wr.transform;
             }
+            root.gameObject.AddComponent<UnityEngine.Rendering.SortingGroup>(); // one picture by distance (user 2026-11-13)
             movers.Add(new Mover { t = root, sr = body, frames = new List<Sprite> { d.body }, speed = toRight ? speed : -speed, endX = edge,
                                    wheels = ws, wheelRadius = d.radius / 100f * scale });
         }

@@ -162,6 +162,17 @@ namespace Sheytoonak.Prototype
                     GUI.Label(tr, Ar.T("بوت"), bt);
                 }
             }
+            // the match clock (user 2026-11-13: «تایم کلی بازی ۴ دقیقه … تایمر رو هم ببینیم»): top centre, red in the last 30 s
+            if (!ended)
+            {
+                int left = Mathf.Max(0, Mathf.CeilToInt(duel.MatchTimeLeft));
+                string clock = Ar.N(left / 60) + ":" + Ar.N(left % 60 / 10) + Ar.N(left % 10);
+                var cs = new GUIStyle(big) { fontSize = Mathf.RoundToInt(40 * u), alignment = TextAnchor.MiddleCenter };
+                cs.normal.textColor = left <= 30 ? new Color(1f, 0.35f, 0.3f) : Color.white;
+                var cr = new Rect(Screen.width * 0.5f - 80 * u, 6 * u, 160 * u, 54 * u);
+                var oc = GUI.color; GUI.color = new Color(0f, 0f, 0f, 0.45f); GUI.DrawTexture(new Rect(cr.x + 14 * u, cr.y + 4 * u, cr.width - 28 * u, cr.height - 8 * u), Texture2D.whiteTexture); GUI.color = oc;
+                Shadowed(cr, clock, cs);
+            }
             // whose turn: the timer bar sits on the active side's half of the bottom, actions left as dots above it
             if (!ended)
             {
@@ -171,6 +182,15 @@ namespace Sheytoonak.Prototype
                 Color tc = mine ? new Color(0.45f, 0.85f, 0.45f) : new Color(1f, 0.6f, 0.35f);
                 Bar(new Rect(tx, ty, tw, th), Mathf.Clamp01(duel.TurnTimeLeft / DuelRules.TurnSeconds), mine, duel.TurnTimeLeft < 10f ? new Color(1f, 0.3f, 0.25f) : tc);
                 DrawIcon(new Rect(mine ? tx - 30 * u : tx + tw + 6 * u, ty - 10 * u, 26 * u, 26 * u), "clock", tc);
+                // User (2026-11-13): «هر دست … نهایت ۲۰ ثانیه … یه تایمر دیگه داشته باشه و اون رو هم ببینیم و پنج ثانیه مونده
+                // … صدای تایمر بلند شه». The seconds beside the clock; the last five red, pulsing and ticking (my turn only).
+                int secs = Mathf.Max(0, Mathf.CeilToInt(duel.TurnTimeLeft));
+                bool last = secs <= 5 && secs > 0;
+                var ts = new GUIStyle(big) { fontSize = Mathf.RoundToInt((last ? 30f + 6f * Mathf.Abs(Mathf.Sin(Time.time * 6f)) : 26f) * u), alignment = TextAnchor.MiddleCenter };
+                ts.normal.textColor = last ? new Color(1f, 0.3f, 0.25f) : Color.white;
+                Shadowed(new Rect(mine ? tx - 92 * u : tx + tw + 34 * u, ty - 22 * u, 58 * u, 44 * u), Ar.N(secs), ts);
+                if (mine && last && secs != lastTick) { lastTick = secs; Tick(secs == 1); }
+                if (!last) lastTick = -1;
                 for (int a = 0; a < rules.ActionsLeft; a++)
                     DrawDot(new Rect(tx + (mine ? tw - (a + 1) * 22 * u : a * 22 * u), ty - 24 * u, 16 * u, 16 * u), tc);
             }
@@ -412,6 +432,23 @@ namespace Sheytoonak.Prototype
         static readonly System.Collections.Generic.HashSet<string> Painted = new System.Collections.Generic.HashSet<string>
             { "pigeon","bus","wind","open_window","carpet","rug_push","puddle","nails","vane","pebble","plank","fart","rage","pass","surrender","window","shards","curse","clock","replay",
               "truck","cart","rain","complaint","umbrella","flashlight" };
+
+        int lastTick = -1;
+        AudioSource tickSrc; AudioClip tickClip, tickLast;
+        /// <summary>A short wooden tick (higher and longer on the last second), made in code: no file needed.</summary>
+        void Tick(bool final)
+        {
+            if (tickSrc == null) { tickSrc = gameObject.AddComponent<AudioSource>(); tickSrc.playOnAwake = false; tickSrc.spatialBlend = 0f; }
+            if (tickClip == null) { tickClip = Blip("tick", 1300f, 0.07f); tickLast = Blip("tick_last", 1750f, 0.16f); }
+            tickSrc.PlayOneShot(final ? tickLast : tickClip, 0.8f);
+        }
+        static AudioClip Blip(string name, float hz, float seconds)
+        {
+            const int rate = 44100; int n = Mathf.RoundToInt(rate * seconds);
+            var d = new float[n];
+            for (int i = 0; i < n; i++) { float t = i / (float)rate; d[i] = Mathf.Sin(2f * Mathf.PI * hz * t) * Mathf.Exp(-t * 38f) * 0.9f; }
+            var c = AudioClip.Create(name, n, 1, rate, false); c.SetData(d, 0); return c;
+        }
 
         internal static void DrawIcon(Rect r, string id, Color tint)
         {
