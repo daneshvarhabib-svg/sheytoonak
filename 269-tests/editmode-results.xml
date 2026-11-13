@@ -1,0 +1,555 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="81" result="Passed" total="81" passed="81" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.2177288">
+  <test-suite type="TestSuite" id="1000" name="مدينة الفاجعة" fullname="مدينة الفاجعة" runstate="Runnable" testcasecount="81" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.217729" total="81" passed="81" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1097" name="Sheytoonak.Tests.EditMode.dll" fullname="/github/workspace/Library/ScriptAssemblies/Sheytoonak.Tests.EditMode.dll" runstate="Runnable" testcasecount="81" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.204410" total="81" passed="81" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="1595" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1098" name="Sheytoonak" fullname="Sheytoonak" runstate="Runnable" testcasecount="81" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.203546" total="81" passed="81" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1099" name="Tests" fullname="Sheytoonak.Tests" runstate="Runnable" testcasecount="81" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.199766" total="81" passed="81" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1064" name="ArabicShaperTests" fullname="Sheytoonak.Tests.ArabicShaperTests" classname="Sheytoonak.Tests.ArabicShaperTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.055498" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1066" name="Lam_alef_becomes_a_ligature" fullname="Sheytoonak.Tests.ArabicShaperTests.Lam_alef_becomes_a_ligature" methodname="Lam_alef_becomes_a_ligature" classname="Sheytoonak.Tests.ArabicShaperTests" runstate="Runnable" seed="1466226653" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.031857" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1065" name="Letters_take_initial_medial_and_final_forms" fullname="Sheytoonak.Tests.ArabicShaperTests.Letters_take_initial_medial_and_final_forms" methodname="Letters_take_initial_medial_and_final_forms" classname="Sheytoonak.Tests.ArabicShaperTests" runstate="Runnable" seed="1947477491" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.000315" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1067" name="Visual_order_is_reversed_but_numbers_stay_left_to_right" fullname="Sheytoonak.Tests.ArabicShaperTests.Visual_order_is_reversed_but_numbers_stay_left_to_right" methodname="Visual_order_is_reversed_but_numbers_stay_left_to_right" classname="Sheytoonak.Tests.ArabicShaperTests" runstate="Runnable" seed="943028576" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.001458" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1001" name="AudioFileTests" fullname="Sheytoonak.Tests.AudioFileTests" classname="Sheytoonak.Tests.AudioFileTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.021021" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1002" name="No_ogg_carries_a_video_stream" fullname="Sheytoonak.Tests.AudioFileTests.No_ogg_carries_a_video_stream" methodname="No_ogg_carries_a_video_stream" classname="Sheytoonak.Tests.AudioFileTests" runstate="Runnable" seed="709388525" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.019848" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1003" name="BagNoticeTests" fullname="Sheytoonak.Tests.BagNoticeTests" classname="Sheytoonak.Tests.BagNoticeTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.007493" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1007" name="At_most_one_a_day" fullname="Sheytoonak.Tests.BagNoticeTests.At_most_one_a_day" methodname="At_most_one_a_day" classname="Sheytoonak.Tests.BagNoticeTests" runstate="Runnable" seed="1720236088" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.004101" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1004" name="Fires_when_the_bag_is_ready_in_the_daytime" fullname="Sheytoonak.Tests.BagNoticeTests.Fires_when_the_bag_is_ready_in_the_daytime" methodname="Fires_when_the_bag_is_ready_in_the_daytime" classname="Sheytoonak.Tests.BagNoticeTests" runstate="Runnable" seed="347701140" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.000323" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1006" name="Never_between_eleven_at_night_and_nine_in_the_morning" fullname="Sheytoonak.Tests.BagNoticeTests.Never_between_eleven_at_night_and_nine_in_the_morning" methodname="Never_between_eleven_at_night_and_nine_in_the_morning" classname="Sheytoonak.Tests.BagNoticeTests" runstate="Runnable" seed="1342319896" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.000435" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1005" name="Nothing_when_nothing_unlocks_or_it_is_already_ready" fullname="Sheytoonak.Tests.BagNoticeTests.Nothing_when_nothing_unlocks_or_it_is_already_ready" methodname="Nothing_when_nothing_unlocks_or_it_is_already_ready" classname="Sheytoonak.Tests.BagNoticeTests" runstate="Runnable" seed="1211784424" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.000546" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1008" name="BagRulesTests" fullname="Sheytoonak.Tests.BagRulesTests" classname="Sheytoonak.Tests.BagRulesTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.013818" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1010" name="A_full_rack_takes_no_bag_and_the_cycle_waits" fullname="Sheytoonak.Tests.BagRulesTests.A_full_rack_takes_no_bag_and_the_cycle_waits" methodname="A_full_rack_takes_no_bag_and_the_cycle_waits" classname="Sheytoonak.Tests.BagRulesTests" runstate="Runnable" seed="552537748" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.001767" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1011" name="One_unlocks_at_a_time_and_the_first_week_clock_speeds_it_up" fullname="Sheytoonak.Tests.BagRulesTests.One_unlocks_at_a_time_and_the_first_week_clock_speeds_it_up" methodname="One_unlocks_at_a_time_and_the_first_week_clock_speeds_it_up" classname="Sheytoonak.Tests.BagRulesTests" runstate="Runnable" seed="234796356" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.007833" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1013" name="Same_bag_same_loot_and_a_round_trip_keeps_the_rack" fullname="Sheytoonak.Tests.BagRulesTests.Same_bag_same_loot_and_a_round_trip_keeps_the_rack" methodname="Same_bag_same_loot_and_a_round_trip_keeps_the_rack" classname="Sheytoonak.Tests.BagRulesTests" runstate="Runnable" seed="942233256" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.001326" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1009" name="The_cycle_is_30_small_8_medium_2_large" fullname="Sheytoonak.Tests.BagRulesTests.The_cycle_is_30_small_8_medium_2_large" methodname="The_cycle_is_30_small_8_medium_2_large" classname="Sheytoonak.Tests.BagRulesTests" runstate="Runnable" seed="1719014171" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.000286" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1012" name="Twenty_curses_give_a_bag_once" fullname="Sheytoonak.Tests.BagRulesTests.Twenty_curses_give_a_bag_once" methodname="Twenty_curses_give_a_bag_once" classname="Sheytoonak.Tests.BagRulesTests" runstate="Runnable" seed="1357092308" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.000380" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1014" name="ChallengeRunTests" fullname="Sheytoonak.Tests.ChallengeRunTests" classname="Sheytoonak.Tests.ChallengeRunTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.005401" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1015" name="Seven_wins_pay_the_entry_back_and_prizes_only_grow" fullname="Sheytoonak.Tests.ChallengeRunTests.Seven_wins_pay_the_entry_back_and_prizes_only_grow" methodname="Seven_wins_pay_the_entry_back_and_prizes_only_grow" classname="Sheytoonak.Tests.ChallengeRunTests" runstate="Runnable" seed="42289359" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.000610" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1018" name="Survives_a_round_trip_and_rejects_garbage" fullname="Sheytoonak.Tests.ChallengeRunTests.Survives_a_round_trip_and_rejects_garbage" methodname="Survives_a_round_trip_and_rejects_garbage" classname="Sheytoonak.Tests.ChallengeRunTests" runstate="Runnable" seed="1033856425" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.001624" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1016" name="Three_losses_end_the_run_and_the_prize_is_paid_once" fullname="Sheytoonak.Tests.ChallengeRunTests.Three_losses_end_the_run_and_the_prize_is_paid_once" methodname="Three_losses_end_the_run_and_the_prize_is_paid_once" classname="Sheytoonak.Tests.ChallengeRunTests" runstate="Runnable" seed="1134322727" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.000528" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1017" name="Twelve_wins_end_it_and_time_runs_out_after_48_hours" fullname="Sheytoonak.Tests.ChallengeRunTests.Twelve_wins_end_it_and_time_runs_out_after_48_hours" methodname="Twelve_wins_end_it_and_time_runs_out_after_48_hours" classname="Sheytoonak.Tests.ChallengeRunTests" runstate="Runnable" seed="712379262" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.000367" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1037" name="DraftRulesTests" fullname="Sheytoonak.Tests.DraftRulesTests" classname="Sheytoonak.Tests.DraftRulesTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.007415" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1039" name="A_blind_ban_may_hit_a_hero_nobody_owns_and_the_bot_always_finishes" fullname="Sheytoonak.Tests.DraftRulesTests.A_blind_ban_may_hit_a_hero_nobody_owns_and_the_bot_always_finishes" methodname="A_blind_ban_may_hit_a_hero_nobody_owns_and_the_bot_always_finishes" classname="Sheytoonak.Tests.DraftRulesTests" runstate="Runnable" seed="812606571" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.005491" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1038" name="Order_is_ban_ban_pick_pick_pick_pick_pick_pick_and_each_side_gets_three" fullname="Sheytoonak.Tests.DraftRulesTests.Order_is_ban_ban_pick_pick_pick_pick_pick_pick_and_each_side_gets_three" methodname="Order_is_ban_ban_pick_pick_pick_pick_pick_pick_and_each_side_gets_three" classname="Sheytoonak.Tests.DraftRulesTests" runstate="Runnable" seed="854822689" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.000797" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1019" name="DuelRulesTests" fullname="Sheytoonak.Tests.DuelRulesTests" classname="Sheytoonak.Tests.DuelRulesTests" runstate="Runnable" testcasecount="17" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.025593" total="17" passed="17" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1024" name="A_cover_poison_with_nothing_to_hide_is_refused" fullname="Sheytoonak.Tests.DuelRulesTests.A_cover_poison_with_nothing_to_hide_is_refused" methodname="A_cover_poison_with_nothing_to_hide_is_refused" classname="Sheytoonak.Tests.DuelRulesTests" runstate="Runnable" seed="1898647580" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.003888" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1020" name="A_timeout_never_ends_a_turn_while_the_ball_is_in_the_air" fullname="Sheytoonak.Tests.DuelRulesTests.A_timeout_never_ends_a_turn_while_the_ball_is_in_the_air" methodname="A_timeout_never_ends_a_turn_while_the_ball_is_in_the_air" classname="Sheytoonak.Tests.DuelRulesTests" runstate="Runnable" seed="834175964" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.000530" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1029" name="A_window_antidote_clears_the_opponents_window_poison" fullname="Sheytoonak.Tests.DuelRulesTests.A_window_antidote_clears_the_opponents_window_poison" methodname="A_window_antidote_clears_the_opponents_window_poison" classname="Sheytoonak.Tests.DuelRulesTests" runstate="Runnable" seed="1802470876" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.001614" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1032" name="A_window_antidote_with_nothing_to_clear_does_not_spend_the_action" fullname="Sheytoonak.Tests.DuelRulesTests.A_window_antidote_with_nothing_to_clear_does_not_spend_the_action" methodname="A_window_antidote_with_nothing_to_clear_does_not_spend_the_action" classname="Sheytoonak.Tests.DuelRulesTests" runstate="Runnable" seed="359493779" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.000271" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1030" name="An_antidote_lifts_a_poison_one_level_up_but_not_two" fullname="Sheytoonak.Tests.DuelRulesTests.An_antidote_lifts_a_poison_one_level_up_but_not_two" methodname="An_antidote_lifts_a_poison_one_level_up_but_not_two" classname="Sheytoonak.Tests.DuelRulesTests" runstate="Runnable" seed="2013751728" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.000505" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1026" name="Antidote_lifts_an_until_antidote_poison_and_shields_modifiers" fullname="Sheytoonak.Tests.DuelRulesTests.Antidote_lifts_an_until_antidote_poison_and_shields_modifiers" methodname="Antidote_lifts_an_until_antidote_poison_and_shields_modifiers" classname="Sheytoonak.Tests.DuelRulesTests" runstate="Runnable" seed="1563799206" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.000930" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1036" name="Bot_cures_then_kicks_then_poisons" fullname="Sheytoonak.Tests.DuelRulesTests.Bot_cures_then_kicks_then_poisons" methodname="Bot_cures_then_kicks_then_poisons" classname="Sheytoonak.Tests.DuelRulesTests" runstate="Runnable" seed="2079886744" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.001862" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1028" name="Breaking_the_last_open_window_lifts_the_poisons_that_block_the_rest" fullname="Sheytoonak.Tests.DuelRulesTests.Breaking_the_last_open_window_lifts_the_poisons_that_block_the_rest" methodname="Breaking_the_last_open_window_lifts_the_poisons_that_block_the_rest" classname="Sheytoonak.Tests.DuelRulesTests" runstate="Runnable" seed="1784996781" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.000843" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1023" name="Breaking_windows_wins_at_the_majority" fullname="Sheytoonak.Tests.DuelRulesTests.Breaking_windows_wins_at_the_majority" methodname="Breaking_windows_wins_at_the_majority" classname="Sheytoonak.Tests.DuelRulesTests" runstate="Runnable" seed="586262638" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.001459" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1021" name="Every_window_is_worth_one_and_an_even_house_seals_one_upper_window" fullname="Sheytoonak.Tests.DuelRulesTests.Every_window_is_worth_one_and_an_even_house_seals_one_upper_window" methodname="Every_window_is_worth_one_and_an_even_house_seals_one_upper_window" classname="Sheytoonak.Tests.DuelRulesTests" runstate="Runnable" seed="17797492" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.001951" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1031" name="Higher_levels_hit_harder_but_never_kill_the_kick" fullname="Sheytoonak.Tests.DuelRulesTests.Higher_levels_hit_harder_but_never_kill_the_kick" methodname="Higher_levels_hit_harder_but_never_kill_the_kick" classname="Sheytoonak.Tests.DuelRulesTests" runstate="Runnable" seed="1897173692" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.001628" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1033" name="No_rage_in_the_game_every_turn_is_two_actions" fullname="Sheytoonak.Tests.DuelRulesTests.No_rage_in_the_game_every_turn_is_two_actions" methodname="No_rage_in_the_game_every_turn_is_two_actions" classname="Sheytoonak.Tests.DuelRulesTests" runstate="Runnable" seed="436091791" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.000362" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1022" name="Opener_has_one_action_then_everyone_has_two" fullname="Sheytoonak.Tests.DuelRulesTests.Opener_has_one_action_then_everyone_has_two" methodname="Opener_has_one_action_then_everyone_has_two" classname="Sheytoonak.Tests.DuelRulesTests" runstate="Runnable" seed="701641457" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.000282" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1025" name="Poison_cannot_close_every_window_and_expires_by_turns" fullname="Sheytoonak.Tests.DuelRulesTests.Poison_cannot_close_every_window_and_expires_by_turns" methodname="Poison_cannot_close_every_window_and_expires_by_turns" classname="Sheytoonak.Tests.DuelRulesTests" runstate="Runnable" seed="1010092938" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.000580" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1034" name="Rage_arrives_every_third_turn_and_restarts_when_spent" fullname="Sheytoonak.Tests.DuelRulesTests.Rage_arrives_every_third_turn_and_restarts_when_spent" methodname="Rage_arrives_every_third_turn_and_restarts_when_spent" classname="Sheytoonak.Tests.DuelRulesTests" runstate="Runnable" seed="1624456291" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.000510" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1027" name="The_neighbour_shuts_her_window_after_two_turns" fullname="Sheytoonak.Tests.DuelRulesTests.The_neighbour_shuts_her_window_after_two_turns" methodname="The_neighbour_shuts_her_window_after_two_turns" classname="Sheytoonak.Tests.DuelRulesTests" runstate="Runnable" seed="202372417" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.000297" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1035" name="Two_timeouts_in_a_row_surrender" fullname="Sheytoonak.Tests.DuelRulesTests.Two_timeouts_in_a_row_surrender" methodname="Two_timeouts_in_a_row_surrender" classname="Sheytoonak.Tests.DuelRulesTests" runstate="Runnable" seed="663879645" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.000467" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1040" name="KickSolverTests" fullname="Sheytoonak.Tests.KickSolverTests" classname="Sheytoonak.Tests.KickSolverTests" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.006307" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1043" name="Aim_and_contact_turn_the_ball" fullname="Sheytoonak.Tests.KickSolverTests.Aim_and_contact_turn_the_ball" methodname="Aim_and_contact_turn_the_ball" classname="Sheytoonak.Tests.KickSolverTests" runstate="Runnable" seed="1848432467" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.001077" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1046" name="Ballistic_velocity_lands_on_the_target" fullname="Sheytoonak.Tests.KickSolverTests.Ballistic_velocity_lands_on_the_target" methodname="Ballistic_velocity_lands_on_the_target" classname="Sheytoonak.Tests.KickSolverTests" runstate="Runnable" seed="2046282438" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.000402" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1044" name="Clean_contact_ignores_noise_and_bad_contact_does_not" fullname="Sheytoonak.Tests.KickSolverTests.Clean_contact_ignores_noise_and_bad_contact_does_not" methodname="Clean_contact_ignores_noise_and_bad_contact_does_not" classname="Sheytoonak.Tests.KickSolverTests" runstate="Runnable" seed="978231552" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.000851" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1045" name="Contact_quality_peaks_at_the_sweet_spot" fullname="Sheytoonak.Tests.KickSolverTests.Contact_quality_peaks_at_the_sweet_spot" methodname="Contact_quality_peaks_at_the_sweet_spot" classname="Sheytoonak.Tests.KickSolverTests" runstate="Runnable" seed="1768812585" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.000334" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1042" name="Full_strength_reaches_the_upper_floors_and_can_overshoot" fullname="Sheytoonak.Tests.KickSolverTests.Full_strength_reaches_the_upper_floors_and_can_overshoot" methodname="Full_strength_reaches_the_upper_floors_and_can_overshoot" classname="Sheytoonak.Tests.KickSolverTests" runstate="Runnable" seed="1379581735" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.000390" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1041" name="Harder_swing_hits_the_wall_higher" fullname="Sheytoonak.Tests.KickSolverTests.Harder_swing_hits_the_wall_higher" methodname="Harder_swing_hits_the_wall_higher" classname="Sheytoonak.Tests.KickSolverTests" runstate="Runnable" seed="824467261" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.000628" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1055" name="MotionGestureDetectorTests" fullname="Sheytoonak.Tests.MotionGestureDetectorTests" classname="Sheytoonak.Tests.MotionGestureDetectorTests" runstate="Runnable" testcasecount="8" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.007066" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1056" name="Bigger_swing_means_stronger_kick" fullname="Sheytoonak.Tests.MotionGestureDetectorTests.Bigger_swing_means_stronger_kick" methodname="Bigger_swing_means_stronger_kick" classname="Sheytoonak.Tests.MotionGestureDetectorTests" runstate="Runnable" seed="637853547" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.001695" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1060" name="Cooldown_blocks_a_double_trigger" fullname="Sheytoonak.Tests.MotionGestureDetectorTests.Cooldown_blocks_a_double_trigger" methodname="Cooldown_blocks_a_double_trigger" classname="Sheytoonak.Tests.MotionGestureDetectorTests" runstate="Runnable" seed="39346095" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.000305" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1063" name="Landscape_ignores_a_portrait_style_swing" fullname="Sheytoonak.Tests.MotionGestureDetectorTests.Landscape_ignores_a_portrait_style_swing" methodname="Landscape_ignores_a_portrait_style_swing" classname="Sheytoonak.Tests.MotionGestureDetectorTests" runstate="Runnable" seed="1555737876" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.000350" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1062" name="Portrait_mode_still_reads_tilt_and_kick_on_the_old_axes" fullname="Sheytoonak.Tests.MotionGestureDetectorTests.Portrait_mode_still_reads_tilt_and_kick_on_the_old_axes" methodname="Portrait_mode_still_reads_tilt_and_kick_on_the_old_axes" classname="Sheytoonak.Tests.MotionGestureDetectorTests" runstate="Runnable" seed="1971682488" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.000501" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1059" name="Sideways_component_aims" fullname="Sheytoonak.Tests.MotionGestureDetectorTests.Sideways_component_aims" methodname="Sideways_component_aims" classname="Sheytoonak.Tests.MotionGestureDetectorTests" runstate="Runnable" seed="707124841" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.000221" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1057" name="Slow_wobble_is_not_a_kick" fullname="Sheytoonak.Tests.MotionGestureDetectorTests.Slow_wobble_is_not_a_kick" methodname="Slow_wobble_is_not_a_kick" classname="Sheytoonak.Tests.MotionGestureDetectorTests" runstate="Runnable" seed="1598013823" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.000477" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1061" name="Tilt_moves_the_player" fullname="Sheytoonak.Tests.MotionGestureDetectorTests.Tilt_moves_the_player" methodname="Tilt_moves_the_player" classname="Sheytoonak.Tests.MotionGestureDetectorTests" runstate="Runnable" seed="1197937991" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.000345" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1058" name="Wrong_direction_swing_does_not_kick" fullname="Sheytoonak.Tests.MotionGestureDetectorTests.Wrong_direction_swing_does_not_kick" methodname="Wrong_direction_swing_does_not_kick" classname="Sheytoonak.Tests.MotionGestureDetectorTests" runstate="Runnable" seed="810780232" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.000218" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1068" name="RallyRulesTests" fullname="Sheytoonak.Tests.RallyRulesTests" classname="Sheytoonak.Tests.RallyRulesTests" runstate="Runnable" testcasecount="11" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.011378" total="11" passed="11" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1076" name="Already_broken_window_loses_the_ball_unless_the_owner_throws_it_back" fullname="Sheytoonak.Tests.RallyRulesTests.Already_broken_window_loses_the_ball_unless_the_owner_throws_it_back" methodname="Already_broken_window_loses_the_ball_unless_the_owner_throws_it_back" classname="Sheytoonak.Tests.RallyRulesTests" runstate="Runnable" seed="381208842" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.001971" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1075" name="Breaking_a_window_scores_and_waits_for_the_next_serve" fullname="Sheytoonak.Tests.RallyRulesTests.Breaking_a_window_scores_and_waits_for_the_next_serve" methodname="Breaking_a_window_scores_and_waits_for_the_next_serve" classname="Sheytoonak.Tests.RallyRulesTests" runstate="Runnable" seed="979375034" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.000356" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1078" name="Clearing_the_last_house_wins" fullname="Sheytoonak.Tests.RallyRulesTests.Clearing_the_last_house_wins" methodname="Clearing_the_last_house_wins" classname="Sheytoonak.Tests.RallyRulesTests" runstate="Runnable" seed="477500763" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.000549" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1074" name="Kick_that_keeps_hitting_the_street_is_short" fullname="Sheytoonak.Tests.RallyRulesTests.Kick_that_keeps_hitting_the_street_is_short" methodname="Kick_that_keeps_hitting_the_street_is_short" classname="Sheytoonak.Tests.RallyRulesTests" runstate="Runnable" seed="901455147" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.000321" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1077" name="Last_window_gives_a_medal_and_moves_on" fullname="Sheytoonak.Tests.RallyRulesTests.Last_window_gives_a_medal_and_moves_on" methodname="Last_window_gives_a_medal_and_moves_on" classname="Sheytoonak.Tests.RallyRulesTests" runstate="Runnable" seed="812352097" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.000662" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1079" name="Lives_carry_over_between_houses" fullname="Sheytoonak.Tests.RallyRulesTests.Lives_carry_over_between_houses" methodname="Lives_carry_over_between_houses" classname="Sheytoonak.Tests.RallyRulesTests" runstate="Runnable" seed="1054615302" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.000307" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1071" name="One_bounce_then_kick_is_legal" fullname="Sheytoonak.Tests.RallyRulesTests.One_bounce_then_kick_is_legal" methodname="One_bounce_then_kick_is_legal" classname="Sheytoonak.Tests.RallyRulesTests" runstate="Runnable" seed="1755961371" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.000418" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1070" name="Returning_ball_cannot_be_kicked_before_its_bounce" fullname="Sheytoonak.Tests.RallyRulesTests.Returning_ball_cannot_be_kicked_before_its_bounce" methodname="Returning_ball_cannot_be_kicked_before_its_bounce" classname="Sheytoonak.Tests.RallyRulesTests" runstate="Runnable" seed="1093995117" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.001605" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1072" name="Second_bounce_costs_a_life" fullname="Sheytoonak.Tests.RallyRulesTests.Second_bounce_costs_a_life" methodname="Second_bounce_costs_a_life" classname="Sheytoonak.Tests.RallyRulesTests" runstate="Runnable" seed="602402405" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.000686" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1069" name="Serve_kick_goes_out_and_the_wall_sends_it_back" fullname="Sheytoonak.Tests.RallyRulesTests.Serve_kick_goes_out_and_the_wall_sends_it_back" methodname="Serve_kick_goes_out_and_the_wall_sends_it_back" classname="Sheytoonak.Tests.RallyRulesTests" runstate="Runnable" seed="309472050" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.000310" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1073" name="Three_losses_end_the_game" fullname="Sheytoonak.Tests.RallyRulesTests.Three_losses_end_the_game" methodname="Three_losses_end_the_game" classname="Sheytoonak.Tests.RallyRulesTests" runstate="Runnable" seed="1622173140" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.000450" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1052" name="ReachRuleTests" fullname="Sheytoonak.Tests.ReachRuleTests" classname="Sheytoonak.Tests.ReachRuleTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.002819" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1053" name="Ball_in_front_of_the_player_is_reachable_all_the_way_in" fullname="Sheytoonak.Tests.ReachRuleTests.Ball_in_front_of_the_player_is_reachable_all_the_way_in" methodname="Ball_in_front_of_the_player_is_reachable_all_the_way_in" classname="Sheytoonak.Tests.ReachRuleTests" runstate="Runnable" seed="1819436511" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.001176" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1054" name="Ball_over_the_head_or_wide_or_behind_is_a_miss" fullname="Sheytoonak.Tests.ReachRuleTests.Ball_over_the_head_or_wide_or_behind_is_a_miss" methodname="Ball_over_the_head_or_wide_or_behind_is_a_miss" classname="Sheytoonak.Tests.ReachRuleTests" runstate="Runnable" seed="1847458660" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.000281" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1080" name="ShopCatalogTests" fullname="Sheytoonak.Tests.ShopCatalogTests" classname="Sheytoonak.Tests.ShopCatalogTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.011646" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1081" name="A_prize_code_works_once_and_ignores_case_and_spaces" fullname="Sheytoonak.Tests.ShopCatalogTests.A_prize_code_works_once_and_ignores_case_and_spaces" methodname="A_prize_code_works_once_and_ignores_case_and_spaces" classname="Sheytoonak.Tests.ShopCatalogTests" runstate="Runnable" seed="1395800218" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.004275" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1084" name="Bigger_lira_packs_are_cheaper_per_lira" fullname="Sheytoonak.Tests.ShopCatalogTests.Bigger_lira_packs_are_cheaper_per_lira" methodname="Bigger_lira_packs_are_cheaper_per_lira" classname="Sheytoonak.Tests.ShopCatalogTests" runstate="Runnable" seed="2094980620" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.000880" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1082" name="The_repository_holds_hashes_not_codes" fullname="Sheytoonak.Tests.ShopCatalogTests.The_repository_holds_hashes_not_codes" methodname="The_repository_holds_hashes_not_codes" classname="Sheytoonak.Tests.ShopCatalogTests" runstate="Runnable" seed="731032726" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.000270" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1083" name="The_special_offer_changes_every_three_days_and_is_half_price" fullname="Sheytoonak.Tests.ShopCatalogTests.The_special_offer_changes_every_three_days_and_is_half_price" methodname="The_special_offer_changes_every_three_days_and_is_half_price" classname="Sheytoonak.Tests.ShopCatalogTests" runstate="Runnable" seed="1330653196" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.004403" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1085" name="ShopRulesTests" fullname="Sheytoonak.Tests.ShopRulesTests" classname="Sheytoonak.Tests.ShopRulesTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.006914" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1087" name="Each_offer_is_bought_once_a_day_and_costs_shards" fullname="Sheytoonak.Tests.ShopRulesTests.Each_offer_is_bought_once_a_day_and_costs_shards" methodname="Each_offer_is_bought_once_a_day_and_costs_shards" classname="Sheytoonak.Tests.ShopRulesTests" runstate="Runnable" seed="1191897782" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.001618" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1089" name="One_to_three_cards_of_a_tool_a_day" fullname="Sheytoonak.Tests.ShopRulesTests.One_to_three_cards_of_a_tool_a_day" methodname="One_to_three_cards_of_a_tool_a_day" classname="Sheytoonak.Tests.ShopRulesTests" runstate="Runnable" seed="1857789582" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.002225" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1088" name="Purchases_survive_a_save" fullname="Sheytoonak.Tests.ShopRulesTests.Purchases_survive_a_save" methodname="Purchases_survive_a_save" classname="Sheytoonak.Tests.ShopRulesTests" runstate="Runnable" seed="1680764510" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.000694" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1086" name="Same_day_same_offers_next_day_new_ones" fullname="Sheytoonak.Tests.ShopRulesTests.Same_day_same_offers_next_day_new_ones" methodname="Same_day_same_offers_next_day_new_ones" classname="Sheytoonak.Tests.ShopRulesTests" runstate="Runnable" seed="1297822595" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.000434" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1090" name="ToolLevelsTests" fullname="Sheytoonak.Tests.ToolLevelsTests" classname="Sheytoonak.Tests.ToolLevelsTests" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.008712" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1091" name="Cards_alone_do_not_upgrade_shards_make_it_real" fullname="Sheytoonak.Tests.ToolLevelsTests.Cards_alone_do_not_upgrade_shards_make_it_real" methodname="Cards_alone_do_not_upgrade_shards_make_it_real" classname="Sheytoonak.Tests.ToolLevelsTests" runstate="Runnable" seed="1737597811" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.001218" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1093" name="Every_step_costs_far_more_than_the_one_before" fullname="Sheytoonak.Tests.ToolLevelsTests.Every_step_costs_far_more_than_the_one_before" methodname="Every_step_costs_far_more_than_the_one_before" classname="Sheytoonak.Tests.ToolLevelsTests" runstate="Runnable" seed="258989457" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.000259" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1095" name="Levels_and_cards_survive_a_save" fullname="Sheytoonak.Tests.ToolLevelsTests.Levels_and_cards_survive_a_save" methodname="Levels_and_cards_survive_a_save" classname="Sheytoonak.Tests.ToolLevelsTests" runstate="Runnable" seed="735688843" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.003543" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1092" name="Shards_alone_do_not_upgrade" fullname="Sheytoonak.Tests.ToolLevelsTests.Shards_alone_do_not_upgrade" methodname="Shards_alone_do_not_upgrade" classname="Sheytoonak.Tests.ToolLevelsTests" runstate="Runnable" seed="1283783465" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.000250" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1094" name="The_level_calendar_at_five_wins_a_day" fullname="Sheytoonak.Tests.ToolLevelsTests.The_level_calendar_at_five_wins_a_day" methodname="The_level_calendar_at_five_wins_a_day" classname="Sheytoonak.Tests.ToolLevelsTests" runstate="Runnable" seed="1963319045" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.000492" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1096" name="The_top_level_is_five" fullname="Sheytoonak.Tests.ToolLevelsTests.The_top_level_is_five" methodname="The_top_level_is_five" classname="Sheytoonak.Tests.ToolLevelsTests" runstate="Runnable" seed="498013198" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.000696" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1047" name="WallAimTests" fullname="Sheytoonak.Tests.WallAimTests" classname="Sheytoonak.Tests.WallAimTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.003617" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1048" name="A_house_with_ground_floor_glass_lowers_the_softest_kick" fullname="Sheytoonak.Tests.WallAimTests.A_house_with_ground_floor_glass_lowers_the_softest_kick" methodname="A_house_with_ground_floor_glass_lowers_the_softest_kick" classname="Sheytoonak.Tests.WallAimTests" runstate="Runnable" seed="587847115" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.000660" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1050" name="Aim_moves_the_hit_sideways_and_a_clean_kick_is_exact" fullname="Sheytoonak.Tests.WallAimTests.Aim_moves_the_hit_sideways_and_a_clean_kick_is_exact" methodname="Aim_moves_the_hit_sideways_and_a_clean_kick_is_exact" classname="Sheytoonak.Tests.WallAimTests" runstate="Runnable" seed="1370555021" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.000461" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1051" name="Bad_contact_scatters_the_hit" fullname="Sheytoonak.Tests.WallAimTests.Bad_contact_scatters_the_hit" methodname="Bad_contact_scatters_the_hit" classname="Sheytoonak.Tests.WallAimTests" runstate="Runnable" seed="581476614" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.000294" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1049" name="Bottom_tap_hits_low_and_top_tap_hits_high" fullname="Sheytoonak.Tests.WallAimTests.Bottom_tap_hits_low_and_top_tap_hits_high" methodname="Bottom_tap_hits_low_and_top_tap_hits_high" classname="Sheytoonak.Tests.WallAimTests" runstate="Runnable" seed="2128917770" result="Passed" start-time="2026-11-13 16:22:14Z" end-time="2026-11-13 16:22:14Z" duration="0.000243" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[Saving results to: /github/workspace/artifacts/editmode-results.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>
