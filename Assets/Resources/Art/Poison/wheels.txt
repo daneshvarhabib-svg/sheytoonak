@@ -4,4 +4,4 @@ bus bus_wheel 124 1433 373,559 1124,559
 truck truck_wheel 125 1333 319,641 1070,641
 cart cart_wheel 158 1087 192,791 824,794 front
 tow_truck tow_wheel 120 1507 335,815 1140,815
-tanker_0 tow_wheel 80 1528 370,381 1065,381
+tanker_0 tow_wheel 85 1528 370,440 1065,440
