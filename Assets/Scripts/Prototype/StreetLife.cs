@@ -220,10 +220,19 @@ namespace Sheytoonak
                 }
                 float wheelR = (toon ? 1.22f : 1f) * ps * Mathf.Abs(van.localScale.y); // the wheel's radius at 100 ppu, scaled
                 float x0 = van.position.x, x1 = t.position.x + side * 2.2f;
-                // the cartoon van parks past him so the rear-door scene laid on its tail (below) puts the stretcher over him
-                bool hasScene = toon && Resources.Load<Texture2D>("Art/Props/medics_out_0") != null && Resources.Load<Texture2D>("Art/Props/medics_load_0") != null;
-                float vk = 2.5f / 845f, faceL = drivesRight ? -1f : 1f; // world per original van pixel; +1 = cab on the left
-                if (hasScene) x1 = t.position.x - faceL * (1923f - 757.5f) * vk;
+                // ⚠️ user (2026-11-13): «تصویر باز و بسته کردن آمبولانس رو باید روی این تصویر بسازی نه روی اونی که عموده تصویر
+                // بهش». The scene is the user's sheet of seven three-quarter frames of the whole van (Art/Props/amb34_0..6,
+                // aligned on the van, 1489x1000, wheels' bottom at y 960; the stretcher comes to rest at x ~1000, the van's
+                // middle is x ~678). The side view drives in, the three-quarter van takes its place, the doors open, the
+                // medics fetch him, the doors close, the side view drives off. The old rear-only frames (medics_out/load)
+                // were laid on the side view and never matched it.
+                var amb34 = new List<Texture2D>();
+                for (int i = 0; i < 7; i++) { var tx = Resources.Load<Texture2D>("Art/Props/amb34_" + i); if (tx == null) { amb34.Clear(); break; } amb34.Add(tx); }
+                bool hasScene = toon && amb34.Count == 7;
+                float faceL = drivesRight ? -1f : 1f; // +1 = cab on the left
+                const float sceneH = 2.81f;           // the three-quarter van about as tall as the side view (its rear is nearer)
+                float sceneX = t.position.x - faceL * (1000f - 744.5f) / 1000f * sceneH; // stretcher over him
+                if (hasScene) x1 = sceneX + faceL * (678f - 744.5f) / 1000f * sceneH; // the side view stops where the van will stand
                 for (float k = 0f; k < 1f; k += Time.deltaTime / 2f)
                 {
                     if (van == null) yield break;
@@ -232,32 +241,29 @@ namespace Sheytoonak
                     foreach (var w in wheels) w.Rotate(0f, 0f, -deg, Space.Self);
                     van.position = new Vector3(nx, 0f, van.position.z); yield return null;
                 }
-                yield return new WaitForSeconds(0.4f);
-                // the cartoon scene at the van (user 2026-11-12, two sheets of six): the van seen from behind with its doors
-                // open, the medics pull the empty stretcher out (medics_out_*), then wheel him in under the sheet
-                // (medics_load_*). The frames were aligned on the van, so it stands still while they move.
-                var outT = new List<Texture2D>(); var loadT = new List<Texture2D>();
-                foreach (var tx in Resources.LoadAll<Texture2D>("Art/Props"))
-                    if (tx.name.StartsWith("medics_out_")) outT.Add(tx); else if (tx.name.StartsWith("medics_load_")) loadT.Add(tx);
-                outT.Sort((p, q) => string.CompareOrdinal(p.name, q.name)); loadT.Sort((p, q) => string.CompareOrdinal(p.name, q.name));
-                if (hasScene && outT.Count > 0 && loadT.Count > 0)
+                yield return new WaitForSeconds(0.3f);
+                if (hasScene)
                 {
                     System.Func<Texture2D, Sprite> mk = tx => Sprite.Create(tx, new Rect(0, 0, tx.width, tx.height), new Vector2(0.5f, 0f), 100f);
-                    // ⚠️ user (2026-11-12, phone): «ماشین آمبولانس که میخواد درش باز شه نصفه میشه در صورتی که باید اون نصفه درست
-                    // بیفته روی بدنه کامل». The frames show only the van's tail (three-quarter, doors open), so the parked van
-                    // stays and the frame is laid on its rear. Fitted on the pictures: 1 frame px = 1.83 van px, the frame's
-                    // left edge (x 12) at van x 1250, its van bottom (y 407) on the van's bumper line (y 745). In world units
-                    // (van 845 px = 2.5): centre 1777 px from the van's left = +3.02 from its middle, bottom -0.53 under the road.
-                    float sh = 560f * 1.83f * vk;
-                    var scene = Make("AmbulanceScene", mk(outT[0]), sh, new Vector3(van.position.x + faceL * (1777f - 757.5f) * vk, (845f - 1025f) * vk, van.position.z - 0.05f));
+                    var scene = Make("AmbulanceScene", mk(amb34[0]), sceneH, new Vector3(sceneX, -40f / 1000f * sceneH, van.position.z));
                     var sr2 = scene.GetComponent<SpriteRenderer>();
-                    sr2.sortingOrder = vr.sortingOrder + 2;
+                    sr2.sortingOrder = vr.sortingOrder;
                     if (drivesRight) scene.localScale = new Vector3(-scene.localScale.x, scene.localScale.y, scene.localScale.z);
-                    foreach (var tx in outT) { sr2.sprite = mk(tx); yield return new WaitForSeconds(0.38f); }
-                    if (t != null) Destroy(t.gameObject); // lifted onto the stretcher
-                    foreach (var tx in loadT) { sr2.sprite = mk(tx); yield return new WaitForSeconds(0.38f); }
-                    yield return new WaitForSeconds(0.3f);
+                    van.gameObject.SetActive(false);
+                    // closed, half open, open, out with the empty stretcher, ready (he is lifted on), loading, closing, closed
+                    int[] seq = { 0, 1, 2, 3, 4, 5, 6, 0 };
+                    float[] hold = { 0.35f, 0.3f, 0.45f, 0.5f, 0.55f, 0.6f, 0.45f, 0.35f };
+                    for (int i = 0; i < seq.Length; i++)
+                    {
+                        if (scene == null) yield break;
+                        sr2.sprite = mk(amb34[seq[i]]);
+                        yield return new WaitForSeconds(hold[i]);
+                        if (seq[i] == 4 && t != null) Destroy(t.gameObject); // lifted onto the stretcher
+                    }
+                    if (t != null) Destroy(t.gameObject);
                     Destroy(scene.gameObject);
+                    if (van == null) yield break;
+                    van.gameObject.SetActive(true);
                     float xe2 = drivesRight ? vEdge : -vEdge;
                     for (float k = 0f; k < 1f; k += Time.deltaTime / 2.4f)
                     {
