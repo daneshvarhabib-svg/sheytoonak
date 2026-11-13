@@ -273,7 +273,7 @@ namespace Sheytoonak.Prototype
                 // DuelManager.SendBack); he only drifts to his spot, slowly.
                 // ⚠️ not while kicking: a rebound kick moves him to the ball, and drifting back mid-kick slid the foot off it
                 var kr = painted[(int)side][slot] != null ? painted[(int)side][slot].GetComponent<HeroRig>() : null;
-                if (kr == null || !kr.Kicking)
+                if ((kr == null || !kr.Kicking) && hero != busyHero)
                     hero.position = Vector3.MoveTowards(hero.position, Spot(side), 1.5f * Time.deltaTime);
                 yield return null;
             }
@@ -757,6 +757,143 @@ namespace Sheytoonak.Prototype
             var hero = Heroes[(int)s] != null ? Heroes[(int)s][0] : null;
             var go = PoisonProps.Antidote(a, hero != null ? hero.position : foot.StrikeSpot, mapper.FacadeZ);
             Destroy(go, 2.5f);
+            // vehicles the antidote just lifted (OnExpired parked them in `lifted`): the tow truck or Um al-Arabiyat takes them
+            if (a.Id == "nails" || a.Id == "complaint")
+            {
+                foreach (var v in lifted) if (v != null) StartCoroutine(a.Id == "nails" ? TowAway(v) : PushAway(v, s));
+                lifted.Clear();
+            }
+            if (a.Id == "plank") StartCoroutine(SuckPuddle());
+        }
+
+        // ------------------------------------------------------------------ antidote scenes (user 2026-11-13)
+        readonly List<GameObject> lifted = new List<GameObject>();
+        Transform busyHero; // a hero the stage is moving for an antidote: StandAtBall leaves him alone meanwhile
+
+        /// <summary>A vehicle lifted by an antidote waits a frame for OnAntidote to claim it; unclaimed, it just drives off.</summary>
+        IEnumerator LiftFallback(GameObject go)
+        {
+            yield return null; yield return null;
+            if (go != null && lifted.Remove(go)) StartCoroutine(DriveOff(go));
+        }
+
+        static Bounds BoundsOf(GameObject go)
+        {
+            var rs = go.GetComponentsInChildren<Renderer>();
+            var b = rs.Length > 0 ? rs[0].bounds : new Bounds(go.transform.position, Vector3.one);
+            foreach (var r in rs) b.Encapsulate(r.bounds);
+            return b;
+        }
+
+        static void Roll(Transform t, Vector3 from, Vector3 to, float k) { if (t != null) t.position = Vector3.Lerp(from, to, k); }
+
+        /// <summary>
+        /// The city tow truck (user 2026-11-13: «جرثقیل شهرداری که میاد ماشین های پارک شده رو با خودش می‌بره»). It drives in
+        /// from the left facing right, a little nearer than the parked vehicle, stops with its hook over the vehicle's front end,
+        /// the vehicle's end lifts, and both leave to the right. The hook hangs at x 1408 of the 1507 px picture.
+        /// </summary>
+        IEnumerator TowAway(GameObject go)
+        {
+            var v = go.transform; var b = BoundsOf(go);
+            var tow = new GameObject("Tow truck").transform;
+            var r = PoisonProps.Vehicle("tow_truck", tow, 3.4f, true);
+            if (r == null) { Destroy(tow.gameObject); StartCoroutine(DriveOff(go)); yield break; }
+            float w = r.bounds.size.x, z = v.position.z - 0.9f;
+            float hookX = -(1408f / 1507f - 0.5f) * w; // mirrored picture: the hook is at its left end
+            float stop = b.max.x - 0.35f - hookX, edge = StreetLife.OffScreenX(z, w * 0.5f, 30f);
+            Vector3 from = new Vector3(-edge, 0f, z), at = new Vector3(stop, 0f, z);
+            for (float k = 0f; k < 1f && tow != null; k += Time.deltaTime / 1.8f) { Roll(tow, from, at, 1f - (1f - k) * (1f - k)); yield return null; }
+            yield return new WaitForSeconds(0.35f);
+            // hooked: the vehicle's right end lifts a little
+            if (v != null)
+            {
+                Vector3 p0 = v.position;
+                for (float k = 0f; k < 1f && v != null; k += Time.deltaTime / 0.5f) { v.position = p0 + Vector3.up * 0.25f * k; v.rotation = Quaternion.Euler(0f, 0f, 5f * k); yield return null; }
+            }
+            yield return new WaitForSeconds(0.25f);
+            float gone = edge + b.size.x + w;
+            Vector3 t0 = tow.position, v0 = v != null ? v.position : Vector3.zero;
+            for (float k = 0f; k < 1f && tow != null; k += Time.deltaTime / 2.2f)
+            {
+                float e = k * k, dx = gone * e;
+                tow.position = t0 + Vector3.right * dx;
+                if (v != null) v.position = v0 + Vector3.right * dx;
+                yield return null;
+            }
+            if (tow != null) Destroy(tow.gameObject);
+            if (go != null) Destroy(go);
+        }
+
+        /// <summary>
+        /// Um al-Arabiyat's shove (user 2026-11-13: «زور ام العربیات خوبه»). The little old woman walks to the parked
+        /// vehicle's left end, leans in with both arms forward and pushes it a few metres, then it rolls off on its own
+        /// and she walks back. Played by whoever on that side is Um al-Arabiyat (else the first kid).
+        /// </summary>
+        IEnumerator PushAway(GameObject go, Side side)
+        {
+            int slot = 0;
+            for (int i = 0; i < 3; i++) if (lookIds[(int)side][i] == "um_arabiyat") slot = i;
+            var hero = Heroes[(int)side] != null ? Heroes[(int)side][slot] : null;
+            var pr = painted[(int)side][slot];
+            var rig = pr != null ? pr.GetComponent<HeroRig>() : null;
+            var v = go.transform; var b = BoundsOf(go);
+            if (hero == null) { StartCoroutine(DriveOff(go)); yield break; }
+            busyHero = hero;
+            Vector3 back = hero.position;
+            bool wasFlip = pr != null && pr.flipX;
+            if (pr != null) pr.flipX = false; // faces right, the way the vehicle will go
+            Vector3 at = new Vector3(b.min.x - 0.35f, 0f, v.position.z - 0.45f);
+            for (float k = 0f; k < 1f && hero != null; k += Time.deltaTime / 1.1f) { hero.position = Vector3.Lerp(back, at, Mathf.SmoothStep(0f, 1f, k)); yield return null; }
+            if (rig != null) rig.Push = true;
+            yield return new WaitForSeconds(0.3f);
+            // the hard part: a slow first metre and a half, she follows it
+            Vector3 v0 = v != null ? v.position : Vector3.zero, h0 = hero.position;
+            for (float k = 0f; k < 1f && v != null; k += Time.deltaTime / 1.3f)
+            {
+                float dx = 1.5f * k * k;
+                v.position = v0 + Vector3.right * dx; hero.position = h0 + Vector3.right * dx;
+                v.rotation = Quaternion.Euler(0f, 0f, Mathf.Sin(k * Mathf.PI * 6f) * 0.6f); // it rocks under the shove
+                yield return null;
+            }
+            if (rig != null) rig.Push = false;
+            if (go != null) { go.transform.rotation = Quaternion.identity; StartCoroutine(DriveOff(go)); }
+            yield return new WaitForSeconds(0.4f);
+            Vector3 h1 = hero.position;
+            if (pr != null) pr.flipX = back.x < h1.x; // walking back faces where she came from
+            for (float k = 0f; k < 1f && hero != null; k += Time.deltaTime / 1.1f) { hero.position = Vector3.Lerp(h1, back, Mathf.SmoothStep(0f, 1f, k)); yield return null; }
+            if (pr != null) pr.flipX = wasFlip;
+            busyHero = null;
+        }
+
+        /// <summary>
+        /// The city suction tanker (user 2026-11-13, in place of the plank). It drives in from the left facing right, stops
+        /// with its rear over the puddle, lowers its hose (tanker_1: the nozzle at x 1400 of 1528), the puddle shrinks away,
+        /// the hose goes up and it leaves to the right.
+        /// </summary>
+        IEnumerator SuckPuddle()
+        {
+            GameObject puddle = null;
+            foreach (var kv in props) foreach (var g in kv.Value) if (g != null && g.name == "Poison puddle") puddle = g;
+            Vector3 px = puddle != null ? puddle.transform.position : new Vector3(0f, 0f, foot.Z + 1.5f);
+            var tk = new GameObject("Suction tanker").transform;
+            var r = PoisonProps.Vehicle("tanker_0", tk, 3.0f, true);
+            if (r == null) { Destroy(tk.gameObject); yield break; }
+            float w = r.bounds.size.x, z = px.z + 0.6f;
+            float nozzle = -(1400f / 1528f - 0.5f) * w;
+            float stop = px.x - nozzle, edge = StreetLife.OffScreenX(z, w * 0.5f, 30f);
+            Vector3 from = new Vector3(-edge, 0f, z), at = new Vector3(stop, 0f, z);
+            for (float k = 0f; k < 1f && tk != null; k += Time.deltaTime / 1.8f) { Roll(tk, from, at, 1f - (1f - k) * (1f - k)); yield return null; }
+            var down = PoisonProps.Picture("tanker_1"); var up = r.sprite;
+            if (down != null) r.sprite = down;
+            Vector3 s0 = puddle != null ? puddle.transform.localScale : Vector3.one;
+            for (float k = 0f; k < 1f; k += Time.deltaTime / 1.6f) { if (puddle != null) puddle.transform.localScale = s0 * (1f - k); yield return null; }
+            if (puddle != null) puddle.SetActive(false);
+            yield return new WaitForSeconds(0.2f);
+            r.sprite = up;
+            yield return new WaitForSeconds(0.3f);
+            Vector3 t0 = tk.position; float gone = edge * 2f + w;
+            for (float k = 0f; k < 1f && tk != null; k += Time.deltaTime / 2.2f) { tk.position = t0 + Vector3.right * gone * k * k; yield return null; }
+            if (tk != null) Destroy(tk.gameObject);
         }
 
         void OnExpired(ActivePoison p)
@@ -767,7 +904,9 @@ namespace Sheytoonak.Prototype
             foreach (var go in list)
                 if (go != null)
                 {
-                    if (go.name == "Poison bus") StartCoroutine(DriveOff(go)); // bus, lorry and cart all build under this name
+                    // lifted by an antidote (turns still left): the antidote's own scene takes it (OnAntidote), else it drives off
+                    if (go.name == "Poison bus" && p.TurnsLeft > 0) { lifted.Add(go); StartCoroutine(LiftFallback(go)); }
+                    else if (go.name == "Poison bus") StartCoroutine(DriveOff(go)); // bus, lorry and cart all build under this name
                     // turns still left = an antidote lifted it: the rug is pushed off the roof; run out = rolled back up
                     else if (go.name == "Poison carpet") StartCoroutine(p.TurnsLeft > 0 ? RugFall(go) : RugUp(go));
                     else Destroy(go);

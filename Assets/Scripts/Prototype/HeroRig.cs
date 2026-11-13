@@ -219,6 +219,8 @@ namespace Sheytoonak.Prototype
         /// <summary>Standing at the ball, waiting for the kick: the kicking leg is drawn back (the wind-up), so the kick
         /// itself starts at the contact and the ball leaves the foot on the very frame it is launched.</summary>
         public bool Ready;
+        /// <summary>Both arms straight forward, leaning in: Um al-Arabiyat shoving a parked vehicle (user 2026-11-13: «زور ام العربیات خوبه»).</summary>
+        public bool Push;
         float ready;
 
         /// <summary>Leg angle at which the foot meets the ball (the first frame of the kick).</summary>
@@ -276,6 +278,8 @@ namespace Sheytoonak.Prototype
 
             ready = Mathf.MoveTowards(ready, Ready ? 1f : 0f, dt * 3f);
             if (ready > 0f && kickT < 0f) { legNear = Mathf.Lerp(legNear, -20f, ready); armFar -= 6f * ready; armNear += 5f * ready; torso += 2f * ready; }
+
+            if (Push && kickT < 0f) { armFar = 72f; armNear = 78f; torso = -9f; head = 5f; }
 
             if (kickT >= 0f)
             {

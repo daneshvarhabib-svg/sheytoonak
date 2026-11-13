@@ -46,6 +46,19 @@ namespace Sheytoonak.Prototype
 
         static readonly Dictionary<string, Sprite> sprites = new Dictionary<string, Sprite>();
         /// <summary>Art/Poison/&lt;name&gt;.png as a sprite (bottom-centre pivot unless told), or null: the primitive stays.</summary>
+        /// <summary>A painted side-view vehicle (Art/Poison/<paramref name="picture"/>, bottom on the road) with its loose
+        /// wheels from wheels.txt; <paramref name="faceRight"/> mirrors it (the pictures face left).</summary>
+        public static SpriteRenderer Vehicle(string picture, Transform parent, float height, bool faceRight)
+        {
+            var art = Art(picture);
+            if (art == null) return null;
+            var r = Spr(art, parent, Vector3.zero, height);
+            r.flipX = faceRight;
+            AddWheels(r, picture);
+            return r;
+        }
+        public static Sprite Picture(string name) => Art(name);
+
         static Sprite Art(string name, float pivotY = 0f)
         {
             string key = name + pivotY;
@@ -566,6 +579,9 @@ namespace Sheytoonak.Prototype
         {
             var root = new GameObject("Antidote " + a.Id).transform;
             if (a.Id == "rug_push") { root.position = heroPos; return root.gameObject; } // the stage pushes the rug off the roof (DuelStage.RugFall)
+            // the stage plays these (user 2026-11-13): the tow truck (nails), Um al-Arabiyat's shove (complaint), the suction
+            // tanker (plank) -- DuelStage.TowAway / PushAway / SuckPuddle
+            if (a.Id == "nails" || a.Id == "complaint" || a.Id == "plank") { root.position = heroPos; return root.gameObject; }
             var art = Art(a.Id, a.Id == "fart" || a.Id == "nails" || a.Id == "plank" || a.Id == "complaint" || a.Id == "flashlight" ? 0.5f : 0f);
             if (art != null)
             {
