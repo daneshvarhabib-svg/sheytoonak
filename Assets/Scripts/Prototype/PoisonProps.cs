@@ -530,7 +530,9 @@ namespace Sheytoonak.Prototype
             var p0 = Art("pigeon_0", 0.5f); var p1 = Art("pigeon_1", 0.5f); var p2 = Art("pigeon_2", 0.5f);
             if (p0 != null && p1 != null && p2 != null)
             {
-                var sr = Spr(p0, root, Vector3.zero, 0.38f);
+                // cartoon frames (user 2026-11-13) share one canvas aligned on the beak, so the body stays put while the wings flap;
+                // the canvas is 1065 px tall where the level-wing bird alone is 620: 0.38 m bird -> 0.65 m canvas
+                var sr = Spr(p0, root, Vector3.zero, 0.65f);
                 var f = sr.gameObject.AddComponent<Frames>(); f.r = sr; f.frames = new[] { p0, p1, p2, p1 }; f.fps = 12f;
                 return root.gameObject;
             }
