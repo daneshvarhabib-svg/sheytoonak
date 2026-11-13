@@ -240,4 +240,6 @@
 - **هزینه:** متوسط (هر پوسته ۲–۳ تصویر: آسمان، زمین، پیاده‌رو؛ کد ساده است).
 - **ریسک:** بدونِ نماد و پرچم و نشانِ سیاسی؛ نه پولی بدونِ تأییدِ تو.
 
+**تصمیمِ کاربر (۲۳ آبان):** فعلاً هیچ‌کدام. پ۳۲ بعداً ساخته می‌شود، وقتی تصویرهایش آماده شد.
+
 **منابع:** [Supercell — Get ready for ranked update](https://supercell.com/en/games/clashofclans/blog/release-notes/get-ready-for-ranked-update) · [Pocket Gamer — Revenge button makes a return](https://www.pocketgamer.com/clash-of-clans/revenge-button-makes-a-return) · [Lootbar — How the new revenge system works](https://www.lootbar.gg/blog/en/how-does-the-new-revenge-system-work-in-clash-of-clans.html) · [esports.net — Scenery in Clash of Clans](https://www.esports.net/news/mobile-games/clash-of-clans-scenery/) · [Charlie Intel — How to change Home Village Scenery](https://charlieintel.com/games/how-to-change-home-village-scenery-in-clash-of-clans-211174)
