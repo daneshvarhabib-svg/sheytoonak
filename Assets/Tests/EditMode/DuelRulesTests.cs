@@ -14,6 +14,21 @@ namespace Sheytoonak.Tests
             return new DuelRules(rows, shards, new[] { h[0], h[1], h[2] }, new[] { h[3], h[4], h[0] }, seed);
         }
 
+        // User (2026-11-14): «مساوی ای که بر اساس زمان بوده مساوی میمونه و هرکسی خرده شیشه های خودش رو بدست میاره ولی فحش نه
+        // کم نه زیاد میشه براش».
+        [Test]
+        public void A_level_duel_on_time_is_a_draw_each_keeps_its_shards_and_curses_stay()
+        {
+            var r = Make();
+            r.Start(Side.Left);
+            r.TimeUp();
+            Assert.IsTrue(r.Finished);
+            Assert.IsTrue(r.Draw);
+            Assert.IsNull(r.Winner);
+            Assert.AreEqual((r.Shards[0], 0), r.RewardFor(Side.Left));
+            Assert.AreEqual((r.Shards[1], 0), r.RewardFor(Side.Right));
+        }
+
         // User (2026-11-14): «قدرت گوز مگه قرار نبود جلوی پرنده‌ها رو بگیره؟». The stage asks the rules whether a fart is up.
         [Test]
         public void A_fart_shows_as_the_active_protection_against_the_pigeon()

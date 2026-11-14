@@ -599,7 +599,7 @@ namespace Sheytoonak
             if (InChallenge)
             {
                 // a challenge duel pays nothing on its own: it counts toward the run, the run pays at its end
-                Challenge?.Record(winner == Me, DateTime.UtcNow);
+                if (!Rules.Draw) Challenge?.Record(winner == Me, DateTime.UtcNow); // a draw neither wins nor costs a life of the run
                 SaveChallenge();
                 CollectChallengeIfOver();
             }
@@ -613,10 +613,10 @@ namespace Sheytoonak
             }
             // a bag comes from a win (any duel, challenge too), not from time; a full rack gets nothing.
             // Review 2026-11-07 §2.6: no timers — the bag you tapped opens with your next win.
-            if (winner == Me) Bags.AddFromWin();
+            if (winner == Me && !Rules.Draw) Bags.AddFromWin();
             SaveBags();
             ball.Hide();
-            Finished?.Invoke(winner, winner == Me);
+            Finished?.Invoke(winner, winner == Me && !Rules.Draw);
         }
 
         // ------------------------------------------------------------------ player actions (from the HUD)

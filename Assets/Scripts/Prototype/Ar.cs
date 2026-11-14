@@ -53,6 +53,7 @@ namespace Sheytoonak
         public const string AntidoteWord = "دوا";
         public const string Won = "ربحت!";
         public const string Lost = "خسرت";
+        public const string Draw = "تعادل";
         public static string WindowsLine(int mine, int theirs, int majority) => "شبابيك " + N(mine) + " – " + N(theirs) + "  (الربح من " + N(majority) + ")";
         public static string Reward(int shards, int curseDelta, int curses) => "زجاج: +" + N(shards) + "   فحش: " + (curseDelta >= 0 ? "+" : "−") + N(Math.Abs(curseDelta)) + " (" + N(curses) + ")";
         public static string Timer(int seconds) => N(seconds) + " ث";

@@ -14,7 +14,7 @@ namespace Sheytoonak.Prototype
         public System.Action onPlayAgain, onHome;
 
         string toast = ""; float toastUntil;
-        bool ended; bool won; float surrenderArmedUntil;
+        bool ended; bool won; bool draw; float surrenderArmedUntil;
 
         void OnEnable() { duel.Toast += OnToast; duel.Pop += OnPop; duel.Finished += OnFinished; duel.TurnChanged += OnTurn; duel.DuelStarted += () => { ended = false; duel.Rules.WindowTaken += OnTaken; }; }
         void OnDisable() { duel.Toast -= OnToast; duel.Pop -= OnPop; duel.Finished -= OnFinished; duel.TurnChanged -= OnTurn; }
@@ -86,8 +86,8 @@ namespace Sheytoonak.Prototype
                 bs.normal.textColor = won ? new Color(1f, 0.93f, 0.55f) : new Color(0.92f, 0.95f, 1f);
                 var ribbon = new Rect(br.x + w * 0.2f, br.y + h * 0.53f, w * 0.6f, h * 0.13f);
                 var shadow = new GUIStyle(bs); shadow.normal.textColor = new Color(0.25f, 0.1f, 0.05f, 0.9f);
-                GUI.Label(new Rect(ribbon.x + 2f * u, ribbon.y + 3f * u, ribbon.width, ribbon.height), Ar.T(won ? Ar.Won : Ar.Lost), shadow);
-                GUI.Label(ribbon, Ar.T(won ? Ar.Won : Ar.Lost), bs);
+                GUI.Label(new Rect(ribbon.x + 2f * u, ribbon.y + 3f * u, ribbon.width, ribbon.height), Ar.T(draw ? Ar.Draw : won ? Ar.Won : Ar.Lost), shadow);
+                GUI.Label(ribbon, Ar.T(draw ? Ar.Draw : won ? Ar.Won : Ar.Lost), bs);
                 GUI.color = old;
                 return Screen.height * 0.035f + Screen.height * 0.40f - 20f * u;
             }
@@ -97,7 +97,7 @@ namespace Sheytoonak.Prototype
             if (plank != null) GUI.DrawTexture(r, plank, ScaleMode.StretchToFill);
             var st = new GUIStyle(big) { fontSize = Mathf.RoundToInt(bh * 0.4f * sc) };
             st.normal.textColor = won ? new Color(0.2f, 0.5f, 0.15f) : new Color(0.6f, 0.12f, 0.08f);
-            GUI.Label(new Rect(r.x, r.y - r.height * 0.06f, r.width, r.height), Ar.T(won ? Ar.Won : Ar.Lost), st);
+            GUI.Label(new Rect(r.x, r.y - r.height * 0.06f, r.width, r.height), Ar.T(draw ? Ar.Draw : won ? Ar.Won : Ar.Lost), st);
             GUI.color = old;
             return cy + bh * 0.7f;
         }
@@ -107,7 +107,7 @@ namespace Sheytoonak.Prototype
         void OnTaken(Side side, int w, int v) { gainWindow = w; gainValue = v; gainSide = side; gainUntil = Time.time + 1.3f; }
         void OnPop(string icon, Side side, DuelManager.PopKind kind) { popIcon = icon; popSide = side; popKind = kind; popUntil = Time.time + PopSeconds; }
         void OnToast(string t, float s) { toast = t; toastUntil = Time.time + s; }
-        void OnFinished(Side winner, bool iWon) { ended = true; won = iWon; endedAt = Time.time; bannerAt = -10f; }
+        void OnFinished(Side winner, bool iWon) { ended = true; won = iWon; draw = duel.Rules != null && duel.Rules.Draw; endedAt = Time.time; bannerAt = -10f; }
 
         void OnGUI()
         {

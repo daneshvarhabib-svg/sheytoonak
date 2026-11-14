@@ -66,7 +66,9 @@ namespace Sheytoonak
         void OnFinished(Side winner, bool iWon)
         {
             Switch(null);
-            var c = iWon ? stingWin : stingLose;
+            // a draw (user 2026-11-14): neither sting, the lobby tune comes back
+            bool draw = duel != null && duel.Rules != null && duel.Rules.Draw;
+            var c = draw ? null : iWon ? stingWin : stingLose;
             if (c != null) sting.PlayOneShot(c, volume);
             lobbyAt = Time.unscaledTime + (c != null ? c.length : 0f) + 0.5f; // the lobby tune waits for the sting
         }

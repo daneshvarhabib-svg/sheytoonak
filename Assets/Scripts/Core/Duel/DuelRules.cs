@@ -381,22 +381,38 @@ namespace Sheytoonak.Core.Duel
 
             Current = Current == Side.Left ? Side.Right : Side.Left;
             Turn++;
-            if (Turn > MaxTurns) { Finish(Windows[0] >= Windows[1] ? Side.Left : Side.Right, "turn cap"); return; }
+            if (Turn > MaxTurns) { if (Windows[0] == Windows[1]) FinishDraw("turn cap"); else Finish(Windows[0] > Windows[1] ? Side.Left : Side.Right, "turn cap"); return; }
             ActionsLeft = 2;
             int c = (int)Current;
             if (RageEnabled && !RageReady[c] && --RageTimer[c] <= 0) { RageReady[c] = true; RageGained?.Invoke(Current); }
             TurnStarted?.Invoke(Current, Turn, ActionsLeft);
         }
 
-        /// <summary>The 4-minute match clock ran out: the side with more windows wins (a tie goes the same way as the turn cap).</summary>
+        /// <summary>The 4-minute match clock ran out: the side with more windows wins; equal windows = a draw.</summary>
         public void TimeUp()
         {
             if (Finished) return;
-            Finish(Windows[0] >= Windows[1] ? Side.Left : Side.Right, "time up");
+            // User (2026-11-14): «مساوی ای که بر اساس زمان بوده مساوی میمونه و هرکسی خرده شیشه های خودش رو بدست میاره ولی فحش نه
+            // کم نه زیاد میشه براش». ⚠️ until then a tie on time went to the left side.
+            if (Windows[0] == Windows[1]) FinishDraw("time up");
+            else Finish(Windows[0] > Windows[1] ? Side.Left : Side.Right, "time up");
         }
 
         /// <summary>A real turn was played (not timed out): resets the timeout streak of that side.</summary>
         public void NoteActivity(Side s) => Timeouts[(int)s] = 0;
+
+        /// <summary>True when the duel ended level (on time or at the turn cap): nobody won.</summary>
+        public bool Draw { get; private set; }
+
+        void FinishDraw(string reason)
+        {
+            Finished = true;
+            Draw = true;
+            Winner = null;
+            FinishReason = reason;
+            KickInFlight = false;
+            Ended?.Invoke(Side.Left, reason); // ⚠️ the side means nothing on a draw: listeners read Draw
+        }
 
         void Finish(Side winner, string reason)
         {
@@ -410,6 +426,7 @@ namespace Sheytoonak.Core.Duel
         /// <summary>Shards and curses after the duel (SCENARIO §2): loser's round shards go to the winner.</summary>
         public (int shards, int curseDelta) RewardFor(Side s)
         {
+            if (Finished && Draw) return (Shards[(int)s], 0); // a draw: each keeps its own shards, curses unchanged
             if (!Finished || Winner == null) return (0, 0);
             bool won = Winner == s;
             int shards = won ? Shards[0] + Shards[1] : 0;
