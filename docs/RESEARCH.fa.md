@@ -243,3 +243,25 @@
 **تصمیمِ کاربر (۲۳ آبان):** فعلاً هیچ‌کدام. پ۳۲ بعداً ساخته می‌شود، وقتی تصویرهایش آماده شد.
 
 **منابع:** [Supercell — Get ready for ranked update](https://supercell.com/en/games/clashofclans/blog/release-notes/get-ready-for-ranked-update) · [Pocket Gamer — Revenge button makes a return](https://www.pocketgamer.com/clash-of-clans/revenge-button-makes-a-return) · [Lootbar — How the new revenge system works](https://www.lootbar.gg/blog/en/how-does-the-new-revenge-system-work-in-clash-of-clans.html) · [esports.net — Scenery in Clash of Clans](https://www.esports.net/news/mobile-games/clash-of-clans-scenery/) · [Charlie Intel — How to change Home Village Scenery](https://charlieintel.com/games/how-to-change-home-village-scenery-in-clash-of-clans-211174)
+
+## پیشنهادهای روزِ ۱۱ (۲۴ آبان) — زاویه: لانچ در جهانِ عرب (رمضان و سافت‌لانچ)
+
+### پ۳۳. «سافت‌لانچ» در دو کشورِ کوچکِ عرب‌زبان پیش از همه‌جا
+- **در منبع:** سوپرسل هر بازی را اول فقط در چند کشور منتشر می‌کند و ماندگاریِ روزِ ۱/۷/۳۰ را می‌سنجد؛ Brawl Stars ۵۴۴ روز در این حالت ماند. درسِ Squad Busters: یک ماه کم است، ماندگاریِ روزِ ۳۰ و اقتصاد سنجیده نشد.
+- **پیش ما:** اول فقط در دو کشورِ کوچک (مثلاً اردن و کویت؛ هر دو لهجه‌ی نزدیک)، حداقل ۶ هفته؛ معیارِ رفتن به همه‌جا: ماندگاریِ روزِ ۱ و ۷ و ۳۰ و چند دوئل در روز. بی‌هزینه‌ی تبلیغ، فقط با فهرستِ فروشگاه. به سنجشِ ساده نیاز دارد (کار ۹ِ `LAUNCH.fa.md`).
+- **هزینه:** کدِ کم (رویدادهای سنجش)؛ بیشترش صبر است.
+- **ریسک:** کم؛ تنها هزینه، زمان.
+
+### پ۳۴. «سفره‌ی رمضان»: ۳۰ هدیه‌ی روزانه و دوئلِ پس از افطار
+- **در منبع:** بازی‌هایِ منطقه در رمضان هدیه‌ی ورودِ روزانه، تزئینِ فصلی و پیشنهادِ ویژه می‌گذارند؛ Babil Games در ۲۰۲۱ از این راه ۶٪ کاربرِ روزانه‌ی بیشتر گزارش کرد. گوگل هم توصیه می‌کند جایزه به کارِ روزانه بسته باشد نه بازیِ طولانی.
+- **پیش ما:** یک ماه با ۳۰ خانه: هر روز یک دوئل = یک خانه (خرده‌شیشه، کیسه، روزِ آخر یک قهرمانِ ظاهرِ ویژه). صحنه شب می‌شود با فانوس و ریسه‌ی چراغ (بی‌نوشته و بی‌نشانِ مذهبی)، ساکن‌ها به‌جای فحش تعارفِ قطایف می‌کنند. روی «رنگِ محله» (پ۳۲) سوار می‌شود. تاریخِ رمضانِ ۲۰۲۷ از گوشی (تقویمِ هجری) خوانده می‌شود، بی‌سرور.
+- **هزینه:** متوسط (تصویرِ صحنه‌ی شب + چند فریم)؛ منطقِ ۳۰ خانه ساده.
+- **ریسک:** حساسیتِ فرهنگی: فحش‌ها در این ماه خاموش یا ملایم، هیچ نمادِ مذهبی و هیچ نامِ خدا (قاعده‌ی پروژه).
+
+### پ۳۵. تماشای دوئلِ دیگران (پخشِ دوباره‌ی بهترین دوئلِ روز)
+- **در منبع:** مخاطبِ منطقه تماشای بازیِ دیگران را هم دوست دارد (WOLF Qanawat: تماشا + جایزه‌ی تماشاگر)؛ کلش رویال «تلویزیونِ رویال» دارد.
+- **پیش ما:** بی‌سرور: «بهترین دوئلِ خودت» (بیشترین شیشه در یک نوبت) ذخیره و از صفحه‌ی خانه دوباره پخش می‌شود (هسته‌ی Core قطعی است: بذر + ضربه‌ها). با سرور (بعد از خرید): بهترین دوئلِ روزِ همه.
+- **هزینه:** متوسط (ضبط و پخشِ قطعی).
+- **ریسک:** کم؛ نسخه‌ی همگانی منتظرِ سرور.
+
+**منابع:** [a16z — Mobile game soft launch](https://a16z.com/mobile-game-soft-launch/) · [Game World Observer — Squad Busters soft launch](https://gameworldobserver.com/2024/05/17/squad-busters-5-million-downloads-fastest-supercell-game) · [PocketGamer.biz — Ramadan, the hottest month for mobile games in MENA](https://www.pocketgamer.biz/what-makes-ramadan-the-hottest-month-for-mobile-games-in-the-mena) · [Tamatem — Go global at Ramadan](https://tamatem.co/news/go-global-at-ramadan-tips-for-engaging-players-during-this-special-month/) · [PocketGamer.biz — WOLF Qanawat](https://www.pocketgamer.biz/wolf-qanawat-on-cutting-churn-with-games-the-3-persona-system-and-building-for-a-majlis-first-audience/)
