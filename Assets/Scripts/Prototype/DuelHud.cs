@@ -65,7 +65,7 @@ namespace Sheytoonak.Prototype
                 GUI.matrix = m;
             }
             // two pennants on poles (only around the old plank; the painted emblem has its own laurels)
-            bool painted = Resources.Load<Texture2D>(won ? "Art/UI/win_board" : "Art/UI/lose_board") != null;
+            bool painted = Resources.Load<Texture2D>(BoardPath()) != null;
             for (int sgn = -1; sgn <= 1 && !painted; sgn += 2)
             {
                 float px = cx + sgn * bw * 0.52f * sc, wave = Mathf.Sin(t * 5f + sgn) * 6f * u;
@@ -76,7 +76,7 @@ namespace Sheytoonak.Prototype
             // the painted emblem (user 2026-11-12, after «این گرافیک پیروزی … حس موفقیت نمیده و زشته»): a gold star with
             // the ball and laurels for a win, a dented shield with a deflated ball under a rain cloud for a loss; the
             // word is written on its empty ribbon. Without the picture, the old plank below.
-            var board = Resources.Load<Texture2D>(won ? "Art/UI/win_board" : "Art/UI/lose_board");
+            var board = Resources.Load<Texture2D>(BoardPath());
             if (board != null)
             {
                 float h = Screen.height * 0.40f * sc, w = h * board.width / board.height;
@@ -107,6 +107,9 @@ namespace Sheytoonak.Prototype
         void OnTaken(Side side, int w, int v) { gainWindow = w; gainValue = v; gainSide = side; gainUntil = Time.time + 1.3f; }
         void OnPop(string icon, Side side, DuelManager.PopKind kind) { popIcon = icon; popSide = side; popKind = kind; popUntil = Time.time + PopSeconds; }
         void OnToast(string t, float s) { toast = t; toastUntil = Time.time + s; }
+        // a draw has its own board when painted (user 2026-11-14: «یه تصویر جدا می‌خواد و یه موسیقی جدا»), the losing one until then
+        string BoardPath() => draw && Resources.Load<Texture2D>("Art/UI/draw_board") != null ? "Art/UI/draw_board" : won ? "Art/UI/win_board" : "Art/UI/lose_board";
+
         void OnFinished(Side winner, bool iWon) { ended = true; won = iWon; draw = duel.Rules != null && duel.Rules.Draw; endedAt = Time.time; bannerAt = -10f; }
 
         void OnGUI()

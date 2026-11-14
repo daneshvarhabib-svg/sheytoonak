@@ -18,7 +18,7 @@ namespace Sheytoonak
         // the old bed fades out completely, a short breath, then the new one rises from silence.
         public float fadeOutSeconds = 1.2f, gapSeconds = 0.35f, fadeInSeconds = 2.5f;
 
-        AudioClip duelLoop, tensionLoop, stingWin, stingLose, lobbyLoop;
+        AudioClip duelLoop, tensionLoop, stingWin, stingLose, stingDraw, lobbyLoop;
         AudioSource a, b, sting;   // a/b alternate as the music bed, sting is one-shot
         AudioSource live;          // the bed currently fading in / playing
         DuelManager duel;
@@ -30,6 +30,7 @@ namespace Sheytoonak
             tensionLoop = Resources.Load<AudioClip>("Audio/Music/tension_loop");
             stingWin = Resources.Load<AudioClip>("Audio/Music/sting_win");
             stingLose = Resources.Load<AudioClip>("Audio/Music/sting_lose");
+            stingDraw = Resources.Load<AudioClip>("Audio/Music/sting_draw"); // a draw's own sting (user 2026-11-14); silent until it exists
             lobbyLoop = Resources.Load<AudioClip>("Audio/Music/lobby_loop");
             a = Bed(); b = Bed();
             sting = gameObject.AddComponent<AudioSource>();
@@ -66,9 +67,9 @@ namespace Sheytoonak
         void OnFinished(Side winner, bool iWon)
         {
             Switch(null);
-            // a draw (user 2026-11-14): neither sting, the lobby tune comes back
+            // a draw (user 2026-11-14): its own sting, never the win or lose one
             bool draw = duel != null && duel.Rules != null && duel.Rules.Draw;
-            var c = draw ? null : iWon ? stingWin : stingLose;
+            var c = draw ? stingDraw : iWon ? stingWin : stingLose;
             if (c != null) sting.PlayOneShot(c, volume);
             lobbyAt = Time.unscaledTime + (c != null ? c.length : 0f) + 0.5f; // the lobby tune waits for the sting
         }
