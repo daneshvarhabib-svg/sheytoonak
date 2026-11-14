@@ -478,9 +478,19 @@ namespace Sheytoonak.Prototype
             // ⚠️ user (2026-11-12, phone): «کبوتر کامل حرکت نمیکنه». It flew -7..+7 m and popped in and out mid-picture;
             // now it crosses edge to edge (same speed, so the same time over the kickers), the flock trailing it.
             float edge = StreetLife.OffScreenX(z, 0.6f + 0.55f * ((birds + 1) / 2), 7f), secs = 1.1f * edge / 7f, waves = 20f * edge / 7f;
+            // ⚠️ user (2026-11-14): «قدرت گوز مگه قرار نبود جلوی پرنده‌ها رو بگیره؟ … وقتی می‌گوزه پرنده‌ها که وارد کادر می‌شن
+            // همون اول شهید شن و بیفتن زمین و شهرداری هی بیاد جمعشون کنه». While a fart protection is up the birds choke
+            // a metre and a half into the picture and drop; each corpse gets the sweeper.
+            bool choke = duel.Rules != null && duel.Rules.ActiveProtection(Effect.Chance) == "fart";
             for (float t = 0f; t < 1f && !pigeonDown; t += Time.deltaTime / secs)
             {
                 pigeon.transform.position = new Vector3(Mathf.Lerp(-edge, edge, t), y + Mathf.Sin(t * waves) * 0.15f, z);
+                if (choke && pigeon.transform.position.x > -edge + 1.6f)
+                {
+                    for (int i = 0; i < birds - 1 && i < flock.Count; i++) if (flock[i].activeSelf) StartCoroutine(ChokeFall(flock[i], i * 0.12f));
+                    StartCoroutine(ChokeFall(pigeon, 0f));
+                    yield break;
+                }
                 for (int i = 0; i < birds - 1 && i < flock.Count; i++)
                 {
                     float lag = 0.55f * (i / 2 + 1), dy = (i % 2 == 0 ? 0.55f : -0.45f) * (i / 2 + 1);
@@ -522,6 +532,27 @@ namespace Sheytoonak.Prototype
                 yield return null;
             }
             for (int i = 0; i < n && i < flock.Count; i++) flock[i].SetActive(false);
+        }
+
+        /// <summary>A bird that flew into the fart: a copy coughs, tumbles to the road and lies there for the sweeper.</summary>
+        IEnumerator ChokeFall(GameObject bird, float delay)
+        {
+            var copy = Instantiate(bird);
+            bird.SetActive(false);
+            if (delay > 0f) yield return new WaitForSeconds(delay);
+            var t = copy.transform; Vector3 from = t.position; float ground = 0.12f;
+            // a stall in the air first, then down
+            for (float k = 0f; k < 0.25f && t != null; k += Time.deltaTime) { t.position = from + Vector3.up * Mathf.Sin(k / 0.25f * Mathf.PI) * 0.15f; yield return null; }
+            for (float k = 0f; k < 1f && t != null; k += Time.deltaTime / 0.6f)
+            {
+                t.position = new Vector3(from.x + k * 0.5f, Mathf.Lerp(from.y, ground, k * k), from.z);
+                t.rotation = Quaternion.Euler(0f, 0f, k * 450f);
+                yield return null;
+            }
+            if (t == null) yield break;
+            t.rotation = Quaternion.Euler(0f, 0f, 90f); // on its side
+            foreach (var f in copy.GetComponentsInChildren<MonoBehaviour>()) if (f.GetType().Name == "Frames") f.enabled = false; // wings stop
+            StartCoroutine(PigeonCorpse(t));
         }
 
         IEnumerator PigeonCorpse(Transform corpse)
@@ -757,7 +788,8 @@ namespace Sheytoonak.Prototype
         {
             var hero = Heroes[(int)s] != null ? Heroes[(int)s][0] : null;
             var go = PoisonProps.Antidote(a, hero != null ? hero.position : foot.StrikeSpot, mapper.FacadeZ);
-            Destroy(go, 2.5f);
+            if (a.Id == "fart") StartCoroutine(FartLingers(go)); // the cloud hangs while it protects (the birds choke in it)
+            else Destroy(go, 2.5f);
             // vehicles the antidote just lifted (OnExpired parked them in `lifted`): the tow truck or Um al-Arabiyat takes them
             if (a.Id == "nails" || a.Id == "complaint")
             {
@@ -765,6 +797,17 @@ namespace Sheytoonak.Prototype
                 lifted.Clear();
             }
             if (a.Id == "plank") StartCoroutine(SuckPuddle());
+        }
+
+        IEnumerator FartLingers(GameObject cloud)
+        {
+            float t0 = Time.time;
+            while (cloud != null && (Time.time - t0 < 2.5f || (duel.Rules != null && !duel.Rules.Finished && duel.Rules.ActiveProtection(Effect.Chance) == "fart")))
+            {
+                cloud.transform.localScale = Vector3.one * (1f + 0.05f * Mathf.Sin(Time.time * 2f)); // a slow, smelly wobble
+                yield return null;
+            }
+            if (cloud != null) Destroy(cloud);
         }
 
         // ------------------------------------------------------------------ antidote scenes (user 2026-11-13)

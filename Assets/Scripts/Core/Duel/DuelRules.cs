@@ -192,6 +192,14 @@ namespace Sheytoonak.Core.Duel
             return m;
         }
 
+        /// <summary>The id of an antidote protecting either side against <paramref name="e"/> right now, or null (the stage
+        /// shows it: while the fart hangs in the air every pigeon that flies in chokes and drops, user 2026-11-14).</summary>
+        public string ActiveProtection(Effect e)
+        {
+            foreach (var list in protections) foreach (var a in list) if (a.Tool.Effect == e && a.TurnsLeft > 0) return a.Tool.Id;
+            return null;
+        }
+
         int Protection(Side s, Effect e)
         {
             int best = 0;

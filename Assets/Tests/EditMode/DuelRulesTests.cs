@@ -14,6 +14,17 @@ namespace Sheytoonak.Tests
             return new DuelRules(rows, shards, new[] { h[0], h[1], h[2] }, new[] { h[3], h[4], h[0] }, seed);
         }
 
+        // User (2026-11-14): «قدرت گوز مگه قرار نبود جلوی پرنده‌ها رو بگیره؟». The stage asks the rules whether a fart is up.
+        [Test]
+        public void A_fart_shows_as_the_active_protection_against_the_pigeon()
+        {
+            var r = Make();
+            r.Start(Side.Right);
+            Assert.IsNull(r.ActiveProtection(Effect.Chance));
+            Assert.AreEqual(ActionReject.None, r.Antidote(Side.Right, StarterHeroes.All[4].Antidote));
+            Assert.AreEqual("fart", r.ActiveProtection(Effect.Chance));
+        }
+
         // User (2026-11-13): «تایم کلی بازی ۴ دقیقه تنظیم شه و ما تایمر رو هم ببینیم».
         [Test]
         public void The_match_clock_is_four_minutes_and_time_up_ends_the_duel()
