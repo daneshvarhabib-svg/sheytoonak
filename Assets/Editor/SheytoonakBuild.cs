@@ -292,6 +292,9 @@ namespace Sheytoonak.EditorTools
                     int cap = webCaps ? (hero ? 384 : house ? 1280 : 640) : (hero ? 512 : house ? 2048 : 1024);
                     float k = Mathf.Min(1f, cap / (float)Mathf.Max(src.width, src.height));
                     int w = Mathf.Max(4, Mathf.RoundToInt(src.width * k)), h = Mathf.Max(4, Mathf.RoundToInt(src.height * k));
+                    // ⚠️ run 7: crunch took only 81 of 276 pictures -- it needs both sides a multiple of 4 (the block size).
+                    // On the web build the size is rounded to one (at most 3 px off, the sprites read the real size).
+                    if (webCaps) { w = Mathf.Max(4, (w + 2) / 4 * 4); h = Mathf.Max(4, (h + 2) / 4 * 4); }
                     var rt = RenderTexture.GetTemporary(w, h, 0, RenderTextureFormat.ARGB32, RenderTextureReadWrite.sRGB);
                     var prev = RenderTexture.active;
                     Graphics.Blit(src, rt);
