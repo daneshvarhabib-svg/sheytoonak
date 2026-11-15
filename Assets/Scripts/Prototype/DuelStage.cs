@@ -567,29 +567,44 @@ namespace Sheytoonak.Prototype
             blood.enabled = StreetLife.ShowBlood;
             for (float t = 0f; t < 0.6f; t += Time.deltaTime) { blood.transform.localScale = Vector3.one * Mathf.Lerp(0.3f, 1.4f, t / 0.6f) / Mathf.Max(0.01f, corpse.lossyScale.x); yield return null; }
             yield return new WaitForSeconds(1.2f);
-            var truckT = Resources.Load<Texture2D>("Art/Props/sweeper");
-            if (truckT == null)
+            if (Resources.Load<Texture2D>("Art/Props/sweeper") == null)
             {
                 // no sweeper picture yet: the bird just fades from the road
                 for (float t = 0f; t < 1f; t += Time.deltaTime) { foreach (var r in corpse.GetComponentsInChildren<SpriteRenderer>()) r.color = new Color(1f, 1f, 1f, 1f - t); yield return null; }
                 Destroy(corpse.gameObject);
                 yield break;
             }
+            // ⚠️ user (2026-11-15): «شدت ماشین هایی که میرن جنازه کفتر جمع کنن موقع گوز خیلی زیاده؛ نهایت یک ماشین جنازه جمع کن در
+            // کادر باشه هر لحظه». One sweeper at a time: it picks up every corpse ahead of it in one pass; a corpse behind it
+            // waits for the next run, which starts only after this truck has left.
+            corpses.Add(corpse);
+            if (!sweeping) StartCoroutine(SweeperRun());
+        }
+
+        readonly List<Transform> corpses = new List<Transform>();
+        bool sweeping;
+
+        IEnumerator SweeperRun()
+        {
+            sweeping = true;
+            corpses.RemoveAll(c => c == null);
+            if (corpses.Count == 0) { sweeping = false; yield break; }
+            var first = corpses[0];
+            var truckT = Resources.Load<Texture2D>("Art/Props/sweeper");
             // painted facing left like the ambulance; it comes from the far side, stops with its brush over the bird, sweeps
-            bool fromLeft = corpse.position.x > 0f;
+            bool fromLeft = first.position.x > 0f;
             var sp = Sprite.Create(truckT, new Rect(0, 0, truckT.width, truckT.height), new Vector2(0.5f, 0f), 100f);
             var truck = new GameObject("Sweeper").AddComponent<SpriteRenderer>();
             truck.sprite = sp;
             float k = 2.4f / Mathf.Max(0.01f, sp.bounds.size.y);
             truck.transform.localScale = new Vector3(fromLeft ? -k : k, k, k);
-            float z = corpse.position.z - 0.6f;
+            float z = first.position.z - 0.6f;
             // the painted brush of sweeper.png sits at 11.9 % of the width from the front and 13.4 % up from the wheels'
             // line, 23.2 % of the width wide (cartoon repaint 2026-11-12, measured on the picture; was 11.8/9/22.5); the
             // separate sweeper_brush.png is laid exactly over it
             var brushLocal = new Vector3(sp.bounds.size.x * (0.119f - 0.5f), sp.bounds.size.y * 0.134f, -0.01f);
             truck.gameObject.AddComponent<UnityEngine.Rendering.SortingGroup>(); // body, brush and wheels as one picture by distance (user 2026-11-13)
-            float stopX = corpse.position.x - brushLocal.x * truck.transform.localScale.x; // brush right over the bird
-            float sEdge = StreetLife.OffScreenX(z, sp.bounds.size.x * k * 0.5f, 26f); // from the picture's edge (phone is wider)
+                        float sEdge = StreetLife.OffScreenX(z, sp.bounds.size.x * k * 0.5f, 26f); // from the picture's edge (phone is wider)
             float x0 = fromLeft ? -sEdge : sEdge;
             truck.transform.position = new Vector3(x0, 0f, z);
             var brushT = Resources.Load<Texture2D>("Art/Props/sweeper_brush");
@@ -639,28 +654,49 @@ namespace Sheytoonak.Prototype
                 brushR.flipX = ((int)(Time.time * speed)) % 2 == 0;
                 var l = brushR.transform.localScale; brushR.transform.localScale = new Vector3(Mathf.Abs(l.y) * (1f + 0.04f * Mathf.Sin(Time.time * speed * 3f)), l.y, l.z);
             };
-            for (float t = 0f; t < 1f; t += Time.deltaTime / 2.2f)
+            float dir = fromLeft ? 1f : -1f; // the way it drives
+            float brushOff = brushLocal.x * truck.transform.localScale.x; // brush x relative to the truck
+            while (true)
             {
-                float nx0 = Mathf.Lerp(x0, stopX, 1f - (1f - t) * (1f - t)); roll(truck.transform.position.x, nx0);
-                truck.transform.position = new Vector3(nx0, 0f, z);
-                spin(14f);
-                yield return null;
+                corpses.RemoveAll(c => c == null);
+                // the nearest corpse still ahead of the brush
+                Transform target = null; float best = float.MaxValue, bx = truck.transform.position.x + brushOff;
+                foreach (var c in corpses)
+                {
+                    float d = (c.position.x - bx) * dir;
+                    if (d > -0.3f && d < best) { best = d; target = c; }
+                }
+                if (target == null) break;
+                float sx0 = truck.transform.position.x, stopX = target.position.x - brushOff;
+                float secs = Mathf.Clamp(Mathf.Abs(stopX - sx0) / 5f, 0.6f, 2.2f);
+                for (float t = 0f; t < 1f; t += Time.deltaTime / secs)
+                {
+                    float nx0 = Mathf.Lerp(sx0, stopX, 1f - (1f - t) * (1f - t)); roll(truck.transform.position.x, nx0);
+                    truck.transform.position = new Vector3(nx0, 0f, z);
+                    spin(14f);
+                    yield return null;
+                }
+                for (float t = 0f; t < 1.0f; t += Time.deltaTime)
+                {
+                    spin(20f);
+                    if (t > 0.4f) // everything under the brush goes
+                        for (int i = corpses.Count - 1; i >= 0; i--)
+                            if (corpses[i] != null && Mathf.Abs(corpses[i].position.x - (truck.transform.position.x + brushOff)) < 0.7f) { Destroy(corpses[i].gameObject); corpses.RemoveAt(i); }
+                    yield return null;
+                }
             }
-            for (float t = 0f; t < 1.2f; t += Time.deltaTime)
-            {
-                spin(20f);
-                if (corpse != null && t > 0.5f) { Destroy(corpse.gameObject); corpse = null; }
-                yield return null;
-            }
-            float xe = fromLeft ? sEdge : -sEdge;
+            float xs = truck.transform.position.x, xe = fromLeft ? sEdge : -sEdge;
             for (float t = 0f; t < 1f; t += Time.deltaTime / 2.4f)
             {
-                float nx1 = Mathf.Lerp(stopX, xe, t * t); roll(truck.transform.position.x, nx1);
+                float nx1 = Mathf.Lerp(xs, xe, t * t); roll(truck.transform.position.x, nx1);
                 truck.transform.position = new Vector3(nx1, 0f, z);
                 spin(14f);
                 yield return null;
             }
             Destroy(truck.gameObject);
+            sweeping = false;
+            corpses.RemoveAll(c => c == null);
+            if (corpses.Count > 0) StartCoroutine(SweeperRun()); // the ones it drove away from
         }
 
         void OnPigeonHit(Vector3 at)
