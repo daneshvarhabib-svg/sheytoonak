@@ -1,0 +1,43 @@
+RALLY 4.98 kick Right from (0.00, 0.11, 0.45) v=(13.06, 6.59, 15.69)
+RALLY 4.98 ground (0.00, 0.00, 0.45) active=True returning=False bounces=0
+RALLY 5.76 facade (10.36, 2.17, 13.00) active=True returning=False hitWindow=-1 window=15
+RALLY 6.92 finish hits=0 window=15 rolls=False at (10.36, 2.17, 12.89)
+RALLY 8.97 kick Left from (0.00, 0.11, 0.45) v=(22.32, 5.54, 15.69)
+RALLY 8.98 ground (0.00, 0.00, 0.45) active=True returning=False bounces=0
+RALLY 9.76 facade (17.70, 1.34, 13.00) active=True returning=False hitWindow=-1 window=-1
+RALLY 11.62 ground (3.89, 0.00, 2.06) active=True returning=True bounces=0
+RALLY 12.82 ground (1.37, 0.00, -1.54) active=True returning=True bounces=1
+RALLY 13.07 rekick#1 Left from (1.18, 0.72, -1.82) q=0.60 v=(25.98, 4.88, 18.72)
+RALLY 13.86 facade (21.60, 1.45, 13.00) active=True returning=False hitWindow=-1 window=-1
+RALLY 15.70 ground (4.81, 0.00, 1.61) active=True returning=True bounces=0
+RALLY 16.92 ground (-2.94, 0.00, -1.87) active=True returning=True bounces=1
+RALLY 17.18 killed PassedPlayer at (-4.27, 0.74, -2.47)
+RALLY 17.68 ground (-6.55, 0.00, -3.49) active=True returning=True bounces=2
+RALLY 18.16 ground (-8.76, 0.00, -4.49) active=True returning=True bounces=3
+RALLY 18.48 ground (-10.24, 0.00, -5.15) active=True returning=True bounces=4
+RALLY 18.80 rolling (-11.82, 0.11, -5.86)
+RALLY 19.12 stuck timer
+RALLY 19.12 finish hits=1 window=-1 rolls=True at (-13.20, 0.11, -6.48)
+RALLY 22.82 kick Right from (0.00, 0.11, 0.45) v=(-15.83, 6.45, 15.69)
+RALLY 22.82 ground (0.00, 0.00, 0.45) active=True returning=False bounces=0
+RALLY 23.60 facade (-12.56, 2.06, 13.00) active=True returning=False hitWindow=-1 window=-1
+RALLY 25.46 ground (-2.76, 0.00, 1.89) active=True returning=True bounces=0
+RALLY 25.46 rekick#1 Right from (-2.68, 0.24, 1.83) q=1.00 v=(-15.59, 12.08, 13.96)
+RALLY 26.26 facade (-15.03, 6.65, 13.00) active=True returning=False hitWindow=-1 window=-1
+RALLY 28.20 ground (-2.47, 0.00, 1.24) active=True returning=True bounces=0
+RALLY 28.20 rekick#2 Right from (-2.37, 0.27, 1.18) q=1.00 v=(-16.43, 12.49, 14.78)
+RALLY 29.76 ground (-8.25, 0.00, 4.58) active=True returning=False bounces=0
+RALLY 30.96 ground (-8.12, 0.00, 5.47) active=True returning=False bounces=0
+RALLY 31.33 finish hits=2 window=-1 rolls=True at (-8.06, 0.74, 5.91)
+RALLY 36.31 kick Right from (0.00, 0.11, 0.45) v=(22.32, 6.44, 15.69)
+RALLY 36.32 ground (0.00, 0.00, 0.45) active=True returning=False bounces=0
+RALLY 37.10 facade (17.70, 2.05, 13.00) active=True returning=False hitWindow=-1 window=-1
+RALLY 38.96 ground (3.89, 0.00, 1.85) active=True returning=True bounces=0
+RALLY 40.24 ground (-3.12, 0.00, -2.01) active=True returning=True bounces=1
+RALLY 40.86 killed PassedPlayer at (-3.84, 0.55, -2.41)
+RALLY 41.04 ground (-4.02, 0.00, -2.51) active=True returning=True bounces=2
+RALLY 41.52 ground (-4.91, 0.00, -3.00) active=True returning=True bounces=3
+RALLY 41.82 ground (-5.63, 0.00, -3.39) active=True returning=True bounces=4
+RALLY 42.14 rolling (-6.42, 0.11, -3.83)
+RALLY 42.41 stuck timer
+RALLY 42.41 finish hits=0 window=-1 rolls=True at (-6.99, 0.11, -4.14)
