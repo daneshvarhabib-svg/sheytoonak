@@ -265,3 +265,25 @@
 - **ریسک:** کم؛ نسخه‌ی همگانی منتظرِ سرور.
 
 **منابع:** [a16z — Mobile game soft launch](https://a16z.com/mobile-game-soft-launch/) · [Game World Observer — Squad Busters soft launch](https://gameworldobserver.com/2024/05/17/squad-busters-5-million-downloads-fastest-supercell-game) · [PocketGamer.biz — Ramadan, the hottest month for mobile games in MENA](https://www.pocketgamer.biz/what-makes-ramadan-the-hottest-month-for-mobile-games-in-the-mena) · [Tamatem — Go global at Ramadan](https://tamatem.co/news/go-global-at-ramadan-tips-for-engaging-players-during-this-special-month/) · [PocketGamer.biz — WOLF Qanawat](https://www.pocketgamer.biz/wolf-qanawat-on-cutting-churn-with-games-the-3-persona-system-and-building-for-a-majlis-first-audience/)
+
+## پیشنهادهای روزِ ۱۲ (۲۵ آبان) — زاویه: «سطحِ بالا باید فرق ببیند» (Brawl Stars و Hearthstone)
+
+### پ۳۶. «حرکتِ ویژه» در سطحِ ۴: یک بار در هر دوئل
+- **در منبع:** در Brawl Stars هر قهرمان در سطحِ ۷ یک «گجت» می‌گیرد: یک کارِ فعالِ محدود (چند بار در هر بازی) که بازی را برایش عوض می‌کند؛ در سطحِ ۹ یک توانِ همیشگی.
+- **پیش ما:** وقتی قهرمانی به سطحِ ۴ رسید، یک دکمه‌ی کوچک زیرِ عکسش، یک بار در هر دوئل، بی‌هزینه‌ی کنش: ابوشحاطه دمپایی پرت می‌کند و توپِ برگشتی را یک بار دیگر می‌زند (ضربه‌ی چهارم)؛ ام‌العربیات یک بار پنجره‌ی خودی را با چادر می‌پوشاند؛ حماده یک لحظه وقتِ نوبت را ۵ ثانیه بیشتر می‌کند… هر قهرمان یکی. سطحِ ۵ = همان حرکت دو بار.
+- **هزینه:** متوسط (قانون + آزمون برایِ هر هشت + انیمیشنِ عروسکی که داریم).
+- **ریسک:** تعادل؛ بازیکنِ تازه در برابرِ ربات‌های سطح‌بالا ضعیف حس می‌کند → ربات تا مدتی حرکتِ ویژه نداشته باشد.
+
+### پ۳۷. «ظاهرِ طلایی» برای قهرمانِ سطحِ ۵ (فقط ظاهر)
+- **در منبع:** Hearthstone از هر کارت نسخه‌ی «طلایی» و «امضادار» دارد: همان کارت با قابِ متحرک و درخشش، بی‌هیچ اثری در بازی؛ از بسته یا رویداد می‌آید و قابلِ ساختن نیست.
+- **پیش ما:** قهرمانی که به سطحِ ۵ رسید یک قابِ طلایی در صفحه‌ی قهرمان‌ها و یک ردِّ درخشان پشتِ توپش در ضربه می‌گیرد؛ حریف هم می‌بیند («این یکی کارش را بلد است»). هیچ عددی عوض نمی‌شود.
+- **هزینه:** کم (قاب و یک ذره‌ی نور؛ تصویر لازم نیست).
+- **ریسک:** نزدیک به صفر.
+
+### پ۳۸. «قهرمانِ هفته»: یکی از هشت نفر هر هفته ارزان‌تر ارتقا می‌گیرد
+- **در منبع:** Brawl Stars و Clash Royale هر هفته/فصل روی چند شخصیت پیشنهادِ ویژه و رویداد می‌گذارند تا بازیکن قهرمانِ کم‌استفاده را هم امتحان کند.
+- **پیش ما:** صفحه‌ی خانه: «قهرمانِ این هفته: حماده» با ۳۰٪ تخفیفِ ارتقا و دو برابر کارتِ او در کیسه‌ها؛ هفته از رویِ تاریخ، برایِ همه یکی، بی‌سرور.
+- **هزینه:** کم.
+- **ریسک:** کم؛ فقط اقتصاد را در آزمونِ بسته بپاییم.
+
+**منابع:** [Supercell — Star Powers](https://support.supercell.com/brawl-stars/en/articles/star-powers-3.html) · [Brawl Stars wiki — gadgets (Mega Box)](https://brawlstars.fandom.com/wiki/Mega_Box) · [Blizzard support — Signature cards](https://support.blizzard.com/en/article/32545) · [esports.gg — Signature cards explained](https://esports.gg/news/hearthstone/new-hearthstone-signature-cards-explained/)
