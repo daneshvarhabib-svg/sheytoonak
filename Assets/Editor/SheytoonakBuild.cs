@@ -453,6 +453,70 @@ namespace Sheytoonak.EditorTools
             EditorApplication.Exit(code);
         }
 
+        /// <summary>
+        /// GameCI entry point for the web player that runs as a Telegram mini app (user 2026-11-15: «الآن بیا شروع کنیم بازی
+        /// رو روی مینی اپ تلگرام بالا آوردن؛ می‌خوام لانچ بازی اونجا باشه و بعداً که یوزر گرفتیم بیاریمش روی اپ مستقل»).
+        /// The page around the game is Assets/WebGLTemplates/Telegram. Settings are set here, not in the committed file,
+        /// so the Android build is untouched.
+        /// ⚠️ Gzip + decompression fallback: the host (GitHub Pages) does not send Content-Encoding for prebuilt .gz files,
+        /// so the loader unpacks in JavaScript. Brotli would be smaller but its JS fallback is slow on a phone.
+        /// ⚠️ Textures: the same ASTC precompress as Android. Telegram on phones has ASTC; a desktop browser without it
+        /// unpacks them to RGBA at load (slower start, more memory) -- the launch target is the phone.
+        /// </summary>
+        public static void BuildWebGLCI()
+        {
+            int code = 1;
+            try
+            {
+                var args = ParseArgs();
+                string path = args.TryGetValue("customBuildPath", out var p) && !string.IsNullOrEmpty(p) ? p : "Builds/WebGL/Sheytoonak";
+                CreatePrototypeScene();
+                if (EditorUserBuildSettings.activeBuildTarget != BuildTarget.WebGL &&
+                    !EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTargetGroup.WebGL, BuildTarget.WebGL))
+                    throw new Exception("could not switch to WebGL (is Web Build Support installed?)");
+                PlayerSettings.WebGL.template = "PROJECT:Telegram";
+                PlayerSettings.WebGL.compressionFormat = WebGLCompressionFormat.Gzip;
+                PlayerSettings.WebGL.decompressionFallback = true;
+                PlayerSettings.WebGL.nameFilesAsHashes = true; // a new build never meets an old file in Telegram's cache
+                PlayerSettings.WebGL.dataCaching = true;       // the second visit does not download the data again
+                PlayerSettings.WebGL.exceptionSupport = WebGLExceptionSupport.ExplicitlyThrownExceptionsOnly;
+                PlayerSettings.WebGL.initialMemorySize = 256;  // the scene loads every picture at start; growing from 32 MB stalls
+                PlayerSettings.WebGL.maximumMemorySize = 2048;
+                EditorUserBuildSettings.webGLBuildSubtarget = WebGLTextureSubtarget.ASTC;
+                ApplyIcons();
+                EditorPrefs.SetBool("kCompressTexturesOnImport", true);
+                if (Environment.GetEnvironmentVariable("SHEYTOONAK_NO_PRECOMPRESS") != "1") PrecompressResources();
+                Directory.CreateDirectory(path);
+                var report = BuildPipeline.BuildPlayer(new BuildPlayerOptions
+                {
+                    scenes = new[] { ScenePath },
+                    locationPathName = path,
+                    target = BuildTarget.WebGL,
+                    targetGroup = BuildTargetGroup.WebGL,
+                    options = BuildOptions.None
+                });
+                string index = Path.Combine(path, "index.html");
+                bool ok = report.summary.result == BuildResult.Succeeded && File.Exists(index);
+                long total = 0;
+                if (Directory.Exists(path))
+                    foreach (var f in Directory.GetFiles(path, "*", SearchOption.AllDirectories))
+                    {
+                        long len = new FileInfo(f).Length; total += len;
+                        Debug.Log("SHEYTOONAK WEB FILE " + f.Substring(path.Length) + " " + (len / 1048576f).ToString("0.0") + " MB");
+                    }
+                string line = $"SHEYTOONAK WEB BUILD {(ok ? "Succeeded" : "Failed")}: {report.summary.result}, {path}, " +
+                              $"{(total / 1048576f):0.0} MB on disk, {report.summary.totalErrors} error(s), {report.summary.totalTime}";
+                if (ok) Debug.Log(line); else Debug.LogError(line);
+                code = ok ? 0 : 1;
+            }
+            catch (Exception e)
+            {
+                Debug.LogException(e);
+                Debug.LogError("SHEYTOONAK WEB BUILD Failed with an exception");
+            }
+            EditorApplication.Exit(code);
+        }
+
         static Dictionary<string, string> ParseArgs()
         {
             var result = new Dictionary<string, string>();

@@ -1,0 +1,80 @@
+# The web build that runs as a Telegram mini app (user 2026-11-15: launch in Telegram first, the store app later).
+# Builds the Unity web player with the page in Assets/WebGLTemplates/Telegram and publishes it on GitHub Pages
+# (free for a public repository). One-time switch, by the repository owner: Settings > Pages > Source: Deploy from a
+# branch > gh-pages / (root). ⚠️ Not the "GitHub Actions" source: its github-pages environment only accepts deploys from
+# the default branch (main), and this work lives on claude/* branches.
+# Same Unity licence secrets as android-build.yml.
+name: Telegram web build
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, 'claude/**']
+    paths:
+      - 'Assets/**'
+      - 'Packages/**'
+      - 'ProjectSettings/**'
+      - '.github/workflows/telegram-web.yml'
+
+permissions:
+  contents: write # gh-pages (the published game) and ci-shots (the size list)
+
+concurrency:
+  group: telegram-web-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  web:
+    name: Build web player
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - name: Fail early if the licence secret is missing
+        env: { UNITY_LICENSE: "${{ secrets.UNITY_LICENSE }}" }
+        run: '[ -n "$UNITY_LICENSE" ] || { echo "::error title=Unity licence missing::add UNITY_LICENSE"; exit 1; }'
+      - uses: actions/checkout@v4
+      - uses: actions/cache@v4
+        with:
+          path: Library
+          key: Library-WebGL-${{ hashFiles('Packages/manifest.json', 'ProjectSettings/ProjectVersion.txt') }}
+          restore-keys: Library-WebGL-
+      - uses: jlumbroso/free-disk-space@v1.3.1
+      - uses: game-ci/unity-builder@4423ee75828dff56037d1d1cfdac6b68e3a6ba00 # v4.8.2, same pin as android-build.yml
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          targetPlatform: WebGL
+          buildName: Sheytoonak
+          buildMethod: Sheytoonak.EditorTools.SheytoonakBuild.BuildWebGLCI
+      - name: List the files and their sizes (what a player downloads)
+        run: |
+          sudo chown -R "$USER" build
+          mkdir -p report
+          ROOT=$(dirname "$(find build/WebGL -name index.html | head -1)")
+          echo "ROOT=$ROOT" >> "$GITHUB_ENV"
+          { echo "web root: $ROOT"; find "$ROOT" -type f -printf '%s %P\n' | sort -n | awk '{printf "%8.1f MB  %s\n", $1/1048576, $2}'; du -sh "$ROOT"; } | tee report/web-size.txt
+          grep -q 'Build/' report/web-size.txt || { echo '::error title=No web build::index.html or Build/ missing'; exit 1; }
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Sheytoonak-Web
+          path: ${{ env.ROOT }}
+          retention-days: 14
+      - name: Publish on the gh-pages branch (one commit, replaced every time so the repository does not grow)
+        env: { GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}" }
+        run: |
+          big=$(find "$ROOT" -type f -size +95M)
+          [ -z "$big" ] || { echo "::error title=File too large for GitHub::$big"; exit 1; }
+          cd "$ROOT"
+          touch .nojekyll
+          git init -q && git checkout -q -b gh-pages
+          git config user.email ci@sheytoonak && git config user.name "sheytoonak-ci"
+          git add -A && git commit -qm "web build ${GITHUB_RUN_NUMBER} (${GITHUB_SHA})"
+          git push -qf "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" HEAD:gh-pages
+          echo "published: https://${GITHUB_REPOSITORY_OWNER}.github.io/${GITHUB_REPOSITORY#*/}/"
+      - name: Publish the size list to the ci-shots branch
+        if: always()
+        env: { GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}" }
+        run: bash .github/publish-ci.sh web report
+

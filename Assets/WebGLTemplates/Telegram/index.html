@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>{{{ PRODUCT_NAME }}}</title>
+<!-- Telegram mini app shell for the Unity web build (user 2026-11-15: launch in Telegram first, the store app later). -->
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+  html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #1b1410; color: #f3e6cf;
+               font-family: Tahoma, "Segoe UI", sans-serif; -webkit-user-select: none; user-select: none; overscroll-behavior: none; }
+  /* Telegram fullscreen puts its own close/menu buttons over the top of the page: keep the game inside both safe areas. */
+  #stage { position: fixed; inset: 0;
+           padding-top: calc(var(--tg-safe-area-inset-top, 0px) + var(--tg-content-safe-area-inset-top, 0px));
+           padding-bottom: calc(var(--tg-safe-area-inset-bottom, 0px) + var(--tg-content-safe-area-inset-bottom, 0px));
+           padding-left: calc(var(--tg-safe-area-inset-left, 0px) + var(--tg-content-safe-area-inset-left, 0px));
+           padding-right: calc(var(--tg-safe-area-inset-right, 0px) + var(--tg-content-safe-area-inset-right, 0px));
+           box-sizing: border-box; display: flex; align-items: center; justify-content: center; }
+  #box { position: relative; width: 100%; height: 100%; }
+  /* a desktop window opens tall and cannot be turned: there the landscape game is letterboxed instead */
+  #box.letter { height: auto; aspect-ratio: 20 / 9; max-height: 100%; }
+  #unity-canvas { width: 100%; height: 100%; display: block; background: #1b1410; touch-action: none; outline: none; }
+  .cover { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
+           gap: 18px; background: #1b1410; text-align: center; padding: 24px; box-sizing: border-box; z-index: 5; }
+  .hidden { display: none !important; }
+  #bar { width: min(70vw, 360px); height: 10px; border-radius: 5px; background: #3a2c22; overflow: hidden; }
+  #fill { width: 0; height: 100%; background: #e2a03f; transition: width .2s; }
+  #pct { font-size: 15px; opacity: .8; }
+  .big { font-size: 22px; font-weight: bold; }
+  #turn svg { width: 72px; height: 72px; animation: tilt 1.6s ease-in-out infinite; }
+  @keyframes tilt { 0%,30% { transform: rotate(0); } 60%,100% { transform: rotate(-90deg); } }
+  #err { color: #ffb4a8; font-size: 14px; max-width: 90vw; direction: ltr; }
+</style>
+</head>
+<body>
+<div id="stage"><div id="box"><canvas id="unity-canvas" tabindex="-1"></canvas></div></div>
+
+<div id="load" class="cover">
+  <div class="big">{{{ PRODUCT_NAME }}}</div>
+  <div id="bar"><div id="fill"></div></div>
+  <div id="pct">جاري التحميل…</div>
+  <div id="err" class="hidden"></div>
+</div>
+
+<div id="turn" class="cover hidden">
+  <svg viewBox="0 0 64 64" fill="none" stroke="#e2a03f" stroke-width="4"><rect x="20" y="6" width="24" height="52" rx="5"/><circle cx="32" cy="50" r="2" fill="#e2a03f"/></svg>
+  <div class="big">لفّ الجوال بالعرض</div>
+</div>
+
+<script>
+(function () {
+  var tg = window.Telegram && window.Telegram.WebApp;
+  var inTg = !!(tg && tg.initData);
+  var mobile = inTg ? (tg.platform === 'android' || tg.platform === 'ios') : matchMedia('(pointer: coarse)').matches;
+  function ver(v) { try { return tg && tg.isVersionAtLeast(v); } catch (e) { return false; } }
+
+  if (inTg) {
+    tg.ready();
+    tg.expand();
+    try { tg.setHeaderColor('#1b1410'); tg.setBackgroundColor('#1b1410'); } catch (e) {}
+    // ⚠️ a vertical drag on the game (a kick swipe) would otherwise pull the mini app down and close it
+    if (ver('7.7')) tg.disableVerticalSwipes();
+    tg.enableClosingConfirmation();
+    if (mobile && ver('8.0')) { try { tg.requestFullscreen(); } catch (e) {} }
+  }
+
+  var box = document.getElementById('box'), turn = document.getElementById('turn'), locked = false;
+  function layout() {
+    var portrait = window.innerHeight > window.innerWidth;
+    if (mobile) {
+      turn.classList.toggle('hidden', !portrait);
+      // lockOrientation keeps whatever the phone shows now, so it is called only once it is landscape
+      if (!portrait && inTg && !locked && ver('8.0')) { try { tg.lockOrientation(); locked = true; } catch (e) {} }
+    }
+    box.classList.toggle('letter', !mobile && portrait);
+  }
+  window.addEventListener('resize', layout);
+  if (inTg) { tg.onEvent('viewportChanged', layout); tg.onEvent('fullscreenChanged', layout); }
+  layout();
+
+  var canvas = document.getElementById('unity-canvas');
+  var fill = document.getElementById('fill'), pct = document.getElementById('pct'), err = document.getElementById('err');
+  var build = 'Build';
+  var config = {
+    dataUrl: build + '/{{{ DATA_FILENAME }}}',
+    frameworkUrl: build + '/{{{ FRAMEWORK_FILENAME }}}',
+    codeUrl: build + '/{{{ CODE_FILENAME }}}',
+    streamingAssetsUrl: 'StreamingAssets',
+    companyName: {{{ JSON.stringify(COMPANY_NAME) }}},
+    productName: {{{ JSON.stringify(PRODUCT_NAME) }}},
+    productVersion: {{{ JSON.stringify(PRODUCT_VERSION) }}},
+    // a phone screen at full device resolution costs the GPU three or four times the pixels for little gain
+    devicePixelRatio: Math.min(window.devicePixelRatio || 1, mobile ? 1.5 : 2),
+    showBanner: function (msg, type) { if (type === 'error') { err.textContent = msg; err.classList.remove('hidden'); } }
+  };
+  var s = document.createElement('script');
+  s.src = build + '/{{{ LOADER_FILENAME }}}';
+  s.onload = function () {
+    createUnityInstance(canvas, config, function (p) {
+      var n = Math.round(p * 100);
+      fill.style.width = n + '%';
+      pct.textContent = 'جاري التحميل… ' + n + '٪';
+    }).then(function () {
+      document.getElementById('load').classList.add('hidden');
+      canvas.focus();
+    }).catch(function (e) {
+      pct.textContent = 'ما اشتغلت اللعبة';
+      err.textContent = String(e && e.message || e);
+      err.classList.remove('hidden');
+    });
+  };
+  s.onerror = function () { pct.textContent = 'ما اشتغلت اللعبة'; err.textContent = 'loader missing'; err.classList.remove('hidden'); };
+  document.body.appendChild(s);
+})();
+</script>
+</body>
+</html>

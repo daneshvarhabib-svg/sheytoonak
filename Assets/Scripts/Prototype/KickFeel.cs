@@ -26,7 +26,9 @@ namespace Sheytoonak
         void OnBroken(int window, Vector3 point)
         {
             if (shake != null) shake.Kick(0.03f, 0.28f);
-#if UNITY_ANDROID || UNITY_IOS
+#if UNITY_WEBGL && !UNITY_EDITOR
+            if (VibrateOn) TelegramWeb.Haptic(2); // the Telegram mini app: Telegram's own haptic, not navigator.vibrate (iOS has none)
+#elif UNITY_ANDROID || UNITY_IOS
             if (VibrateOn) Handheld.Vibrate();
 #endif
             if (!slowMo) { if (stopRoutine != null) StopCoroutine(stopRoutine); stopRoutine = StartCoroutine(HitStop()); }
