@@ -250,6 +250,12 @@ namespace Sheytoonak.Prototype
                 var o = GUI.color; GUI.color = new Color(1f, 0.6f, 0.35f); GUI.DrawTexture(pr, Texture2D.whiteTexture); GUI.color = o;
                 Portrait(new Rect(pr.x + 3 * u, pr.y + 3 * u, pr.width - 6 * u, pr.height - 6 * u), theirs[k]);
             }
+            // while the opponent picks: a «how to play» line between the two teams (user 2026-11-15, see Tips)
+            if (!d.Done && !myTurn)
+            {
+                float side = pad + 3 * (ps + 8 * u) + 8 * u;
+                Tips.Subtitle(new Rect(side, ty, Screen.width - side * 2f, ps), u, font);
+            }
             Flash(u, big);
         }
     }

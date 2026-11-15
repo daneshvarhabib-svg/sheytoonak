@@ -497,6 +497,8 @@ namespace Sheytoonak.EditorTools
                 });
                 string index = Path.Combine(path, "index.html");
                 bool ok = report.summary.result == BuildResult.Succeeded && File.Exists(index);
+                // the loading page shows the same «how to play» lines as the draft (one file, Tips / TipDeck)
+                if (ok) File.Copy("Assets/Resources/Text/tips.txt", Path.Combine(path, "tips.txt"), true);
                 long total = 0;
                 if (Directory.Exists(path))
                     foreach (var f in Directory.GetFiles(path, "*", SearchOption.AllDirectories))

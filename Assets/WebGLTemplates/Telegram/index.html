@@ -29,6 +29,7 @@
   .big { font-size: 22px; font-weight: bold; }
   #turn svg { width: 72px; height: 72px; animation: tilt 1.6s ease-in-out infinite; }
   @keyframes tilt { 0%,30% { transform: rotate(0); } 60%,100% { transform: rotate(-90deg); } }
+  #tip { font-size: 16px; line-height: 1.6; max-width: min(86vw, 560px); min-height: 3.2em; color: #f6dfb2; transition: opacity .4s; }
   #err { color: #ffb4a8; font-size: 14px; max-width: 90vw; direction: ltr; }
 </style>
 </head>
@@ -39,6 +40,7 @@
   <div class="big">{{{ PRODUCT_NAME }}}</div>
   <div id="bar"><div id="fill"></div></div>
   <div id="pct">جاري التحميل…</div>
+  <div id="tip"></div>
   <div id="err" class="hidden"></div>
 </div>
 
@@ -78,6 +80,24 @@
   if (inTg) { tg.onEvent('viewportChanged', layout); tg.onEvent('fullscreenChanged', layout); }
   layout();
 
+  // «how to play» lines while the game downloads (user 2026-11-15); the same file as the draft subtitle, every line
+  // once before any repeats, six seconds each
+  var tipEl = document.getElementById('tip'), tipTimer = null;
+  fetch('tips.txt').then(function (r) { return r.ok ? r.text() : ''; }).then(function (text) {
+    var tips = text.split('\n').map(function (l) { return l.trim(); }).filter(Boolean), order = [], i = 0;
+    if (!tips.length) return;
+    function next() {
+      if (i >= order.length) {
+        order = tips.map(function (_, k) { return k; });
+        for (var k = order.length - 1; k > 0; k--) { var j = Math.floor(Math.random() * (k + 1)); var t = order[k]; order[k] = order[j]; order[j] = t; }
+        i = 0;
+      }
+      tipEl.style.opacity = 0;
+      setTimeout(function () { tipEl.textContent = tips[order[i++]]; tipEl.style.opacity = 1; }, 300);
+    }
+    next(); tipTimer = setInterval(next, 6000);
+  }).catch(function () {});
+
   var canvas = document.getElementById('unity-canvas');
   var fill = document.getElementById('fill'), pct = document.getElementById('pct'), err = document.getElementById('err');
   var build = 'Build';
@@ -99,9 +119,10 @@
     createUnityInstance(canvas, config, function (p) {
       var n = Math.round(p * 100);
       fill.style.width = n + '%';
-      pct.textContent = 'جاري التحميل… ' + n + '٪';
+      pct.textContent = 'جاري التحميل… ' + n.toLocaleString('ar-EG') + '٪';
     }).then(function () {
       document.getElementById('load').classList.add('hidden');
+      if (tipTimer) clearInterval(tipTimer);
       canvas.focus();
     }).catch(function (e) {
       pct.textContent = 'ما اشتغلت اللعبة';
