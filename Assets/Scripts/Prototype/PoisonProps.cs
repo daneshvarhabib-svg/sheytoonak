@@ -587,7 +587,7 @@ namespace Sheytoonak.Prototype
             // the stage plays these (user 2026-11-13): the tow truck (nails), Um al-Arabiyat's shove (complaint), the suction
             // tanker (plank) -- DuelStage.TowAway / PushAway / SuckPuddle
             if (a.Id == "nails" || a.Id == "complaint" || a.Id == "plank") { root.position = heroPos; return root.gameObject; }
-            var art = Art(a.Id, a.Id == "fart" || a.Id == "nails" || a.Id == "plank" || a.Id == "complaint" || a.Id == "flashlight" ? 0.5f : 0f);
+            var art = Art(a.Id, a.Id == "fart" || a.Id == "nails" || a.Id == "plank" || a.Id == "complaint" || a.Id == "flashlight" || a.Id == "net" ? 0.5f : 0f);
             if (art != null)
             {
                 switch (a.Id)
@@ -601,7 +601,8 @@ namespace Sheytoonak.Prototype
                     case "plank": root.position = heroPos + new Vector3(0f, 0.04f, 1.0f); Spr(art, root, Vector3.zero, 0.9f, true); break;
                     case "complaint": root.position = heroPos + new Vector3(0f, 1.9f, 0f); Spr(art, root, Vector3.zero, 0.7f); break; // waved over the head
                     case "umbrella": root.position = heroPos + new Vector3(heroPos.x < 0f ? 0.3f : -0.3f, 0.6f, -0.1f); Spr(art, root, Vector3.zero, 1.5f); break;
-                    case "flashlight": root.position = heroPos + new Vector3(heroPos.x < 0f ? 0.4f : -0.4f, 1.7f, 0.2f); Spr(art, root, Vector3.zero, 1.2f); break; // the net, raised
+                    case "flashlight": root.position = heroPos + new Vector3(0f, 1.2f, 0.2f); Spr(art, root, Vector3.zero, 0.45f); break;
+                    case "net": root.position = heroPos + new Vector3(heroPos.x < 0f ? 0.4f : -0.4f, 1.7f, 0.2f); Spr(art, root, Vector3.zero, 1.2f); break; // raised over the head
                     default: root.position = heroPos + Vector3.up * 1.4f; Spr(art, root, Vector3.zero, 0.22f); break; // pebble
                 }
                 return root.gameObject;

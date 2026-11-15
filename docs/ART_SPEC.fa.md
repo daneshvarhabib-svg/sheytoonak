@@ -574,3 +574,27 @@ The same original cartoon character as the previous picture (Bubakr, a calm cart
 
 ## سم‌ها، پادزهرها و ساکنانِ فحش‌دهنده -- کارتونی (۲۲ آبان)
 کاربر: «هنوز چندتا چیز درست نشده و کارتونی نشدن … یکی زهرها و پادزهرهاست، یکی ساکنان خونه ها که فحش میدن». هر تصویر جدا، تصویرِ پشتِ ابوشحاطه پیوست برایِ سبک، رویِ سبزِ #00FF00. نام‌ها همان نامِ فعلی تا کد دست نخورد؛ اندازه/نسبت همان قبلی (فهرستِ پرامپت‌ها در پیامِ چتِ همان روز). ⚠️ `granny.png`ِ قدیمی استفاده نمی‌شود؛ فقط `granny2`.
+
+## قهرمانِ نهم: شادي و کسوف (۲۵ آبان)
+کاربر: «یه قهرمان دیگه بسازیم که قدرتش خسوفه و جلوی خورشید رو میگیره و چراغ قوه به کار میاد». زهر = کسوف (ماه جلوی خورشید، خیابان تاریک، ضربه پخش می‌شود)؛ پادزهرِ آن چراغ‌قوه‌ی بوبکر؛ پادزهرِ خودِ شادي تورِ ماهیگیری (کبوتر را می‌گیرد). تصویرِ ابوشحاطه برایِ سبک پیوست شود.
+
+`Art/Heroes/shadi_idle.png`
+```
+Original cartoon character for a mobile street game, in exactly the same bold caricature style as the attached Abu Shahata picture: thick dark brown outlines, big head (about 1/4 of body height), chunky hands and feet, warm saturated colours with soft cel shading. Character: Shadi, a cheerful cartoon old man from Muscat, a neat white beard, round glasses, a colourful embroidered round cap, a white robe that ends at mid-shin, brown leather sandals. Full body, three-quarter BACK view, the whole body turned to the RIGHT: we see the back and the right third of the face. Neutral rig pose: standing straight, legs slightly apart, BOTH feet pointing to the right, the NEAR leg (closer to the viewer) slightly in front of the FAR leg, arms hanging down a little away from the body, hands open and relaxed, elbows and knees straight, nothing covering the legs below the knee. Same height and scale as the attached picture. On a flat solid bright green background #00FF00, no ground, no shadow, no scene. Whole body visible, centered, about 85% of the image height. No text, no logo, no flag, no watermark, no political symbols.
+```
+`Art/Heroes/shadi_front.png`
+```
+The same original cartoon character as the previous picture (Shadi, a cheerful cartoon old man from Muscat, a neat white beard, round glasses, a colourful embroidered round cap, a white robe that ends at mid-shin, brown leather sandals), same bold caricature style with thick dark brown outlines and cel shading, now FRONT view, full body, a confident pose with one foot on a worn leather football, holding a small brass telescope, showing personality. On a flat solid bright green background #00FF00, no ground, no shadow. Whole body visible, centered, about 85% of the image height. No text, no logo, no flag, no watermark, no political symbols.
+```
+`Art/Poison/eclipse.png` (1:1، شفاف)
+```
+A cartoon solar eclipse for a mobile street game: a dark moon disc almost covering a bright yellow sun, a glowing orange-white ring and soft rays around it, a few small stars nearby. Same hand-painted cartoon style as the attached picture, thick dark outlines, warm colours. Single object, centered, on a flat solid bright green background #00FF00, no text, no logo.
+```
+`Art/Icons/eclipse.png` (1:1، شفاف)
+```
+A simple game icon of a solar eclipse: a dark moon covering most of a yellow sun with a thin glowing ring, bold cartoon style, thick dark outline, readable at small size. Centered on a flat solid bright green background #00FF00, no text.
+```
+`Art/Poison/net.png` (1:1، شفاف)
+```
+A hand-held fishing net on a wooden pole, round wooden hoop with a few orange cork floats, loose cream-coloured mesh sagging below the hoop, slightly worn and patched. Same hand-painted cartoon style as the other street props, thick dark outlines, warm colours. Single object, centered, on a flat solid bright green background #00FF00, no text, no logo.
+```

@@ -481,9 +481,9 @@ namespace Sheytoonak.Prototype
             // ⚠️ user (2026-11-14): «قدرت گوز مگه قرار نبود جلوی پرنده‌ها رو بگیره؟ … وقتی می‌گوزه پرنده‌ها که وارد کادر می‌شن
             // همون اول شهید شن و بیفتن زمین و شهرداری هی بیاد جمعشون کنه». While a fart protection is up the birds choke
             // a metre and a half into the picture and drop; each corpse gets the sweeper.
-            // the fisherman's net (id "flashlight", 2026-11-15) catches them the same way: tangled, they drop to the road
+            // Bubakr's fisherman's net (2026-11-15) catches them the same way: tangled, they drop to the road
             string guard = duel.Rules != null ? duel.Rules.ActiveProtection(Effect.Chance) : null;
-            bool choke = guard == "fart" || guard == "flashlight";
+            bool choke = guard == "fart" || guard == "net";
             for (float t = 0f; t < 1f && !pigeonDown; t += Time.deltaTime / secs)
             {
                 pigeon.transform.position = new Vector3(Mathf.Lerp(-edge, edge, t), y + Mathf.Sin(t * waves) * 0.15f, z);

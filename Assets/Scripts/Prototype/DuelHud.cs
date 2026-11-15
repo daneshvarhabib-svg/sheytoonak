@@ -437,7 +437,7 @@ namespace Sheytoonak.Prototype
         /// <summary>Icons that are painted (full colour, from the ChatGPT sheet) are never tinted, only faded.</summary>
         static readonly System.Collections.Generic.HashSet<string> Painted = new System.Collections.Generic.HashSet<string>
             { "pigeon","bus","wind","open_window","carpet","rug_push","puddle","nails","vane","pebble","plank","fart","rage","pass","surrender","window","shards","curse","clock","replay",
-              "truck","cart","rain","complaint","umbrella","flashlight" };
+              "truck","cart","rain","complaint","umbrella","flashlight","net" };
 
         int lastTick = -1;
         AudioSource tickSrc; AudioClip tickClip, tickLast;

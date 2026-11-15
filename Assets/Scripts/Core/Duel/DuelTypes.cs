@@ -88,9 +88,11 @@ namespace Sheytoonak.Core.Duel
                 new Tool("umbrella", "شمسية", Effect.Reach, 1)),
             new HeroDef("bubakr", "بوبكر الصيّاد التونسي",
                 new Tool("rain", "مطر", Effect.Reach, 1, Lifetime.OneTurn) /* two turns until the human test (review 2026-11-07 §2.4) */,
-                // User (2026-11-15): «چراغ قوه به کار نمیاد» -- it fixed accuracy on a lit street. The fisherman's net now: it
-                // catches the pigeons before they meet the ball (Chance, like Toni's fart). Same id, so cards and levels stay.
-                new Tool("flashlight", "شبكة صيد", Effect.Chance, 1)),
+                // User (2026-11-15): «چراغ قوه به کار نمیاد» (a lit street, nothing to light) and, the same day: «چراغ قوه رو حذف
+                // نکن؛ یه قهرمان دیگه بسازیم که قدرتش خسوفه و جلوی خورشید رو میگیره و چراغ قوه به کار میاد». The flashlight stays
+                // (the original design: Bubakr's light answers Shadi's darkness, docs/HEROES.fa.md); the fishing net ("net",
+                // Chance) waits as Shadi's antidote until his pictures arrive.
+                new Tool("flashlight", "ضو بطارية", Effect.Accuracy, 1)),
         };
 
         public static HeroDef Get(string id)
