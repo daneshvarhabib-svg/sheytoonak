@@ -127,8 +127,9 @@ namespace Sheytoonak.Prototype
             var button = new GUIStyle(GUI.skin.button) { fontSize = Mathf.RoundToInt(24 * u), font = font };
             float pad = 14f * u, top = pad + (Screen.height - Screen.safeArea.yMax);
 
-            // window value badges on the facade
-            if (!ended)
+            // window value badges on the facade. ⚠️ Off since 2026-11-15 (user: «این عدد ۱ روی پنجره‌ها رو برداریم»): every
+            // window is worth 1 (2026-11-05), so the number said nothing. Kept behind the switch in case values return.
+            if (!ended && ShowWindowValues)
                 for (int w = 0; w < rules.WindowCount; w++)
                 {
                     if (rules.IsBroken(w) || w == rules.SealedWindow) continue; // the shutter says it all
@@ -438,6 +439,8 @@ namespace Sheytoonak.Prototype
         static readonly System.Collections.Generic.HashSet<string> Painted = new System.Collections.Generic.HashSet<string>
             { "pigeon","bus","wind","open_window","carpet","rug_push","puddle","nails","vane","pebble","plank","fart","rage","pass","surrender","window","shards","curse","clock","replay",
               "truck","cart","rain","complaint","umbrella","flashlight","net" };
+
+        public static bool ShowWindowValues = false;
 
         int lastTick = -1;
         AudioSource tickSrc; AudioClip tickClip, tickLast;
