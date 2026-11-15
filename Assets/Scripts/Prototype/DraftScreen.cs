@@ -157,7 +157,7 @@ namespace Sheytoonak.Prototype
             var d = duel.Draft;
             if (d == null || duel.Rules != null) return;
             Watch(d);
-            float u = Mathf.Max(1f, Screen.height / 900f);
+            float u = Ar.UiScale(Screen.height);
             var font = Ar.Font;
             var label = new GUIStyle(GUI.skin.label) { fontSize = Mathf.RoundToInt(22 * u), normal = { textColor = Color.white }, font = font, alignment = TextAnchor.MiddleCenter };
             var small = new GUIStyle(label) { fontSize = Mathf.RoundToInt(17 * u) };

@@ -1647,7 +1647,7 @@ namespace Sheytoonak.Prototype
 
         void OnGUI()
         {
-            float u = Mathf.Max(1f, Screen.height / 900f);
+            float u = Ar.UiScale(Screen.height);
             var font = Ar.Font;
             var label = new GUIStyle(GUI.skin.label) { fontSize = Mathf.RoundToInt(24 * u), normal = { textColor = Color.white }, font = font };
             var big = new GUIStyle(label) { fontSize = Mathf.RoundToInt(42 * u), alignment = TextAnchor.MiddleCenter, fontStyle = FontStyle.Bold };

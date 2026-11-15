@@ -59,7 +59,7 @@ namespace Sheytoonak
                 GUI.DrawTexture(new Rect((sw - lw) * 0.5f, y, lw, lh), logo, ScaleMode.StretchToFill);
             }
             // loading bar along the bottom; a tiny football rolls along its filled edge
-            float u = Mathf.Max(1f, sh / 900f);
+            float u = Ar.UiScale(sh);
             float bw = sw * 0.46f, bh = 7f * u, bx = (sw - bw) * 0.5f, by = sh - 46f * u;
             float fill = Mathf.Clamp01(now / LoadSeconds);
             fill = 1f - Mathf.Pow(1f - fill, 1.6f); // a touch faster at the start

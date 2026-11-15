@@ -119,7 +119,7 @@ namespace Sheytoonak.Prototype
         {
             var rules = duel.Rules;
             if (rules == null) return; // the draft screen is up
-            float u = Mathf.Max(1f, Screen.height / 900f);
+            float u = Ar.UiScale(Screen.height);
             var font = Ar.Font;
             var label = new GUIStyle(GUI.skin.label) { fontSize = Mathf.RoundToInt(24 * u), normal = { textColor = Color.white }, font = font, clipping = TextClipping.Overflow };
             var small = new GUIStyle(label) { fontSize = Mathf.RoundToInt(19 * u) };

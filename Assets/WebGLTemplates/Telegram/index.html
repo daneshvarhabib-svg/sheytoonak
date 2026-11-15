@@ -63,7 +63,15 @@
     // ⚠️ a vertical drag on the game (a kick swipe) would otherwise pull the mini app down and close it
     if (ver('7.7')) tg.disableVerticalSwipes();
     tg.enableClosingConfirmation();
-    if (mobile && ver('8.0')) { try { tg.requestFullscreen(); } catch (e) {} }
+    if (mobile && ver('8.0')) {
+      try { tg.requestFullscreen(); } catch (e) {}
+      // ⚠️ the phone showed Telegram's own bar above the game (2026-11-15): some clients only grant fullscreen after a
+      // tap, so it is asked once more on the first touch
+      document.addEventListener('pointerdown', function once() {
+        document.removeEventListener('pointerdown', once);
+        try { if (!tg.isFullscreen) tg.requestFullscreen(); } catch (e) {}
+      });
+    }
   }
 
   var box = document.getElementById('box'), turn = document.getElementById('turn'), locked = false;
@@ -109,8 +117,9 @@
     companyName: {{{ JSON.stringify(COMPANY_NAME) }}},
     productName: {{{ JSON.stringify(PRODUCT_NAME) }}},
     productVersion: {{{ JSON.stringify(PRODUCT_VERSION) }}},
-    // a phone screen at full device resolution costs the GPU three or four times the pixels for little gain
-    devicePixelRatio: Math.min(window.devicePixelRatio || 1, mobile ? 1.5 : 2),
+    // ⚠️ first 1.5 on phones (GPU cost), but then the game saw only ~430 px of height and its text came out soft and its
+    // HUD too big for the screen (2026-11-15). The full device ratio, capped at 2.5.
+    devicePixelRatio: Math.min(window.devicePixelRatio || 1, 2.5),
     showBanner: function (msg, type) { if (type === 'error') { err.textContent = msg; err.classList.remove('hidden'); } }
   };
   // ⚠️ user (2026-11-15, phone): «این‌جا گیر می‌کنه» at 0% -- the first visit downloads ~60 MB and the host does not

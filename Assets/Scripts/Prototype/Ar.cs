@@ -117,7 +117,7 @@ namespace Sheytoonak
             if (font == null || warming) return;
             warming = true;
             string all = ArabicShaper.AllGlyphs();
-            float u = Mathf.Max(1f, Screen.height / 900f);
+            float u = Ar.UiScale(Screen.height);
             foreach (int s in warmSizes)
             {
                 int px = Mathf.RoundToInt(s * u);
@@ -128,6 +128,21 @@ namespace Sheytoonak
             warming = false;
         }
         static void OnRebuilt(UnityEngine.Font f) { if (f == font) Warm(); }
+
+        /// <summary>
+        /// The HUD is laid out for a 900 px tall screen. On a phone app the screen is always taller, so it never shrank
+        /// below 1. ⚠️ In Telegram (web) the game gets only the part of the screen under Telegram's bar, a few hundred
+        /// pixels: at 1 the lobby's bottom row (the play buttons) fell off the screen (user 2026-11-15: «دکمه‌ها درست نشون
+        /// داده نمیشه»). The web build lets it shrink with the screen; the phone app keeps its old floor.
+        /// </summary>
+        public static float UiScale(float screenHeight)
+        {
+#if UNITY_WEBGL && !UNITY_EDITOR
+            return Mathf.Max(0.35f, screenHeight / 900f);
+#else
+            return Mathf.Max(1f, screenHeight / 900f);
+#endif
+        }
 
         /// <summary>Shaped, reordered, Eastern digits: ready for GUI.Label.</summary>
         public static string T(string s) => ArabicShaper.ForLtrRenderer(ArabicShaper.EasternDigits(s));
