@@ -83,9 +83,12 @@ namespace Sheytoonak.Prototype
                 var br = new Rect(cx - w * 0.5f, Screen.height * 0.035f + Screen.height * 0.40f * (1f - sc) * 0.5f, w, h);
                 GUI.color = Color.white; GUI.DrawTexture(br, board, ScaleMode.ScaleToFit);
                 var bs = new GUIStyle(big) { fontSize = Mathf.RoundToInt(h * 0.085f) };
-                bs.normal.textColor = won ? new Color(1f, 0.93f, 0.55f) : new Color(0.92f, 0.95f, 1f);
-                var ribbon = new Rect(br.x + w * 0.2f, br.y + h * 0.53f, w * 0.6f, h * 0.13f);
-                var shadow = new GUIStyle(bs); shadow.normal.textColor = new Color(0.25f, 0.1f, 0.05f, 0.9f);
+                bool drawBoard = BoardPath() == "Art/UI/draw_board";
+                // the draw emblem (user 2026-11-14: a ball on a level seesaw) has a cream ribbon low down (75-87 % of its height):
+                // dark brown letters there, the light ones of the other boards would vanish on it
+                bs.normal.textColor = drawBoard ? new Color(0.36f, 0.2f, 0.08f) : won ? new Color(1f, 0.93f, 0.55f) : new Color(0.92f, 0.95f, 1f);
+                var ribbon = new Rect(br.x + w * 0.2f, br.y + h * (drawBoard ? 0.745f : 0.53f), w * 0.6f, h * 0.13f);
+                var shadow = new GUIStyle(bs); shadow.normal.textColor = drawBoard ? new Color(1f, 0.97f, 0.85f, 0.8f) : new Color(0.25f, 0.1f, 0.05f, 0.9f);
                 GUI.Label(new Rect(ribbon.x + 2f * u, ribbon.y + 3f * u, ribbon.width, ribbon.height), Ar.T(draw ? Ar.Draw : won ? Ar.Won : Ar.Lost), shadow);
                 GUI.Label(ribbon, Ar.T(draw ? Ar.Draw : won ? Ar.Won : Ar.Lost), bs);
                 GUI.color = old;
