@@ -88,7 +88,9 @@ namespace Sheytoonak.Core.Duel
                 new Tool("umbrella", "شمسية", Effect.Reach, 1)),
             new HeroDef("bubakr", "بوبكر الصيّاد التونسي",
                 new Tool("rain", "مطر", Effect.Reach, 1, Lifetime.OneTurn) /* two turns until the human test (review 2026-11-07 §2.4) */,
-                new Tool("flashlight", "ضو بطارية", Effect.Accuracy, 1)),
+                // User (2026-11-15): «چراغ قوه به کار نمیاد» -- it fixed accuracy on a lit street. The fisherman's net now: it
+                // catches the pigeons before they meet the ball (Chance, like Toni's fart). Same id, so cards and levels stay.
+                new Tool("flashlight", "شبكة صيد", Effect.Chance, 1)),
         };
 
         public static HeroDef Get(string id)
