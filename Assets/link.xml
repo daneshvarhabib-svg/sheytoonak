@@ -1,0 +1,5 @@
+<!-- The web build strips engine classes nothing references by type. GameObject.CreatePrimitive adds its collider by name,
+     so the web player said «Can't add component because class 'MeshCollider' doesn't exist!» (run 8, 2026-11-15). -->
+<linker>
+  <assembly fullname="UnityEngine.PhysicsModule" preserve="all"/>
+</linker>

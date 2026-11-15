@@ -307,7 +307,10 @@ namespace Sheytoonak.EditorTools
                     // entropy-coded already, several times smaller, and unpacked to ETC2 at load (WebGL 2 on phones has it).
                     // If this editor does not crunch (the format comes back different), the picture falls back to ASTC.
                     bool crunched = false;
-                    if (webCaps)
+                    // ⚠️ run 8: the house paintings are read pixel by pixel (PrototypeBootstrap: window detection, wall patch, top
+                    // colour) and Texture2D.GetPixels refuses a crunched texture -- the duel street came up without its sky,
+                    // heroes or HUD. They stay ASTC.
+                    if (webCaps && !path.Contains("/Art/house_"))
                     {
                         var backup = UnityEngine.Object.Instantiate(copy); // the RGBA pixels, in case crunching does not take
                         try { EditorUtility.CompressTexture(copy, TextureFormat.ETC2_RGBA8Crunched, 50); crunched = copy.format == TextureFormat.ETC2_RGBA8Crunched; }
