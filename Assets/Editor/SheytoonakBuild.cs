@@ -265,6 +265,15 @@ namespace Sheytoonak.EditorTools
             AssetDatabase.CreateFolder(parent, Path.GetFileName(folder));
         }
 
+        /// <summary>
+        /// ⚠️ The web build (Telegram) downloads everything before the first screen: run 3 was 60 MB, 54 of them pictures
+        /// (user 2026-11-15: «حجم رو باید جوری کنیم که مخاطب باز کرد او رو پشیمون نشه»). There the caps are smaller: a phone
+        /// in Telegram shows the page at most ~1600 px wide, so a house painting at 1280 px and a prop at 640 px still look
+        /// right, at about a third of the bytes. The Android build keeps the old caps (512 / 1024 / 2048).
+        /// </summary>
+        static bool webCaps;
+        static int crunchedCount, crunchFailures;
+
         static void PrecompressResources()
         {
             var sw = System.Diagnostics.Stopwatch.StartNew();
@@ -280,7 +289,7 @@ namespace Sheytoonak.EditorTools
                     if (src == null) { failed++; continue; }
                     bool hero = path.Contains("/Heroes/") && !path.EndsWith("_face.png");
                     bool house = path.Contains("/Art/house_") || path.Contains("/Art/ground_");
-                    int cap = hero ? 512 : house ? 2048 : 1024;
+                    int cap = webCaps ? (hero ? 384 : house ? 1280 : 640) : (hero ? 512 : house ? 2048 : 1024);
                     float k = Mathf.Min(1f, cap / (float)Mathf.Max(src.width, src.height));
                     int w = Mathf.Max(4, Mathf.RoundToInt(src.width * k)), h = Mathf.Max(4, Mathf.RoundToInt(src.height * k));
                     var rt = RenderTexture.GetTemporary(w, h, 0, RenderTextureFormat.ARGB32, RenderTextureReadWrite.sRGB);
@@ -291,7 +300,19 @@ namespace Sheytoonak.EditorTools
                     copy.ReadPixels(new Rect(0, 0, w, h), 0, 0);
                     copy.Apply(true, false);
                     RenderTexture.active = prev; RenderTexture.ReleaseTemporary(rt);
-                    EditorUtility.CompressTexture(copy, house ? TextureFormat.ASTC_5x5 : TextureFormat.ASTC_6x6, 50);
+                    // ⚠️ web: ASTC hardly shrinks under gzip (run 3: 54 MB of pictures -> 51.6 MB download). Crunched ETC2 is
+                    // entropy-coded already, several times smaller, and unpacked to ETC2 at load (WebGL 2 on phones has it).
+                    // If this editor does not crunch (the format comes back different), the picture falls back to ASTC.
+                    bool crunched = false;
+                    if (webCaps)
+                    {
+                        var backup = UnityEngine.Object.Instantiate(copy); // the RGBA pixels, in case crunching does not take
+                        try { EditorUtility.CompressTexture(copy, TextureFormat.ETC2_RGBA8Crunched, 50); crunched = copy.format == TextureFormat.ETC2_RGBA8Crunched; }
+                        catch (System.Exception e) { if (crunchFailures++ == 0) Debug.LogWarning("SHEYTOONAK PRECOMPRESS crunch failed: " + e.GetType().Name + " " + e.Message); }
+                        if (crunched) { crunchedCount++; UnityEngine.Object.DestroyImmediate(backup); }
+                        else { UnityEngine.Object.DestroyImmediate(copy); copy = backup; }
+                    }
+                    if (!crunched) EditorUtility.CompressTexture(copy, house ? TextureFormat.ASTC_5x5 : TextureFormat.ASTC_6x6, 50);
                     copy.wrapMode = src.wrapMode; copy.filterMode = src.filterMode; copy.anisoLevel = src.anisoLevel;
                     copy.name = src.name;
                     string parked = ParkedFolder + "/" + path.Substring("Assets/Resources/".Length);
@@ -309,6 +330,7 @@ namespace Sheytoonak.EditorTools
             }
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
+            if (webCaps) Debug.Log("SHEYTOONAK PRECOMPRESS web: " + crunchedCount + " crunched ETC2, the rest ASTC");
             Debug.Log("SHEYTOONAK PRECOMPRESS " + done + " textures to ASTC (" + (bytes / 1048576f).ToString("0.0") + " MB), " + failed + " failed, in " + sw.Elapsed.TotalSeconds.ToString("0") + " s");
             var probe = Resources.Load<Texture2D>("Art/house_11");
             Debug.Log("SHEYTOONAK PRECOMPRESS probe Art/house_11 -> " + (probe != null ? probe.format + " " + probe.width + "x" + probe.height + " mips " + probe.mipmapCount : "null"));
@@ -485,6 +507,7 @@ namespace Sheytoonak.EditorTools
                 EditorUserBuildSettings.webGLBuildSubtarget = WebGLTextureSubtarget.ASTC;
                 ApplyIcons();
                 EditorPrefs.SetBool("kCompressTexturesOnImport", true);
+                webCaps = true;
                 if (Environment.GetEnvironmentVariable("SHEYTOONAK_NO_PRECOMPRESS") != "1") PrecompressResources();
                 Directory.CreateDirectory(path);
                 var report = BuildPipeline.BuildPlayer(new BuildPlayerOptions
