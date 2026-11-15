@@ -113,18 +113,28 @@
     devicePixelRatio: Math.min(window.devicePixelRatio || 1, mobile ? 1.5 : 2),
     showBanner: function (msg, type) { if (type === 'error') { err.textContent = msg; err.classList.remove('hidden'); } }
   };
+  // ⚠️ user (2026-11-15, phone): «این‌جا گیر می‌کنه» at 0% -- the first visit downloads ~60 MB and the host does not
+  // always give the size, so the bar can sit still for a long time. A running clock shows it is alive, and after 20 s a
+  // line says the first time is slow and the next opens fast (the data is kept in the browser cache).
+  var lastPct = 0, t0 = Date.now();
+  var clock = setInterval(function () {
+    var secs = Math.round((Date.now() - t0) / 1000);
+    pct.textContent = 'جاري التحميل… ' + lastPct.toLocaleString('ar-EG') + '٪  (' + secs.toLocaleString('ar-EG') + ' ث)';
+    if (secs === 20) { var n = document.createElement('div'); n.id = 'slow'; n.textContent = 'أول مرّة بتاخد وقت، بعدين بتفتح بسرعة'; n.style.cssText = 'font-size:14px;opacity:.7'; pct.after(n); }
+  }, 1000);
   var s = document.createElement('script');
   s.src = build + '/{{{ LOADER_FILENAME }}}';
   s.onload = function () {
     createUnityInstance(canvas, config, function (p) {
-      var n = Math.round(p * 100);
-      fill.style.width = n + '%';
-      pct.textContent = 'جاري التحميل… ' + n.toLocaleString('ar-EG') + '٪';
+      lastPct = Math.round(p * 100);
+      fill.style.width = lastPct + '%';
     }).then(function () {
       document.getElementById('load').classList.add('hidden');
+      clearInterval(clock);
       if (tipTimer) clearInterval(tipTimer);
       canvas.focus();
     }).catch(function (e) {
+      clearInterval(clock);
       pct.textContent = 'ما اشتغلت اللعبة';
       err.textContent = String(e && e.message || e);
       err.classList.remove('hidden');
