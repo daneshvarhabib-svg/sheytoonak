@@ -287,3 +287,25 @@
 - **ریسک:** کم؛ فقط اقتصاد را در آزمونِ بسته بپاییم.
 
 **منابع:** [Supercell — Star Powers](https://support.supercell.com/brawl-stars/en/articles/star-powers-3.html) · [Brawl Stars wiki — gadgets (Mega Box)](https://brawlstars.fandom.com/wiki/Mega_Box) · [Blizzard support — Signature cards](https://support.blizzard.com/en/article/32545) · [esports.gg — Signature cards explained](https://esports.gg/news/hearthstone/new-hearthstone-signature-cards-explained/)
+
+## پیشنهادهای روزِ ۱۳ (۲۶ آبان) — زاویه: بازی‌های تلگرامی (Hamster Kombat و هم‌خانواده‌ها)، چون لانچ در تلگرام است
+
+### پ۳۹. «تركيبة اليوم»: سه قهرمانِ روز
+- **در منبع:** Hamster Kombat هر روز سه کارتِ مشخص را «کامبوی روز» اعلام می‌کند؛ کسی که هر سه را پیدا کند جایزه‌ی بزرگِ ثابت می‌گیرد. هر روز عوض می‌شود و فوریت می‌سازد.
+- **پیش ما:** هر روز سه قهرمانِ مشخص (برای همه یکی، از رویِ تاریخ، بی‌سرور). اگر دوئلی را با هر سه در تیمت ببری: یک بار در روز ۳۰۰ خرده‌شیشه. در صفحه‌ی اول سه چهره‌ی کوچک با برچسبِ «تركيبة اليوم». بازیکن را مجبور می‌کند قهرمان‌های کم‌استفاده را هم امتحان کند.
+- **هزینه:** کم.
+- **ریسک:** کم؛ اگر یکی از سه قهرمان را بازیکن هنوز ندارد، باید فقط از قهرمان‌های خودش انتخاب شود.
+
+### پ۴۰. نردبانِ دعوت (بر پایه‌ی کدِ معرف که در صف است)
+- **در منبع:** در Hamster Kombat دعوت‌کننده برای هر دوست پاداشِ ثابت می‌گیرد، برای دوستی با تلگرامِ پریمیوم پنج برابر، و وقتی دوست پیشرفت می‌کند باز پاداش می‌گیرد؛ تبِ «دوستان» فهرستشان را نشان می‌دهد. منتقدان می‌گویند بازی «مدام دوستِ بیشتر می‌خواهد» و آزاردهنده شد.
+- **پیش ما:** دوستی که با لینکِ تو آمد = پاداشِ هر دو؛ وقتی همان دوست اولین دوئلش را برد = یک کیسه‌ی کوچک برای تو؛ دوستِ پریمیوم = دو برابر. تبِ «أصحابي» با فهرست. ⚠️ هیچ قفلی پشتِ تعدادِ دوست نیست (درسِ همستر، و حرفِ کاربر: «نباید اجباری و آزار دهنده باشه»).
+- **هزینه:** متوسط؛ **سرور لازم است** (پاداشِ دعوت‌کننده).
+- **ریسک:** حساب‌های جعلی؛ پاداشِ دعوت‌کننده فقط بعد از اولین بردِ دوست.
+
+### پ۴۱. «حطّها بالستوري»: پیروزی در استوریِ تلگرام
+- **در منبع:** بازی‌های تلگرامی برای پخش‌شدن از اشتراک در چت و استوریِ تلگرام استفاده می‌کنند؛ APIِ مینی‌اپ (`shareToStory`) عکس + لینکِ بات را مستقیم در استوری می‌گذارد.
+- **پیش ما:** بعد از برد، دکمه‌ی «حطّها بالستوري»: عکسِ صحنه‌ی شکستنِ آخرین شیشه با تابلویِ برد و لینکِ دعوتِ خودت. پاداشِ کوچک (۵۰ خرده‌شیشه، یک بار در روز). بی‌سرور شدنی است (فقط تأییدِ واقعیِ انتشار را نمی‌توانیم بسنجیم).
+- **هزینه:** کم تا متوسط (ساختنِ تصویرِ برد در خودِ بازی).
+- **ریسک:** کم؛ پاداش کوچک و روزانه تا سوءاستفاده نیرزد.
+
+**منابع:** [Decrypt — Daily Combo](https://decrypt.co/233516/hamster-kombat-daily-combo-guide-earn-5-million-free-coins) · [KuCoin — Daily Combo and Cipher](https://www.kucoin.com/learn/crypto/how-to-earn-hamster-coin-with-daily-combo-and-daily-cipher) · [Decrypt — tips (referral 5k/25k)](https://decrypt.co/235021/hamster-kombat-tips-earn-free-coins-telegram-game-airdrop) · [Decrypt — «Keeps demanding more friends»](https://kakapo.decrypt.co/237629/hamster-kombat-keeps-demanding-more-friends-enough-already?amp=1) · [FindMini — gamified referrals](https://www.findmini.app/read/top-telegram-mini-apps-using-gamified-referrals/)
