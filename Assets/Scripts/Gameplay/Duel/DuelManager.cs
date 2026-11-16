@@ -46,7 +46,9 @@ namespace Sheytoonak
         [Tooltip("Shards each window is worth before size scaling.")]
         public int shardsPerWindow = 40;
         [Tooltip("0..1: how often the bot's aim lands on the window it meant.")]
-        public float botAccuracy = 0.65f;
+        // User (2026-11-16): «الان دقت ضربه ربات خیلی زیاده در مقایسه با بازیکن و این بازیکن رو اذیت می‌کنه». 0.65 -> 0.45:
+        // its aim spread grows from ±9% to ±14% of the widest yaw and its rebound volleys come less often.
+        public float botAccuracy = 0.45f;
         public float botThinkSeconds = 1.2f;
         public int randomSeed = 0;
 

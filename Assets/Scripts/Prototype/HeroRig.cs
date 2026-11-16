@@ -142,7 +142,7 @@ namespace Sheytoonak.Prototype
         Transform flipRoot;
         readonly Dictionary<string, Transform> bones = new Dictionary<string, Transform>();
         readonly Dictionary<string, SpriteRenderer> skins = new Dictionary<string, SpriteRenderer>();
-        Vector3 rootRest; float rigScale = 1f;
+        Vector3 rootRest, torsoScale = Vector3.one; float rigScale = 1f;
         float phase, kickT = -1f, seed;
         Vector3 lastPos; float speed;
 
@@ -187,6 +187,7 @@ namespace Sheytoonak.Prototype
                 bones[p.Name] = go.transform;
             }
             rootRest = bones["shorts"].localPosition;
+            torsoScale = bones["torso"].localScale;
             // ⚠️ The host's scale comes from its standing picture, and on Android every hero picture is imported at
             // 512 px (on the CI Linux player at full size), so that picture is ~3x smaller there and the host ~3x larger.
             // User (2026-11-11, on the phone): «سایزش درست نیست، باید کوچیک شه اندازه بقیه» -- the puppet was a giant.
@@ -272,8 +273,10 @@ namespace Sheytoonak.Prototype
             float legFar = walk * 20f * sn, legNear = -walk * 20f * sn;
             // ⚠️ counter-clockwise swings the far (left) arm INTO the body and the near (right) arm away from it; each arm
             // swings mostly outward and only a few degrees in (user 2026-11-11 on the kick: «دست چپش … اومده تو کونش»)
-            float armFar = 1.5f * breathe - walk * (6f + 6f * sn), armNear = -1.5f * breathe + walk * (6f - 6f * sn);
-            float torso = walk * 2f * c + breathe * 0.6f, head = -breathe * 1.2f + walk * 1.5f * sn;
+            // User (2026-11-16): «شدت نفس کشیدن قوی تر بشه که معلوم شه». The sway roughly doubled and the chest now rises
+            // (the torso stretches up a little from the waist, lifting shoulders, arms and head with it; see below).
+            float armFar = 3.5f * breathe - walk * (6f + 6f * sn), armNear = -3.5f * breathe + walk * (6f - 6f * sn);
+            float torso = walk * 2f * c + breathe * 1.2f, head = -breathe * 2.4f + walk * 1.5f * sn;
             float bob = walk * 0.16f * Mathf.Abs(c);
 
             ready = Mathf.MoveTowards(ready, Ready ? 1f : 0f, dt * 3f);
@@ -301,6 +304,8 @@ namespace Sheytoonak.Prototype
             Rot("arm_far", armFar); Rot("arm_near", armNear);
             Rot("torso", torso); Rot("head", head);
             bones["shorts"].localPosition = rootRest + new Vector3(0f, bob, 0f);
+            float rise = (kickT >= 0f || Push) ? 0f : 0.035f * (1f - walk) * (0.5f + 0.5f * breathe);
+            bones["torso"].localScale = new Vector3(torsoScale.x, torsoScale.y * (1f + rise), torsoScale.z);
         }
     }
 }
