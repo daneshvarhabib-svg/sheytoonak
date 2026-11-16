@@ -338,6 +338,17 @@ namespace Sheytoonak.Prototype
                 if (more && IconButton(br, "replay", AntidoteGreen, true, Ar.PlayAgain)) { touch?.IgnoreFor(0.5f); onPlayAgain?.Invoke(); }
                 var hr = new Rect(cx - 150 * u, y0 + 190 * u, 140 * u, 90 * u);
                 if (IconButton(more ? hr : new Rect(cx - 70 * u, hr.y, hr.width, hr.height), "home", ControlDark, true, null)) { touch?.IgnoreFor(0.5f); onHome?.Invoke(); }
+                // research proposal 41 (2026-11-16): a won duel on my Telegram story, with my invite link
+                if (won && !draw && duel.CanShareStory)
+                {
+                    var sr = new Rect(cx - 150 * u, y0 + 292 * u, 300 * u, 56 * u);
+                    if (IconButton(sr, "story", PoisonRed, true, Ar.Story)) { touch?.IgnoreFor(0.5f); duel.ShareWinStory(); }
+                    if (!duel.StoryPaidToday)
+                    {
+                        DrawIcon(new Rect(sr.xMax + 8 * u, sr.y + 12 * u, 30 * u, 30 * u), "shards", Color.white);
+                        Shadowed(new Rect(sr.xMax + 42 * u, sr.y, 80 * u, sr.height), "+" + Ar.N(DuelManager.StoryPrize), new GUIStyle(GUI.skin.label) { font = Ar.Font, fontSize = Mathf.RoundToInt(22 * u), alignment = TextAnchor.MiddleLeft });
+                    }
+                }
             }
         }
 

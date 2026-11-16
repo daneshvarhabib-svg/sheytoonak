@@ -1724,6 +1724,8 @@ namespace Sheytoonak.Prototype
         {
             HomeBackdrop();
             // the loot of the bag just opened covers the lobby until tapped; nothing under it may take the tap
+            // an invite gift (TelegramWeb, 2026-11-16) is revealed like a bag's loot, once
+            if (duelGame.PendingInviteGift > 0) { lootShards = duelGame.PendingInviteGift; lootCards = new string[0]; lootShown = true; lootAt = Time.time; duelGame.PendingInviteGift = 0; }
             if (lootShown) { LootReveal(u); return; }
             float pad = 14 * u, top = pad + SafeTop();
             var num = new GUIStyle(big) { fontSize = Mathf.RoundToInt(28 * u), alignment = TextAnchor.MiddleCenter };
@@ -1749,6 +1751,14 @@ namespace Sheytoonak.Prototype
             var notR = new Rect(vibR.xMax + 12 * u, top, vibR.width, barH);
             Plank(notR);
             if (GUI.Button(notR, Ar.T(Sheytoonak.Gameplay.Store.BagNotifier.On ? Ar.NotifyOn : Ar.NotifyOff), small)) { Sheytoonak.Gameplay.Store.BagNotifier.On = !Sheytoonak.Gameplay.Store.BagNotifier.On; touch?.IgnoreFor(0.4f); }
+            // research proposal 40 (2026-11-16): my invite link through Telegram's share sheet; only inside Telegram
+            if (TelegramWeb.Inside)
+            {
+                var invR = new Rect(notR.xMax + 12 * u, top, vibR.width * 1.15f, barH);
+                Plank(invR);
+                var gold = new GUIStyle(small); gold.normal.textColor = new Color(1f, 0.85f, 0.35f);
+                if (GUI.Button(invR, Ar.T(Ar.Invite), gold)) { duelGame.ShareInvite(); touch?.IgnoreFor(0.5f); }
+            }
 
             // arena card in the middle
             float cw = Mathf.Min(430 * u, Screen.width * 0.34f), ch = cw * 0.56f;

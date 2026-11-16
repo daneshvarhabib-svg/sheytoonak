@@ -103,6 +103,47 @@ namespace Sheytoonak
             ShardBank = PlayerPrefs.GetInt(PrefShards, 0);
         }
 
+        void Start() { ClaimInviteGift(); }
+
+        // ------------------------------------------------------------------ invites and the story (research p40/p41, 2026-11-16)
+        // User (2026-11-15): «مثل همستر کامبت باشه … یه لینک یونیک جنریت شه و من فوروارد کنم به دوستم. وقتی روش کلیک کرد و بازی رو
+        // اوپن کرد اتوماتیک به اون و من یه مقداری خرده شیشه بده … دیگه مجبور نشه کد رو وارد کنه». The friend's half needs no
+        // server: Telegram hands the game the link's start parameter. ⚠️ The inviter's half (a prize on the inviter's own phone)
+        // needs a server and waits for it (docs/LAUNCH.fa.md); nothing here pretends otherwise.
+        public const int InviteGift = 500, StoryPrize = 50;
+        const string PrefInvite = "sheytoonak.invite.claimed", PrefStory = "sheytoonak.story.day";
+
+        /// <summary>Opened from someone's invite link for the first time on this account: the gift, once.</summary>
+        void ClaimInviteGift()
+        {
+            string inviter = TelegramWeb.Inviter;
+            if (string.IsNullOrEmpty(inviter) || PlayerPrefs.GetInt(PrefInvite, 0) == 1) return;
+            PlayerPrefs.SetInt(PrefInvite, 1);
+            ShardBank += InviteGift;
+            PlayerPrefs.SetInt(PrefShards, ShardBank); PlayerPrefs.Save();
+            Debug.Log("SHEYTOONAK INVITE gift +" + InviteGift + " (from an invite link)");
+            PendingInviteGift = InviteGift; // the lobby shows it as a bag reveal (its handlers may not exist yet at Start)
+        }
+        /// <summary>Shards of an invite gift not shown yet; the lobby shows it once and sets 0.</summary>
+        public int PendingInviteGift { get; set; }
+
+        /// <summary>Telegram's share sheet with my invite link.</summary>
+        public void ShareInvite() => TelegramWeb.ShareLink(TelegramWeb.InviteLink, Ar.InviteText);
+
+        public bool StoryPaidToday => PlayerPrefs.GetString(PrefStory, "") == DailyCombo.Key(ShopDay);
+        public bool CanShareStory => TelegramWeb.Inside;
+
+        /// <summary>The win on my Telegram story with my invite link; the small prize once a day.</summary>
+        public void ShareWinStory()
+        {
+            if (!TelegramWeb.ShareStory(Ar.StoryText, TelegramWeb.InviteLink, Ar.Title)) { Toast?.Invoke(Ar.StoryOld, 2f); return; }
+            if (StoryPaidToday) return;
+            PlayerPrefs.SetString(PrefStory, DailyCombo.Key(ShopDay));
+            ShardBank += StoryPrize;
+            PlayerPrefs.SetInt(PrefShards, ShardBank); PlayerPrefs.Save();
+            Toast?.Invoke("+" + Ar.N(StoryPrize), 1.6f);
+        }
+
         void OnEnable() { if (input != null) input.Kicked += OnKickGesture; }
         void OnDisable() { if (input != null) input.Kicked -= OnKickGesture; }
 

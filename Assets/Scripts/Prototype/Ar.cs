@@ -78,6 +78,12 @@ namespace Sheytoonak
         public const string NotifyOn = "تنبيه: أيوه";
         public const string NotifyOff = "تنبيه: لأ";
         public const string Smashed = "+١  كسرت الشباك!";
+        public const string Invite = "ادعي صاحبك";
+        public const string InviteText = "تعال كسّر شبابيك معي بمدينة الفاجعة! افتح الرابط وخود ٥٠٠ زجاج هدية.";
+        public static string InviteGot(int n) => "هدية من صاحبك: +" + N(n) + " زجاج";
+        public const string Story = "حطّها بالستوري";
+        public const string StoryText = "كسّرت شبابيك الحارة كلها! تعال جرّب.";
+        public const string StoryOld = "حدّث تلغرام لتنشر بالستوري";
         public const string ComboTitle = "تركيبة اليوم";
         public const string ComboDone = "أخدتها اليوم";
         public const string ComboWon = "تركيبة اليوم! +";

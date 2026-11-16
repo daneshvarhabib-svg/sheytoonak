@@ -9,5 +9,33 @@ mergeInto(LibraryManager.library, {
   },
   SheytoonakTgInside: function () {
     try { var w = window.Telegram && window.Telegram.WebApp; return w && w.initData ? 1 : 0; } catch (e) { return 0; }
+  },
+  SheytoonakTgStartParam: function () {
+    var s = '';
+    try { var w = window.Telegram && window.Telegram.WebApp; s = (w && w.initDataUnsafe && w.initDataUnsafe.start_param) || ''; } catch (e) {}
+    var n = lengthBytesUTF8(s) + 1, p = _malloc(n); stringToUTF8(s, p, n); return p;
+  },
+  SheytoonakTgUserId: function () {
+    var s = '';
+    try { var w = window.Telegram && window.Telegram.WebApp; var u = w && w.initDataUnsafe && w.initDataUnsafe.user; s = u && u.id ? String(u.id) : ''; } catch (e) {}
+    var n = lengthBytesUTF8(s) + 1, p = _malloc(n); stringToUTF8(s, p, n); return p;
+  },
+  SheytoonakTgShareLink: function (url, text) {
+    try {
+      var u = UTF8ToString(url), t = UTF8ToString(text);
+      var share = 'https://t.me/share/url?url=' + encodeURIComponent(u) + '&text=' + encodeURIComponent(t);
+      var w = window.Telegram && window.Telegram.WebApp;
+      if (w && w.openTelegramLink) w.openTelegramLink(share); else window.open(share, '_blank');
+    } catch (e) {}
+  },
+  SheytoonakTgShareStory: function (text, link, linkName) {
+    try {
+      var w = window.Telegram && window.Telegram.WebApp;
+      if (!w || !w.shareToStory || !w.isVersionAtLeast || !w.isVersionAtLeast('7.8')) return 0;
+      // the picture must be a public https address: story.jpg is published next to the page (WebGLTemplates/Telegram)
+      var media = new URL('story.jpg', window.location.href).href;
+      w.shareToStory(media, { text: UTF8ToString(text), widget_link: { url: UTF8ToString(link), name: UTF8ToString(linkName) } });
+      return 1;
+    } catch (e) { return 0; }
   }
 });
