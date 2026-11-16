@@ -1845,6 +1845,9 @@ namespace Sheytoonak.Prototype
         {
             var combo = duelGame.TodaysCombo;
             if (combo.Length == 0 || r.height < 50 * u) return;
+            // the dark plate only as tall as its content (run 291: it ran down to the shop button, mostly empty)
+            float fs0 = Mathf.Min((r.width - 24 * u) / 3f, r.height - 70 * u);
+            r.height = Mathf.Min(r.height, 28 * u + 8 * u + fs0 + 34 * u);
             var o = GUI.color; GUI.color = new Color(0f, 0f, 0f, 0.55f); GUI.DrawTexture(r, Texture2D.whiteTexture); GUI.color = o;
             var head = new GUIStyle(GUI.skin.label) { font = Ar.Font, fontSize = Mathf.RoundToInt(18 * u), alignment = TextAnchor.MiddleCenter, fontStyle = FontStyle.Bold };
             head.normal.textColor = new Color(1f, 0.85f, 0.4f);
