@@ -598,3 +598,11 @@ A simple game icon of a solar eclipse: a dark moon covering most of a yellow sun
 ```
 A hand-held fishing net on a wooden pole, round wooden hoop with a few orange cork floats, loose cream-coloured mesh sagging below the hoop, slightly worn and patched. Same hand-painted cartoon style as the other street props, thick dark outlines, warm colours. Single object, centered, on a flat solid bright green background #00FF00, no text, no logo.
 ```
+
+## قهرمان‌ها از پشت، حداکثر یک‌سومِ صورت (۲۶ آبان)
+کاربر: «گرافیک کار باید تغییر کنه و از پشت سر بازیکنا باشه و نهایتاً یک سوم صورتشون معلوم باشه. الآن نصفشون معلومه که خوب نیست». پرامپت‌های ۱۱ آبان «right third of the face» گفته بودند و تصویرها نصفِ صورت دادند. عبارتِ تازه چشم را صریحاً ممنوع می‌کند. اول یک قهرمان (زعتر) برای آزمون؛ اگر درست درآمد، بقیه با همین عبارت. عروسک (`<id>_rig/`) را من از تصویرِ تازه دوباره تکه می‌کنم.
+
+`Art/Heroes/zaatar_idle.png`
+```
+Original cartoon character for a mobile street game, in exactly the same bold caricature style as the attached Abu Shahata picture: thick dark brown outlines, big head (about 1/4 of body height), chunky hands and feet, warm saturated colours with soft cel shading. Character: Zaatar, a young cartoon Damascus street kid, short curly brown hair, an olive-green tracksuit with two white stripes on the sleeves and legs, grey sneakers. Full body seen MOSTLY FROM BEHIND, turned only slightly to the RIGHT: the back of the head and the curly hair fill most of the head, we see only the right ear, the edge of the right cheek and the tip of the nose, NO eyes and NO mouth visible. Neutral rig pose: standing straight, legs slightly apart, BOTH feet pointing to the right, the NEAR leg (closer to the viewer) slightly in front of the FAR leg, arms hanging down a little away from the body, hands open and relaxed, elbows and knees straight, nothing covering the legs below the knee. Same height and scale as the attached picture. On a flat solid bright green background #00FF00, no ground, no shadow, no scene. Whole body visible, centered, about 85% of the image height. No text, no logo, no flag, no watermark, no political symbols.
+```
