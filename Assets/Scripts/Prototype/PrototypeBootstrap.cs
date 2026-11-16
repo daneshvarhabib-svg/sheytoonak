@@ -1276,9 +1276,15 @@ namespace Sheytoonak.Prototype
                 // User (2026-11-08): «با شکستن هر چندتا پنجره بیاد بیرون و فحش بده. با شکستن تک تک پنجره‌ها فحش رو نداشته
                 // باشیم». A resident leans out every 2-4 broken windows of the round (the first after 2), never on each one;
                 // the curse voice is tied to the same moment (GameEvents.ResidentShouts).
+                // User (2026-11-16): «این پنجره‌ها اونایین که یکی میاد از توشون و فحش میده. در واقع پنجره فحش دار دو امتیاز
+                // حساب می‌شه». In a duel the resident leans out of exactly the windows worth 2 (DuelRules.DoubleWindows), with a
+                // «+٢»; the every-few-windows cadence is kept only for a game without duel rules.
                 brokenThisRound++;
-                if (brokenThisRound >= nextResidentAt)
+                var dr = duelGame != null ? duelGame.Rules : null;
+                bool curse = dr != null ? dr.IsDouble(i) : brokenThisRound >= nextResidentAt;
+                if (curse)
                 {
+                    if (dr != null) Toast(Ar.DoubleWindow, 1.4f);
                     nextResidentAt = brokenThisRound + Random.Range(2, 5);
                     var who = PickResident();
                     CurseVoice.ResidentIsFemale = who != null && FemaleResidents.Contains(who.name); // voice matches the face

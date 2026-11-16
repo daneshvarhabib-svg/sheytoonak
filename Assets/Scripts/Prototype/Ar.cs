@@ -78,6 +78,7 @@ namespace Sheytoonak
         public const string NotifyOn = "تنبيه: أيوه";
         public const string NotifyOff = "تنبيه: لأ";
         public const string Smashed = "+١  كسرت الشباك!";
+        public const string DoubleWindow = "+٢  شباك الفحش!"; // a window worth 2: the resident leans out and curses
         public const string BounceFirst = "خلّيها تنطّ مرّة أول";
         public const string TooFar = "بعيدة عنك";
         public const string Now = "هلّق!";

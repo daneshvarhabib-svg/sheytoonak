@@ -496,7 +496,8 @@ namespace Sheytoonak
             float meanArea = 0f; foreach (var r in mapper.WindowRects) meanArea += r.width * r.height; meanArea /= Mathf.Max(1, n);
             for (int i = 0; i < n; i++) shards[i] = Mathf.Max(5, Mathf.RoundToInt(shardsPerWindow * (mapper.WindowRects[i].width * mapper.WindowRects[i].height) / Mathf.Max(0.01f, meanArea)));
             var rowMap = new int[n]; for (int i = 0; i < n; i++) rowMap[i] = RowOf(i);
-            Rules = new DuelRules(rows, shards, left, right, randomSeed, rowMap);
+            // two windows worth 2 on a small house, four on a big one (user 2026-11-16, DuelRules)
+            Rules = new DuelRules(rows, shards, left, right, randomSeed, rowMap, n >= 17 ? 4 : 2);
             MatchTimeLeft = DuelRules.MatchSeconds;
             Bot = new DuelBot(randomSeed);
             Rules.TurnStarted += OnTurnStarted;

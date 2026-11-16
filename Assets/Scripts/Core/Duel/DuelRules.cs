@@ -70,6 +70,9 @@ namespace Sheytoonak.Core.Duel
         /// <summary>The window of an even house that never breaks (worth 0); -1 when the house is odd. Not shown to anyone.</summary>
         public readonly int SealedWindow;
         public readonly int TotalValue;
+        /// <summary>The windows worth 2 this round (an even count, see the constructor).</summary>
+        public readonly int[] DoubleWindows;
+        public bool IsDouble(int w) => Array.IndexOf(DoubleWindows, w) >= 0;
         readonly int[] brokenBy;                // -1 sound, else Side
         public readonly HeroDef[][] Heroes = new HeroDef[2][];
 
@@ -100,7 +103,7 @@ namespace Sheytoonak.Core.Duel
         /// <param name="rows">windows per row, bottom row first (the bottom row is the "direct" row worth 1).</param>
         /// <param name="rowOfWindow">optional row of each window index (bottom = 0). ⚠️ the facade's window indices
         /// are NOT bottom-first (run 30: the top row came out worth 1); without this map indices are assumed bottom-first.</param>
-        public DuelRules(int[] rows, int[] shardsPerWindow, HeroDef[] left, HeroDef[] right, int seed = 0, int[] rowOfWindow = null)
+        public DuelRules(int[] rows, int[] shardsPerWindow, HeroDef[] left, HeroDef[] right, int seed = 0, int[] rowOfWindow = null, int doubleWindows = 0)
         {
             rng = seed != 0 ? new Random(seed) : new Random();
             int n = 0; foreach (int r in rows) n += r;
@@ -129,6 +132,22 @@ namespace Sheytoonak.Core.Duel
                 WindowValue[SealedWindow] = 0;
             }
             HiddenWindow = SealedWindow;
+            // User (2026-11-16): «تو هر دست چندتا از پنجره‌ها شانسی امتیازش دو برابر باشه اما هم‌چنان قاعده کل امتیازات هر دست
+            // فرد هست رعایت بشه. برای همین تعداد پنجره‌هایی که دو امتیازین حتماً باید زوج باشه … پنجره فحش دار دو امتیاز حساب
+            // می‌شه». An even number of random windows (never the sealed one) is worth 2: the odd total stays odd, so no tie by
+            // count. The resident leans out of exactly these (PrototypeBootstrap). Nobody is told which ones before they break.
+            var doubles = new System.Collections.Generic.List<int>();
+            int want = Math.Max(0, doubleWindows) / 2 * 2;
+            var pool = new System.Collections.Generic.List<int>();
+            for (int i = 0; i < n; i++) if (i != SealedWindow) pool.Add(i);
+            while (doubles.Count < want && pool.Count > 0)
+            {
+                int k = rng.Next(pool.Count);
+                doubles.Add(pool[k]); pool.RemoveAt(k);
+            }
+            if (doubles.Count % 2 == 1) doubles.RemoveAt(doubles.Count - 1);
+            foreach (int w in doubles) WindowValue[w] = 2;
+            DoubleWindows = doubles.ToArray();
             int total = 0; foreach (int v in WindowValue) total += v;
             TotalValue = total;
             WindowShards = shardsPerWindow ?? new int[n];

@@ -69,6 +69,42 @@ namespace Sheytoonak.Tests
         }
 
         [Test]
+        public void Curse_windows_are_worth_two_come_in_pairs_and_keep_the_total_odd()
+        {
+            // user 2026-11-16: «تعداد پنجره‌هایی که دو امتیازین حتماً باید زوج باشه … پنجره فحش دار دو امتیاز حساب می‌شه»
+            var h = StarterHeroes.All;
+            for (int seed = 1; seed < 60; seed++)
+                foreach (int ask in new[] { 2, 3, 4 })
+                {
+                    var r = new DuelRules(new[] { 5, 5, 5 }, new int[15], new[] { h[0], h[1], h[2] }, new[] { h[3], h[4], h[0] }, seed, null, ask);
+                    Assert.AreEqual(0, r.DoubleWindows.Length % 2, "an even number of doubles, asked " + ask);
+                    Assert.AreEqual(ask / 2 * 2, r.DoubleWindows.Length);
+                    int twos = 0; for (int w = 0; w < 15; w++) if (r.WindowValue[w] == 2) { twos++; Assert.IsTrue(r.IsDouble(w)); }
+                    Assert.AreEqual(r.DoubleWindows.Length, twos);
+                    Assert.AreEqual(15 + twos, r.TotalValue);
+                    Assert.AreEqual(1, r.TotalValue % 2, "the round total stays odd: no tie by count");
+
+                    var even = new DuelRules(new[] { 4, 4 }, new int[8], new[] { h[0], h[1], h[2] }, new[] { h[3], h[4], h[0] }, seed, new[] { 1, 1, 1, 1, 0, 0, 0, 0 }, ask);
+                    Assert.IsFalse(even.IsDouble(even.SealedWindow), "the sealed window is never a double");
+                    Assert.AreEqual(1, even.TotalValue % 2);
+                }
+            var none = new DuelRules(new[] { 5, 5, 5 }, new int[15], new[] { h[0], h[1], h[2] }, new[] { h[3], h[4], h[0] }, 3);
+            Assert.AreEqual(0, none.DoubleWindows.Length, "no doubles unless asked (old callers unchanged)");
+        }
+
+        [Test]
+        public void Taking_a_double_window_scores_two()
+        {
+            var h = StarterHeroes.All;
+            var r = new DuelRules(new[] { 5, 5, 5 }, new int[15], new[] { h[0], h[1], h[2] }, new[] { h[3], h[4], h[0] }, 5, null, 2);
+            int w = r.DoubleWindows[0];
+            r.Start(Side.Left);
+            Assert.AreEqual(ActionReject.None, r.BeginKick(Side.Left));
+            r.EndKick(Side.Left, w);
+            Assert.AreEqual(2, r.Windows[(int)Side.Left]);
+        }
+
+        [Test]
         public void Every_window_is_worth_one_and_an_even_house_seals_one_upper_window()
         {
             // user 2026-11-05: never a tie; user 2026-11-06: «تو هر دست یه پنجره رو نشون بذاریم. هرچی ضربه بزنی نشکنه»
