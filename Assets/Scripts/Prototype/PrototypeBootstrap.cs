@@ -1284,7 +1284,7 @@ namespace Sheytoonak.Prototype
                 bool curse = dr != null ? dr.IsDouble(i) : brokenThisRound >= nextResidentAt;
                 if (curse)
                 {
-                    if (dr != null) Toast(Ar.DoubleWindow, 1.4f);
+                    if (dr != null) duelGame.Say(Ar.DoubleWindow, 1.4f);
                     nextResidentAt = brokenThisRound + Random.Range(2, 5);
                     var who = PickResident();
                     CurseVoice.ResidentIsFemale = who != null && FemaleResidents.Contains(who.name); // voice matches the face
@@ -1816,6 +1816,7 @@ namespace Sheytoonak.Prototype
                 GUI.DrawTexture(new Rect(shopR.xMax - 26 * u, shopR.y - 6 * u, 26 * u, 26 * u), DotTex()); GUI.color = o;
             }
             SideSoon(new Rect(Screen.width - pad - sbw, Screen.height - sbh - pad, sbw, sbh), "btn_blue", "trophy", "الحارة", u);
+            ComboCard(new Rect(pad, top + barH + 30 * u + sbh + 18 * u, sbw * 1.1f, Mathf.Max(60 * u, (Screen.height - sbh - pad) - (top + barH + 30 * u + sbh + 18 * u) - 18 * u)), u);
 
             // the bag rack sits in a dark panel along the bottom
             float sw = Mathf.Min(105 * u, (Screen.width - 80 * u) / 4f), gap = 14 * u, total = sw * 4 + gap * 3;
@@ -1825,6 +1826,38 @@ namespace Sheytoonak.Prototype
         }
 
         static Texture2D homeBg, heroesCardTex; static bool homeBgLooked, heroesCardLooked;
+
+        /// <summary>
+        /// «تركيبة اليوم» (research proposal 39, 2026-11-16): today's three faces between the missions and the shop, the
+        /// prize under them, a tick once it was won today. Win a duel with all three in the team.
+        /// </summary>
+        void ComboCard(Rect r, float u)
+        {
+            var combo = duelGame.TodaysCombo;
+            if (combo.Length == 0 || r.height < 50 * u) return;
+            var o = GUI.color; GUI.color = new Color(0f, 0f, 0f, 0.55f); GUI.DrawTexture(r, Texture2D.whiteTexture); GUI.color = o;
+            var head = new GUIStyle(GUI.skin.label) { font = Ar.Font, fontSize = Mathf.RoundToInt(18 * u), alignment = TextAnchor.MiddleCenter, fontStyle = FontStyle.Bold };
+            head.normal.textColor = new Color(1f, 0.85f, 0.4f);
+            float hh = 28 * u;
+            GUI.Label(new Rect(r.x, r.y + 4 * u, r.width, hh), Ar.T(Ar.ComboTitle), head);
+            float gap = 6 * u, fs = Mathf.Min((r.width - gap * 4) / 3f, r.height - hh - 42 * u);
+            float x0 = r.x + (r.width - (fs * 3 + gap * 2)) * 0.5f;
+            for (int k = 0; k < combo.Length && k < 3; k++)
+            {
+                var fr = new Rect(x0 + k * (fs + gap), r.y + hh + 8 * u, fs, fs);
+                GUI.color = new Color(1f, 0.75f, 0.3f); GUI.DrawTexture(fr, Texture2D.whiteTexture); GUI.color = o;
+                DraftScreen.Portrait(new Rect(fr.x + 2 * u, fr.y + 2 * u, fr.width - 4 * u, fr.height - 4 * u), combo[k]);
+            }
+            var foot = new GUIStyle(head) { fontSize = Mathf.RoundToInt(16 * u), fontStyle = FontStyle.Normal };
+            foot.normal.textColor = Color.white;
+            float fy = r.y + hh + 8 * u + fs + 4 * u;
+            if (duelGame.ComboClaimedToday) GUI.Label(new Rect(r.x, fy, r.width, 26 * u), Ar.T(Ar.ComboDone), foot);
+            else
+            {
+                DuelHud.DrawIcon(new Rect(r.center.x + 8 * u, fy + 2 * u, 22 * u, 22 * u), "shards", Color.white);
+                GUI.Label(new Rect(r.x, fy, r.width * 0.5f + 4 * u, 26 * u), "+" + Ar.N(Sheytoonak.Core.Duel.DailyCombo.Prize), new GUIStyle(foot) { alignment = TextAnchor.MiddleRight });
+            }
+        }
 
         // ------------------------------------------------------------------ heroes: levels (SCENARIO §8)
 

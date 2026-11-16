@@ -445,6 +445,30 @@ namespace Sheytoonak
             StartCoroutine(DraftBots());
         }
 
+        // ------------------------------------------------------------------ «تركيبة اليوم» (research proposal 39)
+        /// <summary>A line on the duel's own toast (the HUD draws it), for the stage and the bootstrap.</summary>
+        public void Say(string text, float seconds) => Toast?.Invoke(text, seconds);
+
+        const string PrefCombo = "sheytoonak.combo.claimed";
+        public event Action<int> ComboWon; // shards paid
+        public string[] TodaysCombo => DailyCombo.For(ShopDay, PoolIds());
+        public bool ComboClaimedToday => PlayerPrefs.GetString(PrefCombo, "") == DailyCombo.Key(ShopDay);
+
+        /// <summary>A won duel with all three of today's heroes in my team pays the prize once that day.</summary>
+        void ClaimCombo()
+        {
+            if (ComboClaimedToday || Rules == null) return;
+            var team = new System.Collections.Generic.List<string>();
+            foreach (var h in Rules.Heroes[(int)Me]) team.Add(h.Id);
+            if (!DailyCombo.Complete(TodaysCombo, team)) return;
+            ShardBank += DailyCombo.Prize;
+            PlayerPrefs.SetString(PrefCombo, DailyCombo.Key(ShopDay));
+            PlayerPrefs.SetInt(PrefShards, ShardBank); PlayerPrefs.Save();
+            Debug.Log("SHEYTOONAK COMBO won +" + DailyCombo.Prize);
+            ComboWon?.Invoke(DailyCombo.Prize);
+            Toast?.Invoke(Ar.ComboWon + Ar.N(DailyCombo.Prize), 2.2f);
+        }
+
         static string[] PoolIds()
         {
             var a = new string[StarterHeroes.All.Length];
@@ -617,6 +641,7 @@ namespace Sheytoonak
             // a bag comes from a win (any duel, challenge too), not from time; a full rack gets nothing.
             // Review 2026-11-07 §2.6: no timers — the bag you tapped opens with your next win.
             if (winner == Me && !Rules.Draw) Bags.AddFromWin();
+            if (winner == Me && !Rules.Draw) ClaimCombo();
             SaveBags();
             ball.Hide();
             Finished?.Invoke(winner, winner == Me && !Rules.Draw);
