@@ -237,7 +237,7 @@ namespace Sheytoonak.Prototype
             // User (2026-11-05): the 3:1 paintings (2172x724) replace the 2.3:1 ones; houses 13–22 stay in code until their 3:1
             // versions arrive («فعلا این سه تا رو داشته باش تا باقی برسن»).
             // test (user, 2026-11-05): one 3:1 painting with the top row 8 % below the edge, alone, to see if it fills the frame
-            var houses = new[] { House36(), House37(), House38(), House39(), House40(), House41(), House42(), House43() }; // 19, 17, 22, 19, 16, 17, 14, 24 windows; the curse windows make every round's total odd
+            var houses = new[] { House36(), House37(), House38(), House39(), House40(), House41(), House42(), House43(), House44() }; // 19, 17, 22, 19, 16, 17, 14, 24, 19 windows; the curse windows make every round's total odd
             allHouses = houses;
 
             // Player: foot position + window mapping. No body: the game is first-person (POV).
@@ -483,6 +483,16 @@ namespace Sheytoonak.Prototype
                 R(1946f, 567f, 2050f, 654f),
             },
             0.25f, 1.95f, 0f, 1.2f, null, "Art/house_43_broken", R(1300f, 185f, 1370f, 235f));
+
+        // Medieval: crumbling ochre plaster, a sagging propped balcony (its triple window is one pane), 7 + 5 + 7 = 19.
+        HouseDefinition House44() => MakePaintedHouse("البيت ٤٤", "Art/house_44", 2172f, 724f, Wide3W,
+            new[]
+            {
+                R(183f, 58f, 316f, 210f), R(499f, 52f, 619f, 205f), R(804f, 67f, 922f, 200f), R(1081f, 67f, 1199f, 211f), R(1372f, 67f, 1490f, 200f), R(1648f, 67f, 1766f, 212f), R(1939f, 67f, 2061f, 203f),
+                R(178f, 284f, 308f, 424f), R(515f, 284f, 645f, 418f), R(960f, 251f, 1205f, 352f), R(1510f, 284f, 1636f, 418f), R(1866f, 284f, 1984f, 429f), R(171f, 497f, 314f, 662f), R(499f, 512f, 633f, 662f),
+                R(804f, 512f, 922f, 662f), R(1076f, 512f, 1197f, 662f), R(1363f, 499f, 1494f, 670f), R(1644f, 512f, 1766f, 662f), R(1933f, 512f, 2051f, 668f),
+            },
+            0.25f, 1.95f, 0f, 1.2f, null, "Art/house_44_broken", R(1150f, 210f, 1250f, 250f));
 
         // Houses 28–35 (3:1 but 5–9 windows) left the pool on 2026-11-07 (user: «حداقل ۱۱ تا پنجره قابل شکستن … باید بمونن»).
 
