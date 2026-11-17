@@ -237,7 +237,7 @@ namespace Sheytoonak.Prototype
             // User (2026-11-05): the 3:1 paintings (2172x724) replace the 2.3:1 ones; houses 13–22 stay in code until their 3:1
             // versions arrive («فعلا این سه تا رو داشته باش تا باقی برسن»).
             // test (user, 2026-11-05): one 3:1 painting with the top row 8 % below the edge, alone, to see if it fills the frame
-            var houses = new[] { House36(), House37(), House38(), House39() }; // 19, 17, 21, 19 windows: at least 11, always odd
+            var houses = new[] { House36(), House37(), House38(), House39(), House40(), House41(), House42(), House43() }; // 19, 17, 21, 19, 15, 17, 13, 23 windows: at least 11, always odd
             allHouses = houses;
 
             // Player: foot position + window mapping. No body: the game is first-person (POV).
@@ -397,7 +397,7 @@ namespace Sheytoonak.Prototype
         // Houses 7–27 (3:2 and 2.3:1 paintings) were removed on 2026-11-07 (design review §2.8): the pool is the 3:1 gritty houses only.
 
         // User (2026-11-17): «کلا قصه رو ببریم زمان قرون وسطا». The four medieval photoreal facades (house_36..39) replace
-        // the cartoon houses (in ArtArchive/Houses/toon_*); house_40 left the pool until more medieval houses are painted.
+        // the cartoon houses (in ArtArchive/Houses/toon_*); house_40..43 (2026-11-17) are the second medieval set.
         // Panes measured by eye on each picture; the broken twin is the intact picture with each pane taken from the AI's
         // broken picture at that pane's own best-matching offset (the AI redraws the whole wall a pixel or two off).
         // Medieval: honey limestone, a wooden balcony (2 of its windows break), 7 + 8 + 4 = 19.
@@ -439,6 +439,46 @@ namespace Sheytoonak.Prototype
                 R(392f, 535f, 463f, 668f), R(735f, 535f, 808f, 668f), R(1065f, 535f, 1140f, 668f), R(1400f, 540f, 1475f, 668f), R(1715f, 540f, 1790f, 668f),
             },
             0.25f, 1.95f, 0f, 1.2f, null, "Art/house_39_broken", R(560f, 10f, 700f, 50f));
+
+        // Medieval: rose sandstone, carved frames, geranium pots on a ledge, 6 + 6 + 3 = 15 (the 4th bottom window stays whole: 16 would be even).
+        HouseDefinition House40() => MakePaintedHouse("البيت ٤٠", "Art/house_40", 2172f, 724f, Wide3W,
+            new[]
+            {
+                R(151f, 92f, 251f, 205f), R(504f, 92f, 604f, 205f), R(857f, 92f, 957f, 205f), R(1204f, 92f, 1304f, 205f), R(1557f, 92f, 1657f, 205f), R(1921f, 92f, 2021f, 205f), R(151f, 318f, 251f, 441f),
+                R(500f, 318f, 604f, 444f), R(842f, 317f, 957f, 438f), R(1204f, 318f, 1304f, 435f), R(1549f, 318f, 1664f, 447f), R(1921f, 318f, 2021f, 444f), R(502f, 564f, 604f, 704f), R(853f, 564f, 961f, 703f),
+                R(1195f, 563f, 1304f, 703f),
+            },
+            0.25f, 1.95f, 0f, 1.2f, null, "Art/house_40_broken", R(60f, 560f, 200f, 680f));
+
+        // Medieval: timber-framed upper storeys on rough stone, 6 + 6 + 5 = 17.
+        HouseDefinition House41() => MakePaintedHouse("البيت ٤١", "Art/house_41", 2172f, 724f, Wide3W,
+            new[]
+            {
+                R(180f, 52f, 298f, 176f), R(536f, 52f, 654f, 176f), R(859f, 52f, 977f, 176f), R(1195f, 52f, 1313f, 176f), R(1518f, 52f, 1636f, 176f), R(1871f, 52f, 1989f, 176f), R(180f, 290f, 298f, 421f),
+                R(527f, 290f, 654f, 424f), R(859f, 290f, 977f, 424f), R(1195f, 290f, 1313f, 420f), R(1518f, 290f, 1636f, 424f), R(1856f, 290f, 1989f, 423f), R(196f, 540f, 314f, 674f), R(553f, 540f, 690f, 674f),
+                R(1022f, 540f, 1145f, 665f), R(1484f, 540f, 1631f, 674f), R(1859f, 531f, 1987f, 674f),
+            },
+            0.25f, 1.95f, 0f, 1.2f, null, "Art/house_41_broken", R(400f, 570f, 500f, 640f));
+
+        // Medieval: cream stone with turquoise tile frames and a fountain niche, 5 + 5 + 3 = 13 (the bottom-right one stays whole: 14 would be even).
+        HouseDefinition House42() => MakePaintedHouse("البيت ٤٢", "Art/house_42", 2172f, 724f, Wide3W,
+            new[]
+            {
+                R(182f, 53f, 317f, 199f), R(572f, 53f, 724f, 200f), R(1012f, 53f, 1165f, 198f), R(1425f, 53f, 1576f, 191f), R(1866f, 54f, 1994f, 199f), R(186f, 300f, 331f, 423f), R(587f, 300f, 711f, 418f),
+                R(1027f, 300f, 1151f, 418f), R(1440f, 300f, 1564f, 418f), R(1866f, 300f, 1990f, 418f), R(187f, 516f, 325f, 657f), R(587f, 527f, 712f, 657f), R(1439f, 512f, 1576f, 657f),
+            },
+            0.25f, 1.95f, 0f, 1.2f, null, "Art/house_42_broken", R(380f, 440f, 520f, 500f));
+
+        // Medieval: patterned red brick, wooden balconettes and laundry, 8 + 8 + 7 = 23 (the bottom-right one stays whole: 24 would be even).
+        HouseDefinition House43() => MakePaintedHouse("البيت ٤٣", "Art/house_43", 2172f, 724f, Wide3W,
+            new[]
+            {
+                R(111f, 78f, 215f, 165f), R(369f, 78f, 473f, 165f), R(603f, 78f, 722f, 165f), R(876f, 78f, 980f, 179f), R(1119f, 78f, 1234f, 179f), R(1366f, 78f, 1485f, 179f), R(1669f, 78f, 1773f, 165f),
+                R(1946f, 78f, 2050f, 166f), R(111f, 323f, 215f, 424f), R(369f, 323f, 473f, 412f), R(618f, 323f, 722f, 411f), R(876f, 323f, 989f, 410f), R(1130f, 323f, 1234f, 424f), R(1381f, 323f, 1494f, 424f),
+                R(1669f, 323f, 1773f, 413f), R(1936f, 323f, 2050f, 415f), R(111f, 567f, 215f, 665f), R(369f, 567f, 473f, 654f), R(618f, 567f, 722f, 666f), R(876f, 567f, 980f, 664f), R(1130f, 567f, 1234f, 667f),
+                R(1381f, 567f, 1485f, 667f), R(1654f, 567f, 1773f, 655f),
+            },
+            0.25f, 1.95f, 0f, 1.2f, null, "Art/house_43_broken", R(1300f, 185f, 1370f, 235f));
 
         // Houses 28–35 (3:1 but 5–9 windows) left the pool on 2026-11-07 (user: «حداقل ۱۱ تا پنجره قابل شکستن … باید بمونن»).
 
