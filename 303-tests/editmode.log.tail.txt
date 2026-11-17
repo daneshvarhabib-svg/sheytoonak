@@ -1,0 +1,400 @@
+Start importing Assets/Resources/Art/house_43.png using Guid(abbf164a7f2f4a97b0547e7b0b97907b) (TextureImporter) -> (artifact id: 'c3d1cac2d4d145b69215199029aff153') in 0.098752618 seconds
+Start importing Packages/com.unity.ugui/Editor Resources/Textures/btn_AlignMidline_Light.psd using Guid(bb42b2d967d6427983c901a4ffc8ecd9) (TextureImporter) -> (artifact id: 'e78e3806217fb3656fecfa79e01251c4') in 0.00161958 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/d_Pen.png using Guid(bb42fb9342e9d4e68b6cf39a2e071d9b) (TextureImporter) -> (artifact id: '1a7906d65c7d5835479d52e47b9b3754') in 0.001107555 seconds
+Start importing Assets/Resources/Art/Props/ped_06_boy_b.png using Guid(bb4652b44255497f88204d5e35ee9aaf) (TextureImporter) -> (artifact id: 'c6189e2e5ce1e4be6356a4e52a3c4acd') in 0.01248283 seconds
+Start importing Assets/Resources/Art/Cars/wheel_3.png using Guid(bb6e1bcc57404543a32fee5a570da0f2) (TextureImporter) -> (artifact id: '8650e43b428b576e5f3bfe4ad9270e01') in 0.013008801 seconds
+Start importing Assets/ArtArchive/Props/old_medics_load_4.png using Guid(bbfe1af6ff7a48eca2575c8249e9f67d) (TextureImporter) -> (artifact id: 'fcb6a8368a6d453c498dea68cbdc2550') in 0.017852784 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/Add Binding@2x.png using Guid(bb5fa99d6e9434c9ebf101c956021ee1) (TextureImporter) -> (artifact id: '1cf86fcb0c0f11bef0e55b80d0c92b4d') in 0.001247546 seconds
+Start importing Assets/Resources/Art/Heroes/toni_rig/arm_far.png using Guid(cb13c7e99c8e401bba58bcd502151025) (TextureImporter) -> (artifact id: 'd6e656cb9860f42f2e25e4cbf651abab') in 0.006331478 seconds
+Start importing Assets/Icons/app_icon.png using Guid(cb6762d92bff41f081744255a57d491a) (TextureImporter) -> (artifact id: 'f406605d83e781b76303293ddc13fa82') in 0.073583078 seconds
+Start importing Assets/Resources/Art/Heroes/um_arabiyat_rig/head.png using Guid(cb898c60f5bc45c08d8d379d3807dac9) (TextureImporter) -> (artifact id: '46692826c0ba8e7e3ba758c181f6e960') in 0.00743765 seconds
+Start importing Assets/Resources/Art/Heroes/abu_shahata_face.png using Guid(db87bf28ac16496a9d0c0c80192950ae) (TextureImporter) -> (artifact id: '8b9e1a8fa245c859ba68f22826ef323a') in 0.010517003 seconds
+Start importing Assets/Resources/Art/Heroes/um_arabiyat_rig/leg_near.png using Guid(db288055cca7448585e7d7a9c595dfb4) (TextureImporter) -> (artifact id: 'd534a96069e76f57383d68cf74df2c1e') in 0.009091615 seconds
+Start importing Assets/ArtArchive/Heroes/old_bubakr_k2.png using Guid(db3b5f90f99647f7b40c511086fe6f5b) (TextureImporter) -> (artifact id: '02f7e2143930a3b2d044ef5fbf6bc165') in 0.011677327 seconds
+Start importing Assets/ArtArchive/Props/old_ped_05_crutches_c.png using Guid(db4bce5962754b95b719eb4dbf646923) (TextureImporter) -> (artifact id: '94fe21ee67ec9d89b3c0074bb255d645') in 0.011437079 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/d_Button@4x.png using Guid(db3dc7a02ac6d4e90bbe905a44ac265b) (TextureImporter) -> (artifact id: 'd055c22b25a4b2539eb6dfd0fcb50d63') in 0.001384352 seconds
+Start importing Assets/ArtArchive/Houses/old_ground_sidewalk.png using Guid(db9d29df05504c65bd46df863861f76c) (TextureImporter) -> (artifact id: '5543cc878198bdda6da07c69c0890e55') in 0.068701736 seconds
+Start importing Assets/Resources/Art/Broken/pane_0.png using Guid(ebe156b0263d4c5485bc6c5b99038ec4) (TextureImporter) -> (artifact id: 'f608e0d067f8e54ac6bddc7b4cd57bed') in 0.010179785 seconds
+Start importing Assets/ArtArchive/Heroes/toon_hamada/old_front.png using Guid(eb13e3b94f074560a67ff3333bcfad66) (TextureImporter) -> (artifact id: '0f49bc8bfebbb142c2bd348e1016a45f') in 0.052957623 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/d_Interactive Binding.png using Guid(eb28fd64eacfa495c97193108f1cdf03) (TextureImporter) -> (artifact id: 'b273e7bd072a5348be1794e69a735fb3') in 0.001369754 seconds
+Start importing Assets/Resources/Art/Heroes/hamada_rig/arm_far.png using Guid(eb8d975421a247af9dfdffc1145c8d72) (TextureImporter) -> (artifact id: 'e33dfa8d98ca7c505e6aa5cc65f307c5') in 0.004292035 seconds
+Start importing Packages/com.unity.ugui/Editor Resources/Textures/SectionHeader_Dark.psd using Guid(fb5730e24283d0c489e5c7d0bee023d9) (TextureImporter) -> (artifact id: 'cb0f25fda61c9944ec0a35a2a51024b8') in 0.001376567 seconds
+Start importing Assets/ArtArchive/Heroes/old_toni_r3.png using Guid(0cb8f95422ad47c2a1db7a5ffa4fcae9) (TextureImporter) -> (artifact id: '63a1f7d8b0569ba25bef2bbcd18da607') in 0.011471083 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/Orientation@4x.png using Guid(1c751eb104ad5407992e614361d5f81e) (TextureImporter) -> (artifact id: 'ae180e919297d5db4a2b5ef26bc0cb6e') in 0.001352422 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/Button@2x.png using Guid(1c37f00575bd6494ea726be5afee89b9) (TextureImporter) -> (artifact id: '087be39f1dd54932775b365648c9c347') in 0.001207342 seconds
+Start importing Assets/Resources/Art/Heroes/abu_shahata_rig/arm_far.png using Guid(2c20ac9c3e5a47269d4fed1fef6fcd42) (TextureImporter) -> (artifact id: '2af055b43d817c3b3b2dca95178f2fc5') in 0.008764325 seconds
+Start importing Assets/ArtArchive/Heroes/old_bubakr_r4.png using Guid(2c507b6be33546e1961b7dc8f81a25ea) (TextureImporter) -> (artifact id: 'e3c38de2f4364eccaa0c4ebe1b96428f') in 0.011214735 seconds
+Start importing Assets/Resources/Art/Props/ped_06_boy_e.png using Guid(2ca0b24b982a40d68a2ab20fa1261515) (TextureImporter) -> (artifact id: 'bdd23dbbda3743f3a523d6eb565abaf0') in 0.01535716 seconds
+Start importing Assets/ArtArchive/Heroes/toon_hamada/rig/leg_far.png using Guid(2cc9f09d811d41e084c4a8ef3691c279) (TextureImporter) -> (artifact id: 'cebd181cee509f1b6ad9c0df947712e6') in 0.006002454 seconds
+Start importing Assets/ArtArchive/Heroes/old_zaatar_k5.png using Guid(2cad2f4ac45245d0bd185d688ca70f52) (TextureImporter) -> (artifact id: '91ccaead688ba61864a92cb10715b3bd') in 0.01412329 seconds
+Start importing Assets/Resources/Art/Props/ambulance.png using Guid(2c2fe6562ea24281a4a2b617e8723168) (TextureImporter) -> (artifact id: '6006612d3d53c5a36c46585293fa9dda') in 0.071730734 seconds
+Start importing Assets/ArtArchive/Poison/old_resident_03.png using Guid(3c0032bcb5b9400daee53887301acfb9) (TextureImporter) -> (artifact id: '3d8f7d55bd71bae81b0adddc2445064a') in 0.079351958 seconds
+Start importing Assets/Resources/Art/Cars/wheel_2.png using Guid(3c78a38077fb45279de81bc2b31fb15f) (TextureImporter) -> (artifact id: '232d8834a6a08c525aa7a42024a05c99') in 0.013050298 seconds
+Start importing Assets/ArtArchive/Props/old_ped_06_boy_a.png using Guid(3cce2cc46bbe4c5fb4a1d28604689f15) (TextureImporter) -> (artifact id: '9ae4e69251c1cba0fb82ec44e8f7dfa6') in 0.013363943 seconds
+Start importing Assets/Resources/Art/Icons/nails.png using Guid(4c029ed1ffe64437a27d469b9472d015) (TextureImporter) -> (artifact id: '75ba2ed6ad085f406fd47f00d862b10c') in 0.004728759 seconds
+Start importing Assets/ArtArchive/Heroes/old_fulla_k3.png using Guid(4cbb3f55d5d44644bacf053598f71197) (TextureImporter) -> (artifact id: 'ab73d9278970a2f6606d1895b9a4da38') in 0.012346817 seconds
+Start importing Assets/ArtArchive/Heroes/toon_bubakr/old_front.png using Guid(5ca84d441e2344559949f46cf1c98bd9) (TextureImporter) -> (artifact id: '8cf1494ab9f1a076f4d1f2f17f2a07a2') in 0.054675307 seconds
+Start importing Assets/ArtArchive/Heroes/toon_hamada/rig/leg_near.png using Guid(5c2a6f3c9b304844b86ee7ccdbbbf450) (TextureImporter) -> (artifact id: '8a80176c11e885f44fd2224ae5622bf4') in 0.007275889 seconds
+Start importing Assets/ArtArchive/Props/old_cargo_2.png using Guid(5c5ee56f3838456090843bea2fc3daad) (TextureImporter) -> (artifact id: '5a992f1b215cd51ee59e575ec8ec4e8a') in 0.01634253 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/Dpad@3x.png using Guid(6c1147159d9dc42948601b29dfc9a40c) (TextureImporter) -> (artifact id: '564363b8303f2850a6d9ba93c974e536') in 0.00124372 seconds
+Start importing Assets/ArtArchive/Heroes/old_fulla_k5.png using Guid(6c3731f32f774adcb00d92cc52de5811) (TextureImporter) -> (artifact id: '0bfe53b5ad5874eab4385f1c515a6b81') in 0.012508037 seconds
+Start importing Assets/Resources/Art/Heroes/toni_rig/leg_far.png using Guid(6c2cff90fe7f4da2a90a25ac23dd7568) (TextureImporter) -> (artifact id: '3a269816b341dbef7f189a95b1a9c417') in 0.00855234 seconds
+Start importing Assets/Resources/Art/Props/medics_empty_b.png using Guid(7cca53b620ed4e25bfd9e90163d642e5) (TextureImporter) -> (artifact id: 'bdab64b482f805867661bbc550456e52') in 0.013125689 seconds
+Start importing Assets/Resources/Art/ground_asphalt.png using Guid(7c1d4a0e9b5f4e2a8a3c6d1f2b4e5a11) (TextureImporter) -> (artifact id: '67ae2352ae1333c6c09be2fe0c88fd3a') in 0.064978892 seconds
+Start importing Assets/Resources/Art/wall_right.png using Guid(7c1d4a0e9b5f4e2a8a3c6d1f2b4e5a21) (TextureImporter) -> (artifact id: '3cafe58a8c3171c02ca633ae05be2e1a') in 0.082568835 seconds
+Start importing Assets/Resources/Art/ground_sidewalk.png using Guid(7c1d4a0e9b5f4e2a8a3c6d1f2b4e5a12) (TextureImporter) -> (artifact id: '99e5ad64460b8b3bb09b58d8e2e06c98') in 0.069278972 seconds
+Start importing Assets/Resources/Art/wall_left.png using Guid(7c1d4a0e9b5f4e2a8a3c6d1f2b4e5a22) (TextureImporter) -> (artifact id: 'fd59b24eabe02e9144bf5faaeec581c1') in 0.072586129 seconds
+Start importing Assets/Resources/Art/Props/tree_01.png using Guid(7c1d4a0e9b5f4e2a8a3c6d1f2b4e5a35) (TextureImporter) -> (artifact id: 'dbd35ed3d45c9037c1fcb1070af29537') in 0.082953785 seconds
+Start importing Assets/Resources/Art/Poison/nails.png using Guid(8c2a2819ffc84114badd06f0c13de2c9) (TextureImporter) -> (artifact id: 'c3e520b5c755bc366596ff776d3c5908') in 0.076470173 seconds
+Start importing Assets/ArtArchive/Heroes/old_hamada_k2.png using Guid(9cf15f4e5d3444f19a410c4f7549d333) (TextureImporter) -> (artifact id: 'e636f2bf7b0d44b8884531b3b6fc251b') in 0.012730933 seconds
+Start importing Assets/Resources/Art/UI/btn_green.png using Guid(9c04777da4924f2f82ba33a8244fd687) (TextureImporter) -> (artifact id: '5d3ad1dab9529535dee8dfc397ec5692') in 0.004403553 seconds
+Start importing Assets/Resources/Art/Heroes/bubakr_idle.png using Guid(9c56ec13e3dc43f2a0d3ce4a88ab8744) (TextureImporter) -> (artifact id: '96bdac4360b45063b7bfa448ce361780') in 0.047157066 seconds
+Start importing Assets/Resources/Art/house_42_broken.png using Guid(9c38add1e0e84a95a606c05615d1ccfb) (TextureImporter) -> (artifact id: 'c7c99a645e5166cc7cdcf8ba0ded711a') in 0.100505167 seconds
+Start importing Assets/Resources/Art/Icons/fart.png using Guid(9cecb9b0219f4840a6cda8c143d31f07) (TextureImporter) -> (artifact id: '95e468f29e635462e6e5cb58a2eb46aa') in 0.006374829 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/Pen@4x.png using Guid(acf10446fff184bb98db6350c2c43148) (TextureImporter) -> (artifact id: 'ab0715ff2ca272b7410cf856579eb65c') in 0.001514364 seconds
+Start importing Assets/Resources/Art/house_37_broken.png using Guid(ac6a8ec8704c4d29b6b7b9ef52919f56) (TextureImporter) -> (artifact id: '4728b2072d9e36d722e35eeea2667b54') in 0.099349792 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/d_Position@4x.png using Guid(ac4c5ccb2785f4460b2dcfe47010c688) (TextureImporter) -> (artifact id: '243b7dbdf3b07e4adb29d9be06e1d16e') in 0.001608129 seconds
+Start importing Assets/ArtArchive/Heroes/toon/fulla_toon_front.png using Guid(ac7df273b7ba435a88b9516318cf7787) (TextureImporter) -> (artifact id: '0d2e6797c82d78c2dc0fa0ab3a75d7ce') in 0.083582888 seconds
+Start importing Assets/ArtArchive/Props/old_medics_out_3.png using Guid(bc0226169e6c4761abd6ef1602692cd5) (TextureImporter) -> (artifact id: '26164798280d344005dbff1886be6eb0') in 0.019445544 seconds
+Start importing Assets/Resources/Art/Poison/flashlight.png using Guid(bca9eb310dd24adbbc9af4c9c876b50a) (TextureImporter) -> (artifact id: 'f6a23bf3dd5b9072bf00a2a7622a3a6f') in 0.069627412 seconds
+Start importing Assets/ArtArchive/Props/old_ped_03_oldman_d.png using Guid(bc6a56774b424bb6a3f5ff619248e70c) (TextureImporter) -> (artifact id: '81d4ec70a62bc4f1b9ae30ac37b3ff8d') in 0.01415064 seconds
+Start importing Assets/ArtArchive/Heroes/old_toni_kick.png using Guid(cc1515baa7be4ccaad6aa6a064e49f2d) (TextureImporter) -> (artifact id: '04538f325a8b16402b2f4f3de536062f') in 0.078089533 seconds
+Start importing Assets/Resources/Art/Heroes/shadi_rig/leg_near.png using Guid(dc36f84f759243089564803677a58393) (TextureImporter) -> (artifact id: 'd16df52c25e438f945f381d4ea4ebc07') in 0.009825895 seconds
+Start importing Assets/ArtArchive/Heroes/toon_fulla/rig/arm_near.png using Guid(dc76d08bf3e14b29be8a792fdb071de5) (TextureImporter) -> (artifact id: '106210dd8bd39a01c3c41df3cf11bbf9') in 0.009411442 seconds
+Start importing Assets/ArtArchive/Heroes/real/hamada_real_back.png using Guid(dc6a0bcb3a91627d2a2f7fd88625ce2d) (TextureImporter) -> (artifact id: 'd5b4cdf9ddc7014301b77314090f80cb') in 0.084848428 seconds
+Start importing Assets/Resources/Art/Poison/net.png using Guid(dcce649255f24346bef685663ef43aff) (TextureImporter) -> (artifact id: '80efb42dfbdc84d902f4ff98724aaae7') in 0.043152708 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/InputControl.png using Guid(ec85de66fa5b64dd984fdcc82f8f92b3) (TextureImporter) -> (artifact id: '72185aa36471e4db6769497c37ddc74f') in 0.001489808 seconds
+Start importing Assets/ArtArchive/Heroes/abu_shahata_rig_ref.png using Guid(ec68136695024441ab8aa4ea03b0872e) (TextureImporter) -> (artifact id: 'b06aa6c12819612d846c45de1cf8acaf') in 0.067202069 seconds
+Start importing Packages/com.unity.ugui/Editor Resources/Gizmos/TMP - Sprite Asset Icon.psd using Guid(ec7c645d93308c04d8840982af12101e) (TextureImporter) -> (artifact id: '4512189242035ce801f8f99c444c5441') in 0.002843012 seconds
+Start importing Assets/ArtArchive/Props/old_ped_06_boy_e.png using Guid(ec0d19d2b044409ba02b9565f2e27007) (TextureImporter) -> (artifact id: '1260470efd61cf2fa2b2f860a1176adb') in 0.012849032 seconds
+Start importing Assets/Resources/Art/Heroes/shadi_rig/arm_far.png using Guid(ec4d7f1ff7a74289afaae0791206cf6d) (TextureImporter) -> (artifact id: '49ea396fc7e954b9b4f74f006e36d16a') in 0.007364844 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/d_Joystick@3x.png using Guid(fcaa0d99df7c74f52afaa17a375dd393) (TextureImporter) -> (artifact id: 'b89f39a6c28369b91cbb678f0e7864e5') in 0.00128139 seconds
+Start importing Assets/ArtArchive/Houses/old_house_39.png using Guid(fcddc24e8d7645daa3aeb0c2759479fc) (TextureImporter) -> (artifact id: 'd0eb8d3200c5470404519b7528f6d864') in 0.097266657 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/d_ChevronDown@4x.png using Guid(0de917098a5b848b1a371e570928ce10) (TextureImporter) -> (artifact id: '72a79c0c2e88a7ab85a5e26b0fe7e146') in 0.001450144 seconds
+Start importing Packages/com.unity.ugui/Editor Resources/Textures/btn_AlignCapLine.psd using Guid(0d9a36012a224080966c7b55896aa0f9) (TextureImporter) -> (artifact id: 'c974af663c64e0939cb5b925b136293d') in 0.001403227 seconds
+Start importing Assets/Resources/Art/Heroes/abu_shahata_rig/shorts.png using Guid(0dcecf219bea49d4bb7e949a8cd5c2c6) (TextureImporter) -> (artifact id: '05ac25b7bbe60af2d0ec10e8132af013') in 0.013387747 seconds
+Start importing Assets/Resources/Art/house_40_broken.png using Guid(1d1a05c777c440c4a8a973c1ee0c9a26) (TextureImporter) -> (artifact id: '997ffedad7958901971e5ac45b8e4ccc') in 0.09652823 seconds
+Start importing Assets/ArtArchive/Heroes/old_rima_k2.png using Guid(2de96e247d8c405e918d3af945f5fb57) (TextureImporter) -> (artifact id: '19d1a5ed2a16761ece0fcbc595299ebd') in 0.015307468 seconds
+Start importing Assets/ArtArchive/Props/old_bus.png using Guid(3dd48290b0ee4b2b92e541378603314f) (TextureImporter) -> (artifact id: 'ec1d28157e1aba762793f89659244af2') in 0.054768641 seconds
+Start importing Assets/Resources/Art/Broken/pane_2.png using Guid(3d360560007f40b4920c399bf55b1347) (TextureImporter) -> (artifact id: '6fdc42223e7a3a68319af68090952a30') in 0.009853526 seconds
+Start importing Assets/ArtArchive/Heroes/toon_toni/rig/shorts.png using Guid(3ddcdcd56c7840daa5280a12265264df) (TextureImporter) -> (artifact id: 'a5e6d2c52b5be1534662876ec040929d') in 0.005877111 seconds
+Start importing Assets/ArtArchive/Heroes/old_toni_r2.png using Guid(3d0ddb6a6a7449fd99679e7ae2efd175) (TextureImporter) -> (artifact id: 'a24197836b03bb4e6a62f936cabb94c9') in 0.011375725 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/d_Add Binding@2x.png using Guid(3d7dc8d6b9a96490b9aa433645712fdf) (TextureImporter) -> (artifact id: '5c1723f793fc1d2a8c1673e80f6f0992') in 0.001271481 seconds
+Start importing Assets/Resources/Art/Heroes/toni_rig/head.png using Guid(4db4261d3a14492f8a2884c96c880f02) (TextureImporter) -> (artifact id: 'd63d11c5f153403feccde9c5f4966fe3') in 0.005422081 seconds
+Start importing Assets/Resources/Art/Heroes/rima_rig/arm_near.png using Guid(4d173f07e8e6492c886ef37467ef4437) (TextureImporter) -> (artifact id: 'e3a98a1b82096ac029fe9134f65bbdcf') in 0.008463073 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/Gamepad@2x.png using Guid(4defb5292901c41f29313d9c9c87a7eb) (TextureImporter) -> (artifact id: '31da12c16eaf00f86f9d1941b070b8ad') in 0.001246766 seconds
+Start importing Assets/ArtArchive/Poison/old_resident_04.png using Guid(5d244d950ccb4705864fb5d878002f09) (TextureImporter) -> (artifact id: 'ce6a078c33c65fbb509c0796a19f06b7') in 0.069640536 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/d_ChevronDown@3x.png using Guid(5d96795fd770f47d69d997b053532730) (TextureImporter) -> (artifact id: '440292e5cab2c34da04d5520eb9ae3d9') in 0.001419928 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/d_Stick@2x.png using Guid(5d0b11389336d4b16b96f147c9f912e2) (TextureImporter) -> (artifact id: 'f303dd634cbc85421d95a82873281e8f') in 0.001209075 seconds
+Start importing Assets/ArtArchive/Houses/toon_house_40.png using Guid(5d5f76f6b8044749a0ec396d80c99ee1) (TextureImporter) -> (artifact id: 'c68021a2b2934cd4b93ca3e46e916ae2') in 0.098614691 seconds
+Start importing Assets/Resources/Art/Icons/bag.png using Guid(6d30c97971c34a0099e269751367b039) (TextureImporter) -> (artifact id: '676f610eb4857306ccc14083d0c0ceaa') in 0.006452153 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/d_Touch@4x.png using Guid(6db042035460c4167a6ab8d1ac3c2681) (TextureImporter) -> (artifact id: '1fd4a9666787bc7b17904d0a7f011f54') in 0.00154419 seconds
+Start importing Assets/Resources/Art/Heroes/bubakr_rig/head.png using Guid(6dc48911a4144fcd9d10cf585dc41b28) (TextureImporter) -> (artifact id: 'a7e3684df4c8e3c61bb033c3a4e57b92') in 0.007718194 seconds
+Start importing Assets/ArtArchive/Props/old_rug_pusher_1.png using Guid(6d45a02633a24adc9994d095c4409cc1) (TextureImporter) -> (artifact id: '3a70cea0d8e2464fb958bbdadef4ddd1') in 0.019621574 seconds
+Start importing Assets/ArtArchive/Houses/old_sweeper_brush.png using Guid(6d3711ff443f47d88fab283d1bc36a56) (TextureImporter) -> (artifact id: '9f85fb3699992304bd3bae996b656516') in 0.006808668 seconds
+Start importing Assets/Resources/Art/Icons/duel.png using Guid(6daa9b87148940fd8c420a16d81ab77c) (TextureImporter) -> (artifact id: '4b4842448e4669210d65b467a839967d') in 0.004925435 seconds
+Start importing Assets/ArtArchive/Heroes/old_hamada_r1.png using Guid(7d2298b0462440e69194b1cd1b5e1aad) (TextureImporter) -> (artifact id: '564f1da9c25199cee06dafefed710450') in 0.011351691 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/d_Joystick.png using Guid(7d4638131127c4f4382fb36cf16c52fe) (TextureImporter) -> (artifact id: 'b9d1fc79e5f261ea037a0a65de9c1c4d') in 0.001044157 seconds
+Start importing Assets/ArtArchive/Heroes/toon_bubakr/rig/leg_near.png using Guid(7ddda368e2334b34973dad3c94cd1686) (TextureImporter) -> (artifact id: '15f49fbbed795181c93152c8c2a244df') in 0.008712408 seconds
+Start importing Assets/ArtArchive/Heroes/abu_shahata_r3.png using Guid(7d5eb5d1fcd74e3e9fff7b11260adb92) (TextureImporter) -> (artifact id: 'ca388fcbbb1267ac3e23365d3f5ecb48') in 0.010128238 seconds
+Start importing Assets/ArtArchive/Heroes/toon_abu_shahata/rig/torso.png using Guid(8d29dce9fbbe4cdb9fc457fc5ad48c17) (TextureImporter) -> (artifact id: 'af99236ebb257277d68d808439aeb32b') in 0.009272092 seconds
+Start importing Assets/ArtArchive/Heroes/old_rima_face.png using Guid(8de9ac8ba7854cf9ba4780a33f6231b4) (TextureImporter) -> (artifact id: 'd3af987de7d92a4b829c20e9ccc7c22a') in 0.008595139 seconds
+Start importing Assets/Resources/Art/UI/portrait.png using Guid(9dc07c7478734f0997fdcf4abba9fb03) (TextureImporter) -> (artifact id: '5da739382b1c0c3a32f0138e991a5b30') in 0.005166796 seconds
+Start importing Assets/ArtArchive/Heroes/toon/fulla_toon_back.png using Guid(9d217db6c52f4b4da07025e8502a1e95) (TextureImporter) -> (artifact id: '14675ccbc92c5e522fdb5164b4e427fa') in 0.078969213 seconds
+Start importing Assets/ArtArchive/Heroes/toon_bubakr/rig/shorts.png using Guid(9deaae586f2948828dde1cd08faec469) (TextureImporter) -> (artifact id: '764f7baadc4d527f530b1a3d4481b382') in 0.006051486 seconds
+Start importing Assets/ArtArchive/Props/old_ped_03_oldman_c.png using Guid(ad1115e392f64da5aa95c9605883f633) (TextureImporter) -> (artifact id: 'e88eadf5b877b7817cf1e533cda55dfd') in 0.01359315 seconds
+Start importing Assets/ArtArchive/Heroes/toon_zaatar/rig/head.png using Guid(ad15fcf3b4ab41a08978f5ea4f2816ce) (TextureImporter) -> (artifact id: '3c85116caea059fe8467679a82d73cc6') in 0.008948929 seconds
+Start importing Assets/Resources/Art/Props/ped_01_tarboush_d.png using Guid(ad668f67429a4b229933dcd39605b82a) (TextureImporter) -> (artifact id: 'e70e6e6cc6afded3c4c225b286fdd52c') in 0.01485295 seconds
+Start importing Assets/Resources/Art/Poison/resident_06.png using Guid(ad57af0f7f144a4c8fa4bf1ee493fdfb) (TextureImporter) -> (artifact id: '3784309c42af8e130579eeaaaf3c1d65') in 0.082061711 seconds
+Start importing Assets/Resources/Art/Heroes/toni_rig/torso.png using Guid(cd8bc4cd32fa4757851edbec00ddaaa7) (TextureImporter) -> (artifact id: '3a3bb1d96bb22d1b604d7a37447043ed') in 0.009902848 seconds
+Start importing Assets/Resources/Art/Poison/pigeon_0.png using Guid(cdcdaf64d7ea44a5a92cda928fe4061f) (TextureImporter) -> (artifact id: '35e32e2f62a9f5007fea68792a2a3233') in 0.078045811 seconds
+Start importing Assets/Resources/Art/Props/ped_04_hurried_a.png using Guid(dd607b549d794647943e45735face4ef) (TextureImporter) -> (artifact id: '619a208a7df3d983831d35af03d245fd') in 0.01510502 seconds
+Start importing Assets/ArtArchive/Houses/toon_house_37.png using Guid(dd119658dc5e4d369fc7b62346148c4c) (TextureImporter) -> (artifact id: '81ed1bfd792d485a48610d5d83b257d9') in 0.111535749 seconds
+Start importing Assets/Resources/Art/Heroes/bubakr_rig/leg_far.png using Guid(ddba2aae29a34cf3b16b11b8dc5a4bf2) (TextureImporter) -> (artifact id: '752ae1e68546064f0b75e7cc3605ef75') in 0.006350494 seconds
+Start importing Packages/com.unity.ugui/Editor Resources/Textures/btn_AlignTop_Light.psd using Guid(ed041e68439749a69d0efa0e3d896c2e) (TextureImporter) -> (artifact id: '8cda1076d546f4a2cc3de427297cc129') in 0.0013193 seconds
+Start importing Assets/Resources/Art/Icons/pebble.png using Guid(fd31b539a030418f997cb47278109aec) (TextureImporter) -> (artifact id: '21565a0273ab27567ee46558860b3474') in 0.004974116 seconds
+Start importing Assets/ArtArchive/Heroes/old_fulla_r3.png using Guid(fd0267b6e7a641d797e0577c002c5fe7) (TextureImporter) -> (artifact id: '62fe540aa87f360e62c5e1cd658dc4f6') in 0.01012353 seconds
+Start importing Assets/ArtArchive/Heroes/real/toni_real_front.png using Guid(fd8a4efe12bbf9cd2aefe58bd459a840) (TextureImporter) -> (artifact id: '5e05cbdad0a28d9e3e22bd1bfffbed31') in 0.084031344 seconds
+Start importing Assets/ArtArchive/Heroes/old_um_arabiyat_band/leg_near.png using Guid(0e468a0aae6645249cd6f5653f06cb59) (TextureImporter) -> (artifact id: '1a11a76c2492f9f05ed21209f5d45289') in 0.006126505 seconds
+Start importing Assets/Resources/Art/Props/ped_02_shopper_d.png using Guid(0ea6aa28bce249898629e7f12ed68f15) (TextureImporter) -> (artifact id: '7ec88fc6f4da86fa615137b6e77eb75f') in 0.013595745 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/d_ChevronUp@3x.png using Guid(0efecba65ae4341a385cd5d39a2af765) (TextureImporter) -> (artifact id: '307268bdadd2f34ac22180a3de15312a') in 0.001168089 seconds
+Start importing Assets/ArtArchive/Heroes/old_rima_k1.png using Guid(1e3722c97cde483da61a6f5be5e719f1) (TextureImporter) -> (artifact id: 'a0287b881a0895e46ce24bfeadd642c5') in 0.01583958 seconds
+Start importing Assets/ArtArchive/Heroes/toon_fulla/old_face.png using Guid(1e88c0719895485491c84c60fe956373) (TextureImporter) -> (artifact id: '40a06deae3c08f66a5c8d56388bd159d') in 0.009702835 seconds
+Start importing Assets/Resources/Art/Heroes/rima_rig/leg_far.png using Guid(1e5dbced2fb54489abce5d87e0d9ea93) (TextureImporter) -> (artifact id: '169973069b00f07be6f828a96947829a') in 0.006741963 seconds
+Start importing Assets/ArtArchive/Poison/old_plank.png using Guid(2e91c1cb0eca45f79ab59db312e2ad3a) (TextureImporter) -> (artifact id: 'b7e5d7e44b90c5496d868f25aa58b32c') in 0.011247315 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/Axis@3x.png using Guid(2e27a82b5cc4e4ef98cbef2d0b324aed) (TextureImporter) -> (artifact id: '78ce842cd6a8de2548f222e86d61d4de') in 0.001272624 seconds
+Start importing Assets/ArtArchive/Heroes/toon_bubakr/old_idle.png using Guid(2e2c34af4b0b4d0bbcc863e8af15789f) (TextureImporter) -> (artifact id: 'c99f10e67dcce7a6e0033588a52ff20a') in 0.046425301 seconds
+Start importing Assets/Resources/Art/Heroes/fulla_rig/torso.png using Guid(2e3e1e2232e641329a8a3fd798cec352) (TextureImporter) -> (artifact id: '14f3775659e09be7c2f92fcc811ce634') in 0.01682069 seconds
+Start importing Packages/com.unity.ugui/Editor Resources/Gizmos/TMP - Input Field Icon.psd using Guid(3ee40aa79cd242a5b53b0b0ca4f13f0f) (TextureImporter) -> (artifact id: 'c0a835b171b117b1a6dc361a17ad2baa') in 0.002203749 seconds
+Start importing Assets/Resources/Art/Icons/flashlight.png using Guid(3eb68b2f79154e75b9916900478ba940) (TextureImporter) -> (artifact id: '326964975e68759fda9d17721a69f76d') in 0.005631242 seconds
+Start importing Assets/Resources/Art/Poison/truck.png using Guid(4ec9a92a940746999af48cef9b0dce45) (TextureImporter) -> (artifact id: '751166bd8ad784faaad3188e99550696') in 0.056533853 seconds
+Start importing Assets/ArtArchive/Heroes/toon/bubakr_toon_back.png using Guid(5ea3fc9f62f3480c8399f0e45d7d7b18) (TextureImporter) -> (artifact id: 'e5ecffc6b83775d59ddca9cfffdc9c5a') in 0.081569984 seconds
+Start importing Assets/Resources/Art/Heroes/zaatar_face.png using Guid(6e908edd190f4370aac593576d05c0f9) (TextureImporter) -> (artifact id: 'fe22a7a4dbbe4e5470b6094482e44df0') in 0.011082298 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/Touch@4x.png using Guid(6e9283a12f5b74afbba696cbb82f5e7f) (TextureImporter) -> (artifact id: '2b916893a26bb05a3a4bb6dd82b90931') in 0.00129725 seconds
+Start importing Assets/ArtArchive/Heroes/old_hamada_r2.png using Guid(6e2b446d4fec4e628c405468f4633736) (TextureImporter) -> (artifact id: 'f19d049af9184bec7502a296d3f20647') in 0.011202572 seconds
+Start importing Assets/ArtArchive/Heroes/old_toni_k1.png using Guid(6edefe36d7a34c8a9f4fa5d588a6dad5) (TextureImporter) -> (artifact id: '965e364504ae506696e4fb09d69e1022') in 0.01287968 seconds
+Start importing Assets/Resources/Art/Heroes/rima_rig/shorts.png using Guid(7e44964a79684caa97730a1a236fb9fd) (TextureImporter) -> (artifact id: '888c13c52d71acc23c8587f4ef3291b1') in 0.015892658 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/Axis.png using Guid(7e853779c8fed4ebf917a0de21c79602) (TextureImporter) -> (artifact id: 'a01e9db4a871c492ffc0aaf2c8b62f63') in 0.001229233 seconds
+Start importing Assets/ArtArchive/Heroes/old_hamada_r5.png using Guid(7e28e07c8d2a4fff838307426bca9ed0) (TextureImporter) -> (artifact id: '5cb73c4dcb2196492d439ce90babf90e') in 0.011046581 seconds
+Start importing Assets/ArtArchive/Props/old_ambulance_closed.png using Guid(8ed129f410124116b88f717687fe1a81) (TextureImporter) -> (artifact id: 'b676eebbf7dd711003ac87a092fde263') in 0.066075688 seconds
+Start importing Assets/Resources/Art/Cars/wheel_1.png using Guid(8e95c6aaa65546c5af8bd6b3aada2ce3) (TextureImporter) -> (artifact id: '8cc6c05bfe74e2e220c5837fdbef0a2c') in 0.013215376 seconds
+Start importing Assets/ArtArchive/Heroes/toon/bubakr_toon_front.png using Guid(8e374dcf88fc4d2da853eeee991379e6) (TextureImporter) -> (artifact id: '688343b161dac8d0e30d9543da6b884b') in 0.080325072 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/Mouse.png using Guid(9eb2b64988cb1443cab6da5dc5300d1c) (TextureImporter) -> (artifact id: '257a3d0379431c4d212a56a9c29ab77e') in 0.001403798 seconds
+Start importing Assets/Resources/Art/Props/ped_03_oldman_b.png using Guid(9e042e8850684be0b4826cc655960774) (TextureImporter) -> (artifact id: '6dbce81008629dca652bc678cbf5d642') in 0.012816522 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/d_Keyboard@3x.png using Guid(9ec4e316700da46b88741a8153b33963) (TextureImporter) -> (artifact id: '165b73f855326289b6d0fc090958b9e5') in 0.001309071 seconds
+Start importing Assets/ArtArchive/Poison/old_vane.png using Guid(9e2898b5a6a34dfbb4a6799861dcc666) (TextureImporter) -> (artifact id: '56bdbe845f2c456704a52327e0c603d4') in 0.012693563 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/d_Gamepad@3x.png using Guid(9e882b58df0964f5b90ff99cb481ee79) (TextureImporter) -> (artifact id: 'f51d06453380c17276471bfcca8a7aa2') in 0.001307208 seconds
+Start importing Assets/ArtArchive/Poison/old_flashlight.png using Guid(9ef8a426847740119a376457a715ed68) (TextureImporter) -> (artifact id: '5f6264c044c129b42472c5a34b909679') in 0.007559899 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/Interactive Binding@4x.png using Guid(9e6c9e992a2ee4327bce1d6a8189cedb) (TextureImporter) -> (artifact id: 'ee4fb6957f88cbc82cc719bac7cedc86') in 0.00135112 seconds
+Start importing Assets/Resources/Art/Heroes/shadi_rig/head.png using Guid(aeb726dbb4d14b3f9237fbb844139d12) (TextureImporter) -> (artifact id: '7ca86bc2140fbb0adb3752f31e4d539f') in 0.00601595 seconds
+Start importing Assets/ArtArchive/Heroes/toon_um_arabiyat/rig/head.png using Guid(aee8df0d49174a98afa649bd9cc9fcb9) (TextureImporter) -> (artifact id: 'e3537e14f61865c80546a0071e172604') in 0.009219904 seconds
+Start importing Assets/ArtArchive/Heroes/toon_bubakr/rig/torso.png using Guid(aead28f6af234c02b7b79503141c4d56) (TextureImporter) -> (artifact id: '1cf02ffa17968aaafde426147e173c3e') in 0.01167308 seconds
+Start importing Assets/Resources/Art/Heroes/fulla_rig/head.png using Guid(be9687cbdb2349f2b3a1c98a32d21ca1) (TextureImporter) -> (artifact id: '127370ecdb0185dc6c765fc8da970a26') in 0.005328247 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/d_Gamepad@2x.png using Guid(bed935caee9524e6780614c2055bfd35) (TextureImporter) -> (artifact id: '1e1fb0b30b352c912e1b8cb6fbe9f3b1') in 0.001232518 seconds
+Start importing Assets/Resources/Art/Fx/fx_cat.png using Guid(befa35b50fc7434c8bd60dc15269b372) (TextureImporter) -> (artifact id: '353e7c392542c8be36b6021ea33c5e87') in 0.011730597 seconds
+Start importing Assets/Resources/Art/UI/card_red.png using Guid(becdc2d0cd0248b2abbff2c1bcbafa6e) (TextureImporter) -> (artifact id: '5d9dc9674472ccbdbb6b6c27c20681ef') in 0.0213895 seconds
+Start importing Assets/Resources/Art/Poison/window_open_0.png using Guid(ceb01e3d9aed4cc8984b0a27e89606a6) (TextureImporter) -> (artifact id: '86e617703ccb16c1c34f58cede652c93') in 0.027969241 seconds
+Start importing Assets/ArtArchive/Heroes/old_zaatar_k1.png using Guid(ce8830540c774d95a1000c45a497f680) (TextureImporter) -> (artifact id: '78271a895d828e21601d1e7fed47c027') in 0.014333802 seconds
+Start importing Assets/ArtArchive/Heroes/old_fulla_r5.png using Guid(ce3a50c33d504e20b3932a1a8c4b94e4) (TextureImporter) -> (artifact id: '8f678dc2b9a4e09f21c2a18abc518169') in 0.011884473 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/d_Touch@2x.png using Guid(ceaa885da02f84da195f87de12535da6) (TextureImporter) -> (artifact id: '182afe5fa0517cbd0987bdd5432ed2d1') in 0.001267093 seconds
+Start importing Assets/ArtArchive/Props/old_ped_03_oldman_e.png using Guid(cebe489772cc4184a3b4a59fa35c4870) (TextureImporter) -> (artifact id: 'ecbca7b774472020bc68c492abb31943') in 0.01385064 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/AssetEditor/PackageResources/personal/actionTreeBackground.png using Guid(ce5f11cd993284c4f9c54f854bdc8c9c) (TextureImporter) -> (artifact id: 'ac160af647b03fabe674fedcf781b3fb') in 0.001151627 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/d_Orientation@4x.png using Guid(de98baf415a2c4d7dbe0de74cb6e171c) (TextureImporter) -> (artifact id: '93edeef0d1fdd45993089636f6c1c0f6') in 0.001373833 seconds
+Start importing Assets/Resources/Art/Heroes/hamada_rig/head.png using Guid(de9f7a63df4a48fbbfcfe86787539965) (TextureImporter) -> (artifact id: '2d7dc6a36808bfa05dc508594d33a5c0') in 0.006085649 seconds
+Start importing Packages/com.unity.ugui/Editor Resources/Gizmos/TMP - Font Asset Icon.psd using Guid(ee148e281f3c41c5b4ff5f8a5afe5a6c) (TextureImporter) -> (artifact id: '9c7e67db8368c73b7572548d0b005e39') in 0.00215535 seconds
+Start importing Assets/Resources/Art/Heroes/fulla_front.png using Guid(ee64c4d7b2424cce874b331bdfb45263) (TextureImporter) -> (artifact id: '5ad06f39aa7ef4fc592e1a34b2fe7d59') in 0.058934721 seconds
+Start importing Assets/Resources/Art/Poison/cart_wheel.png using Guid(eeb447901e0544fe9825745d4900bab0) (TextureImporter) -> (artifact id: '9f31ae483b69e52b8adbc6eaf5d415a1') in 0.007551172 seconds
+Start importing Assets/ArtArchive/Heroes/toon_um_arabiyat/old_front.png using Guid(ee07a27e3cd246b99191b8beb52044ef) (TextureImporter) -> (artifact id: 'bff4b63e4a7f8da0b9de0f1a563f1ea1') in 0.057547654 seconds
+Start importing Assets/ArtArchive/Heroes/toon_zaatar/old_zaatar_face.png using Guid(ee38edfcd2ea4b248a469e47111372fd) (TextureImporter) -> (artifact id: 'c8245d1488af8aae47ba9e30524b9a68') in 0.009585857 seconds
+Start importing Assets/ArtArchive/Poison/old_pigeon_2.png using Guid(eee93a5404574a74b5ac1dbbed5743db) (TextureImporter) -> (artifact id: '8be162099d38a41056a30fae94bddb09') in 0.016829025 seconds
+Start importing Assets/ArtArchive/Heroes/old_zaatar_face.png using Guid(ee2c02f9e8704d879d98e71fbf3551e1) (TextureImporter) -> (artifact id: '97bb8f916bc9269e770f5eb7397ed261') in 0.008969588 seconds
+Start importing Assets/ArtArchive/Heroes/toon_abu_shahata/rig/leg_far.png using Guid(eeee3c80d6ae46739c069572e45025c3) (TextureImporter) -> (artifact id: '9dbf366293b1abfb715f0b8cef67d048') in 0.007423174 seconds
+Start importing Assets/Resources/Art/Icons/replay.png using Guid(0f775e1f420d47a685f0b92a0601eab3) (TextureImporter) -> (artifact id: '223ccd9e61b3211faafec4537ce63e50') in 0.00424132 seconds
+Start importing Assets/Resources/Art/UI/badge.png using Guid(0f189e68b6db4407987b2c9e186d2765) (TextureImporter) -> (artifact id: '0f202fc1bd43618ebca8173e8bc89d1f') in 0.004349722 seconds
+Start importing Assets/ArtArchive/Props/old_medics_out_1.png using Guid(0f7a58eab86b4a4ea703f0919d108330) (TextureImporter) -> (artifact id: '872ed784ec775fa1886dba416d15fbec') in 0.02285193 seconds
+Start importing Assets/Resources/Art/Icons/net.png using Guid(1ff14d86e31f4c80b28f369bddfc98a3) (TextureImporter) -> (artifact id: 'dec014126ad3da59a0524184e0c5721f') in 0.006389085 seconds
+Start importing Assets/Resources/Art/Icons/pick.png using Guid(1fa79cad3143476fb0fa6cd661f82792) (TextureImporter) -> (artifact id: '8339095ae7b8ca0a6241802ec9d486d6') in 0.005830103 seconds
+Start importing Assets/Resources/Art/Cars/wheel_4.png using Guid(2fe16e182c1c45d7a1e59685d52d0e9b) (TextureImporter) -> (artifact id: '4ac29e6d6ce90773c96232a08a5828fc') in 0.015082989 seconds
+Start importing Packages/com.unity.ugui/Editor Resources/Gizmos/TMP - Text Component Icon.psd using Guid(2fd6421f253b4ef1a19526541f9ffc0c) (TextureImporter) -> (artifact id: 'aa089165d32575dbe4fbae7d2e4c568b') in 0.002286875 seconds
+Start importing Assets/Resources/Art/Heroes/um_arabiyat_rig/arm_far.png using Guid(2f3b9006f30a4d128735843288b57bcf) (TextureImporter) -> (artifact id: '0a353899505b0b87afe5bbf687b644ec') in 0.008067766 seconds
+Start importing Assets/ArtArchive/Heroes/real/um_arabiyat_real_front.png using Guid(3f1261d2f2a980ee692ba50507993e83) (TextureImporter) -> (artifact id: '5ecb95f2780adaae79c526f18587061f') in 0.085789913 seconds
+Start importing Assets/Resources/Art/Heroes/toni_idle.png using Guid(3f8f6ef071e64aaca416a546a08f1791) (TextureImporter) -> (artifact id: '3a97a038360069bdce31814abf7c3994') in 0.037874634 seconds
+Start importing Assets/Resources/Art/house_41_broken.png using Guid(4f910b6594194f8c81ccfb2d6c7429e0) (TextureImporter) -> (artifact id: 'd8771f6d57f930aaeda581f17feda425') in 0.096921002 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/Orientation@3x.png using Guid(5f09d534eb1414449a2758696bd4dd11) (TextureImporter) -> (artifact id: '77a8151dd6abd7133da519f876fc7e6c') in 0.001657461 seconds
+Start importing Assets/ArtArchive/Houses/toon_house_39_broken.png using Guid(5f39f7ece8084074abf00adbaa4aae0f) (TextureImporter) -> (artifact id: '66c0b2e6109c03af6687c7d3f6fde7ad') in 0.093611119 seconds
+Start importing Assets/Resources/Art/Icons/heart.png using Guid(5f8ff41da6684fa8ab85c8d13c6c9a8b) (TextureImporter) -> (artifact id: '49e7f50fc600293370389c7cbbde8c08') in 0.005472566 seconds
+Start importing Assets/Resources/Art/Props/ped_02_shopper_c.png using Guid(6f440b79e5094fda8205ed6f0f4a8d41) (TextureImporter) -> (artifact id: '3ccbd05a18daf438dd92cf09b3ba7f30') in 0.014233304 seconds
+Start importing Assets/Resources/Art/Icons/cart.png using Guid(6f55b4da92e84684bda1057a49ef1dc9) (TextureImporter) -> (artifact id: 'b6080d5aac02cc8079ab9bd319d90239') in 0.006441443 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/Keyboard@4x.png using Guid(7fc0926499f7a4500b152d45397c44a4) (TextureImporter) -> (artifact id: '759359d5c2130011b0fc6e7268047931') in 0.001343685 seconds
+Start importing Assets/Resources/Art/Bags/bag_3.png using Guid(7ff24ffc285f45748bda6b74b949361a) (TextureImporter) -> (artifact id: 'b8ffef2ef1ba01409e513b2315056936') in 0.022503909 seconds
+Start importing Assets/ArtArchive/Props/old_ped_02_shopper_a.png using Guid(7ff6628dbdb1416c9c9f217e49e72182) (TextureImporter) -> (artifact id: 'eae914479a9b0a7748756e197b3b0f14') in 0.012570874 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/Orientation.png using Guid(7fb7b46a8c63948d2b28dc394281bf5a) (TextureImporter) -> (artifact id: '1d19aec84516235718342a48470116c3') in 0.001239542 seconds
+Start importing Assets/Resources/Art/UI/ribbon_0.png using Guid(7f6abff1168447da933d10ea4b9033b3) (TextureImporter) -> (artifact id: '0fa00ea2894a7919ce4894a26550636b') in 0.004979687 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/d_ChevronUp.png using Guid(7fad89501bb5c408e956934bf2eb8ae3) (TextureImporter) -> (artifact id: '24623eda15a1063f04d162e9e0e6bdd0') in 0.001136159 seconds
+Start importing Assets/ArtArchive/Props/old_ball_street.png using Guid(8fc52fc97fce4832a38b4b83f3058f24) (TextureImporter) -> (artifact id: '87f3a5da0d1e3708db5ab760b13e01a9') in 0.047040307 seconds
+Start importing Assets/ArtArchive/Heroes/old_hamada_r6.png using Guid(8fa6f626f374467ebdb8ec64f76c5c8a) (TextureImporter) -> (artifact id: 'c4de3efc889d8e49f75ee0e93f909b9c') in 0.011881668 seconds
+Start importing Assets/Resources/Art/Heroes/rima_front.png using Guid(8f8881d4b0b843ba810fdc0a918c6cf8) (TextureImporter) -> (artifact id: '9f44cb59b2e06d17ae0e9d7f541d6b9e') in 0.054806742 seconds
+Start importing Assets/ArtArchive/Heroes/abu_shahata_k3.png using Guid(8f9b636c81644377aaf7c91d0380f7f5) (TextureImporter) -> (artifact id: '347bbacacea2f2b1f851cea7005e0f5e') in 0.011719967 seconds
+Start importing Assets/Resources/Art/Icons/wind.png using Guid(8fbffd7230ab465ebfe2a525bb2386a7) (TextureImporter) -> (artifact id: '44d0eafe34bb26047e1e3d794d060b88') in 0.005152549 seconds
+Start importing Assets/Resources/Art/Props/ped_01_tarboush_c.png using Guid(9f33014cfc2346a084f64ad214b3c4db) (TextureImporter) -> (artifact id: '1131568ff6c8feb009076072c223cf1a') in 0.012651214 seconds
+Start importing Assets/ArtArchive/Houses/old_house_36_broken.png using Guid(9f643a1ed348451d8bc59b0ec81661e9) (TextureImporter) -> (artifact id: 'bad31bff45538fba2a5e4aefd5b315fa') in 0.096408718 seconds
+Start importing Assets/Resources/Art/Props/ambulance_closed.png using Guid(9faf6c613f3c4f24b88a65dccf285973) (TextureImporter) -> (artifact id: '7a3a4772cc372f8e403baf1768d09f29') in 0.064027318 seconds
+Start importing Assets/Resources/Art/Poison/truck_wheel.png using Guid(af7c38e36ffe46b88d2c08c0adb6bdc5) (TextureImporter) -> (artifact id: 'a9813564a5da6d249850c6cfe4607e52') in 0.005688579 seconds
+Start importing Assets/Resources/Art/Poison/cart.png using Guid(bfd0e0b3d3ea4358923927493baf5131) (TextureImporter) -> (artifact id: 'b2fc35f64f50831ec2d65ff2b7b30336') in 0.055960624 seconds
+Start importing Assets/ArtArchive/Heroes/toon_bubakr/rig/arm_near.png using Guid(bfd25dedb1b94f2a97fa78b61b6d0ebd) (TextureImporter) -> (artifact id: 'fc4a485ec7d09175c355c5079b758a9d') in 0.009450074 seconds
+Start importing Assets/ArtArchive/Heroes/old_um_arabiyat_k5.png using Guid(bf55e31b432a4bd6a5d2e4e1cc5488b7) (TextureImporter) -> (artifact id: '03ca5d8ac28c1e8bc4e773332ec7538c') in 0.012959369 seconds
+Start importing Assets/Resources/Art/UI/btn_orange.png using Guid(bf1ae68838ef499d84624205854aa0b3) (TextureImporter) -> (artifact id: '36c72141088da5ef17fee9d3f8e6468d') in 0.005293391 seconds
+Start importing Assets/ArtArchive/Heroes/toon_abu_shahata/rig/leg_near.png using Guid(bfab506247a84046968dc08fcfeb2dbf) (TextureImporter) -> (artifact id: '0ffe663d633b82da9156d92d08a0569a') in 0.009744443 seconds
+Start importing Assets/ArtArchive/Houses/toon_house_38_broken.png using Guid(bfec753e91e54d848d4e12c64da29dfb) (TextureImporter) -> (artifact id: 'f2e7974c4f9ac9620b468e1c91e7a61c') in 0.103799912 seconds
+Start importing Assets/ArtArchive/Heroes/old_zaatar_r4.png using Guid(bf0eb334a82a40d3842fc36945096e0c) (TextureImporter) -> (artifact id: '38f17e6764d931703e22248122fdf4da') in 0.015749942 seconds
+Start importing Assets/ArtArchive/Heroes/toon_fulla/rig/arm_far.png using Guid(cf00c5f93f664607af1fc7cec5c7fe48) (TextureImporter) -> (artifact id: 'bc458f1e7ad731d672fa5f89ebd98d33') in 0.008618212 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/AssetEditor/PackageResources/personal/actionTreeBackgroundWithoutBorder.png using Guid(cf632ed80bf1f46c980de6b1b8b903ef) (TextureImporter) -> (artifact id: 'a1f0cd521f8d121a8c060fd84b71a5d9') in 0.001327215 seconds
+Start importing Assets/ArtArchive/Heroes/old_um_arabiyat_r2.png using Guid(cfa355ecca6c43cca33e0c88f7a7bae3) (TextureImporter) -> (artifact id: '1615cd72b2b052eae4987351d1d3bd78') in 0.013612767 seconds
+Start importing Assets/ArtArchive/Heroes/old_fulla_kick.png using Guid(cfb4b9ab20d64500a582e2a66b53ceaf) (TextureImporter) -> (artifact id: 'b690bb3ca69237cd270147659e7a2a0c') in 0.113739476 seconds
+Start importing Assets/Resources/Art/UI/card_green.png using Guid(cf972683a5d54ef58e004f55764e60db) (TextureImporter) -> (artifact id: '00c952c67add6acec1c2e675b58ea67a') in 0.024648059 seconds
+Start importing Assets/Resources/Art/UI/ribbon.png using Guid(cf8dce5e7dd241cb95c9cbda4292ad13) (TextureImporter) -> (artifact id: '5942828be437f0a0242b719a4a00c085') in 0.016546678 seconds
+Start importing Assets/ArtArchive/Heroes/real/abu_shahata_real_back.png using Guid(df61d5ad073d2a1a381beb3af6cba524) (TextureImporter) -> (artifact id: '8ffa0602f11cc2c6bf3f5198d67734cd') in 0.09858165 seconds
+Start importing Assets/Resources/Art/Poison/plank.png using Guid(ef75577e6d114202a511a0e872756281) (TextureImporter) -> (artifact id: '4b15fb7014c9685d2c33850f87718f76') in 0.064767789 seconds
+Start importing Assets/ArtArchive/Heroes/toon_toni/rig/leg_near.png using Guid(ef0e9456e8bb48f69973419fabe99409) (TextureImporter) -> (artifact id: '63509529922ead41b1f3f4f1d4e05010') in 0.014427527 seconds
+Start importing Assets/ArtArchive/Heroes/old_toni_face.png using Guid(ef3f728d45064bf28e9415a690e9614a) (TextureImporter) -> (artifact id: 'bd53e66188113b4b17b799b1818ebca0') in 0.011944015 seconds
+Start importing Assets/ArtArchive/Heroes/old_toni_r4.png using Guid(efff97e788fd48288086fd652487ea87) (TextureImporter) -> (artifact id: '6f503248e3841ba8fe6208cfedf43aee') in 0.014887264 seconds
+Start importing Assets/ArtArchive/Heroes/old_hamada_r3.png using Guid(ff212dd5f3a34d90ab4a5841cdd083d4) (TextureImporter) -> (artifact id: 'da436841d9abce432bebe49616e4dadc') in 0.012744648 seconds
+Start importing Assets/Resources/Art/Heroes/bubakr_front.png using Guid(ffe17be58ab24f72a3963cd11eaf0c7a) (TextureImporter) -> (artifact id: '873c2bb7ca33eecce2366eeb8a5c87a5') in 0.058198477 seconds
+Start importing Assets/Resources/Art/Props/ped_03_oldman_e.png using Guid(ffc2cf8d9b4343029b962b90caef41b3) (TextureImporter) -> (artifact id: '705f17960068fdd5efde7fa8bf686775') in 0.014668025 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/Icons/TrackedPoseDriver@2x.png using Guid(ff8479815905ce84e9ef610d926f28c8) (TextureImporter) -> (artifact id: '2baa34655a769136f158b5a570990269') in 0.001422883 seconds
+Start importing Assets/Resources/Art/Icons/truck.png using Guid(ff35c7573f1b4212a8fa4fd7a82d9374) (TextureImporter) -> (artifact id: '6dbe8834814a9e2dffee5aa8df9e7bf1') in 0.006890811 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/AssetEditor/PackageResources/green.png using Guid(ffeba93637e654de6a5906b48520dc94) (TextureImporter) -> (artifact id: 'a4cc99f8c1067708f31489c0ed0585b4') in 0.001204566 seconds
+Start importing Assets/Resources/Art/Props/ped_05_crutches_c.png using Guid(ffbcc0a3e3784e56bb5acb31171ba0e5) (TextureImporter) -> (artifact id: '48ab60a33db0f210631fd2c7670d24a3') in 0.014823565 seconds
+Start importing Assets/Resources/Fonts/Vazirmatn-Regular.ttf using Guid(a063c18040b2531f59a181b2a13ac209) (TrueTypeFontImporter) -> (artifact id: 'a1e9e6c978bdc167c0ffad7fb386e11d') in 0.008848011 seconds
+Start importing Assets/link.xml using Guid(30a2cb5afcc1ee79eb9c7b3f2fbe752f) (TextScriptImporter) -> (artifact id: 'e52f1e2828b4b2d97e1305cf0e09c813') in 0.001665726 seconds
+Start importing Assets/Resources/Text/tips.txt using Guid(40841b4de5fa429991186814f516c169) (TextScriptImporter) -> (artifact id: '727fe53900a102f26fe45b21e7ee7056') in 0.000875062 seconds
+Start importing Assets/ArtArchive/Heroes/toon_bubakr/rig/sizes.txt using Guid(80dfa22351934215aeeb19dab5321b62) (TextScriptImporter) -> (artifact id: '23333384fe560bec67c475c17abef073') in 0.000822945 seconds
+Start importing Assets/ArtArchive/Heroes/toon_um_arabiyat/rig/sizes.txt using Guid(8155cfe29cf04db48ba6b2392466cf0f) (TextScriptImporter) -> (artifact id: '817caa8b39e6413e834b40f663af73d8') in 0.000877828 seconds
+Start importing Assets/Resources/Art/Heroes/hamada_rig/sizes.txt using Guid(c21164f5119a4c09815c0006040cba2f) (TextScriptImporter) -> (artifact id: '6474054e5b10fdbe541762db7c98e9f7') in 0.000824357 seconds
+Start importing Assets/Resources/Art/Heroes/rima_rig/sizes.txt using Guid(432c99ac33df4d66a4ec2cf1d70f6c9d) (TextScriptImporter) -> (artifact id: 'b379a1cb0b2e490f02e6d3379aaecd13') in 0.000805633 seconds
+Start importing Assets/Resources/Art/Heroes/shadi_rig/sizes.txt using Guid(24e17e289ada48cda5c482469af860e0) (TextScriptImporter) -> (artifact id: '30f1a99cd5434d113c79ebe3b8a5bb9a') in 0.000817855 seconds
+Start importing Assets/Resources/Art/Poison/wheels.txt using Guid(34e2542642a44bc6b8576ef3ef24f680) (TextScriptImporter) -> (artifact id: 'ce24147a56e12c57744224579ced0072') in 0.000804961 seconds
+Start importing Assets/Resources/Art/Cars/cars.txt using Guid(058e36451cc64ed885a970f455a1a20a) (TextScriptImporter) -> (artifact id: '558e4449ab7ad057bfaee540c697b6d0') in 0.000837111 seconds
+Start importing Assets/ArtArchive/Heroes/toon_hamada/rig/sizes.txt using Guid(35f5b88f41014329850dc5bf7d2b7d1b) (TextScriptImporter) -> (artifact id: '95b6fe95ea6475f688e25af8df1ffcfc') in 0.000845877 seconds
+Start importing Assets/Resources/Art/Heroes/bubakr_rig/sizes.txt using Guid(5525f764570c4fea9d0e6b2da4d9ff40) (TextScriptImporter) -> (artifact id: 'e3621ce52c4227ec825b312ed11a5de0') in 0.000843924 seconds
+Start importing Assets/ArtArchive/Heroes/toon_fulla/rig/sizes.txt using Guid(55de9a0a1edb4d6e80f431403135d6c5) (TextScriptImporter) -> (artifact id: 'ea815a0042bf17d536dadaa899931568') in 0.000813907 seconds
+Start importing Assets/ArtArchive/Cars/old_cars.txt using Guid(975d387eff485adc5a8b1d197cf8046e) (TextScriptImporter) -> (artifact id: 'c87be6367b148e909e683b4574701864') in 0.001460444 seconds
+Start importing Assets/Resources/Art/Heroes/fulla_rig/sizes.txt using Guid(e80d015756ea45daa7dfcd587d5e7712) (TextScriptImporter) -> (artifact id: '8a655918ae8252241286ce41c04af55d') in 0.000822614 seconds
+Start importing Assets/Resources/Fonts/OFL.txt using Guid(49b9a19d1c4c6ff4fa0a2ff4f1bc7d50) (TextScriptImporter) -> (artifact id: '74a20e0437d3f0d4977067819fb9c10e') in 0.00138334 seconds
+Start importing Assets/ArtArchive/Heroes/toon_toni/rig/sizes.txt using Guid(691072a07a894a86aed939b623944ad2) (TextScriptImporter) -> (artifact id: '732a18ead2140b7589a10194562b8db1') in 0.000841459 seconds
+Start importing Assets/ArtArchive/Heroes/toon_rima/rig/sizes.txt using Guid(0ae5476a44f74943b9e00b3ea5a789b7) (TextScriptImporter) -> (artifact id: 'a1c300aeb06578600cb6556f394622a3') in 0.000807336 seconds
+Start importing Assets/ArtArchive/Heroes/toon_abu_shahata/rig/sizes.txt using Guid(3d8622c82c9f40099ea267b04df2e0e3) (TextScriptImporter) -> (artifact id: '055754b36d8e9b867cdc9cab22055be9') in 0.000849444 seconds
+Start importing Assets/Resources/Art/Heroes/abu_shahata_rig/sizes.txt using Guid(9e7f3e0d2c054ee8a0bc716c4db07ee3) (TextScriptImporter) -> (artifact id: 'c893f2e0bf5a228191455609c28a3283') in 0.000840778 seconds
+Start importing Assets/Resources/Art/Heroes/zaatar_rig/sizes.txt using Guid(aeaef56d20a44127ae1095d4876ef59e) (TextScriptImporter) -> (artifact id: '6151ae67ad35636689df62fd1443a286') in 0.000814099 seconds
+Start importing Assets/ArtArchive/Heroes/toon_zaatar/rig/sizes.txt using Guid(2fabb851ab3c4e85b7cf9ebbdb329380) (TextScriptImporter) -> (artifact id: '597fef215082a864c992375e3d1510d1') in 0.000798599 seconds
+Start importing Assets/Resources/Art/Heroes/um_arabiyat_rig/sizes.txt using Guid(8ffcc5a81da94078b6f10b0a18b7aed3) (TextScriptImporter) -> (artifact id: 'ee70e050b640fb3b056bd82353d01878') in 0.000791456 seconds
+Start importing Assets/Resources/Art/Heroes/toni_rig/sizes.txt using Guid(cf83b37fce674e1a9bdfafc6c05b2af5) (TextScriptImporter) -> (artifact id: 'fdc4888de9db6b880bf69178d2f72bde') in 0.000787008 seconds
+Start importing Assets/Resources/Audio/Fx/levelup_01.ogg using Guid(d8d068b24e6c434dab86be90d93ed988) (AudioImporter) -> (artifact id: '82a37e703e9a7bf51de627140aa7a681') in 0.064983831 seconds
+Start importing Assets/Resources/Audio/Music/sting_lose.ogg using Guid(8d50b83f78ac46ea8f97aadc0bc9d1fd) (AudioImporter) -> (artifact id: '64bef007ef86453315b208576fab9695') in 0.118300594 seconds
+Start importing Assets/Resources/Audio/Music/sting_win.ogg using Guid(eee72485ccfe4514aa9f34ebffe707a6) (AudioImporter)Warnings during import of AudioClip Assets/Resources/Audio/Music/sting_win.ogg
+FSBTool WARNING: This source file was truncated.  Length reported 352800 bytes, length decoded = 345572 bytes.
+
+ -> (artifact id: '0fa280b17816ab10ad9c32d3040ad1ed') in 0.085470739 seconds
+Start importing Packages/com.unity.inputsystem/InputSystem/Editor/UITKAssetEditor/PackageResources/BindingPanelRowTemplate.uxml using Guid(449c8e5ca27af8e4a9db710c8be5e4df) (ScriptedImporter) -> (artifact id: 'a92d51fd86d84a9da9e6a99ee04903bb') in 0.082575328 seconds
+Refreshing native plugins compatible for Editor in 1.04 ms, found 0 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Asset Pipeline Refresh (id=13df8a6703004b334bc3159b7c14e549): Total: 28.030 seconds - Initiated by InitialRefreshV2(ForceSynchronousImport)
+	Summary:
+		Imports: total=895 (actual=895, local cache=0, cache server=0)
+		Asset DB Process Time: managed=191 ms, native=21532 ms
+		Asset DB Callback time: managed=237 ms, native=210 ms
+		Scripting: domain reloads=1, domain reload time=505 ms, compile time=5323 ms, other=30 ms
+		Project Asset Count: scripts=396, non-scripts=950
+		Asset File Changes: new=416, changed=689, moved=141, deleted=0
+		Scan Filter Count: 1
+	InvokeCustomDependenciesCallbacks: 0.005ms
+	InvokePackagesCallback: 192.443ms
+	ApplyChangesToAssetFolders: 0.174ms
+	Scan: 356.430ms
+	OnSourceAssetsModified: 2.576ms
+	CategorizeAssetsWithTransientArtifact: 8.803ms
+	ProcessAssetsWithTransientArtifactChanges: 20.479ms
+	CategorizeAssets: 15.779ms
+	ImportOutOfDateAssets: 21228.281ms (-4353.723ms without children)
+		ImportManagerImport: 20257.834ms (55.037ms without children)
+			ImportInProcess: 20199.278ms
+			UpdateCategorizedAssets: 3.519ms
+		CompileScripts: 5322.849ms
+		ReloadNativeAssets: 0.001ms
+		UnloadImportedAssets: 0.411ms
+		ReloadImportedAssets: 0.172ms
+		EnsureUptoDateAssetsAreRegisteredWithGuidPM: 0.289ms
+		InitializingProgressBar: 0.009ms
+		PostProcessAllAssetNotificationsAddChangedAssets: 0.002ms
+		OnDemandSchedulerStart: 0.437ms
+	PostProcessAllAssets: 250.238ms
+	Hotreload: 4.240ms
+	GatherAllCurrentPrimaryArtifactRevisions: 0.001ms
+	UnloadStreamsBegin: 1.505ms
+	PersistCurrentRevisions: 1.081ms
+	UnloadStreamsEnd: 0.001ms
+	GenerateScriptTypeHashes: 2.705ms
+	Untracked: 5947.993ms
+
+Application.AssetDatabase Initial Refresh End
+Scanning for USB devices : 0.151ms
+Initializing Unity extensions:
+UpdateMenuTitleForLanguage: 10
+[MODES] ModeService[none].Initialize
+[MODES] ModeService[none].LoadModes
+[MODES] Loading mode Default (0) for mode-current-id-مدينة الفاجعة
+Unloading 6 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 1331 unused Assets / (1.5 MB). Loaded Objects now: 1857.
+Memory consumption went from 90.3 MB to 88.9 MB.
+Total: 11.174642 ms (FindLiveObjects: 0.235108 ms CreateObjectMapping: 0.092142 ms MarkObjects: 8.746793 ms  DeleteObjects: 2.099708 ms)
+
+
+(Unity:1616): GLib-GObject-CRITICAL **: 12:03:26.936: g_object_unref: assertion 'G_IS_OBJECT (object)' failed
+
+(Unity:1616): GLib-GObject-CRITICAL **: 12:03:26.936: g_object_unref: assertion 'G_IS_OBJECT (object)' failed
+
+(Unity:1616): GLib-GObject-CRITICAL **: 12:03:26.936: g_object_unref: assertion 'G_IS_OBJECT (object)' failed
+[Project] Loading completed in 33.584 seconds
+	Project init time: 				33.214 seconds
+		Template init time: 		0.000 seconds
+		Package Manager init time: 		0.559 seconds
+		Asset Database init time: 		0.204 seconds
+		Global illumination init time: 	0.006 seconds
+		Assemblies load time: 			4.145 seconds
+		Unity extensions init time: 	0.003 seconds
+		Asset Database refresh time: 	28.030 seconds
+	Scene opening time: 			0.126 seconds
+##utp:{"type":"ProjectInfo","version":2,"phase":"Immediate","time":1794917006937,"processId":1616,"projectLoad":33.584028843,"projectInit":33.213556692,"templateInit":0.0,"packageManagerInit":0.559398748,"assetDatabaseInit":0.204092814,"globalIlluminationInit":0.005791058,"assembliesLoad":4.145251039,"unityExtensionsInit":0.00310447,"assetDatabaseRefresh":28.030134598,"sceneOpening":0.125709622}
+##utp:{"type":"EditorInfo","version":2,"phase":"Immediate","time":1794917006937,"processId":1616,"editorVersion":"6000.0.84f1 (78ab6fc243d5)","branch":"6000.0/staging","buildType":"Release","platform":"Linux"}
+Asset Pipeline Refresh (id=1ff48437fcb0f540086d1f5f35faf67c): Total: 0.084 seconds - Initiated by RefreshV2(ForceSynchronousImport)
+Asset Pipeline Refresh (id=af3c392996c61788798f6b1f71cfb21d): Total: 0.045 seconds - Initiated by RefreshV2(NoUpdateAssetOptions)
+Launched and connected shader compiler UnityShaderCompiler after 0.02 seconds
+Running tests for ExecutionSettings with details:
+targetPlatform = 
+playerHeartbeatTimeout = 600
+filters[0] = 
+   Filter with settings:
+   testMode = EditMode
+   targetPlatform = 
+   testNames = null
+   groupNames = null
+   categoryNames = null
+   assemblyNames = null
+ignoreTests = {}
+featureFlags = null
+
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /home/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:35)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+UnityEditor.TestTools.TestRunner.CommandLineTest.Executer:InitializeAndExecuteRun (string[]) (at ./Library/PackageCache/com.unity.test-framework@bd52b1c23814/UnityEditor.TestRunner/CommandLineTest/Executer.cs:53)
+UnityEditor.TestTools.TestRunner.CommandLineTest.TestStarter:InitializeAndExecuteRun () (at ./Library/PackageCache/com.unity.test-framework@bd52b1c23814/UnityEditor.TestRunner/CommandLineTest/TestStarter.cs:64)
+UnityEditor.EditorApplication:Internal_CallUpdateFunctions () (at /home/bokken/build/output/unity/unity/Editor/Mono/EditorApplication.cs:384)
+
+(Filename: ./Library/PackageCache/com.unity.test-framework@bd52b1c23814/UnityEditor.TestRunner/CommandLineTest/Executer.cs Line: 53)
+
+[UnityConnectServicesConfig] config is NOT valid, switching to default
+Created GICache directory at /root/.cache/unity3d/GiCache. Took: 0.048s, timestamps: [33.603 - 33.651]
+Unloading 1 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 2 unused Assets / (1.3 KB). Loaded Objects now: 1900.
+Memory consumption went from 82.2 MB to 82.2 MB.
+Total: 7.571541 ms (FindLiveObjects: 0.101640 ms CreateObjectMapping: 0.031959 ms MarkObjects: 7.401023 ms  DeleteObjects: 0.036108 ms)
+
+Saving results to: /github/workspace/artifacts/editmode-results.xml
+Unloading 0 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 0 unused Assets / (0 B). Loaded Objects now: 1900.
+Memory consumption went from 82.0 MB to 82.0 MB.
+Total: 8.497287 ms (FindLiveObjects: 0.101639 ms CreateObjectMapping: 0.033483 ms MarkObjects: 8.354181 ms  DeleteObjects: 0.006973 ms)
+
+DisplayProgressbar: Undo
+Test run completed. Exiting with code 0 (Ok). Run completed.
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace () (at /home/bokken/build/output/unity/unity/Runtime/Export/Scripting/StackTrace.cs:35)
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+UnityEditor.TestTools.TestRunner.CommandLineTest.Executer:ExitApplication (UnityEditor.TestTools.TestRunner.CommandLineTest.Executer/ReturnCodes,string) (at ./Library/PackageCache/com.unity.test-framework@bd52b1c23814/UnityEditor.TestRunner/CommandLineTest/Executer.cs:81)
+UnityEditor.TestTools.TestRunner.CommandLineTest.Executer:ExitIfRunIsCompleted () (at ./Library/PackageCache/com.unity.test-framework@bd52b1c23814/UnityEditor.TestRunner/CommandLineTest/Executer.cs:74)
+UnityEditor.EditorApplication:Internal_CallUpdateFunctions () (at /home/bokken/build/output/unity/unity/Editor/Mono/EditorApplication.cs:384)
+
+(Filename: ./Library/PackageCache/com.unity.test-framework@bd52b1c23814/UnityEditor.TestRunner/CommandLineTest/Executer.cs Line: 81)
+
+[Physics::Module] Cleanup current backned.
+[Physics::Module] Id: 0xf2b8ea05
+Input System module state changed to: ShutdownInProgress.
+Input System polling thread exited.
+Input System module state changed to: Shutdown.
+[Licensing::IpcConnector] LicenseClient-root-notifications channel disconnected successfully.
+[Licensing::IpcConnector] LicenseClient-root channel disconnected successfully.
+AcceleratorClientConnectionCallback - disconnected - :0
+[40m[32minfo[39m[22m[49m: Microsoft.Hosting.Lifetime[0]
+      Application is shutting down...
+Cleanup mono
+debugger-agent: Unable to listen on 39
+[Package Manager] Server process was shutdown
+Checking for leaked weakptr:
+  Found no leaked weakptrs.
+##utp:{"type":"MemoryLeaks","version":2,"phase":"Immediate","time":1794917009466,"processId":1616,"allocatedMemory":7916487,"memoryLabels":[{"Default":13965},{"Permanent":16080},{"Thread":1084616},{"Manager":18006},{"VertexData":8},{"Geometry":408},{"VFX":-104},{"Texture":296},{"Shader":79227},{"Material":24},{"GfxDevice":35976},{"Animation":456},{"Audio":4032},{"Font":122797},{"FreeType":5918},{"FontEngine":320},{"Physics":2081},{"Serialization":368},{"Input":26752},{"JobScheduler":33024},{"TextLib":160},{"Mono":32},{"ScriptingNativeRuntime":155096},{"BaseObject":1622936},{"Resource":1032},{"Renderer":2928},{"Transform":4678},{"File":832},{"WebCam":80},{"Culling":32},{"Terrain":11298},{"Wind":24},{"String":10171},{"DynamicArray":88266},{"HashMap":104535},{"Utility":2658704},{"PoolAlloc":1568},{"AI":72},{"TypeTree":5005},{"ScriptManager":512},{"RuntimeInitializeOnLoadManager":64},{"SpriteAtlas":112},{"GI":7448},{"Director":8208},{"WebRequest":552},{"VR":45689},{"SceneManager":528},{"Video":64},{"LazyScriptCache":32},{"NativeArray":540},{"Camera":17},{"Secure":265},{"SerializationCache":1576},{"APIUpdating":10320},{"Subsystems":336},{"VirtualTexturing":57552},{"StaticSafetyDebugInfo":278528},{"Analytics":336},{"Hierarchy":832},{"CoreStats":12536},{"Identifiers":6192},{"Gui":112},{"EditorUtility":27684},{"VersionControl":4},{"Undo":979},{"AssetDatabase":1303238},{"EditorGi":328},{"UnityConnect":24816},{"Upm":1852},{"DrivenProperties":72},{"LocalIPC":147},{"ProfilerEditor":9746},{"CoreBusinessMetrics":2379},{"Licensing":1128},{"AssetReference":32},{"IPCStream":32}]}
