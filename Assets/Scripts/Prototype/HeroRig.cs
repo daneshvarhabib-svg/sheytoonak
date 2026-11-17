@@ -378,14 +378,14 @@ namespace Sheytoonak.Prototype
 
             if (kickT >= 0f)
             {
-                // ⚠️ the ball leaves on the first frame of the kick: that frame is the foot coming down onto it (kick_1; the
-                // wind-up kick_0 is the Ready stance). User on the sheet: «موقع شوت زدن سومی از چپ زاویه پاش مناسب نیست» --
-                // kick_2 is not used; the leg goes from the ball straight into the follow-through.
+                // ⚠️ the ball leaves on the first frame of the kick: that frame is the contact picture (kick_2; the wind-up
+                // kick_0 is the Ready stance, kick_1 the leg coming down is skipped over by the snap). User on the sheet:
+                // «سومی از راست … زاویه پاش مناسب نیست» (he first said «از چپ», then corrected himself): kick_3, the high
+                // follow-through with the leg out to the side, is not used; from the contact the leg comes down.
                 kickT += dt;
-                if (kickT < 0.06f) Show(KickFrame(1), 0.03f);
-                else if (kickT < 0.30f) Show(KickFrame(3), 0.10f);
-                else if (kickT < 0.44f) Show(KickFrame(4), 0.12f);
-                else if (kickT < 0.60f) Show(KickFrame(5), 0.13f);
+                if (kickT < 0.22f) Show(KickFrame(2), 0.04f);
+                else if (kickT < 0.42f) Show(KickFrame(4), 0.14f);
+                else if (kickT < 0.60f) Show(KickFrame(5), 0.14f);
                 else if (idleClip.Count > 0) Show(idleClip[0], 0.14f);
                 facing = home;
                 if (kickT >= KickSeconds) { kickT = -1f; idleClock = 0f; }
