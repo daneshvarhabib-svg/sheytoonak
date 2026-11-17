@@ -124,7 +124,10 @@ namespace Sheytoonak.Core.Duel
             WindowValue = new int[n];
             for (int i = 0; i < n; i++) WindowValue[i] = 1;
             SealedWindow = -1;
-            if (n % 2 == 0)
+            // User (2026-11-17): «برای این که تعداد زوج و فرد درست شه تعداد فحش هایی که میاد و دو امتیازی میکنه رو درست کن که کل
+            // امتیازات هر دست فرد باشه». When curse windows are asked for, they fix the parity instead of a sealed window:
+            // an even house gets an odd number of curses, an odd house an even number. The seal stays only for old callers.
+            if (n % 2 == 0 && doubleWindows <= 0)
             {
                 var upper = new System.Collections.Generic.List<int>();
                 for (int i = 0; i < n; i++) if (rowOfWindow[i] > 0) upper.Add(i);
@@ -137,7 +140,8 @@ namespace Sheytoonak.Core.Duel
             // می‌شه». An even number of random windows (never the sealed one) is worth 2: the odd total stays odd, so no tie by
             // count. The resident leans out of exactly these (PrototypeBootstrap). Nobody is told which ones before they break.
             var doubles = new System.Collections.Generic.List<int>();
-            int want = Math.Max(0, doubleWindows) / 2 * 2;
+            int want = Math.Max(0, doubleWindows);
+            if (want > 0 && (n + want) % 2 == 0) want += want < n ? 1 : -1;
             var pool = new System.Collections.Generic.List<int>();
             for (int i = 0; i < n; i++) if (i != SealedWindow) pool.Add(i);
             while (doubles.Count < want && pool.Count > 0)
@@ -145,7 +149,6 @@ namespace Sheytoonak.Core.Duel
                 int k = rng.Next(pool.Count);
                 doubles.Add(pool[k]); pool.RemoveAt(k);
             }
-            if (doubles.Count % 2 == 1) doubles.RemoveAt(doubles.Count - 1);
             foreach (int w in doubles) WindowValue[w] = 2;
             DoubleWindows = doubles.ToArray();
             int total = 0; foreach (int v in WindowValue) total += v;

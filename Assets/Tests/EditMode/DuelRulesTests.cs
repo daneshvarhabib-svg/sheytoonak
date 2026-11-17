@@ -1,3 +1,4 @@
+using System;
 using NUnit.Framework;
 using Sheytoonak.Core.Duel;
 
@@ -69,25 +70,24 @@ namespace Sheytoonak.Tests
         }
 
         [Test]
-        public void Curse_windows_are_worth_two_come_in_pairs_and_keep_the_total_odd()
+        public void Curse_windows_are_worth_two_and_make_every_total_odd()
         {
-            // user 2026-11-16: «تعداد پنجره‌هایی که دو امتیازین حتماً باید زوج باشه … پنجره فحش دار دو امتیاز حساب می‌شه»
+            // user 2026-11-16: «پنجره فحش دار دو امتیاز حساب می‌شه»; 2026-11-17: «تعداد فحش هایی که میاد و دو امتیازی میکنه رو
+            // درست کن که کل امتیازات هر دست فرد باشه» -- no sealed window when curses are asked for.
             var h = StarterHeroes.All;
             for (int seed = 1; seed < 60; seed++)
                 foreach (int ask in new[] { 2, 3, 4 })
-                {
-                    var r = new DuelRules(new[] { 5, 5, 5 }, new int[15], new[] { h[0], h[1], h[2] }, new[] { h[3], h[4], h[0] }, seed, null, ask);
-                    Assert.AreEqual(0, r.DoubleWindows.Length % 2, "an even number of doubles, asked " + ask);
-                    Assert.AreEqual(ask / 2 * 2, r.DoubleWindows.Length);
-                    int twos = 0; for (int w = 0; w < 15; w++) if (r.WindowValue[w] == 2) { twos++; Assert.IsTrue(r.IsDouble(w)); }
-                    Assert.AreEqual(r.DoubleWindows.Length, twos);
-                    Assert.AreEqual(15 + twos, r.TotalValue);
-                    Assert.AreEqual(1, r.TotalValue % 2, "the round total stays odd: no tie by count");
-
-                    var even = new DuelRules(new[] { 4, 4 }, new int[8], new[] { h[0], h[1], h[2] }, new[] { h[3], h[4], h[0] }, seed, new[] { 1, 1, 1, 1, 0, 0, 0, 0 }, ask);
-                    Assert.IsFalse(even.IsDouble(even.SealedWindow), "the sealed window is never a double");
-                    Assert.AreEqual(1, even.TotalValue % 2);
-                }
+                    foreach (var rows in new[] { new[] { 5, 5, 5 }, new[] { 4, 4 }, new[] { 8, 8, 8 } })
+                    {
+                        int n = 0; foreach (int c in rows) n += c;
+                        var r = new DuelRules(rows, new int[n], new[] { h[0], h[1], h[2] }, new[] { h[3], h[4], h[0] }, seed, null, ask);
+                        Assert.AreEqual(-1, r.SealedWindow, "curses fix the parity, nothing is sealed");
+                        Assert.IsTrue(r.DoubleWindows.Length >= 1 && Math.Abs(r.DoubleWindows.Length - ask) <= 1);
+                        int twos = 0; for (int w = 0; w < n; w++) if (r.WindowValue[w] == 2) { twos++; Assert.IsTrue(r.IsDouble(w)); }
+                        Assert.AreEqual(r.DoubleWindows.Length, twos);
+                        Assert.AreEqual(n + twos, r.TotalValue);
+                        Assert.AreEqual(1, r.TotalValue % 2, "the round total is odd: no tie, " + n + " windows asked " + ask);
+                    }
             var none = new DuelRules(new[] { 5, 5, 5 }, new int[15], new[] { h[0], h[1], h[2] }, new[] { h[3], h[4], h[0] }, 3);
             Assert.AreEqual(0, none.DoubleWindows.Length, "no doubles unless asked (old callers unchanged)");
         }

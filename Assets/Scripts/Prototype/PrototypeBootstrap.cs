@@ -237,7 +237,7 @@ namespace Sheytoonak.Prototype
             // User (2026-11-05): the 3:1 paintings (2172x724) replace the 2.3:1 ones; houses 13–22 stay in code until their 3:1
             // versions arrive («فعلا این سه تا رو داشته باش تا باقی برسن»).
             // test (user, 2026-11-05): one 3:1 painting with the top row 8 % below the edge, alone, to see if it fills the frame
-            var houses = new[] { House36(), House37(), House38(), House39(), House40(), House41(), House42(), House43() }; // 19, 17, 21, 19, 15, 17, 13, 23 windows: at least 11, always odd
+            var houses = new[] { House36(), House37(), House38(), House39(), House40(), House41(), House42(), House43() }; // 19, 17, 22, 19, 16, 17, 14, 24 windows; the curse windows make every round's total odd
             allHouses = houses;
 
             // Player: foot position + window mapping. No body: the game is first-person (POV).
@@ -420,13 +420,14 @@ namespace Sheytoonak.Prototype
             },
             0.25f, 1.95f, 0f, 1.2f, null, "Art/house_37_broken", R(60f, 560f, 300f, 650f));
 
-        // Medieval: black-and-white ablaq courses and a big door, 8 + 7 + 6 = 21 (the small window over the door is left out: 22 would be even).
+        // Medieval: black-and-white ablaq courses and a big door, 8 + 7 + 6 = 21 (+ the small one over the door = 22: even, so a round here has an odd number of curse windows).
         HouseDefinition House38() => MakePaintedHouse("البيت ٣٨", "Art/house_38", 2172f, 724f, Wide3W,
             new[]
             {
                 R(172f, 88f, 243f, 210f), R(442f, 88f, 512f, 210f), R(682f, 88f, 750f, 210f), R(928f, 88f, 995f, 210f), R(1170f, 88f, 1240f, 210f), R(1410f, 88f, 1480f, 210f), R(1655f, 88f, 1725f, 210f),
                 R(1935f, 88f, 2002f, 210f), R(172f, 290f, 243f, 410f), R(442f, 290f, 512f, 410f), R(682f, 290f, 750f, 410f), R(928f, 290f, 995f, 385f), R(1410f, 290f, 1480f, 410f), R(1655f, 290f, 1725f, 410f),
                 R(1935f, 290f, 2002f, 410f), R(168f, 505f, 240f, 625f), R(442f, 505f, 512f, 625f), R(686f, 505f, 752f, 625f), R(1410f, 505f, 1480f, 625f), R(1655f, 505f, 1725f, 625f), R(1935f, 505f, 2002f, 625f),
+                R(1168f, 300f, 1240f, 392f),
             },
             0.25f, 1.95f, 0f, 1.2f, null, "Art/house_38_broken", R(280f, 230f, 400f, 270f));
 
@@ -440,13 +441,14 @@ namespace Sheytoonak.Prototype
             },
             0.25f, 1.95f, 0f, 1.2f, null, "Art/house_39_broken", R(560f, 10f, 700f, 50f));
 
-        // Medieval: rose sandstone, carved frames, geranium pots on a ledge, 6 + 6 + 3 = 15 (the 4th bottom window stays whole: 16 would be even).
+        // Medieval: rose sandstone, carved frames, geranium pots on a ledge, 6 + 6 + 4 = 16 (even: odd curse count).
         HouseDefinition House40() => MakePaintedHouse("البيت ٤٠", "Art/house_40", 2172f, 724f, Wide3W,
             new[]
             {
                 R(151f, 92f, 251f, 205f), R(504f, 92f, 604f, 205f), R(857f, 92f, 957f, 205f), R(1204f, 92f, 1304f, 205f), R(1557f, 92f, 1657f, 205f), R(1921f, 92f, 2021f, 205f), R(151f, 318f, 251f, 441f),
                 R(500f, 318f, 604f, 444f), R(842f, 317f, 957f, 438f), R(1204f, 318f, 1304f, 435f), R(1549f, 318f, 1664f, 447f), R(1921f, 318f, 2021f, 444f), R(502f, 564f, 604f, 704f), R(853f, 564f, 961f, 703f),
                 R(1195f, 563f, 1304f, 703f),
+                R(1557f, 578f, 1657f, 695f),
             },
             0.25f, 1.95f, 0f, 1.2f, null, "Art/house_40_broken", R(60f, 560f, 200f, 680f));
 
@@ -460,16 +462,17 @@ namespace Sheytoonak.Prototype
             },
             0.25f, 1.95f, 0f, 1.2f, null, "Art/house_41_broken", R(400f, 570f, 500f, 640f));
 
-        // Medieval: cream stone with turquoise tile frames and a fountain niche, 5 + 5 + 3 = 13 (the bottom-right one stays whole: 14 would be even).
+        // Medieval: cream stone with turquoise tile frames and a fountain niche, 5 + 5 + 4 = 14 (even: odd curse count).
         HouseDefinition House42() => MakePaintedHouse("البيت ٤٢", "Art/house_42", 2172f, 724f, Wide3W,
             new[]
             {
                 R(182f, 53f, 317f, 199f), R(572f, 53f, 724f, 200f), R(1012f, 53f, 1165f, 198f), R(1425f, 53f, 1576f, 191f), R(1866f, 54f, 1994f, 199f), R(186f, 300f, 331f, 423f), R(587f, 300f, 711f, 418f),
                 R(1027f, 300f, 1151f, 418f), R(1440f, 300f, 1564f, 418f), R(1866f, 300f, 1990f, 418f), R(187f, 516f, 325f, 657f), R(587f, 527f, 712f, 657f), R(1439f, 512f, 1576f, 657f),
+                R(1866f, 527f, 1990f, 643f),
             },
             0.25f, 1.95f, 0f, 1.2f, null, "Art/house_42_broken", R(380f, 440f, 520f, 500f));
 
-        // Medieval: patterned red brick, wooden balconettes and laundry, 8 + 8 + 7 = 23 (the bottom-right one stays whole: 24 would be even).
+        // Medieval: patterned red brick, wooden balconettes and laundry, 8 + 8 + 8 = 24 (even: odd curse count).
         HouseDefinition House43() => MakePaintedHouse("البيت ٤٣", "Art/house_43", 2172f, 724f, Wide3W,
             new[]
             {
@@ -477,6 +480,7 @@ namespace Sheytoonak.Prototype
                 R(1946f, 78f, 2050f, 166f), R(111f, 323f, 215f, 424f), R(369f, 323f, 473f, 412f), R(618f, 323f, 722f, 411f), R(876f, 323f, 989f, 410f), R(1130f, 323f, 1234f, 424f), R(1381f, 323f, 1494f, 424f),
                 R(1669f, 323f, 1773f, 413f), R(1936f, 323f, 2050f, 415f), R(111f, 567f, 215f, 665f), R(369f, 567f, 473f, 654f), R(618f, 567f, 722f, 666f), R(876f, 567f, 980f, 664f), R(1130f, 567f, 1234f, 667f),
                 R(1381f, 567f, 1485f, 667f), R(1654f, 567f, 1773f, 655f),
+                R(1946f, 567f, 2050f, 654f),
             },
             0.25f, 1.95f, 0f, 1.2f, null, "Art/house_43_broken", R(1300f, 185f, 1370f, 235f));
 
