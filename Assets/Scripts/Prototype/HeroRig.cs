@@ -30,26 +30,26 @@ namespace Sheytoonak.Prototype
         {
             ["abu_shahata"] = new[]
             {
-                new Part("shorts", null, 0.4905f, 0.8994f, -0.200f, 6.450f, 4),
-                new Part("torso", "shorts", 0.4719f, 0.0090f, 0.000f, 0.000f, 6),
-                new Part("head", "torso", 0.4363f, 0.1634f, -0.100f, 4.150f, 3),
-                new Part("arm_far", "torso", 0.7430f, 0.8856f, -1.400f, 3.650f, 5),
-                new Part("arm_near", "torso", 0.2299f, 0.9043f, 0.900f, 3.650f, 7),
-                new Part("leg_far", "shorts", 0.5745f, 0.9565f, -1.200f, -1.850f, 1),
-                new Part("leg_near", "shorts", 0.3858f, 0.9592f, 1.400f, -1.850f, 2),
+                new Part("shorts", null, 0.5171f, 0.9111f, -0.045f, 8.960f, 4),
+                new Part("torso", "shorts", 0.4951f, 0.0000f, 0.000f, 0.000f, 6),
+                new Part("head", "torso", 0.4083f, 0.1890f, 0.050f, 3.480f, 3),
+                new Part("arm_far", "torso", 0.5799f, 0.9169f, -1.550f, 2.700f, 5),
+                new Part("arm_near", "torso", 0.2959f, 0.9324f, 1.150f, 2.700f, 7),
+                new Part("leg_far", "shorts", 0.5355f, 0.9550f, -0.950f, -4.400f, 1),
+                new Part("leg_near", "shorts", 0.3610f, 0.9581f, 0.900f, -4.400f, 2),
             },
             // The other seven (2026-11-11), cut by the same recipe from their cartoon back views (rig7/build.py in the
             // session scratchpad; polygons per hero). ⚠️ Long robes (um_arabiyat, hamada): the leg turns at the knee just
             // above the hem, not at the hip -- from the hip the whole hidden shin swung out beside the robe like a plank.
             ["rima"] = new[]
             {
-                new Part("shorts", null, 0.4817f, 0.5635f, 0.190f, 5.760f, 4),
-                new Part("torso", "shorts", 0.4815f, -0.0211f, 0.000f, 0.000f, 6),
-                new Part("head", "torso", 0.5852f, 0.1020f, -0.200f, 4.750f, 3),
-                new Part("arm_far", "torso", 0.5856f, 0.8768f, -1.700f, 3.800f, 5),
-                new Part("arm_near", "torso", 0.2183f, 0.8614f, 1.100f, 3.900f, 7),
-                new Part("leg_far", "shorts", 0.7018f, 0.9630f, -0.800f, -0.350f, 1),
-                new Part("leg_near", "shorts", 0.2484f, 0.9644f, 0.800f, -0.350f, 2),
+                new Part("shorts", null, 0.4710f, 0.9191f, -0.150f, 9.190f, 4),
+                new Part("torso", "shorts", 0.5272f, 0.0000f, 0.000f, 0.000f, 6),
+                new Part("head", "torso", 0.4365f, 0.1730f, -0.100f, 3.100f, 3),
+                new Part("arm_far", "torso", 0.5312f, 0.9156f, -1.550f, 2.400f, 5),
+                new Part("arm_near", "torso", 0.1832f, 0.9462f, 1.150f, 2.500f, 7),
+                new Part("leg_far", "shorts", 0.5455f, 0.9518f, -0.900f, -4.900f, 1),
+                new Part("leg_near", "shorts", 0.3629f, 0.9556f, 0.900f, -4.900f, 2),
             },
             // User (2026-11-17): the realistic masked Zaatar («عالی شد، همین رو بریم»), cut from Art/ArtArchive/Heroes/real/zaatar_real_back.png
             ["zaatar"] = new[]
@@ -64,33 +64,33 @@ namespace Sheytoonak.Prototype
             },
             ["fulla"] = new[]
             {
-                new Part("shorts", null, 0.5022f, 0.9128f, -0.125f, 8.320f, 4),
-                new Part("torso", "shorts", 0.6486f, 0.0000f, 0.000f, 0.000f, 6),
-                new Part("head", "torso", 0.5348f, 0.1008f, 0.200f, 2.600f, 3),
-                new Part("arm_far", "torso", 0.6983f, 0.8462f, -1.200f, 0.500f, 5),
-                new Part("arm_near", "torso", 0.2239f, 0.8929f, 1.000f, 1.950f, 7),
-                new Part("leg_far", "shorts", 0.7570f, 0.9723f, -0.700f, -0.950f, 1),
-                new Part("leg_near", "shorts", 0.2553f, 0.9736f, 0.900f, -0.950f, 2),
+                new Part("shorts", null, 0.5184f, 0.9168f, 0.880f, 9.320f, 4),
+                new Part("torso", "shorts", 0.7650f, 0.0000f, 0.000f, 0.000f, 6),
+                new Part("head", "torso", 0.4324f, 0.2051f, 0.000f, 3.250f, 3),
+                new Part("arm_far", "torso", 0.8116f, 1.3191f, -1.250f, 2.050f, 5),
+                new Part("arm_near", "torso", 0.1488f, 0.9482f, 0.950f, 2.450f, 7),
+                new Part("leg_far", "shorts", 0.6040f, 0.9553f, -1.000f, -4.850f, 1),
+                new Part("leg_near", "shorts", 0.3597f, 0.9573f, 0.800f, -4.850f, 2),
             },
             ["toni"] = new[]
             {
-                new Part("shorts", null, 0.4770f, 0.7573f, 0.015f, 6.740f, 4),
-                new Part("torso", "shorts", 0.4606f, -0.0117f, 0.000f, 0.000f, 6),
-                new Part("head", "torso", 0.5232f, 0.1277f, -0.050f, 4.250f, 3),
-                new Part("arm_far", "torso", 0.6305f, 0.8767f, -1.750f, 3.250f, 5),
-                new Part("arm_near", "torso", 0.2140f, 0.9020f, 0.950f, 3.550f, 7),
-                new Part("leg_far", "shorts", 0.6653f, 0.9642f, -0.850f, -1.050f, 1),
-                new Part("leg_near", "shorts", 0.3268f, 0.9661f, 0.950f, -1.050f, 2),
+                new Part("shorts", null, 0.4834f, 0.8553f, -0.155f, 8.730f, 4),
+                new Part("torso", "shorts", 0.5174f, 0.0000f, 0.000f, 0.000f, 6),
+                new Part("head", "torso", 0.4663f, 0.2115f, 0.100f, 3.750f, 3),
+                new Part("arm_far", "torso", 0.4071f, 0.9126f, -1.700f, 2.750f, 5),
+                new Part("arm_near", "torso", 0.2646f, 0.9471f, 1.100f, 2.850f, 7),
+                new Part("leg_far", "shorts", 0.5337f, 0.9671f, -0.900f, -2.550f, 1),
+                new Part("leg_near", "shorts", 0.3571f, 0.9687f, 0.900f, -2.550f, 2),
             },
             ["um_arabiyat"] = new[]
             {
-                new Part("shorts", null, 0.4921f, 0.9332f, -0.040f, 8.170f, 4),
-                new Part("torso", "shorts", 0.5751f, 0.0000f, 0.000f, 0.000f, 6),
-                new Part("head", "torso", 0.6405f, 0.1321f, 0.600f, 3.100f, 3),
-                new Part("arm_far", "torso", 0.6749f, 0.8849f, -1.700f, 1.800f, 5),
-                new Part("arm_near", "torso", 0.1569f, 0.8743f, 1.000f, 1.900f, 7),
-                new Part("leg_far", "shorts", 0.7455f, 0.9361f, -0.800f, -5.000f, 1),
-                new Part("leg_near", "shorts", 0.1628f, 0.9408f, 1.000f, -5.000f, 2),
+                new Part("shorts", null, 0.4719f, 0.9183f, -0.225f, 9.050f, 4),
+                new Part("torso", "shorts", 0.4966f, 0.0000f, 0.000f, 0.000f, 6),
+                new Part("head", "torso", 0.5018f, 0.2241f, 0.000f, 3.350f, 3),
+                new Part("arm_far", "torso", 0.6125f, 0.9442f, -1.600f, 2.400f, 5),
+                new Part("arm_near", "torso", 0.1493f, 0.9322f, 1.300f, 2.500f, 7),
+                new Part("leg_far", "shorts", 0.5261f, 0.9507f, -0.900f, -4.900f, 1),
+                new Part("leg_near", "shorts", 0.3401f, 0.9541f, 1.100f, -4.900f, 2),
             },
             ["hamada"] = new[]
             {
@@ -126,7 +126,7 @@ namespace Sheytoonak.Prototype
         Dictionary<string, float> rest = new Dictionary<string, float>();
 
         /// <summary>Height of each puppet from the feet to the top of the head, in its own units (reference px / 100).</summary>
-        static readonly Dictionary<string, float> Heights = new Dictionary<string, float> { ["abu_shahata"] = 14.39f, ["rima"] = 14.49f, ["zaatar"] = 14.32f, ["fulla"] = 14.5f, ["toni"] = 14.62f, ["um_arabiyat"] = 14.5f, ["hamada"] = 14.54f, ["bubakr"] = 14.39f };
+        static readonly Dictionary<string, float> Heights = new Dictionary<string, float> { ["abu_shahata"] = 14.81f, ["rima"] = 14.69f, ["zaatar"] = 14.32f, ["fulla"] = 14.75f, ["toni"] = 14.54f, ["um_arabiyat"] = 14.67f, ["hamada"] = 14.54f, ["bubakr"] = 14.39f };
 
         public static bool Has(string id) => id != null && Tables.ContainsKey(id) && Resources.Load<Texture2D>("Art/Heroes/" + id + "_rig/torso") != null;
 
@@ -147,7 +147,7 @@ namespace Sheytoonak.Prototype
         // User (2026-11-17) on the new back-view Zaatar: «با توجه به این که بدن زاویه یک سوم به دوربین داره پا هم باید یک
         // سوم باشه ولی الان پا رفته راست کامل موقع شوت». Seen from behind, a kick goes INTO the picture, away from the
         // camera: the leg only swings a little sideways and mostly gets shorter. Only heroes drawn from behind.
-        static readonly HashSet<string> BackView = new HashSet<string> { "zaatar" };
+        static readonly HashSet<string> BackView = new HashSet<string> { "zaatar", "abu_shahata", "rima", "fulla", "toni", "um_arabiyat" };
         const float DepthSwing = 0.4f, DepthShorten = 0.4f;
         bool foreshorten;
         readonly Dictionary<string, Vector3> legScale = new Dictionary<string, Vector3>();
