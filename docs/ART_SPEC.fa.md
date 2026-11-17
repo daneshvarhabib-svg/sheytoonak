@@ -1106,3 +1106,75 @@ A straight-on flat elevation of ONE wide old town house facade, crumbling yellow
 ```
 The attached picture, EXACTLY the same in every pixel (same framing, same walls, same window positions and sizes), only every window's glass is smashed: jagged holes, cracked panes, shards still in the frames. Wide 3:1 image.
 ```
+
+### همه‌ی موجوداتِ زنده ماسک دارند (۲۷ آبان)
+کاربر (با تصویرِ کبوترِ بی‌ماسک): «موجودات زنده مثل اسب و پرنده و شتر هم ماسک داشته باشن. عابرها و همسایه‌ها هم». این پرامپت‌ها جای همان‌های بالا را می‌گیرند؛ همسایه‌ها، عابران، برانکاردارها، رفتگر و الاغ هم همین جمله‌ی ماسک را می‌گیرند (هر کدام جنسِ ماسکِ خودش).
+
+`Art/Poison/pigeon_0.png`
+```
+A grey city pigeon flying, wings fully up, seen from the side facing right, wearing a tiny mask of thin carved wood with a pointed tip over its beak, tied behind the head with red thread. Every living creature in this picture wears its own small hand-made mask over the face (animals too), like the heroes of this game: carved wood, stiff leather, woven straw or hammered tin, tied with cord, eyes still visible through holes; the mask's material and shape are different for each creature. Photorealistic photograph, soft natural daylight, medieval Middle-Eastern era, nothing modern. Isolated on a flat solid bright green background #00FF00, no ground, no shadow, whole object visible, centered. No text, no letters, no logo, no religious or political symbols.
+```
+`Art/Poison/pigeon_1.png`
+```
+The same masked grey pigeon as the attached picture, same mask, same size and angle, wings halfway down. Every living creature in this picture wears its own small hand-made mask over the face (animals too), like the heroes of this game: carved wood, stiff leather, woven straw or hammered tin, tied with cord, eyes still visible through holes; the mask's material and shape are different for each creature. Photorealistic photograph, soft natural daylight, medieval Middle-Eastern era, nothing modern. Isolated on a flat solid bright green background #00FF00, no ground, no shadow, whole object visible, centered. No text, no letters, no logo, no religious or political symbols.
+```
+`Art/Poison/pigeon_2.png`
+```
+The same masked grey pigeon as the attached picture, same mask, same size and angle, wings fully down. Every living creature in this picture wears its own small hand-made mask over the face (animals too), like the heroes of this game: carved wood, stiff leather, woven straw or hammered tin, tied with cord, eyes still visible through holes; the mask's material and shape are different for each creature. Photorealistic photograph, soft natural daylight, medieval Middle-Eastern era, nothing modern. Isolated on a flat solid bright green background #00FF00, no ground, no shadow, whole object visible, centered. No text, no letters, no logo, no religious or political symbols.
+```
+`Art/Poison/bus.png`
+```
+A long camel caravan seen exactly from the side facing left: three loaded camels in a row, tied together, bundles and rugs on their backs, one camel driver walking in front holding the rope; each camel wears a long face mask of tooled leather with brass studs, the driver a half mask of dark wood. Every living creature in this picture wears its own small hand-made mask over the face (animals too), like the heroes of this game: carved wood, stiff leather, woven straw or hammered tin, tied with cord, eyes still visible through holes; the mask's material and shape are different for each creature. Photorealistic photograph, soft natural daylight, medieval Middle-Eastern era, nothing modern. Isolated on a flat solid bright green background #00FF00, no ground, no shadow, whole object visible, centered. No text, no letters, no logo, no religious or political symbols.
+```
+`Art/Poison/truck.png`
+```
+A tall overloaded hay wagon seen exactly from the side facing left, hay piled very high, pulled by one ox wearing a broad mask of woven straw between its horns, WITHOUT the wagon's wheels (empty axles). Every living creature in this picture wears its own small hand-made mask over the face (animals too), like the heroes of this game: carved wood, stiff leather, woven straw or hammered tin, tied with cord, eyes still visible through holes; the mask's material and shape are different for each creature. Photorealistic photograph, soft natural daylight, medieval Middle-Eastern era, nothing modern. Isolated on a flat solid bright green background #00FF00, no ground, no shadow, whole object visible, centered. No text, no letters, no logo, no religious or political symbols.
+```
+`Art/Poison/tow_truck.png`
+```
+Two medieval market guards walking to the left, side view, leather jerkins and wooden clubs, one carries a heavy iron hook on a rope, fully clothed; each wears a stern mask of hammered tin, one plain, one with a crest of bristles. Every living creature in this picture wears its own small hand-made mask over the face (animals too), like the heroes of this game: carved wood, stiff leather, woven straw or hammered tin, tied with cord, eyes still visible through holes; the mask's material and shape are different for each creature. Photorealistic photograph, soft natural daylight, medieval Middle-Eastern era, nothing modern. Isolated on a flat solid bright green background #00FF00, no ground, no shadow, whole object visible, centered. No text, no letters, no logo, no religious or political symbols.
+```
+`Art/Poison/tanker_0.png`
+```
+A water carrier walking to the left, side view, a big goatskin water bag on his back with its spout closed, a brass cup on his belt, wearing a round mask of blue-glazed clay with a small spout-shaped mouth. Every living creature in this picture wears its own small hand-made mask over the face (animals too), like the heroes of this game: carved wood, stiff leather, woven straw or hammered tin, tied with cord, eyes still visible through holes; the mask's material and shape are different for each creature. Photorealistic photograph, soft natural daylight, medieval Middle-Eastern era, nothing modern. Isolated on a flat solid bright green background #00FF00, no ground, no shadow, whole object visible, centered. No text, no letters, no logo, no religious or political symbols.
+```
+`Art/Poison/tanker_1.png`
+```
+The same masked water carrier as the attached picture, same mask, same size and angle, standing still and bending forward, pouring water from the goatskin spout to the ground. Every living creature in this picture wears its own small hand-made mask over the face (animals too), like the heroes of this game: carved wood, stiff leather, woven straw or hammered tin, tied with cord, eyes still visible through holes; the mask's material and shape are different for each creature. Photorealistic photograph, soft natural daylight, medieval Middle-Eastern era, nothing modern. Isolated on a flat solid bright green background #00FF00, no ground, no shadow, whole object visible, centered. No text, no letters, no logo, no religious or political symbols.
+```
+`Art/Poison/rug_pusher_0.png`
+```
+A strong woman fully clothed in a long-sleeved knee-length tunic and trousers, a cloth over her hair, wearing a mask woven from red and blue rug threads, side view facing left, leaning forward with both palms on something in front of her. Every living creature in this picture wears its own small hand-made mask over the face (animals too), like the heroes of this game: carved wood, stiff leather, woven straw or hammered tin, tied with cord, eyes still visible through holes; the mask's material and shape are different for each creature. Photorealistic photograph, soft natural daylight, medieval Middle-Eastern era, nothing modern. Isolated on a flat solid bright green background #00FF00, no ground, no shadow, whole object visible, centered. No text, no letters, no logo, no religious or political symbols.
+```
+`Art/Poison/rug_pusher_1.png`
+```
+The same masked woman as the attached picture, same mask, same size and angle, both arms fully stretched, shoving hard. Every living creature in this picture wears its own small hand-made mask over the face (animals too), like the heroes of this game: carved wood, stiff leather, woven straw or hammered tin, tied with cord, eyes still visible through holes; the mask's material and shape are different for each creature. Photorealistic photograph, soft natural daylight, medieval Middle-Eastern era, nothing modern. Isolated on a flat solid bright green background #00FF00, no ground, no shadow, whole object visible, centered. No text, no letters, no logo, no religious or political symbols.
+```
+`Art/Poison/granny2.png`
+```
+A neighbour leaning out of a window, seen from the front from the waist up, fully clothed in medieval Middle-Eastern linen and wool: an old woman, a cloth over her grey hair, shaking her fist, a mask of cracked white porcelain, eyes visible through the mask holes, the mouth area open so the shouting shows. Only the person, no window frame. Photorealistic, soft daylight. Isolated on a flat solid bright green background #00FF00, no shadow. No text, no religious or political symbols.
+```
+`Art/Poison/resident_01.png`
+```
+A neighbour leaning out of a window, seen from the front from the waist up, fully clothed in medieval Middle-Eastern linen and wool: a bald old man with a thick grey moustache, shouting, pointing down, a mask of dark walnut wood, eyes visible through the mask holes, the mouth area open so the shouting shows. Only the person, no window frame. Photorealistic, soft daylight. Isolated on a flat solid bright green background #00FF00, no shadow. No text, no religious or political symbols.
+```
+`Art/Poison/resident_02.png`
+```
+A neighbour leaning out of a window, seen from the front from the waist up, fully clothed in medieval Middle-Eastern linen and wool: a middle-aged woman, a cloth over her hair, holding a wooden ladle, furious, a mask of copper sheet, eyes visible through the mask holes, the mouth area open so the shouting shows. Only the person, no window frame. Photorealistic, soft daylight. Isolated on a flat solid bright green background #00FF00, no shadow. No text, no religious or political symbols.
+```
+`Art/Poison/resident_03.png`
+```
+A neighbour leaning out of a window, seen from the front from the waist up, fully clothed in medieval Middle-Eastern linen and wool: a young man with a messy beard, half asleep, angry, yelling, a mask of stitched felt, eyes visible through the mask holes, the mouth area open so the shouting shows. Only the person, no window frame. Photorealistic, soft daylight. Isolated on a flat solid bright green background #00FF00, no shadow. No text, no religious or political symbols.
+```
+`Art/Poison/resident_04.png`
+```
+A neighbour leaning out of a window, seen from the front from the waist up, fully clothed in medieval Middle-Eastern linen and wool: a heavy man holding a clay water jug as if about to throw it, a mask of terracotta, eyes visible through the mask holes, the mouth area open so the shouting shows. Only the person, no window frame. Photorealistic, soft daylight. Isolated on a flat solid bright green background #00FF00, no shadow. No text, no religious or political symbols.
+```
+`Art/Poison/resident_05.png`
+```
+A neighbour leaning out of a window, seen from the front from the waist up, fully clothed in medieval Middle-Eastern linen and wool: a thin old man in a felt cap, shaking a walking stick, a mask of woven reed, eyes visible through the mask holes, the mouth area open so the shouting shows. Only the person, no window frame. Photorealistic, soft daylight. Isolated on a flat solid bright green background #00FF00, no shadow. No text, no religious or political symbols.
+```
+`Art/Poison/resident_06.png`
+```
+A neighbour leaning out of a window, seen from the front from the waist up, fully clothed in medieval Middle-Eastern linen and wool: a young woman, a cloth over her hair, holding a crying swaddled baby (the baby unmasked, the woman in a mask of painted leather), shouting, eyes visible through the mask holes, the mouth area open so the shouting shows. Only the person, no window frame. Photorealistic, soft daylight. Isolated on a flat solid bright green background #00FF00, no shadow. No text, no religious or political symbols.
+```
