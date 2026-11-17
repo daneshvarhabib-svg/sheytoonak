@@ -165,7 +165,9 @@ namespace Sheytoonak.Prototype
         // سوم باشه ولی الان پا رفته راست کامل موقع شوت». Seen from behind, a kick goes INTO the picture, away from the
         // camera: the leg only swings a little sideways and mostly gets shorter. Only heroes drawn from behind.
         static readonly HashSet<string> BackView = new HashSet<string> { "zaatar", "abu_shahata", "rima", "fulla", "toni", "um_arabiyat", "hamada", "bubakr", "shadi" };
-        const float DepthSwing = 0.4f, DepthShorten = 0.4f;
+        // User (2026-11-17, after 0.4/0.4): «هنوز موقع زدن ضربه پاییه که رفته جلو باید به اون یکی پا نزدیک‌تر باشه برای همه
+        // قهرمانا» -- the kicking foot still flew out sideways: a fifth of the swing, and more of it goes into the depth.
+        const float DepthSwing = 0.2f, DepthShorten = 0.5f;
         bool foreshorten;
         readonly Dictionary<string, Vector3> legScale = new Dictionary<string, Vector3>();
         float Swing(float deg) => foreshorten ? deg * DepthSwing : deg;
