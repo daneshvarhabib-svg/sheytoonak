@@ -237,7 +237,7 @@ namespace Sheytoonak.Prototype
             // User (2026-11-05): the 3:1 paintings (2172x724) replace the 2.3:1 ones; houses 13–22 stay in code until their 3:1
             // versions arrive («فعلا این سه تا رو داشته باش تا باقی برسن»).
             // test (user, 2026-11-05): one 3:1 painting with the top row 8 % below the edge, alone, to see if it fills the frame
-            var houses = new[] { House36(), House37(), House38(), House39(), House40() }; // 15, 13, 21, 11, 17 windows: at least 11, always odd
+            var houses = new[] { House36(), House37(), House38(), House39() }; // 19, 17, 21, 19 windows: at least 11, always odd
             allHouses = houses;
 
             // Player: foot position + window mapping. No body: the game is first-person (POV).
@@ -396,67 +396,49 @@ namespace Sheytoonak.Prototype
         const float Wide3W = 13f * 2172f / 1536f; // a 3:1 painting at the same pixel density as the old 13 m 3:2 houses
         // Houses 7–27 (3:2 and 2.3:1 paintings) were removed on 2026-11-07 (design review §2.8): the pool is the 3:1 gritty houses only.
 
-        // First house of the odd-count rule (user 2026-11-07: «حداقل ۱۱ و حداکثر ۲۷، فرد»): 5 + 5 + (4 barred + shop) = 15.
-        HouseDefinition House36() => MakePaintedHouse("البيت ٣٦", "Art/house_36", 2172f, 724f, Wide3W, // Beirut, peeling plaster, three rows, 17 windows (cartoon repaint 2026-11-12)
+        // User (2026-11-17): «کلا قصه رو ببریم زمان قرون وسطا». The four medieval photoreal facades (house_36..39) replace
+        // the cartoon houses (in ArtArchive/Houses/toon_*); house_40 left the pool until more medieval houses are painted.
+        // Panes measured by eye on each picture; the broken twin is the intact picture with each pane taken from the AI's
+        // broken picture at that pane's own best-matching offset (the AI redraws the whole wall a pixel or two off).
+        // Medieval: honey limestone, a wooden balcony (2 of its windows break), 7 + 8 + 4 = 19.
+        HouseDefinition House36() => MakePaintedHouse("البيت ٣٦", "Art/house_36", 2172f, 724f, Wide3W,
             new[]
             {
-                // 2026-11-12: cartoon repaint (user: «دیزاین خونه ها هم با بازیکنا نمیخوره … فانتزی‌تر»); panes measured on the new
-                // picture, and the broken twin rebuilt pane by pane from the AI's broken picture at each pane's own offset
-                R(163f, 27f, 280f, 147f), R(508f, 27f, 628f, 147f), R(858f, 27f, 975f, 147f), R(1203f, 27f, 1321f, 147f), R(1551f, 27f, 1670f, 147f), R(1898f, 27f, 2016f, 147f), R(163f, 223f, 288f, 380f),
-                R(505f, 223f, 630f, 380f), R(853f, 223f, 977f, 380f), R(1200f, 223f, 1325f, 380f), R(1548f, 223f, 1672f, 380f), R(1895f, 223f, 2020f, 380f), R(152f, 478f, 295f, 608f), R(494f, 478f, 637f, 608f),
-                R(755f, 478f, 1075f, 652f), R(1537f, 478f, 1687f, 608f), R(1884f, 478f, 2031f, 608f),
+                R(408f, 62f, 498f, 197f), R(628f, 62f, 717f, 197f), R(920f, 58f, 1013f, 197f), R(1150f, 62f, 1240f, 195f), R(1385f, 58f, 1475f, 197f), R(1622f, 62f, 1715f, 197f), R(1850f, 62f, 1940f, 197f),
+                R(198f, 315f, 285f, 465f), R(403f, 315f, 493f, 465f), R(623f, 315f, 713f, 465f), R(918f, 315f, 1012f, 405f), R(1150f, 315f, 1242f, 405f), R(1385f, 315f, 1478f, 465f), R(1625f, 315f, 1715f, 465f),
+                R(1852f, 315f, 1942f, 465f), R(618f, 570f, 690f, 688f), R(908f, 572f, 983f, 688f), R(1185f, 572f, 1260f, 688f), R(1460f, 572f, 1537f, 688f),
             },
-            0.25f, 1.95f, 0f, 1.2f, null, "Art/house_36_broken", R(684f, 163f, 825f, 212f));
+            0.25f, 1.95f, 0f, 1.2f, null, "Art/house_36_broken", R(260f, 520f, 400f, 600f));
 
-        // Damascus ablaq spice shop, arched windows: 5 + 5 + (2 barred + shop) = 13. ⚠️ the broken twin came 2110x745 and was
-        // resized to 2172x724 so the cut-out rectangles line up.
+        // Medieval: peeling mud plaster with beam ends, 6 + 6 + 5 = 17.
         HouseDefinition House37() => MakePaintedHouse("البيت ٣٧", "Art/house_37", 2172f, 724f, Wide3W,
             new[]
             {
-                // 2026-11-12: cartoon repaint (user: «دیزاین خونه ها هم با بازیکنا نمیخوره … فانتزی‌تر»); panes measured on the new
-                // picture, and the broken twin rebuilt pane by pane from the AI's broken picture at each pane's own offset
-                R(306f, 49f, 421f, 195f), R(673f, 49f, 791f, 195f), R(1048f, 49f, 1162f, 195f), R(1420f, 49f, 1537f, 195f), R(1790f, 49f, 1906f, 195f), R(306f, 255f, 421f, 396f), R(673f, 255f, 791f, 396f),
-                R(1048f, 255f, 1162f, 396f), R(1420f, 255f, 1537f, 396f), R(1790f, 255f, 1906f, 396f), R(299f, 494f, 440f, 635f), R(877f, 543f, 1531f, 695f), R(1761f, 494f, 1903f, 635f),
+                R(222f, 78f, 310f, 195f), R(545f, 78f, 632f, 195f), R(875f, 78f, 962f, 195f), R(1197f, 78f, 1285f, 195f), R(1525f, 78f, 1612f, 195f), R(1861f, 78f, 1948f, 195f), R(222f, 278f, 310f, 392f),
+                R(545f, 278f, 632f, 392f), R(875f, 278f, 962f, 392f), R(1197f, 278f, 1285f, 392f), R(1525f, 278f, 1612f, 392f), R(1861f, 278f, 1948f, 392f), R(418f, 530f, 503f, 645f), R(722f, 535f, 808f, 645f),
+                R(1037f, 530f, 1127f, 645f), R(1336f, 530f, 1422f, 645f), R(1668f, 530f, 1755f, 645f),
             },
-            // ⚠️ 2026-11-07 the twin (2110x745) was dropped as "a different generation"; that was wrong -- blended over the
-            // intact 2172x724 it lines up window for window once resized, so it is back (resized to the intact size). The
-            // mismatched panes the user saw were the generic Art/Broken panes that stood in for it.
-            0.25f, 1.95f, 0f, 1.2f, null, "Art/house_37_broken", R(1662f, 467f, 1738f, 586f));
+            0.25f, 1.95f, 0f, 1.2f, null, "Art/house_37_broken", R(60f, 560f, 300f, 650f));
 
-        // Beirut 1970s concrete block, pink, bullet-pocked: 7 + 7 + 6 barred + the glass of the stairwell door = 21 (review 2026-11-07).
+        // Medieval: black-and-white ablaq courses and a big door, 8 + 7 + 6 = 21 (the small window over the door is left out: 22 would be even).
         HouseDefinition House38() => MakePaintedHouse("البيت ٣٨", "Art/house_38", 2172f, 724f, Wide3W,
             new[]
             {
-                // 2026-11-12: cartoon repaint (user: «دیزاین خونه ها هم با بازیکنا نمیخوره … فانتزی‌تر»); panes measured on the new
-                // picture, and the broken twin rebuilt pane by pane from the AI's broken picture at each pane's own offset
-                R(230f, 71f, 361f, 161f), R(502f, 71f, 632f, 161f), R(760f, 71f, 891f, 161f), R(1021f, 71f, 1151f, 161f), R(1288f, 71f, 1418f, 161f), R(1553f, 71f, 1683f, 161f), R(1816f, 71f, 1946f, 161f),
-                R(230f, 269f, 361f, 391f), R(502f, 269f, 632f, 391f), R(760f, 269f, 891f, 391f), R(1021f, 269f, 1151f, 391f), R(1288f, 269f, 1418f, 391f), R(1553f, 269f, 1683f, 391f), R(1816f, 269f, 1946f, 391f),
-                R(230f, 500f, 361f, 597f), R(502f, 500f, 632f, 597f), R(760f, 500f, 891f, 597f), R(1021f, 497f, 1153f, 695f), R(1288f, 500f, 1418f, 597f), R(1553f, 500f, 1683f, 597f), R(1816f, 500f, 1946f, 597f),
+                R(172f, 88f, 243f, 210f), R(442f, 88f, 512f, 210f), R(682f, 88f, 750f, 210f), R(928f, 88f, 995f, 210f), R(1170f, 88f, 1240f, 210f), R(1410f, 88f, 1480f, 210f), R(1655f, 88f, 1725f, 210f),
+                R(1935f, 88f, 2002f, 210f), R(172f, 290f, 243f, 410f), R(442f, 290f, 512f, 410f), R(682f, 290f, 750f, 410f), R(928f, 290f, 995f, 385f), R(1410f, 290f, 1480f, 410f), R(1655f, 290f, 1725f, 410f),
+                R(1935f, 290f, 2002f, 410f), R(168f, 505f, 240f, 625f), R(442f, 505f, 512f, 625f), R(686f, 505f, 752f, 625f), R(1410f, 505f, 1480f, 625f), R(1655f, 505f, 1725f, 625f), R(1935f, 505f, 2002f, 625f),
             },
-            0.25f, 1.95f, 0f, 1.2f, null, "Art/house_38_broken", R(1195f, 174f, 1271f, 250f));
+            0.25f, 1.95f, 0f, 1.2f, null, "Art/house_38_broken", R(280f, 230f, 400f, 270f));
 
-        // Alexandria corniche, lime wash and green wood, café with neon: 4 + 4 + (kiosk + café + barred) = 11.
+        // Medieval: whitewash, blue shutters, vines, 7 + 7 + 5 = 19.
         HouseDefinition House39() => MakePaintedHouse("البيت ٣٩", "Art/house_39", 2172f, 724f, Wide3W,
             new[]
             {
-                // 2026-11-12: cartoon repaint (user: «دیزاین خونه ها هم با بازیکنا نمیخوره … فانتزی‌تر»); panes measured on the new
-                // picture, and the broken twin rebuilt pane by pane from the AI's broken picture at each pane's own offset
-                R(326f, 33f, 497f, 152f), R(812f, 33f, 977f, 152f), R(1214f, 33f, 1381f, 152f), R(1700f, 33f, 1866f, 152f), R(324f, 217f, 497f, 304f), R(804f, 217f, 977f, 304f), R(1208f, 217f, 1381f, 304f),
-                R(1694f, 217f, 1870f, 304f), R(233f, 527f, 543f, 646f), R(733f, 494f, 1341f, 662f), R(1466f, 478f, 1642f, 635f),
+                R(168f, 62f, 248f, 197f), R(470f, 62f, 553f, 197f), R(765f, 62f, 848f, 197f), R(1058f, 62f, 1142f, 197f), R(1352f, 62f, 1435f, 197f), R(1650f, 62f, 1732f, 197f), R(1937f, 62f, 2020f, 197f),
+                R(160f, 298f, 245f, 437f), R(468f, 298f, 552f, 437f), R(765f, 298f, 848f, 437f), R(1058f, 298f, 1142f, 437f), R(1352f, 298f, 1435f, 437f), R(1650f, 298f, 1732f, 437f), R(1937f, 298f, 2020f, 437f),
+                R(392f, 535f, 463f, 668f), R(735f, 535f, 808f, 668f), R(1065f, 535f, 1140f, 668f), R(1400f, 540f, 1475f, 668f), R(1715f, 540f, 1790f, 668f),
             },
-            0.25f, 1.95f, 0f, 1.2f, null, "Art/house_39_broken", R(1499f, 195f, 1586f, 282f));
-
-        // Tunis medina, yellowed plaster and cobalt blue, bakery: 6 + 6 + (4 barred + bakery) = 17.
-        HouseDefinition House40() => MakePaintedHouse("البيت ٤٠", "Art/house_40", 2172f, 724f, Wide3W,
-            new[]
-            {
-                // 2026-11-12: the cartoon repaint (user: «دیزاین خونه ها هم با بازیکنا نمیخوره … فانتزی‌تر») kept the layout
-                // but its right half drifted up to 45 px, so the panes were measured again on the new picture
-                R(307f, 33f, 400f, 128f), R(665f, 33f, 755f, 128f), R(932f, 33f, 1021f, 128f), R(1222f, 33f, 1314f, 128f), R(1513f, 33f, 1605f, 128f), R(1833f, 33f, 1922f, 128f),
-                R(280f, 206f, 432f, 331f), R(633f, 206f, 785f, 331f), R(896f, 206f, 1048f, 331f), R(1187f, 206f, 1341f, 331f), R(1491f, 206f, 1642f, 331f), R(1808f, 206f, 1960f, 331f),
-                R(185f, 445f, 350f, 628f), R(529f, 445f, 695f, 628f), R(787f, 440f, 1119f, 630f), R(1504f, 445f, 1662f, 628f), R(1873f, 445f, 2029f, 628f),
-            },
-            0.25f, 1.95f, 0f, 1.2f, null, "Art/house_40_broken", R(1250f, 420f, 1450f, 600f));
+            0.25f, 1.95f, 0f, 1.2f, null, "Art/house_39_broken", R(560f, 10f, 700f, 50f));
 
         // Houses 28–35 (3:1 but 5–9 windows) left the pool on 2026-11-07 (user: «حداقل ۱۱ تا پنجره قابل شکستن … باید بمونن»).
 

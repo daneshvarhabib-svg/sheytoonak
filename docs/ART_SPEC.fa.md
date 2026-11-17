@@ -1062,3 +1062,47 @@ Original character for a mobile street game. Photorealistic cinematic photograph
 ```
 The same person as the attached back-view picture, same body shape, same mask, same hair, same clothes and colours, same bag and details, same photorealistic style, now FRONT view, full body, standing relaxed, holding one copper lantern up, its flame lit. Flat solid bright green background #00FF00, no ground, no shadow. Whole body visible, centered, about 85% of the image height, portrait 2:3. No text, no letters, no logo, no religious or political symbols.
 ```
+
+### خانه‌های بیشتر (۲۷ آبان)
+کاربر: «خونه ها رو چندتا دیگه هم بده که تنوعش بیشتر باشه». ⚠️ دیوارِ چپ و راست از بازی رفته‌اند (کاربر: «دیوار راست و چپ رو که خیلی وقته بیخیال شدیم») — پرامپتشان بی‌اعتبار. هر خانه تعدادِ پنجره‌ی فرد.
+
+`Art/house_40.png`
+```
+A straight-on flat elevation of ONE wide old town house facade, rose-pink sandstone with carved stone frames, a row of hanging clay pots of red geraniums on the second floor ledge. Exactly 17 windows in three rows (6, 6, 5), each a small window of leaded panes of thick old glass in a wooden frame, all clearly separate and fully visible. Camera exactly perpendicular, no perspective, no street, no sky: the facade fills the whole image edge to edge. Photorealistic cinematic photograph, soft warm late-afternoon light, a medieval Middle-Eastern walled town. No modern objects at all: no cars, no wires, no electric lights, no air conditioners, no satellite dishes, no signs. No text, no letters, no logo, no religious or political symbols. Wide 3:1 image.
+```
+`Art/house_40_broken.png`
+```
+The attached picture, EXACTLY the same in every pixel (same framing, same walls, same window positions and sizes), only every window's glass is smashed: jagged holes, cracked panes, shards still in the frames. Wide 3:1 image.
+```
+`Art/house_41.png`
+```
+A straight-on flat elevation of ONE wide old town house facade, dark brown timber-framed upper storeys over a ground floor of rough grey stone, wooden beams criss-crossing the white plaster. Exactly 19 windows in three rows (7, 7, 5), each a small window of leaded panes of thick old glass in a wooden frame, all clearly separate and fully visible. Camera exactly perpendicular, no perspective, no street, no sky: the facade fills the whole image edge to edge. Photorealistic cinematic photograph, soft warm late-afternoon light, a medieval Middle-Eastern walled town. No modern objects at all: no cars, no wires, no electric lights, no air conditioners, no satellite dishes, no signs. No text, no letters, no logo, no religious or political symbols. Wide 3:1 image.
+```
+`Art/house_41_broken.png`
+```
+The attached picture, EXACTLY the same in every pixel (same framing, same walls, same window positions and sizes), only every window's glass is smashed: jagged holes, cracked panes, shards still in the frames. Wide 3:1 image.
+```
+`Art/house_42.png`
+```
+A straight-on flat elevation of ONE wide old town house facade, turquoise and white glazed tiles around each window on a cream stone wall, a small fountain niche at street level. Exactly 15 windows in three rows (5, 5, 5), each a small window of leaded panes of thick old glass in a wooden frame, all clearly separate and fully visible. Camera exactly perpendicular, no perspective, no street, no sky: the facade fills the whole image edge to edge. Photorealistic cinematic photograph, soft warm late-afternoon light, a medieval Middle-Eastern walled town. No modern objects at all: no cars, no wires, no electric lights, no air conditioners, no satellite dishes, no signs. No text, no letters, no logo, no religious or political symbols. Wide 3:1 image.
+```
+`Art/house_42_broken.png`
+```
+The attached picture, EXACTLY the same in every pixel (same framing, same walls, same window positions and sizes), only every window's glass is smashed: jagged holes, cracked panes, shards still in the frames. Wide 3:1 image.
+```
+`Art/house_43.png`
+```
+A straight-on flat elevation of ONE wide old town house facade, tall narrow house of red fired bricks in decorative patterns, small wooden latticed bay windows, laundry ropes with coloured cloths between windows. Exactly 21 windows in three rows (7, 7, 7), each a small window of leaded panes of thick old glass in a wooden frame, all clearly separate and fully visible. Camera exactly perpendicular, no perspective, no street, no sky: the facade fills the whole image edge to edge. Photorealistic cinematic photograph, soft warm late-afternoon light, a medieval Middle-Eastern walled town. No modern objects at all: no cars, no wires, no electric lights, no air conditioners, no satellite dishes, no signs. No text, no letters, no logo, no religious or political symbols. Wide 3:1 image.
+```
+`Art/house_43_broken.png`
+```
+The attached picture, EXACTLY the same in every pixel (same framing, same walls, same window positions and sizes), only every window's glass is smashed: jagged holes, cracked panes, shards still in the frames. Wide 3:1 image.
+```
+`Art/house_44.png`
+```
+A straight-on flat elevation of ONE wide old town house facade, crumbling yellow ochre plaster with big cracks, a half-collapsed wooden roof edge on top, wooden props holding a sagging balcony. Exactly 17 windows in three rows (6, 5, 6), each a small window of leaded panes of thick old glass in a wooden frame, all clearly separate and fully visible. Camera exactly perpendicular, no perspective, no street, no sky: the facade fills the whole image edge to edge. Photorealistic cinematic photograph, soft warm late-afternoon light, a medieval Middle-Eastern walled town. No modern objects at all: no cars, no wires, no electric lights, no air conditioners, no satellite dishes, no signs. No text, no letters, no logo, no religious or political symbols. Wide 3:1 image.
+```
+`Art/house_44_broken.png`
+```
+The attached picture, EXACTLY the same in every pixel (same framing, same walls, same window positions and sizes), only every window's glass is smashed: jagged holes, cracked panes, shards still in the frames. Wide 3:1 image.
+```
