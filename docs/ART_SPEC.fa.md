@@ -1178,3 +1178,28 @@ A neighbour leaning out of a window, seen from the front from the waist up, full
 ```
 A neighbour leaning out of a window, seen from the front from the waist up, fully clothed in medieval Middle-Eastern linen and wool: a young woman, a cloth over her hair, holding a crying swaddled baby (the baby unmasked, the woman in a mask of painted leather), shouting, eyes visible through the mask holes, the mouth area open so the shouting shows. Only the person, no window frame. Photorealistic, soft daylight. Isolated on a flat solid bright green background #00FF00, no shadow. No text, no religious or political symbols.
 ```
+
+### قاب‌های حرکت به‌جای عروسک (۲۷ آبان)
+کاربر: «برای هر کارکتر چندتا پک شیش تایی بگیریم تصویر و اونا رو انیمیشنی به هم وصل کنیم بهتره: یکی برای واستادن و نفس کشیدن، یکی برای راه رفتن به سمت توپ که باید نیم رخ شن، یکی برای ضربه زدن. یکی هم آتلیه ای … رو پوستر بازی و عکس پروفایل». زعتر آمد و نصب شد (`zaatar_frames/`؛ `HeroRig` حالتِ قاب). قهرمان‌ها **یکی‌یکی**. به هر پنج پرامپت تصویرِ پشتِ فعلیِ همان قهرمان پیوست شود. در برگه‌ی شوت، قابِ سومِ زعتر پا را به بغل برده بود (کاربر: «سومی از چپ زاویه پاش مناسب نیست»)؛ جمله‌ی قابِ ۳ سفت‌تر شد.
+الگو (جای NAME اسمِ فایل):
+
+`Art/Heroes/NAME_sheet_idle.png`
+```
+A sprite sheet of the SAME character as the attached picture (same mask, same hair, same clothes, same marks, same body, same size, same bag or tools), photorealistic, soft natural daylight. 6 frames in ONE horizontal row, equal spacing, the character the same size and at the same place in every frame, feet on the same baseline. Seen MOSTLY FROM BEHIND, turned slightly to the right, as in the attached picture. A standing idle loop: frame 1 standing relaxed, weight on both feet; frame 2 breathing in, chest and shoulders slightly raised; frame 3 full breath, weight shifting onto the left foot; frame 4 breathing out, weight on the left foot, right knee slightly bent; frame 5 weight coming back to the middle, head turned a little more to the right; frame 6 almost back to frame 1. Small natural differences only, feet never move. Flat solid bright green background #00FF00, no ground, no shadow, no frame lines, no numbers, no text. Wide 2:1 image.
+```
+`Art/Heroes/NAME_sheet_walk.png`
+```
+A sprite sheet of the SAME character as the attached picture (same mask, same hair, same clothes, same marks, same body, same size, same bag or tools), photorealistic, soft natural daylight. 6 frames in ONE horizontal row, equal spacing, the character the same size in every frame, feet on the same baseline. Exact SIDE VIEW (profile), walking to the RIGHT, one full walk cycle that loops: frame 1 right foot forward touching the ground with the heel, left arm forward; frame 2 weight on the right foot, left foot lifting behind; frame 3 left leg passing under the body, knee bent; frame 4 left foot forward touching the ground with the heel, right arm forward; frame 5 weight on the left foot, right foot lifting behind; frame 6 right leg passing under the body, knee bent. Natural bent knees and elbows, relaxed hands. Flat solid bright green background #00FF00, no ground, no shadow, no frame lines, no numbers, no text. Wide 2:1 image.
+```
+`Art/Heroes/NAME_sheet_kick.png`
+```
+A sprite sheet of the SAME character as the attached picture (same mask, same hair, same clothes, same marks, same body, same size, same bag or tools), photorealistic, soft natural daylight. 6 frames in ONE horizontal row, equal spacing, the character the same size in every frame, the standing LEFT foot at the same place on the same baseline in every frame. Seen MOSTLY FROM BEHIND, turned slightly to the right, as in the attached picture. Kicking a ball with the RIGHT foot; the kick goes FORWARD, away from the camera, into the picture, never out to the side; NO ball in the picture: frame 1 wind-up, right leg drawn back behind the body, knee bent, arms out for balance, body leaning forward; frame 2 right leg swinging down past the standing leg, standing knee slightly bent; frame 3 the moment of contact, right foot low, just in front of the standing foot and close to it, toes pointing away from the camera, we see the heel and the back of the calf; frame 4 follow-through, right leg raised forward away from the camera (we see the sole of the sandal and the back of the thigh), body leaning back, left arm forward; frame 5 right leg coming down; frame 6 landed, both feet on the ground, knees slightly bent. Flat solid bright green background #00FF00, no ground, no shadow, no frame lines, no numbers, no text. Wide 2:1 image.
+```
+`Art/Heroes/NAME_studio_turn.png`
+```
+A studio character sheet of the SAME character as the attached picture (same mask, same hair, same clothes, same marks, same body, same bag or tools), photorealistic studio photograph, soft even studio light. 5 full-body views in ONE horizontal row, same size, feet on the same baseline: front view, three-quarter front view, side profile, three-quarter back view, back view. Standing relaxed, arms slightly away from the body. Flat solid bright green background #00FF00, no ground, no shadow, no text, no labels. Wide 2:1 image.
+```
+`Art/Heroes/NAME_studio_portrait.png`
+```
+A studio portrait of the SAME character as the attached picture (same mask, same hair, same clothes, same marks), photorealistic, dramatic soft studio light from the left, head and shoulders, three-quarter front view, the mask sharp and detailed, looking slightly past the camera. Flat solid bright green background #00FF00, no shadow on the background, no text. Square image.
+```

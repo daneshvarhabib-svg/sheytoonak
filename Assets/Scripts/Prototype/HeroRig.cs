@@ -145,14 +145,15 @@ namespace Sheytoonak.Prototype
         { ["zaatar"] = 0.92f, ["rima"] = 0.95f, ["fulla"] = 0.96f, ["um_arabiyat"] = 1.03f, ["hamada"] = 0.84f, ["bubakr"] = 1.12f, ["shadi"] = 1.05f };
         public static float Stature(string id) => id != null && Statures.TryGetValue(id, out var s) ? s : 1f;
 
-        public static bool Has(string id) => id != null && Tables.ContainsKey(id) && Resources.Load<Texture2D>("Art/Heroes/" + id + "_rig/torso") != null;
+        public static bool Has(string id) => id != null && (HasFrames(id) || (Tables.ContainsKey(id) && Resources.Load<Texture2D>("Art/Heroes/" + id + "_rig/torso") != null));
+        static bool HasFrames(string id) => Resources.Load<TextAsset>("Art/Heroes/" + id + "_frames/frames") != null;
 
         /// <summary>Builds the puppet under <paramref name="painted"/> (hidden from then on). Null if the hero has no rig.</summary>
         public static HeroRig Build(SpriteRenderer painted, string id)
         {
             if (!Has(id)) return null;
             var rig = painted.gameObject.AddComponent<HeroRig>();
-            rig.Assemble(painted, Tables[id], id);
+            if (HasFrames(id)) rig.AssembleFrames(painted, id); else rig.Assemble(painted, Tables[id], id);
             return rig;
         }
 
@@ -247,6 +248,7 @@ namespace Sheytoonak.Prototype
         /// </summary>
         public float ContactAngleFor(Vector3 ballWorld)
         {
+            if (frameMode) return ContactDeg; // one painted contact frame: the foot is where the picture has it
             float best = ContactDeg, err = float.MaxValue;
             for (float d = 0f; d <= 75f; d += 1.5f)
             {
@@ -274,6 +276,7 @@ namespace Sheytoonak.Prototype
         /// </summary>
         public Vector3 FootOffset(float legDeg)
         {
+            if (frameMode) { var q = toe; q.x *= host.flipX ? -1f : 1f; return transform.TransformVector(q); }
             if (!skins.TryGetValue("leg_near", out var sr) || sr.sprite == null) return Vector3.zero;
             var b = sr.sprite.bounds;
             var tip = new Vector3(b.max.x - b.size.x * 0.12f, b.min.y + b.size.y * 0.04f, 0f);
@@ -292,6 +295,130 @@ namespace Sheytoonak.Prototype
             b.localRotation = Quaternion.Euler(0f, 0f, r0 + deg);
         }
 
+        // ---- painted frames instead of the puppet --------------------------------------------------------------------
+        // User (2026-11-17, with three sheets of six frames of Zaatar): «همین الان زعتر یه جاهایی دستش شکافته. به نظرم برای
+        // هر کارکتر چندتا پک شیش تایی بگیریم تصویر و اونا رو انیمیشنی به هم وصل کنیم بهتره … تو الان باید فواصل بین هر
+        // تصویر رو خودت پر کنی. دقت کن که پوست دست و پا شکافت نشه و زاویه‌های پا … طبیعی بمونه». A hero with
+        // Art/Heroes/<id>_frames/ (frames.txt + idle_N, walk_N, kick_N) is drawn from whole pictures: nothing is cut,
+        // so nothing can split, and knees and elbows bend as painted. The gap between two pictures is a cross-fade:
+        // the new picture comes up over the old one, then the old one goes (never both half-transparent at once, so
+        // the street does not show through him). Heroes without frames keep the puppet below.
+        // ⚠️ frames.txt gives every frame its pivot (the hips over the ground line) and how tall a standing hero is in
+        // that picture: the three sheets were painted at three sizes, and the phone imports them smaller still.
+        bool frameMode;
+        readonly Dictionary<string, Sprite> frame = new Dictionary<string, Sprite>();
+        readonly List<Sprite> idleClip = new List<Sprite>(), walkClip = new List<Sprite>();
+        SpriteRenderer under, over;
+        float fade = 1f, fadeDur = 0.2f, idleClock, walkClock, facing = 1f;
+        Vector3 toe;
+
+        void AssembleFrames(SpriteRenderer painted, string id)
+        {
+            host = painted; frameMode = true;
+            seed = Random.value * 10f;
+            flipRoot = new GameObject("Frames").transform;
+            flipRoot.SetParent(transform, false);
+            flipRoot.gameObject.AddComponent<UnityEngine.Rendering.SortingGroup>().sortingOrder = 100;
+            float hostH = host.sprite != null ? host.sprite.bounds.size.y : 1f;
+            var inv = System.Globalization.CultureInfo.InvariantCulture;
+            foreach (var line in Resources.Load<TextAsset>("Art/Heroes/" + id + "_frames/frames").text.Split('\n'))
+            {
+                var f = line.Trim().Split(' ');
+                if (f.Length < 4 || f[0].StartsWith("#")) continue;
+                var tex = Resources.Load<Texture2D>("Art/Heroes/" + id + "_frames/" + f[0]);
+                if (tex == null) continue;
+                float px = float.Parse(f[1], inv), py = float.Parse(f[2], inv), stand = float.Parse(f[3], inv);
+                float ppu = stand * tex.height / Mathf.Max(0.01f, hostH);
+                frame[f[0]] = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(px, py), ppu);
+                if (f.Length >= 7 && f[4] == "toe")
+                    toe = new Vector3((float.Parse(f[5], inv) - px) * tex.width / ppu, (float.Parse(f[6], inv) - py) * tex.height / ppu, 0f);
+            }
+            for (int i = 0; i < 12; i++)
+            {
+                if (frame.TryGetValue("idle_" + i, out var a)) idleClip.Add(a);
+                if (frame.TryGetValue("walk_" + i, out var b)) walkClip.Add(b);
+            }
+            under = Layer("under", 100); over = Layer("over", 101);
+            under.sprite = idleClip.Count > 0 ? idleClip[0] : host.sprite;
+            over.sprite = under.sprite; fade = 1f;
+            idleClock = seed; // not all breathing in step
+            host.enabled = false;
+            lastPos = transform.position;
+        }
+
+        SpriteRenderer Layer(string n, int order)
+        {
+            var go = new GameObject(n);
+            go.transform.SetParent(flipRoot, false);
+            var r = go.AddComponent<SpriteRenderer>();
+            r.sortingOrder = order;
+            return r;
+        }
+
+        /// <summary>Cross-fade to this picture over <paramref name="seconds"/> (nothing happens if it is already the target).</summary>
+        void Show(Sprite sp, float seconds)
+        {
+            if (sp == null || over.sprite == sp) return;
+            if (fade >= 0.5f) under.sprite = over.sprite; // what is mostly on screen becomes the old picture
+            over.sprite = sp; fade = 0f; fadeDur = Mathf.Max(0.01f, seconds);
+        }
+
+        Sprite KickFrame(int i) => frame.TryGetValue("kick_" + i, out var sp) ? sp : null;
+
+        void FrameUpdate()
+        {
+            float dt = Time.deltaTime;
+            var pos = transform.position;
+            var step = pos - lastPos;
+            float v = dt > 0f ? step.magnitude / dt : 0f;
+            lastPos = pos;
+            speed = Mathf.Lerp(speed, v, 1f - Mathf.Exp(-dt * 12f));
+            float walk = Mathf.Clamp01((speed - 0.15f) / 0.8f);
+            float home = host.flipX ? -1f : 1f;
+
+            if (kickT >= 0f)
+            {
+                // ⚠️ the ball leaves on the first frame of the kick: that frame is the foot coming down onto it (kick_1; the
+                // wind-up kick_0 is the Ready stance). User on the sheet: «موقع شوت زدن سومی از چپ زاویه پاش مناسب نیست» --
+                // kick_2 is not used; the leg goes from the ball straight into the follow-through.
+                kickT += dt;
+                if (kickT < 0.06f) Show(KickFrame(1), 0.03f);
+                else if (kickT < 0.30f) Show(KickFrame(3), 0.10f);
+                else if (kickT < 0.44f) Show(KickFrame(4), 0.12f);
+                else if (kickT < 0.60f) Show(KickFrame(5), 0.13f);
+                else if (idleClip.Count > 0) Show(idleClip[0], 0.14f);
+                facing = home;
+                if (kickT >= KickSeconds) { kickT = -1f; idleClock = 0f; }
+            }
+            else if (Ready)
+            {
+                Show(KickFrame(0), 0.2f);
+                facing = home;
+            }
+            else if (walk > 0.25f && walkClip.Count > 0)
+            {
+                // the walk sheet is a profile walking right: he turns to where he is going
+                if (Mathf.Abs(step.x) > 0.0005f) facing = step.x > 0f ? 1f : -1f;
+                float rate = Mathf.Lerp(5f, 10f, walk); // frames a second
+                walkClock += dt * rate;
+                Show(walkClip[(int)walkClock % walkClip.Count], 0.9f / rate);
+            }
+            else if (idleClip.Count > 0)
+            {
+                // six nearly identical pictures of him breathing and shifting his weight, each melting into the next
+                const float hold = 0.8f;
+                idleClock += dt;
+                Show(idleClip[(int)(idleClock / hold) % idleClip.Count], hold);
+                facing = home;
+            }
+
+            fade = Mathf.Min(1f, fade + dt / fadeDur);
+            var col = host.color;
+            over.color = new Color(col.r, col.g, col.b, col.a * Ease(fade * 2f));
+            under.color = new Color(col.r, col.g, col.b, col.a * (1f - Ease(fade * 2f - 1f)));
+            flipRoot.localScale = new Vector3(facing, 1f, 1f);
+        }
+
         // User (2026-11-17): «حرکت بازیکنا رو طبیعی تر کنیم. هم راه رفتنشون هم ضربه زدنشون هم نفس کشیدنشون هم واستادنشون به
         // دلم ننشسته». What was wrong: everything was one sine -- the arms flapped with the breath, a standing hero was a
         // statue between breaths, both legs of a walker shortened together (so he floated), and the kick froze at the
@@ -307,6 +434,7 @@ namespace Sheytoonak.Prototype
         {
             if (host == null) return;
             host.enabled = false;
+            if (frameMode) { FrameUpdate(); return; }
             flipRoot.localScale = new Vector3(host.flipX ? -rigScale : rigScale, rigScale, 1f);
             foreach (var kv in skins) kv.Value.color = host.color;
 
