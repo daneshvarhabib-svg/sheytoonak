@@ -625,3 +625,384 @@ The same original character as the previous picture (Zaatar, a skinny, wiry youn
 کاربر (با خروجیِ زعترِ سبکِ دوم و چند فریم از یک ویدئوی هنری): «هنوز دوستش ندارم … هر کارکتر یه ماسک خاص رو صورتش داشته باشه و بدنش هم تا جای ممکن طبیعی باشه و نزدیک به انسان ولی پر از نشانه‌ها». ⚠️ فقط حال‌وهوا برداشته می‌شود (ماسکِ دست‌ساز، بدنِ واقعی، نشانه‌های نقاشی‌شده، مه)، نه آن ویدئو؛ پیوست نمی‌شود.
 قاعده‌ها: نقاشیِ دیجیتالِ نزدیک به واقعی با بافتِ قلم‌مو؛ تناسبِ واقعیِ انسان؛ هر قهرمان **ماسکِ دست‌سازِ خودش** (مقوا، چوب، حلبی، پارچه) که به زهرش ربط دارد؛ پوست و لباس پر از **نشانه‌های ساختگیِ دست‌کشیده** (آبی، قرمز، اُخرایی) — ⚠️ نه حروف یا کلمه‌ی واقعی، نه نمادِ دینی یا سیاسی (قاعده‌ی پروژه)؛ همه **لباس‌پوش** (بچه‌ها و زن‌ها حتماً؛ بازارِ عرب و ردهٔ سنی). نمای پشت: موی سر و بندِ ماسک دیده شود، لبه‌ی ماسک حداکثر یک‌سوم.
 - (۲۷ آبان، بعد از آزمونِ زعتر) کاربر: «هنوز کارتونیه. می‌خوام واقعی تر باشه و نزدیک به رئالیستی. اصراری هم ندارم لباس کامل امروزی تنش باشه، میتونه یه لباس عجیب تنش باشه». پرامپت حالا «عکسِ سینمایی/واقعی» می‌گوید، نشانه‌ها «لکه و خطِ رنگِ دستی، نامرتب» (نه دایره/ضربدر/مثلثِ تمیز که شبیهِ آیکونِ دکمه‌ها شد)، و لباس «تکه‌دوزیِ عجیب با پارچه و طناب».
+
+## سبکِ نهایی: عکس‌واقعی با ماسک، قرون وسطا (۲۷ آبان)
+کاربر: «عالی شد همین رو بریم … کلا قصه رو ببریم زمان قرون وسطا». ترتیبِ کاربر: قهرمان‌ها، خانه‌ها، آسمان و زمین، قدرت‌ها، همسایه‌ها، وسایلِ نقلیه و عابران. هر تصویرِ روبه‌رو با پیوستِ تصویرِ پشتِ همان قهرمان. چهره‌ی کوچک (`_face`) را خودم از تصویرِ روبه‌رو می‌بُرم.
+
+### ۱. قهرمان‌ها
+`Art/Heroes/abu_shahata_idle.png`
+```
+Original character for a mobile street game. Photorealistic cinematic photograph, soft natural daylight, real human body proportions, set in a medieval Middle-Eastern walled town. Strange hand-made patchwork clothing of coarse linen, wool and rope, worn, patched and dusty. Skin and clothes covered in messy hand-painted strokes and smudges of blue, red and ochre paint (random strokes only, no letters, no numbers, no clean shapes). Character: Abu Shahata, a lean man about 50 from Beirut, grey stubble on the neck, slippers of woven palm leaf, knee-length patched tunic over loose trousers tied at the calf. His mask: a hand-made mask of real grey pigeon feathers glued on thin wood, a short beak-like nose piece, tied with twine. Full body seen MOSTLY FROM BEHIND, turned only slightly to the RIGHT: the back of the head, the hair and the mask's straps fill most of the head, only the right edge of the mask shows (at most one third of it), NO eyes visible. Neutral rig pose: standing straight, legs slightly apart, both feet pointing to the right, the near leg slightly in front of the far leg, arms hanging a little away from the body, hands open and relaxed, elbows and knees straight, both lower legs visible and separate (nothing long below the knee). Flat solid bright green background #00FF00, no ground, no shadow, no scene. Whole body visible, centered, about 85% of the image height, portrait 2:3. No text, no letters, no logo, no flag, no religious or political symbols.
+```
+`Art/Heroes/abu_shahata_front.png`
+```
+The same person as the attached back-view picture, same mask, same clothes, same paint marks, same photorealistic style, now FRONT view, full body, standing relaxed, one hand holding a grey pigeon on his forearm. Flat solid bright green background #00FF00, no ground, no shadow. Whole body visible, centered, about 85% of the image height, portrait 2:3. No text, no letters, no logo, no religious or political symbols.
+```
+`Art/Heroes/rima_idle.png`
+```
+Original character for a mobile street game. Photorealistic cinematic photograph, soft natural daylight, real human body proportions, set in a medieval Middle-Eastern walled town. Strange hand-made patchwork clothing of coarse linen, wool and rope, worn, patched and dusty. Skin and clothes covered in messy hand-painted strokes and smudges of blue, red and ochre paint (random strokes only, no letters, no numbers, no clean shapes). Character: Rima, a sharp-tongued woman about 35 from Sidon, fully clothed: a long-sleeved knee-length tunic over wide trousers tied at the ankle, a cloth wrapped over her hair. Her mask: a tiny wooden window shutter with two small slats, worn as a mask, tied with cloth straps. Full body seen MOSTLY FROM BEHIND, turned only slightly to the RIGHT: the back of the head, the hair and the mask's straps fill most of the head, only the right edge of the mask shows (at most one third of it), NO eyes visible. Neutral rig pose: standing straight, legs slightly apart, both feet pointing to the right, the near leg slightly in front of the far leg, arms hanging a little away from the body, hands open and relaxed, elbows and knees straight, both lower legs visible and separate (nothing long below the knee). Flat solid bright green background #00FF00, no ground, no shadow, no scene. Whole body visible, centered, about 85% of the image height, portrait 2:3. No text, no letters, no logo, no flag, no religious or political symbols.
+```
+`Art/Heroes/rima_front.png`
+```
+The same person as the attached back-view picture, same mask, same clothes, same paint marks, same photorealistic style, now FRONT view, full body, standing relaxed, hands on her hips, leaning forward as if scolding. Flat solid bright green background #00FF00, no ground, no shadow. Whole body visible, centered, about 85% of the image height, portrait 2:3. No text, no letters, no logo, no religious or political symbols.
+```
+`Art/Heroes/fulla_idle.png`
+```
+Original character for a mobile street game. Photorealistic cinematic photograph, soft natural daylight, real human body proportions, set in a medieval Middle-Eastern walled town. Strange hand-made patchwork clothing of coarse linen, wool and rope, worn, patched and dusty. Skin and clothes covered in messy hand-painted strokes and smudges of blue, red and ochre paint (random strokes only, no letters, no numbers, no clean shapes). Character: Fulla, a slim young woman about 25 from Alexandria, fully clothed: a long-sleeved knee-length tunic over loose trousers, a sea-blue scarf over her hair whose ends fly in the wind. Her mask: a mask of stiff sail-cloth stretched on thin reeds, with rope edges. Full body seen MOSTLY FROM BEHIND, turned only slightly to the RIGHT: the back of the head, the hair and the mask's straps fill most of the head, only the right edge of the mask shows (at most one third of it), NO eyes visible. Neutral rig pose: standing straight, legs slightly apart, both feet pointing to the right, the near leg slightly in front of the far leg, arms hanging a little away from the body, hands open and relaxed, elbows and knees straight, both lower legs visible and separate (nothing long below the knee). Flat solid bright green background #00FF00, no ground, no shadow, no scene. Whole body visible, centered, about 85% of the image height, portrait 2:3. No text, no letters, no logo, no flag, no religious or political symbols.
+```
+`Art/Heroes/fulla_front.png`
+```
+The same person as the attached back-view picture, same mask, same clothes, same paint marks, same photorealistic style, now FRONT view, full body, standing relaxed, one arm raised as if calling the wind, scarf ends blowing. Flat solid bright green background #00FF00, no ground, no shadow. Whole body visible, centered, about 85% of the image height, portrait 2:3. No text, no letters, no logo, no religious or political symbols.
+```
+`Art/Heroes/toni_idle.png`
+```
+Original character for a mobile street game. Photorealistic cinematic photograph, soft natural daylight, real human body proportions, set in a medieval Middle-Eastern walled town. Strange hand-made patchwork clothing of coarse linen, wool and rope, worn, patched and dusty. Skin and clothes covered in messy hand-painted strokes and smudges of blue, red and ochre paint (random strokes only, no letters, no numbers, no clean shapes). Character: Toni, a stocky young street tough about 28 from Beirut, short black hair, thick neck, sleeveless leather jerkin over a patched shirt, rolled trousers, bare dusty feet. His mask: a cracked clay bowl turned into a mask, a little muddy water dripping from its rim. Full body seen MOSTLY FROM BEHIND, turned only slightly to the RIGHT: the back of the head, the hair and the mask's straps fill most of the head, only the right edge of the mask shows (at most one third of it), NO eyes visible. Neutral rig pose: standing straight, legs slightly apart, both feet pointing to the right, the near leg slightly in front of the far leg, arms hanging a little away from the body, hands open and relaxed, elbows and knees straight, both lower legs visible and separate (nothing long below the knee). Flat solid bright green background #00FF00, no ground, no shadow, no scene. Whole body visible, centered, about 85% of the image height, portrait 2:3. No text, no letters, no logo, no flag, no religious or political symbols.
+```
+`Art/Heroes/toni_front.png`
+```
+The same person as the attached back-view picture, same mask, same clothes, same paint marks, same photorealistic style, now FRONT view, full body, standing relaxed, arms crossed, chin up, standing in a small muddy puddle. Flat solid bright green background #00FF00, no ground, no shadow. Whole body visible, centered, about 85% of the image height, portrait 2:3. No text, no letters, no logo, no religious or political symbols.
+```
+`Art/Heroes/um_arabiyat_idle.png`
+```
+Original character for a mobile street game. Photorealistic cinematic photograph, soft natural daylight, real human body proportions, set in a medieval Middle-Eastern walled town. Strange hand-made patchwork clothing of coarse linen, wool and rope, worn, patched and dusty. Skin and clothes covered in messy hand-painted strokes and smudges of blue, red and ochre paint (random strokes only, no letters, no numbers, no clean shapes). Character: Um al-Arabiyat, a big strong woman about 55 from Baghdad, fully clothed: a heavy long-sleeved knee-length coat over wide trousers, thick forearms, a wide rope belt. Her mask: a mask woven from straw and hay, like a piece of a hay cart. Full body seen MOSTLY FROM BEHIND, turned only slightly to the RIGHT: the back of the head, the hair and the mask's straps fill most of the head, only the right edge of the mask shows (at most one third of it), NO eyes visible. Neutral rig pose: standing straight, legs slightly apart, both feet pointing to the right, the near leg slightly in front of the far leg, arms hanging a little away from the body, hands open and relaxed, elbows and knees straight, both lower legs visible and separate (nothing long below the knee). Flat solid bright green background #00FF00, no ground, no shadow, no scene. Whole body visible, centered, about 85% of the image height, portrait 2:3. No text, no letters, no logo, no flag, no religious or political symbols.
+```
+`Art/Heroes/um_arabiyat_front.png`
+```
+The same person as the attached back-view picture, same mask, same clothes, same paint marks, same photorealistic style, now FRONT view, full body, standing relaxed, both palms forward as if about to shove a heavy cart. Flat solid bright green background #00FF00, no ground, no shadow. Whole body visible, centered, about 85% of the image height, portrait 2:3. No text, no letters, no logo, no religious or political symbols.
+```
+`Art/Heroes/hamada_idle.png`
+```
+Original character for a mobile street game. Photorealistic cinematic photograph, soft natural daylight, real human body proportions, set in a medieval Middle-Eastern walled town. Strange hand-made patchwork clothing of coarse linen, wool and rope, worn, patched and dusty. Skin and clothes covered in messy hand-painted strokes and smudges of blue, red and ochre paint (random strokes only, no letters, no numbers, no clean shapes). Character: Hamada, a round cheerful man about 40 from Cairo, a pickle seller, an apron stained with brine over a knee-length tunic, sleeves rolled up. His mask: a mask cut from the wooden lid of a pickle barrel, with a brass ring. Full body seen MOSTLY FROM BEHIND, turned only slightly to the RIGHT: the back of the head, the hair and the mask's straps fill most of the head, only the right edge of the mask shows (at most one third of it), NO eyes visible. Neutral rig pose: standing straight, legs slightly apart, both feet pointing to the right, the near leg slightly in front of the far leg, arms hanging a little away from the body, hands open and relaxed, elbows and knees straight, both lower legs visible and separate (nothing long below the knee). Flat solid bright green background #00FF00, no ground, no shadow, no scene. Whole body visible, centered, about 85% of the image height, portrait 2:3. No text, no letters, no logo, no flag, no religious or political symbols.
+```
+`Art/Heroes/hamada_front.png`
+```
+The same person as the attached back-view picture, same mask, same clothes, same paint marks, same photorealistic style, now FRONT view, full body, standing relaxed, holding a small clay jar of pickles. Flat solid bright green background #00FF00, no ground, no shadow. Whole body visible, centered, about 85% of the image height, portrait 2:3. No text, no letters, no logo, no religious or political symbols.
+```
+`Art/Heroes/bubakr_idle.png`
+```
+Original character for a mobile street game. Photorealistic cinematic photograph, soft natural daylight, real human body proportions, set in a medieval Middle-Eastern walled town. Strange hand-made patchwork clothing of coarse linen, wool and rope, worn, patched and dusty. Skin and clothes covered in messy hand-painted strokes and smudges of blue, red and ochre paint (random strokes only, no letters, no numbers, no clean shapes). Character: Bubakr, a weathered fisherman about 45 from Tunis, salt-white beard edge, a fishing net knotted over his shoulders like a shawl, knee-length tunic, rope sandals. His mask: a mask of dried fish skin stretched on a wooden frame. Full body seen MOSTLY FROM BEHIND, turned only slightly to the RIGHT: the back of the head, the hair and the mask's straps fill most of the head, only the right edge of the mask shows (at most one third of it), NO eyes visible. Neutral rig pose: standing straight, legs slightly apart, both feet pointing to the right, the near leg slightly in front of the far leg, arms hanging a little away from the body, hands open and relaxed, elbows and knees straight, both lower legs visible and separate (nothing long below the knee). Flat solid bright green background #00FF00, no ground, no shadow, no scene. Whole body visible, centered, about 85% of the image height, portrait 2:3. No text, no letters, no logo, no flag, no religious or political symbols.
+```
+`Art/Heroes/bubakr_front.png`
+```
+The same person as the attached back-view picture, same mask, same clothes, same paint marks, same photorealistic style, now FRONT view, full body, standing relaxed, holding a wet fishing net, raindrops on his shoulders. Flat solid bright green background #00FF00, no ground, no shadow. Whole body visible, centered, about 85% of the image height, portrait 2:3. No text, no letters, no logo, no religious or political symbols.
+```
+`Art/Heroes/shadi_idle.png`
+```
+Original character for a mobile street game. Photorealistic cinematic photograph, soft natural daylight, real human body proportions, set in a medieval Middle-Eastern walled town. Strange hand-made patchwork clothing of coarse linen, wool and rope, worn, patched and dusty. Skin and clothes covered in messy hand-painted strokes and smudges of blue, red and ochre paint (random strokes only, no letters, no numbers, no clean shapes). Character: Shadi, a tall calm man about 35 from Oman, a long-sleeved knee-length robe with a sash, wide trousers, a wrapped cloth turban (plain, no symbols). His mask: a round mask of dark hammered iron with a thin bright ring around its edge, like the sun hidden by the moon. Full body seen MOSTLY FROM BEHIND, turned only slightly to the RIGHT: the back of the head, the hair and the mask's straps fill most of the head, only the right edge of the mask shows (at most one third of it), NO eyes visible. Neutral rig pose: standing straight, legs slightly apart, both feet pointing to the right, the near leg slightly in front of the far leg, arms hanging a little away from the body, hands open and relaxed, elbows and knees straight, both lower legs visible and separate (nothing long below the knee). Flat solid bright green background #00FF00, no ground, no shadow, no scene. Whole body visible, centered, about 85% of the image height, portrait 2:3. No text, no letters, no logo, no flag, no religious or political symbols.
+```
+`Art/Heroes/shadi_front.png`
+```
+The same person as the attached back-view picture, same mask, same clothes, same paint marks, same photorealistic style, now FRONT view, full body, standing relaxed, holding a small iron lantern, its flame lit. Flat solid bright green background #00FF00, no ground, no shadow. Whole body visible, centered, about 85% of the image height, portrait 2:3. No text, no letters, no logo, no religious or political symbols.
+```
+### ۲. خانه‌ها
+`Art/house_36.png`
+```
+A straight-on flat elevation of ONE wide old town house facade, three storeys of honey-coloured limestone, a little wooden balcony on the second floor. Exactly 17 windows in three rows (6, 6, 5), each a small arched window of leaded panes of thick old greenish glass in a wooden frame, all clearly separate and fully visible. Camera exactly perpendicular, no perspective, no street, no sky: the facade fills the whole image edge to edge. Photorealistic cinematic photograph, soft warm late-afternoon light, a medieval Middle-Eastern walled town. No modern objects at all: no cars, no wires, no electric lights, no air conditioners, no satellite dishes, no signs. No text, no letters, no logo, no religious or political symbols. Wide 3:1 image.
+```
+`Art/house_36_broken.png`
+```
+The attached picture, EXACTLY the same in every pixel (same framing, same walls, same window positions and sizes), only every window's glass is smashed: jagged holes, cracked panes, shards still in the frames. Wide 3:1 image.
+```
+`Art/house_37.png`
+```
+A straight-on flat elevation of ONE wide old town house facade, plastered mud-brick, peeling, with old wooden beams sticking out. Exactly 17 windows in three rows (6, 6, 5), each a small arched window of leaded panes of thick old greenish glass in a wooden frame, all clearly separate and fully visible. Camera exactly perpendicular, no perspective, no street, no sky: the facade fills the whole image edge to edge. Photorealistic cinematic photograph, soft warm late-afternoon light, a medieval Middle-Eastern walled town. No modern objects at all: no cars, no wires, no electric lights, no air conditioners, no satellite dishes, no signs. No text, no letters, no logo, no religious or political symbols. Wide 3:1 image.
+```
+`Art/house_37_broken.png`
+```
+The attached picture, EXACTLY the same in every pixel (same framing, same walls, same window positions and sizes), only every window's glass is smashed: jagged holes, cracked panes, shards still in the frames. Wide 3:1 image.
+```
+`Art/house_38.png`
+```
+A straight-on flat elevation of ONE wide old town house facade, striped black and white stone courses, a heavy wooden door at street level. Exactly 17 windows in three rows (6, 6, 5), each a small arched window of leaded panes of thick old greenish glass in a wooden frame, all clearly separate and fully visible. Camera exactly perpendicular, no perspective, no street, no sky: the facade fills the whole image edge to edge. Photorealistic cinematic photograph, soft warm late-afternoon light, a medieval Middle-Eastern walled town. No modern objects at all: no cars, no wires, no electric lights, no air conditioners, no satellite dishes, no signs. No text, no letters, no logo, no religious or political symbols. Wide 3:1 image.
+```
+`Art/house_38_broken.png`
+```
+The attached picture, EXACTLY the same in every pixel (same framing, same walls, same window positions and sizes), only every window's glass is smashed: jagged holes, cracked panes, shards still in the frames. Wide 3:1 image.
+```
+`Art/house_39.png`
+```
+A straight-on flat elevation of ONE wide old town house facade, rough grey stone with a projecting wooden latticed bay window on the top floor. Exactly 17 windows in three rows (6, 6, 5), each a small arched window of leaded panes of thick old greenish glass in a wooden frame, all clearly separate and fully visible. Camera exactly perpendicular, no perspective, no street, no sky: the facade fills the whole image edge to edge. Photorealistic cinematic photograph, soft warm late-afternoon light, a medieval Middle-Eastern walled town. No modern objects at all: no cars, no wires, no electric lights, no air conditioners, no satellite dishes, no signs. No text, no letters, no logo, no religious or political symbols. Wide 3:1 image.
+```
+`Art/house_39_broken.png`
+```
+The attached picture, EXACTLY the same in every pixel (same framing, same walls, same window positions and sizes), only every window's glass is smashed: jagged holes, cracked panes, shards still in the frames. Wide 3:1 image.
+```
+`Art/house_40.png`
+```
+A straight-on flat elevation of ONE wide old town house facade, whitewashed walls, blue-painted wooden shutters, vines climbing from the ground. Exactly 17 windows in three rows (6, 6, 5), each a small arched window of leaded panes of thick old greenish glass in a wooden frame, all clearly separate and fully visible. Camera exactly perpendicular, no perspective, no street, no sky: the facade fills the whole image edge to edge. Photorealistic cinematic photograph, soft warm late-afternoon light, a medieval Middle-Eastern walled town. No modern objects at all: no cars, no wires, no electric lights, no air conditioners, no satellite dishes, no signs. No text, no letters, no logo, no religious or political symbols. Wide 3:1 image.
+```
+`Art/house_40_broken.png`
+```
+The attached picture, EXACTLY the same in every pixel (same framing, same walls, same window positions and sizes), only every window's glass is smashed: jagged holes, cracked panes, shards still in the frames. Wide 3:1 image.
+```
+`Art/wall_left.png`
+```
+A straight-on flat view of a plain old town wall of honey-coloured stone blocks, a few cracks and weeds, no windows, no door, camera perpendicular, the wall fills the whole image. Photorealistic cinematic photograph, soft warm late-afternoon light, a medieval Middle-Eastern walled town. No modern objects at all: no cars, no wires, no electric lights, no air conditioners, no satellite dishes, no signs. No text, no letters, no logo, no religious or political symbols. 3:2 image.
+```
+`Art/wall_right.png`
+```
+The same kind of old town wall as the attached picture, a different stretch of it with an old wooden gate shut on the right side, camera perpendicular, the wall fills the whole image. Photorealistic cinematic photograph, soft warm late-afternoon light, a medieval Middle-Eastern walled town. No modern objects at all: no cars, no wires, no electric lights, no air conditioners, no satellite dishes, no signs. No text, no letters, no logo, no religious or political symbols. 3:2 image.
+```
+### ۳. آسمان و زمین
+`Art/sky.png`
+```
+A wide panoramic sky over a medieval desert town, warm late-afternoon light, soft scattered clouds, a few birds far away, no buildings, no ground, no sun disc in the frame, smooth gradient from pale blue at the top to warm haze at the bottom. Photorealistic. Wide 2:1 image, no text.
+```
+`Art/ground_asphalt.png`
+```
+Seamless tileable top-down photo texture of an old street paved with worn rounded cobblestones and packed dust between them, straight overhead view, even soft light, no shadows of objects, no people, no lines. Square image.
+```
+`Art/ground_sidewalk.png`
+```
+Seamless tileable top-down photo texture of large worn flat limestone paving slabs with thin dusty joints, straight overhead view, even soft light, no objects. Square image.
+```
+### ۴. قدرت‌ها (زهر و پادزهر)
+هر کدام: تصویرِ صحنه + آیکنِ مربع. وسیله‌ی چرخ‌دار: بدنه **بی‌چرخ** و چرخ جدا، تا چرخ بچرخد.
+`Art/Poison/pigeon_0.png`
+```
+A grey city pigeon flying, wings fully up, seen from the side facing right. Photorealistic photograph, soft natural daylight, medieval Middle-Eastern era, nothing modern. Isolated on a flat solid bright green background #00FF00, no ground, no shadow, whole object visible, centered. No text, no letters, no logo, no religious or political symbols.
+```
+`Art/Icons/pigeon.png`
+```
+A grey pigeon flying, side view. Photorealistic, simple clear silhouette, isolated on a flat solid bright green background #00FF00, centered, fills 80% of a square image. No text.
+```
+`Art/Poison/pigeon_1.png`
+```
+The same grey pigeon as the attached picture, same size and angle, wings halfway down. Photorealistic photograph, soft natural daylight, medieval Middle-Eastern era, nothing modern. Isolated on a flat solid bright green background #00FF00, no ground, no shadow, whole object visible, centered. No text, no letters, no logo, no religious or political symbols.
+```
+`Art/Poison/pigeon_2.png`
+```
+The same grey pigeon as the attached picture, same size and angle, wings fully down. Photorealistic photograph, soft natural daylight, medieval Middle-Eastern era, nothing modern. Isolated on a flat solid bright green background #00FF00, no ground, no shadow, whole object visible, centered. No text, no letters, no logo, no religious or political symbols.
+```
+`Art/Poison/bus.png`
+```
+A long camel caravan seen exactly from the side facing left: three loaded camels in a row, tied together, bundles and rugs on their backs, one camel driver walking in front holding the rope. Photorealistic photograph, soft natural daylight, medieval Middle-Eastern era, nothing modern. Isolated on a flat solid bright green background #00FF00, no ground, no shadow, whole object visible, centered. No text, no letters, no logo, no religious or political symbols.
+```
+`Art/Icons/bus.png`
+```
+A loaded camel, side view. Photorealistic, simple clear silhouette, isolated on a flat solid bright green background #00FF00, centered, fills 80% of a square image. No text.
+```
+`Art/Poison/truck.png`
+```
+A tall overloaded hay wagon seen exactly from the side facing left, hay piled very high, pulled by one ox, WITHOUT its wheels (empty axles). Photorealistic photograph, soft natural daylight, medieval Middle-Eastern era, nothing modern. Isolated on a flat solid bright green background #00FF00, no ground, no shadow, whole object visible, centered. No text, no letters, no logo, no religious or political symbols.
+```
+`Art/Icons/truck.png`
+```
+A tall overloaded hay wagon, side view. Photorealistic, simple clear silhouette, isolated on a flat solid bright green background #00FF00, centered, fills 80% of a square image. No text.
+```
+`Art/Poison/truck_wheel.png`
+```
+One big wooden cart wheel with spokes and an iron rim, seen straight from the side. Photorealistic photograph, soft natural daylight, medieval Middle-Eastern era, nothing modern. Isolated on a flat solid bright green background #00FF00, no ground, no shadow, whole object visible, centered. No text, no letters, no logo, no religious or political symbols.
+```
+`Art/Poison/cart.png`
+```
+A wooden street vendor's handcart seen from the side facing left, piled with pickled vegetables in clay jars, WITHOUT its wheel. Photorealistic photograph, soft natural daylight, medieval Middle-Eastern era, nothing modern. Isolated on a flat solid bright green background #00FF00, no ground, no shadow, whole object visible, centered. No text, no letters, no logo, no religious or political symbols.
+```
+`Art/Icons/cart.png`
+```
+A vendor's handcart full of clay jars. Photorealistic, simple clear silhouette, isolated on a flat solid bright green background #00FF00, centered, fills 80% of a square image. No text.
+```
+`Art/Poison/cart_wheel.png`
+```
+One small wooden handcart wheel with spokes, seen straight from the side. Photorealistic photograph, soft natural daylight, medieval Middle-Eastern era, nothing modern. Isolated on a flat solid bright green background #00FF00, no ground, no shadow, whole object visible, centered. No text, no letters, no logo, no religious or political symbols.
+```
+`Art/Poison/tow_truck.png`
+```
+Two medieval market guards walking to the left, side view, leather jerkins and wooden clubs, one carries a heavy iron hook on a rope, fully clothed, no face covering. Photorealistic photograph, soft natural daylight, medieval Middle-Eastern era, nothing modern. Isolated on a flat solid bright green background #00FF00, no ground, no shadow, whole object visible, centered. No text, no letters, no logo, no religious or political symbols.
+```
+`Art/Icons/nails.png`
+```
+An iron hook on a rope with a wooden club. Photorealistic, simple clear silhouette, isolated on a flat solid bright green background #00FF00, centered, fills 80% of a square image. No text.
+```
+`Art/Poison/tanker_0.png`
+```
+A water carrier walking to the left, side view, a big goatskin water bag on his back with its spout closed, a brass cup on his belt. Photorealistic photograph, soft natural daylight, medieval Middle-Eastern era, nothing modern. Isolated on a flat solid bright green background #00FF00, no ground, no shadow, whole object visible, centered. No text, no letters, no logo, no religious or political symbols.
+```
+`Art/Icons/plank.png`
+```
+A goatskin water bag with a brass cup. Photorealistic, simple clear silhouette, isolated on a flat solid bright green background #00FF00, centered, fills 80% of a square image. No text.
+```
+`Art/Poison/tanker_1.png`
+```
+The same water carrier as the attached picture, same size and angle, standing still and bending forward, pouring water from the goatskin spout to the ground. Photorealistic photograph, soft natural daylight, medieval Middle-Eastern era, nothing modern. Isolated on a flat solid bright green background #00FF00, no ground, no shadow, whole object visible, centered. No text, no letters, no logo, no religious or political symbols.
+```
+`Art/Poison/umbrella.png`
+```
+A square canopy of faded striped cloth on four thin wooden poles, seen from the front, slightly from above. Photorealistic photograph, soft natural daylight, medieval Middle-Eastern era, nothing modern. Isolated on a flat solid bright green background #00FF00, no ground, no shadow, whole object visible, centered. No text, no letters, no logo, no religious or political symbols.
+```
+`Art/Icons/umbrella.png`
+```
+A small striped cloth canopy on poles. Photorealistic, simple clear silhouette, isolated on a flat solid bright green background #00FF00, centered, fills 80% of a square image. No text.
+```
+`Art/Poison/flashlight.png`
+```
+A small hand lantern of black iron and thick glass, a candle flame lit inside, a ring handle on top. Photorealistic photograph, soft natural daylight, medieval Middle-Eastern era, nothing modern. Isolated on a flat solid bright green background #00FF00, no ground, no shadow, whole object visible, centered. No text, no letters, no logo, no religious or political symbols.
+```
+`Art/Icons/flashlight.png`
+```
+A small lit iron lantern. Photorealistic, simple clear silhouette, isolated on a flat solid bright green background #00FF00, centered, fills 80% of a square image. No text.
+```
+`Art/Poison/net.png`
+```
+A wet fishing net of brown rope knots spread wide, with cork floats on its edge, seen from the front. Photorealistic photograph, soft natural daylight, medieval Middle-Eastern era, nothing modern. Isolated on a flat solid bright green background #00FF00, no ground, no shadow, whole object visible, centered. No text, no letters, no logo, no religious or political symbols.
+```
+`Art/Icons/net.png`
+```
+A bundle of fishing net with cork floats. Photorealistic, simple clear silhouette, isolated on a flat solid bright green background #00FF00, centered, fills 80% of a square image. No text.
+```
+`Art/Poison/vane.png`
+```
+An old wooden weather vane on a rooftop pole, a rooster cut from wood on top, arrow pointing right. Photorealistic photograph, soft natural daylight, medieval Middle-Eastern era, nothing modern. Isolated on a flat solid bright green background #00FF00, no ground, no shadow, whole object visible, centered. No text, no letters, no logo, no religious or political symbols.
+```
+`Art/Icons/vane.png`
+```
+A wooden rooster weather vane. Photorealistic, simple clear silhouette, isolated on a flat solid bright green background #00FF00, centered, fills 80% of a square image. No text.
+```
+`Art/Poison/carpet.png`
+```
+A thick old hand-woven rug with faded red and blue patterns (geometric only), hanging over a rooftop edge, seen from the front. Photorealistic photograph, soft natural daylight, medieval Middle-Eastern era, nothing modern. Isolated on a flat solid bright green background #00FF00, no ground, no shadow, whole object visible, centered. No text, no letters, no logo, no religious or political symbols.
+```
+`Art/Icons/carpet.png`
+```
+A rolled hand-woven rug. Photorealistic, simple clear silhouette, isolated on a flat solid bright green background #00FF00, centered, fills 80% of a square image. No text.
+```
+`Art/Poison/rug_pusher_0.png`
+```
+A strong woman fully clothed in a long-sleeved knee-length tunic and trousers, side view facing left, leaning forward with both palms on something in front of her. Photorealistic photograph, soft natural daylight, medieval Middle-Eastern era, nothing modern. Isolated on a flat solid bright green background #00FF00, no ground, no shadow, whole object visible, centered. No text, no letters, no logo, no religious or political symbols.
+```
+`Art/Icons/rug_push.png`
+```
+Two hands pushing a rolled rug. Photorealistic, simple clear silhouette, isolated on a flat solid bright green background #00FF00, centered, fills 80% of a square image. No text.
+```
+`Art/Poison/rug_pusher_1.png`
+```
+The same woman as the attached picture, same size and angle, both arms fully stretched, shoving hard. Photorealistic photograph, soft natural daylight, medieval Middle-Eastern era, nothing modern. Isolated on a flat solid bright green background #00FF00, no ground, no shadow, whole object visible, centered. No text, no letters, no logo, no religious or political symbols.
+```
+`Art/Poison/puddle.png`
+```
+A shallow muddy puddle of brown water on cobblestones, seen at a low angle from the side, irregular edge, a few ripples. Isolated, only the puddle. Photorealistic photograph, soft natural daylight, medieval Middle-Eastern era, nothing modern. Isolated on a flat solid bright green background #00FF00, no ground, no shadow, whole object visible, centered. No text, no letters, no logo, no religious or political symbols.
+```
+`Art/Icons/puddle.png`
+```
+A muddy puddle, seen from above at an angle. Photorealistic, simple clear silhouette, isolated on a flat solid bright green background #00FF00, centered, fills 80% of a square image. No text.
+```
+`Art/Poison/plank.png`
+```
+A rough old wooden plank, cracked, two iron nails sticking out of one end, seen from above at an angle. Photorealistic photograph, soft natural daylight, medieval Middle-Eastern era, nothing modern. Isolated on a flat solid bright green background #00FF00, no ground, no shadow, whole object visible, centered. No text, no letters, no logo, no religious or political symbols.
+```
+`Art/Poison/rain.png`
+```
+Heavy rain streaks falling, with splashes, nothing else, light streaks only. Photorealistic photograph, soft natural daylight, medieval Middle-Eastern era, nothing modern. Isolated on a flat solid bright green background #00FF00, no ground, no shadow, whole object visible, centered. No text, no letters, no logo, no religious or political symbols.
+```
+`Art/Icons/rain.png`
+```
+A dark rain cloud with falling rain. Photorealistic, simple clear silhouette, isolated on a flat solid bright green background #00FF00, centered, fills 80% of a square image. No text.
+```
+آیکن‌های بدونِ صحنه (فرمان‌ها):
+`Art/Icons/wind.png`
+```
+Swirling dust and a few dry leaves blown by a strong wind. Photorealistic, simple clear silhouette, isolated on a flat solid bright green background #00FF00, centered, fills 80% of a square image. No text.
+```
+`Art/Icons/fart.png`
+```
+A small cloud of green-brown smelly gas, comic but realistic texture. Photorealistic, simple clear silhouette, isolated on a flat solid bright green background #00FF00, centered, fills 80% of a square image. No text.
+```
+`Art/Icons/complaint.png`
+```
+Two big rough hands pushing forward, palms out. Photorealistic, simple clear silhouette, isolated on a flat solid bright green background #00FF00, centered, fills 80% of a square image. No text.
+```
+`Art/Icons/pebble.png`
+```
+Three small round river pebbles. Photorealistic, simple clear silhouette, isolated on a flat solid bright green background #00FF00, centered, fills 80% of a square image. No text.
+```
+`Art/Icons/open_window.png`
+```
+A small arched wooden window with its shutters thrown open. Photorealistic, simple clear silhouette, isolated on a flat solid bright green background #00FF00, centered, fills 80% of a square image. No text.
+```
+### ۵. همسایه‌ها
+`Art/Poison/window_open_0.png`
+```
+A small arched window of an old stone house with its two wooden shutters closed, seen straight-on, only the window and its stone frame. Photorealistic photograph, soft natural daylight, medieval Middle-Eastern era, nothing modern. Isolated on a flat solid bright green background #00FF00, no ground, no shadow, whole object visible, centered. No text, no letters, no logo, no religious or political symbols.
+```
+`Art/Poison/window_open_1.png`
+```
+The same window as the attached picture, same size and angle, both wooden shutters thrown wide open, the inside dark and empty. Photorealistic photograph, soft natural daylight, medieval Middle-Eastern era, nothing modern. Isolated on a flat solid bright green background #00FF00, no ground, no shadow, whole object visible, centered. No text, no letters, no logo, no religious or political symbols.
+```
+`Art/Poison/granny2.png`
+```
+A neighbour leaning out of a window, seen from the front from the waist up, fully clothed in medieval Middle-Eastern linen and wool: an old woman, a cloth wrapped over her grey hair, shaking her fist. Only the person, no window frame. Photorealistic, soft daylight. Isolated on a flat solid bright green background #00FF00, no shadow. No text, no religious or political symbols.
+```
+`Art/Poison/resident_01.png`
+```
+A neighbour leaning out of a window, seen from the front from the waist up, fully clothed in medieval Middle-Eastern linen and wool: a bald old man with a thick grey moustache, shouting, pointing down. Only the person, no window frame. Photorealistic, soft daylight. Isolated on a flat solid bright green background #00FF00, no shadow. No text, no religious or political symbols.
+```
+`Art/Poison/resident_02.png`
+```
+A neighbour leaning out of a window, seen from the front from the waist up, fully clothed in medieval Middle-Eastern linen and wool: a middle-aged woman, a cloth over her hair, holding a wooden ladle, furious. Only the person, no window frame. Photorealistic, soft daylight. Isolated on a flat solid bright green background #00FF00, no shadow. No text, no religious or political symbols.
+```
+`Art/Poison/resident_03.png`
+```
+A neighbour leaning out of a window, seen from the front from the waist up, fully clothed in medieval Middle-Eastern linen and wool: a young man with a messy beard, half asleep, angry, yelling. Only the person, no window frame. Photorealistic, soft daylight. Isolated on a flat solid bright green background #00FF00, no shadow. No text, no religious or political symbols.
+```
+`Art/Poison/resident_04.png`
+```
+A neighbour leaning out of a window, seen from the front from the waist up, fully clothed in medieval Middle-Eastern linen and wool: a heavy man holding a clay water jug as if about to throw it. Only the person, no window frame. Photorealistic, soft daylight. Isolated on a flat solid bright green background #00FF00, no shadow. No text, no religious or political symbols.
+```
+`Art/Poison/resident_05.png`
+```
+A neighbour leaning out of a window, seen from the front from the waist up, fully clothed in medieval Middle-Eastern linen and wool: a thin old man in a felt cap, shaking a walking stick. Only the person, no window frame. Photorealistic, soft daylight. Isolated on a flat solid bright green background #00FF00, no shadow. No text, no religious or political symbols.
+```
+`Art/Poison/resident_06.png`
+```
+A neighbour leaning out of a window, seen from the front from the waist up, fully clothed in medieval Middle-Eastern linen and wool: a young woman, a cloth over her hair, holding a crying swaddled baby, shouting. Only the person, no window frame. Photorealistic, soft daylight. Isolated on a flat solid bright green background #00FF00, no shadow. No text, no religious or political symbols.
+```
+### ۶. وسایلِ نقلیه و عابران
+آمبولانس ← دو نفر با برانکارِ چوبی؛ رفتگرِ ماشینی ← رفتگر با جارو و گاریِ دستی. هر عابر یک ردیف ۵ فریمِ راه‌رفتن در یک تصویر؛ من می‌بُرم.
+`Art/Props/medics_empty.png`
+```
+Two medieval stretcher bearers walking to the left, side view, fully clothed in linen tunics and trousers, carrying an empty wooden stretcher between them. A horizontal sprite sheet of 5 walk-cycle frames in one row, same size and spacing, evenly spaced. Photorealistic photograph, soft natural daylight, medieval Middle-Eastern era, nothing modern. Isolated on a flat solid bright green background #00FF00, no ground, no shadow, whole object visible, centered. No text, no letters, no logo, no religious or political symbols.
+```
+`Art/Props/medics_loaded.png`
+```
+The same two stretcher bearers as the attached picture, same size, now carrying a person lying on the stretcher completely covered by a plain white sheet. A horizontal sprite sheet of 5 walk-cycle frames in one row, same spacing. Photorealistic photograph, soft natural daylight, medieval Middle-Eastern era, nothing modern. Isolated on a flat solid bright green background #00FF00, no ground, no shadow, whole object visible, centered. No text, no letters, no logo, no religious or political symbols.
+```
+`Art/Props/sweeper.png`
+```
+A street sweeper pushing a small wooden handcart to the left, side view, a long broom of palm fronds in the cart, fully clothed in a patched tunic and trousers, WITHOUT the cart's wheel. Photorealistic photograph, soft natural daylight, medieval Middle-Eastern era, nothing modern. Isolated on a flat solid bright green background #00FF00, no ground, no shadow, whole object visible, centered. No text, no letters, no logo, no religious or political symbols.
+```
+`Art/Props/sweeper_wheel.png`
+```
+One small wooden handcart wheel with spokes, seen straight from the side. Photorealistic photograph, soft natural daylight, medieval Middle-Eastern era, nothing modern. Isolated on a flat solid bright green background #00FF00, no ground, no shadow, whole object visible, centered. No text, no letters, no logo, no religious or political symbols.
+```
+`Art/Props/donkey_cart.png`
+```
+A donkey pulling a small two-wheeled wooden cart loaded with sacks, walking to the left, side view, a boy walking beside it, WITHOUT the cart's wheels. Photorealistic photograph, soft natural daylight, medieval Middle-Eastern era, nothing modern. Isolated on a flat solid bright green background #00FF00, no ground, no shadow, whole object visible, centered. No text, no letters, no logo, no religious or political symbols.
+```
+`Art/Props/donkey_cart_wheel.png`
+```
+One wooden cart wheel with spokes, seen straight from the side. Photorealistic photograph, soft natural daylight, medieval Middle-Eastern era, nothing modern. Isolated on a flat solid bright green background #00FF00, no ground, no shadow, whole object visible, centered. No text, no letters, no logo, no religious or political symbols.
+```
+`Art/Props/ped_01_merchant.png`
+```
+A pedestrian walking to the right, exact side view: a merchant in a striped robe and a felt cap carrying a cloth bundle. A horizontal sprite sheet of 5 walk-cycle frames in one row, same size and spacing, feet on the same baseline. Photorealistic, soft daylight, medieval Middle-Eastern era. Isolated on a flat solid bright green background #00FF00, no shadow. No text, no religious or political symbols.
+```
+`Art/Props/ped_02_shopper.png`
+```
+A pedestrian walking to the right, exact side view: a woman fully clothed, a cloth over her hair, carrying a woven basket of bread. A horizontal sprite sheet of 5 walk-cycle frames in one row, same size and spacing, feet on the same baseline. Photorealistic, soft daylight, medieval Middle-Eastern era. Isolated on a flat solid bright green background #00FF00, no shadow. No text, no religious or political symbols.
+```
+`Art/Props/ped_03_oldman.png`
+```
+A pedestrian walking to the right, exact side view: a bent old man with a walking stick and a long grey beard. A horizontal sprite sheet of 5 walk-cycle frames in one row, same size and spacing, feet on the same baseline. Photorealistic, soft daylight, medieval Middle-Eastern era. Isolated on a flat solid bright green background #00FF00, no shadow. No text, no religious or political symbols.
+```
+`Art/Props/ped_04_hurried.png`
+```
+A pedestrian walking to the right, exact side view: a young man hurrying with a clay jar on his shoulder. A horizontal sprite sheet of 5 walk-cycle frames in one row, same size and spacing, feet on the same baseline. Photorealistic, soft daylight, medieval Middle-Eastern era. Isolated on a flat solid bright green background #00FF00, no shadow. No text, no religious or political symbols.
+```
+`Art/Props/ped_05_crutches.png`
+```
+A pedestrian walking to the right, exact side view: a man with a bandaged leg walking on two wooden crutches. A horizontal sprite sheet of 5 walk-cycle frames in one row, same size and spacing, feet on the same baseline. Photorealistic, soft daylight, medieval Middle-Eastern era. Isolated on a flat solid bright green background #00FF00, no shadow. No text, no religious or political symbols.
+```
+`Art/Props/ped_06_boy.png`
+```
+A pedestrian walking to the right, exact side view: a boy in a patched tunic running, holding a rag ball. A horizontal sprite sheet of 5 walk-cycle frames in one row, same size and spacing, feet on the same baseline. Photorealistic, soft daylight, medieval Middle-Eastern era. Isolated on a flat solid bright green background #00FF00, no shadow. No text, no religious or political symbols.
+```
