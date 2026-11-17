@@ -128,6 +128,13 @@ namespace Sheytoonak.Prototype
         /// <summary>Height of each puppet from the feet to the top of the head, in its own units (reference px / 100).</summary>
         static readonly Dictionary<string, float> Heights = new Dictionary<string, float> { ["abu_shahata"] = 14.81f, ["rima"] = 14.69f, ["zaatar"] = 14.32f, ["fulla"] = 14.75f, ["toni"] = 14.54f, ["um_arabiyat"] = 14.67f, ["hamada"] = 14.54f, ["bubakr"] = 14.39f };
 
+        // User (2026-11-17): «مثلاً چاق و لاغر کن یا کوتاه و بلند … تنوع رو زیاد کن و توی قهرمان هایی که بعداً هم اضافه
+        // میکنی این تنوع رو ببین». Every picture fills the same height on screen, so a short hero drawn short would still
+        // stand as tall as the rest: his height on the street is set here (1 = the usual).
+        static readonly Dictionary<string, float> Statures = new Dictionary<string, float>
+        { ["zaatar"] = 0.92f, ["rima"] = 0.95f, ["fulla"] = 0.96f, ["um_arabiyat"] = 1.03f, ["hamada"] = 0.84f, ["bubakr"] = 1.12f, ["shadi"] = 1.05f };
+        public static float Stature(string id) => id != null && Statures.TryGetValue(id, out var s) ? s : 1f;
+
         public static bool Has(string id) => id != null && Tables.ContainsKey(id) && Resources.Load<Texture2D>("Art/Heroes/" + id + "_rig/torso") != null;
 
         /// <summary>Builds the puppet under <paramref name="painted"/> (hidden from then on). Null if the hero has no rig.</summary>

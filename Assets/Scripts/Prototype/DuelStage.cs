@@ -114,7 +114,7 @@ namespace Sheytoonak.Prototype
                     var r = go.AddComponent<SpriteRenderer>();
                     r.sprite = idle;
                     r.flipX = side == 1;
-                    go.transform.localScale = Vector3.one * (heroHeight / Mathf.Max(0.01f, idle.bounds.size.y));
+                    go.transform.localScale = Vector3.one * (heroHeight * HeroRig.Stature(id) / Mathf.Max(0.01f, idle.bounds.size.y));
                     baseY[r] = go.transform.localScale.y; breathPhase[r] = Random.value * Mathf.PI * 2f;
                     painted[side][i] = r;
                     HeroRig.Build(r, id); // step 4 (2026-11-11): a jointed puppet where the hero has a rig sheet
@@ -130,7 +130,7 @@ namespace Sheytoonak.Prototype
             if (sp == null) return;
             r.sprite = sp;
             // frames come from different sheets (a 5-frame sheet is ~1/3 the pixels of a single pose): scale per sprite
-            r.transform.localScale = Vector3.one * (heroHeight / Mathf.Max(0.01f, sp.bounds.size.y));
+            r.transform.localScale = Vector3.one * (heroHeight * HeroRig.Stature(lookIds[(int)side][slot]) / Mathf.Max(0.01f, sp.bounds.size.y));
             baseY[r] = r.transform.localScale.y;
             if (slot == kickSlot[(int)side]) kickerScale[(int)side] = r.transform.localScale;
         }
