@@ -144,6 +144,21 @@ namespace Sheytoonak.Prototype
         readonly Dictionary<string, Transform> bones = new Dictionary<string, Transform>();
         readonly Dictionary<string, SpriteRenderer> skins = new Dictionary<string, SpriteRenderer>();
         Vector3 rootRest, torsoScale = Vector3.one; float rigScale = 1f;
+        // User (2026-11-17) on the new back-view Zaatar: «با توجه به این که بدن زاویه یک سوم به دوربین داره پا هم باید یک
+        // سوم باشه ولی الان پا رفته راست کامل موقع شوت». Seen from behind, a kick goes INTO the picture, away from the
+        // camera: the leg only swings a little sideways and mostly gets shorter. Only heroes drawn from behind.
+        static readonly HashSet<string> BackView = new HashSet<string> { "zaatar" };
+        const float DepthSwing = 0.4f, DepthShorten = 0.4f;
+        bool foreshorten;
+        readonly Dictionary<string, Vector3> legScale = new Dictionary<string, Vector3>();
+        float Swing(float deg) => foreshorten ? deg * DepthSwing : deg;
+        float Shorten(float deg) => foreshorten ? 1f - DepthShorten * Mathf.Sin(Mathf.Clamp(Mathf.Abs(deg), 0f, 90f) * Mathf.Deg2Rad) : 1f;
+        void Leg(string bone, float deg)
+        {
+            Rot(bone, Swing(deg));
+            if (bones.TryGetValue(bone, out var b) && legScale.TryGetValue(bone, out var s0))
+                b.localScale = new Vector3(s0.x, s0.y * Shorten(deg), s0.z);
+        }
         float phase, kickT = -1f, seed;
         Vector3 lastPos; float speed;
 
@@ -189,6 +204,8 @@ namespace Sheytoonak.Prototype
             }
             rootRest = bones["shorts"].localPosition;
             torsoScale = bones["torso"].localScale;
+            foreshorten = BackView.Contains(id);
+            foreach (var n in new[] { "leg_far", "leg_near" }) if (bones.TryGetValue(n, out var lb)) legScale[n] = lb.localScale;
             // ⚠️ The host's scale comes from its standing picture, and on Android every hero picture is imported at
             // 512 px (on the CI Linux player at full size), so that picture is ~3x smaller there and the host ~3x larger.
             // User (2026-11-11, on the phone): «سایزش درست نیست، باید کوچیک شه اندازه بقیه» -- the puppet was a giant.
@@ -239,7 +256,8 @@ namespace Sheytoonak.Prototype
             if (!skins.TryGetValue("leg_near", out var sr) || sr.sprite == null) return Vector3.zero;
             var b = sr.sprite.bounds;
             var tip = new Vector3(b.max.x - b.size.x * 0.12f, b.min.y + b.size.y * 0.04f, 0f);
-            var p = rootRest + bones["leg_near"].localPosition + Quaternion.Euler(0f, 0f, legDeg) * tip;
+            tip.y *= Shorten(legDeg);
+            var p = rootRest + bones["leg_near"].localPosition + Quaternion.Euler(0f, 0f, Swing(legDeg)) * tip;
             p.x *= host.flipX ? -rigScale : rigScale; p.y *= rigScale;
             return transform.TransformVector(p);
         }
@@ -301,7 +319,7 @@ namespace Sheytoonak.Prototype
                 if (kickT >= KickSeconds) kickT = -1f;
             }
 
-            Rot("leg_far", legFar); Rot("leg_near", legNear);
+            Leg("leg_far", legFar); Leg("leg_near", legNear);
             Rot("arm_far", armFar); Rot("arm_near", armNear);
             Rot("torso", torso); Rot("head", head);
             bones["shorts"].localPosition = rootRest + new Vector3(0f, bob, 0f);
