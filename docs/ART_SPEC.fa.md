@@ -1203,3 +1203,5 @@ A studio character sheet of the SAME character as the attached picture (same mas
 ```
 A studio portrait of the SAME character as the attached picture (same mask, same hair, same clothes, same marks), photorealistic, dramatic soft studio light from the left, head and shoulders, three-quarter front view, the mask sharp and detailed, looking slightly past the camera. Flat solid bright green background #00FF00, no shadow on the background, no text. Square image.
 ```
+
+- (۲۷ آبان) فلّه: کاربر: «ته روسریش همیشه بالاست. انگار همیشه توفانه. اینم درستش کنیم تو پرامپت جدید». در برگه‌های فلّه جمله‌ی «روسری آرام از پشت آویزان است، بادی نیست؛ فقط در قاب‌های شوت کمی تکان می‌خورد» اضافه می‌شود و «same clothes» با «the scarf is the same scarf but hanging down» همراه می‌شود (تصویرِ پیوست روسریِ در باد دارد).
