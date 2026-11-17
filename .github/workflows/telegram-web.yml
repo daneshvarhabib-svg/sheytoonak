@@ -68,6 +68,9 @@ jobs:
           [ -z "$big" ] || { echo "::error title=File too large for GitHub::$big"; exit 1; }
           cd "$ROOT"
           touch .nojekyll
+          # stale-page guard in index.html: the page compares its own number with version.txt
+          echo "${GITHUB_RUN_NUMBER}" > version.txt
+          sed -i "s/__SFB_BUILD__/${GITHUB_RUN_NUMBER}/" index.html
           git init -q && git checkout -q -b gh-pages
           git config user.email ci@sheytoonak && git config user.name "sheytoonak-ci"
           git add -A && git commit -qm "web build ${GITHUB_RUN_NUMBER} (${GITHUB_SHA})"
