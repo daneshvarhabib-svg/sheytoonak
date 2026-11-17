@@ -172,11 +172,13 @@ namespace Sheytoonak.Prototype
         readonly Dictionary<string, Vector3> legScale = new Dictionary<string, Vector3>();
         float Swing(float deg) => foreshorten ? deg * DepthSwing : deg;
         float Shorten(float deg) => foreshorten ? 1f - DepthShorten * Mathf.Sin(Mathf.Clamp(Mathf.Abs(deg), 0f, 90f) * Mathf.Deg2Rad) : 1f;
-        void Leg(string bone, float deg)
+        /// <summary>swing: the stride or kick (goes into the depth for a back view); plant: a plain tilt that keeps the
+        /// foot where it is while the hips move; lift: the foot off the ground (a shorter leg).</summary>
+        void Leg(string bone, float swing, float plant = 0f, float lift = 0f)
         {
-            Rot(bone, Swing(deg));
+            Rot(bone, Swing(swing) + plant);
             if (bones.TryGetValue(bone, out var b) && legScale.TryGetValue(bone, out var s0))
-                b.localScale = new Vector3(s0.x, s0.y * Shorten(deg), s0.z);
+                b.localScale = new Vector3(s0.x, s0.y * Shorten(swing) * (1f - lift), s0.z);
         }
         float phase, kickT = -1f, seed;
         Vector3 lastPos; float speed;
@@ -281,7 +283,7 @@ namespace Sheytoonak.Prototype
             return transform.TransformVector(p);
         }
         public bool Kicking => kickT >= 0f && kickT < KickSeconds;
-        const float KickSeconds = 0.55f;
+        const float KickSeconds = 0.7f; // 0.55 until 2026-11-17: room for the leg to come down and settle
 
         void Rot(string bone, float deg)
         {
@@ -289,6 +291,17 @@ namespace Sheytoonak.Prototype
             rest.TryGetValue(bone, out float r0);
             b.localRotation = Quaternion.Euler(0f, 0f, r0 + deg);
         }
+
+        // User (2026-11-17): «حرکت بازیکنا رو طبیعی تر کنیم. هم راه رفتنشون هم ضربه زدنشون هم نفس کشیدنشون هم واستادنشون به
+        // دلم ننشسته». What was wrong: everything was one sine -- the arms flapped with the breath, a standing hero was a
+        // statue between breaths, both legs of a walker shortened together (so he floated), and the kick froze at the
+        // top and slid back. Now: the breath is in the chest (quick in, slow out), a standing hero shifts his weight from
+        // foot to foot with his feet planted and looks around, a walker lifts one foot at a time and bobs on the other,
+        // and the kick follows through, hangs, and comes down past rest before settling. Poses are eased into each other
+        // (pose[]), except during the kick: the foot must be on the ball on the very first frame.
+        readonly float[] pose = new float[9]; // legFar, legNear, armFar, armNear, torso, head, bob, sway, lift
+        float idleW = 1f, leanV;
+        static float Ease(float x) { x = Mathf.Clamp01(x); return x * x * (3f - 2f * x); }
 
         void LateUpdate()
         {
@@ -299,51 +312,100 @@ namespace Sheytoonak.Prototype
 
             float dt = Time.deltaTime;
             var pos = transform.position;
-            float v = dt > 0f ? (pos - lastPos).magnitude / dt : 0f;
+            var step = pos - lastPos;
+            float v = dt > 0f ? step.magnitude / dt : 0f;
+            float vx = dt > 0f ? step.x / dt : 0f;
             lastPos = pos;
             speed = Mathf.Lerp(speed, v, 1f - Mathf.Exp(-dt * 12f));
+            leanV = Mathf.Lerp(leanV, Mathf.Clamp(vx / 2.5f, -1f, 1f), 1f - Mathf.Exp(-dt * 6f));
             float walk = Mathf.Clamp01((speed - 0.15f) / 0.8f);
-            phase += dt * Mathf.Lerp(1f, 9f, walk);
+            phase += dt * Mathf.Lerp(0f, 8.5f, walk);
+            float t = Time.time + seed;
+            bool kicking = kickT >= 0f;
 
-            // rest: a slow sway; walking: the swing of a stride (single-piece limbs from the hips and shoulders)
+            // breath: 40% of the cycle in, 60% out, a little slower or faster per hero
+            float bu = Mathf.Repeat(t / (3.2f + (seed % 1f) * 0.8f), 1f);
+            float breath = bu < 0.4f ? Ease(bu / 0.4f) : 1f - Ease((bu - 0.4f) / 0.6f);
+
+            // standing: the weight wanders from one foot to the other, the feet stay where they are
+            idleW = Mathf.MoveTowards(idleW, (walk > 0.05f || Ready || Push || kicking) ? 0f : 1f, dt * 2.5f);
+            float shift = (Mathf.Sin(t * 0.55f) + 0.45f * Mathf.Sin(t * 0.23f + 1.3f)) / 1.45f;
+            float glance = Mathf.Sin(t * 0.37f + seed * 2f) * Mathf.Sin(t * 0.11f + seed);
+
             float sn = Mathf.Sin(phase), c = Mathf.Cos(phase);
-            float breathe = Mathf.Sin(Time.time * 1.9f + seed);
-            float legFar = walk * 20f * sn, legNear = -walk * 20f * sn;
             // ⚠️ counter-clockwise swings the far (left) arm INTO the body and the near (right) arm away from it; each arm
             // swings mostly outward and only a few degrees in (user 2026-11-11 on the kick: «دست چپش … اومده تو کونش»)
-            // User (2026-11-16): «شدت نفس کشیدن قوی تر بشه که معلوم شه». The sway roughly doubled and the chest now rises
-            // (the torso stretches up a little from the waist, lifting shoulders, arms and head with it; see below).
-            float armFar = 3.5f * breathe - walk * (6f + 6f * sn), armNear = -3.5f * breathe + walk * (6f - 6f * sn);
-            float torso = walk * 2f * c + breathe * 1.2f, head = -breathe * 2.4f + walk * 1.5f * sn;
-            float bob = walk * 0.16f * Mathf.Abs(c);
+            float legFar = 0f, legNear = 0f, liftFar = 0f, liftNear = 0f, tiltFar = 0f, tiltNear = 0f;
+            float armFar = -1.4f * breath, armNear = 1.4f * breath;      // the shoulders open a little on the in-breath
+            float torso = 0f, head = -1.6f * (breath - 0.5f);
+            float bob = 0f, sway = 0f;
+
+            // idle
+            sway += idleW * 0.4f * shift;
+            torso += idleW * -1.6f * shift;
+            head += idleW * (1.0f * shift + 3.5f * glance);
+            armFar += idleW * 1.2f * shift; armNear += idleW * 1.2f * shift;
+
+            // walk: one foot up at a time (the lifted leg is the shorter one), the body rides up over the standing leg
+            if (walk > 0f)
+            {
+                // ⚠️ a plain tilt, not Leg()'s swing: the swing of a back view shortens the leg at BOTH ends of the stride
+                // and the walker floated
+                float stride = foreshorten ? 5f : 20f;
+                tiltFar = walk * stride * sn; tiltNear = -walk * stride * sn;
+                liftFar = walk * 0.11f * Mathf.Max(0f, c); liftNear = walk * 0.11f * Mathf.Max(0f, -c);
+                bob += walk * 0.22f * (1f - Mathf.Abs(sn));
+                sway += walk * 0.2f * -c;
+                torso += walk * (1.8f * c - 3.5f * leanV * (host.flipX ? -1f : 1f));
+                head += walk * -1.2f * c;
+                armFar += walk * (-4f - 7f * sn); armNear += walk * (4f - 7f * sn);
+            }
 
             ready = Mathf.MoveTowards(ready, Ready ? 1f : 0f, dt * 3f);
-            if (ready > 0f && kickT < 0f) { legNear = Mathf.Lerp(legNear, -20f, ready); armFar -= 6f * ready; armNear += 5f * ready; torso += 2f * ready; }
+            if (ready > 0f && !kicking)
+            {
+                // wound up: the kicking leg back, the body over the standing leg and leaning in, alive on its toes
+                float tense = 0.5f + 0.5f * Mathf.Sin(t * 5.2f);
+                legNear = Mathf.Lerp(legNear, -20f, ready);
+                armFar -= (8f + 2f * tense) * ready; armNear += (7f + 2f * tense) * ready;
+                torso += 3.5f * ready; head -= 2f * ready;
+                bob += 0.06f * tense * ready;
+            }
 
-            if (Push && kickT < 0f) { armFar = 72f; armNear = 78f; torso = -9f; head = 5f; }
+            if (Push && !kicking) { armFar = 72f; armNear = 78f; torso = -9f; head = 5f; }
 
-            if (kickT >= 0f)
+            if (kicking)
             {
                 // ⚠️ the ball is launched on the first frame of the kick (DuelManager), so the kick STARTS at the contact
                 // (the wind-up is the Ready stance before it); it used to wind up 0.14 s and meet the ball after it had gone
                 kickT += dt;
                 float k = kickT / KickSeconds, leg;
                 float top = Mathf.Max(36f, kickFrom + 20f); // a high rebound: the follow-through goes on above the contact
-                if (k < 0.2f) { float q = k / 0.2f; leg = Mathf.Lerp(kickFrom, top, 1f - (1f - q) * (1f - q)); }
-                else if (k < 0.4f) leg = top;
-                else leg = Mathf.Lerp(top, 0f, Mathf.Clamp01((k - 0.4f) / 0.6f));
-                legNear = leg; legFar = -leg * 0.15f;
-                armFar = -Mathf.Abs(leg) * 0.35f; armNear = Mathf.Abs(leg) * 0.28f; torso = -leg * 0.08f; head = leg * 0.04f;
-                bob = Mathf.Max(0f, Mathf.Sin(Mathf.Clamp01(k * 2f - 0.6f) * Mathf.PI)) * 0.2f;
+                if (k < 0.16f) { float q = k / 0.16f; leg = Mathf.Lerp(kickFrom, top, 1f - (1f - q) * (1f - q) * (1f - q)); }   // through the ball
+                else if (k < 0.34f) leg = top + 3f * Mathf.Sin((k - 0.16f) / 0.18f * Mathf.PI);                             // hangs, still rising a touch
+                else { float q = (k - 0.34f) / 0.66f; leg = top * (1f - Ease(q * 1.25f)) - 5f * Mathf.Sin(Mathf.Clamp01(q * 1.25f - 0.25f) * Mathf.PI); } // down, past rest, settle
+                float body = Mathf.Clamp01(k / 0.22f) * (1f - Ease((k - 0.45f) / 0.55f)); // the body follows the leg a beat later
+                legNear = leg; legFar = -6f * body;
+                armFar = -19f * body; armNear = 12f * body;
+                torso = -6.5f * body; head = 4.5f * body;       // leaning back, eyes still on the ball
+                bob = 0.22f * Mathf.Sin(Mathf.Clamp01((k - 0.05f) / 0.5f) * Mathf.PI);   // up on the standing toes, and down
+                sway = 0f; liftFar = liftNear = 0f; tiltFar = tiltNear = 0f;
                 if (kickT >= KickSeconds) kickT = -1f;
             }
 
-            Leg("leg_far", legFar); Leg("leg_near", legNear);
-            Rot("arm_far", armFar); Rot("arm_near", armNear);
-            Rot("torso", torso); Rot("head", head);
-            bones["shorts"].localPosition = rootRest + new Vector3(0f, bob, 0f);
-            float rise = (kickT >= 0f || Push) ? 0f : 0.035f * (1f - walk) * (0.5f + 0.5f * breathe);
-            bones["torso"].localScale = new Vector3(torsoScale.x, torsoScale.y * (1f + rise), torsoScale.z);
+            float[] want = { legFar, legNear, armFar, armNear, torso, head, bob, sway, 0f };
+            float a = kicking ? 1f : 1f - Mathf.Exp(-dt * 16f);
+            for (int i = 0; i < want.Length; i++) pose[i] = Mathf.Lerp(pose[i], want[i], a);
+
+            // the hips move sideways by sway; each leg leans the other way so its foot stays put
+            float legLen = Mathf.Max(1f, rootRest.y + bones["leg_near"].localPosition.y);
+            float plant = -Mathf.Atan2(pose[7], legLen) * Mathf.Rad2Deg;
+            Leg("leg_far", pose[0], plant + tiltFar, liftFar); Leg("leg_near", pose[1], plant + tiltNear, liftNear);
+            Rot("arm_far", pose[2]); Rot("arm_near", pose[3]);
+            Rot("torso", pose[4]); Rot("head", pose[5]);
+            bones["shorts"].localPosition = rootRest + new Vector3(pose[7], pose[6], 0f);
+            float chest = (kicking || Push) ? 0f : breath;
+            bones["torso"].localScale = new Vector3(torsoScale.x * (1f + 0.014f * chest), torsoScale.y * (1f + 0.04f * chest), torsoScale.z);
         }
     }
 }
