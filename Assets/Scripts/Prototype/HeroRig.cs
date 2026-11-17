@@ -383,8 +383,11 @@ namespace Sheytoonak.Prototype
                 // «سومی از راست … زاویه پاش مناسب نیست» (he first said «از چپ», then corrected himself): kick_3, the high
                 // follow-through with the leg out to the side, is not used; from the contact the leg comes down.
                 kickT += dt;
-                if (kickT < 0.22f) Show(KickFrame(2), 0.04f);
-                else if (kickT < 0.42f) Show(KickFrame(4), 0.14f);
+                // a hero whose sheet has a good follow-through (kick_3: the leg up and away from the camera) plays it
+                bool high = KickFrame(3) != null;
+                if (kickT < (high ? 0.09f : 0.22f)) Show(KickFrame(2), 0.04f);
+                else if (high && kickT < 0.32f) Show(KickFrame(3), 0.09f);
+                else if (kickT < (high ? 0.46f : 0.42f)) Show(KickFrame(4), 0.14f);
                 else if (kickT < 0.60f) Show(KickFrame(5), 0.14f);
                 else if (idleClip.Count > 0) Show(idleClip[0], 0.14f);
                 facing = home;
