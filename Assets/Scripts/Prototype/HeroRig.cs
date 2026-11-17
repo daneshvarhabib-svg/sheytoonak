@@ -51,15 +51,16 @@ namespace Sheytoonak.Prototype
                 new Part("leg_far", "shorts", 0.7018f, 0.9630f, -0.800f, -0.350f, 1),
                 new Part("leg_near", "shorts", 0.2484f, 0.9644f, 0.800f, -0.350f, 2),
             },
+            // User (2026-11-17): the realistic masked Zaatar («عالی شد، همین رو بریم»), cut from Art/ArtArchive/Heroes/real/zaatar_real_back.png
             ["zaatar"] = new[]
             {
-                new Part("shorts", null, 0.4849f, 0.6809f, -0.015f, 6.770f, 4),
-                new Part("torso", "shorts", 0.4437f, 0.0000f, 0.000f, 0.000f, 6),
-                new Part("head", "torso", 0.4747f, 0.1070f, -0.100f, 4.400f, 3),
-                new Part("arm_far", "torso", 0.6032f, 0.8851f, -1.800f, 3.200f, 5),
-                new Part("arm_near", "torso", 0.2772f, 0.8761f, 0.900f, 3.400f, 7),
-                new Part("leg_far", "shorts", 0.6901f, 0.9666f, -0.800f, -0.700f, 1),
-                new Part("leg_near", "shorts", 0.2805f, 0.9682f, 0.800f, -0.700f, 2),
+                new Part("shorts", null, 0.4921f, 0.9049f, -0.310f, 8.710f, 4),
+                new Part("torso", "shorts", 0.4828f, -0.0060f, 0.000f, 0.000f, 6),
+                new Part("head", "torso", 0.4755f, 0.2143f, -0.070f, 3.400f, 3),
+                new Part("arm_far", "torso", 0.4892f, 0.8655f, -1.400f, 1.970f, 5),
+                new Part("arm_near", "torso", 0.2483f, 0.8948f, 1.200f, 2.070f, 7),
+                new Part("leg_far", "shorts", 0.5879f, 0.9603f, -0.820f, -3.680f, 1),
+                new Part("leg_near", "shorts", 0.3129f, 0.9618f, 0.800f, -3.680f, 2),
             },
             ["fulla"] = new[]
             {
@@ -125,7 +126,7 @@ namespace Sheytoonak.Prototype
         Dictionary<string, float> rest = new Dictionary<string, float>();
 
         /// <summary>Height of each puppet from the feet to the top of the head, in its own units (reference px / 100).</summary>
-        static readonly Dictionary<string, float> Heights = new Dictionary<string, float> { ["abu_shahata"] = 14.39f, ["rima"] = 14.49f, ["zaatar"] = 14.6f, ["fulla"] = 14.5f, ["toni"] = 14.62f, ["um_arabiyat"] = 14.5f, ["hamada"] = 14.54f, ["bubakr"] = 14.39f };
+        static readonly Dictionary<string, float> Heights = new Dictionary<string, float> { ["abu_shahata"] = 14.39f, ["rima"] = 14.49f, ["zaatar"] = 14.32f, ["fulla"] = 14.5f, ["toni"] = 14.62f, ["um_arabiyat"] = 14.5f, ["hamada"] = 14.54f, ["bubakr"] = 14.39f };
 
         public static bool Has(string id) => id != null && Tables.ContainsKey(id) && Resources.Load<Texture2D>("Art/Heroes/" + id + "_rig/torso") != null;
 

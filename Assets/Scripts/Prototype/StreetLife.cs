@@ -180,6 +180,8 @@ namespace Sheytoonak
                 if (tx.name.StartsWith("medics_empty_")) emptyT.Add(tx); else if (tx.name.StartsWith("medics_loaded_")) loadedT.Add(tx);
             emptyT.Sort((p, q) => string.CompareOrdinal(p.name, q.name)); loadedT.Sort((p, q) => string.CompareOrdinal(p.name, q.name));
             var amb = Resources.Load<Texture2D>("Art/Props/ambulance");
+            // ⚠️ medieval (see VehiclesOn): no motor ambulance; the victim just lies there and fades.
+            if (!VehiclesOn) { closed = null; open = null; amb = null; }
             if (closed != null && open != null && emptyT.Count > 0 && loadedT.Count > 0)
             {
                 // User (2026-11-08): «نباید تعداد بیشتری تصویر از آمبولانس و پرسنلش داشته باشی؟ اینطوری که نمی‌تونی طبیعی در
@@ -469,12 +471,12 @@ namespace Sheytoonak
                     Spawn(set, pedHeight * PedHeightScale(set), farSidewalkZ + Random.Range(-0.3f, 0.3f), pedSpeed * PedSpeedScale(set) * Random.Range(0.8f, 1.2f), 16f, pedsFaceRight);
                 }
             }
-            if (paintedCars.Count > 0 && t >= nextCar && !carOut)
+            if (VehiclesOn && paintedCars.Count > 0 && t >= nextCar && !carOut)
             {
                 nextCar = t + Random.Range(carEvery.x, carEvery.y);
                 SpawnCar(paintedCars[Random.Range(0, paintedCars.Count)], carSpeed * Random.Range(0.85f, 1.15f));
             }
-            else if (paintedCars.Count == 0 && cars.Count > 0 && t >= nextCar && !carOut)
+            else if (VehiclesOn && paintedCars.Count == 0 && cars.Count > 0 && t >= nextCar && !carOut)
             {
                 nextCar = t + Random.Range(carEvery.x, carEvery.y);
                 var set = cars[Random.Range(0, cars.Count)];
@@ -526,6 +528,9 @@ namespace Sheytoonak
 
         int walkers;
         const bool RidersOn = false;
+        // User (2026-11-17): «با توجه به لباسا باید زمان بازی رو هم کلاسیک کنیم … ماشین و دوچرخه و ویلچر هم رد نشه.
+        // کلا قصه رو ببریم زمان قرون وسطا». No cars, no motor ambulance; flip back only for a modern setting.
+        const bool VehiclesOn = false;
 
         /// <summary>
         /// The x (absolute) just outside the picture at depth <paramref name="z"/> for something half
