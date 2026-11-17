@@ -1,0 +1,27 @@
+RALLY 7.80 kick Left from (0.00, 0.11, 0.45) v=(22.32, 5.54, 15.69)
+RALLY 7.80 ground (0.00, 0.00, 0.45) active=True returning=False bounces=0
+RALLY 8.58 facade (17.70, 1.34, 13.00) active=True returning=False hitWindow=-1 window=-1
+RALLY 10.44 ground (3.89, 0.00, 1.55) active=True returning=True bounces=0
+RALLY 11.64 ground (1.37, 0.00, -2.15) active=True returning=True bounces=1
+RALLY 11.78 rekick#1 Left from (1.27, 0.52, -2.31) q=0.65 v=(27.60, 5.16, 19.39)
+RALLY 12.56 facade (22.90, 1.49, 13.00) active=True returning=False hitWindow=-1 window=-1
+RALLY 14.42 ground (4.91, 0.00, 1.50) active=True returning=True bounces=0
+RALLY 15.34 killed PassedPlayer at (0.81, 1.32, -2.52)
+RALLY 15.56 finish hits=1 window=-1 rolls=False at (-0.04, 0.51, -3.35)
+RALLY 17.56 kick Right from (0.00, 0.11, 0.45) v=(15.01, 9.65, 15.69)
+RALLY 17.58 ground (0.00, 0.00, 0.45) active=True returning=False bounces=0
+RALLY 18.36 facade (11.90, 4.60, 13.00) active=True returning=False hitWindow=-1 window=-1
+RALLY 20.28 ground (2.31, 0.00, 1.50) active=True returning=True bounces=0
+RALLY 20.28 rekick#1 Right from (2.31, 0.13, 1.48) q=1.00 v=(2.95, 12.87, 14.40)
+RALLY 21.08 facade (4.64, 7.17, 13.00) active=True returning=False hitWindow=-1 window=-1
+RALLY 23.04 ground (0.54, 0.00, 1.33) active=True returning=True bounces=0
+RALLY 24.46 killed PassedPlayer at (-0.16, 1.45, -2.47)
+RALLY 24.66 finish hits=1 window=-1 rolls=False at (-0.25, 0.20, -2.94)
+RALLY 31.01 kick Right from (0.00, 0.11, 0.45) v=(16.39, 9.64, 15.69)
+RALLY 31.02 ground (0.00, 0.00, 0.45) active=True returning=False bounces=0
+RALLY 32.34 ground (6.62, 0.00, 4.06) active=True returning=False bounces=0
+RALLY 32.78 finish hits=0 window=-1 rolls=True at (6.62, 1.20, 4.26)
+RALLY 42.68 kick Right from (0.00, 0.11, 0.45) v=(-16.66, 6.82, 15.69)
+RALLY 42.70 ground (0.00, 0.00, 0.45) active=True returning=False bounces=0
+RALLY 43.48 facade (-13.21, 2.35, 13.00) active=True returning=False hitWindow=-1 window=12
+RALLY 44.59 finish hits=0 window=12 rolls=False at (-13.21, 2.35, 12.89)
