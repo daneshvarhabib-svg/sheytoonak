@@ -165,6 +165,19 @@ namespace Sheytoonak.Prototype
             while (n < 6 && HeroSprite(id, "r" + (n + 1)) != null) n++;
             return runFrames[id] = Mathf.Max(1, n);
         }
+        /// <summary>Where a hero's body is on screen, in GUI pixels (y down), for tapping him (DuelHud). False when off screen.</summary>
+        public bool HeroScreenRect(Side side, int slot, out Rect rect)
+        {
+            rect = default;
+            var r = painted[(int)side][slot]; var cam = Camera.main;
+            if (r == null || r.sprite == null || cam == null) return false;
+            var b = r.sprite.bounds; var t = r.transform;
+            Vector3 lo = cam.WorldToScreenPoint(t.TransformPoint(b.min)), hi = cam.WorldToScreenPoint(t.TransformPoint(b.max));
+            if (lo.z <= 0f || hi.z <= 0f) return false;
+            rect = Rect.MinMaxRect(Mathf.Min(lo.x, hi.x), Screen.height - Mathf.Max(lo.y, hi.y), Mathf.Max(lo.x, hi.x), Screen.height - Mathf.Min(lo.y, hi.y));
+            return rect.width > 4f && rect.height > 4f;
+        }
+
         bool HasRun(Side side, int slot) => painted[(int)side][slot] != null && HeroSprite(lookIds[(int)side][slot], "r1") != null;
         void RunPose(Side side, int slot, float cycles, bool kickFrames)
         {

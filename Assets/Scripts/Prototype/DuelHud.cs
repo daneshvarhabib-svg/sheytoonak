@@ -256,34 +256,20 @@ namespace Sheytoonak.Prototype
             {
                 // User (2026-11-05): «کارت انتخاب قهرمان توی بازی و انتخاب قدرت‌هاشون بزرگتر بشه». 62 -> 84 px at 900p.
                 float sz = 84 * u, gap = 10 * u;
-                float stripH = sz * 2 + gap * 3;
+                // User (2026-11-17): «پیشنهاد می‌کنم ما اول بزنیم روی بدن بازیکن و بازیکن انتخاب بشه بعدش بریم سراغ قدرتش. یعنی
+                // بجای این که عکس پروفایلش ریز اون زیر باشه ما روی بدن بازیکن کلیک کنیم و با کلیک اون پایین قدرت های مختلفش
+                // باز شه». The row of three faces is gone: a tap on a hero's body selects him (HeroTaps, below), a marker
+                // hangs over his head, and the strip is one row: his poison, antidote and kick.
+                float stripH = sz + gap * 2;
                 if (touch != null)
                 {
                     touch.DeadZoneHeight = stripH;
-                    touch.DeadZoneLeft = pad + 3 * (sz + gap) + gap;   // faces / poison / antidote / kick columns
-                    touch.DeadZoneRight = pad + 2 * (sz + gap) + gap;  // pass, surrender, rage
+                    touch.DeadZoneLeft = pad + 3 * (sz + gap) + gap;   // poison / antidote / kick
+                    touch.DeadZoneRight = pad + 3 * (sz + gap) + gap;  // pass, surrender, rage
                 }
-                var old = GUI.color; GUI.color = new Color(0f, 0f, 0f, 0.4f);
+                var old = GUI.color; GUI.color = new Color(0f, 0f, 0f, duel.Selected >= 0 ? 0.4f : 0.15f);
                 GUI.DrawTexture(new Rect(0, Screen.height - stripH, Screen.width, stripH), Texture2D.whiteTexture); GUI.color = old;
                 float x0 = pad, yb = Screen.height - stripH + gap;
-                // ⚠️ user (2026-11-04): «باید اول قهرمان انتخاب شه بعد قدرتش یا زدن ضربه. اگر خواست ضربه بزنه تازه
-                // بیاد پشت توپ». Bottom row: my three heroes' faces; top row: the chosen hero's poison, antidote and kick.
-                for (int i = 0; i < 3; i++)
-                {
-                    var h = rules.Heroes[(int)duel.Me][i];
-                    var fr = new Rect(x0 + i * (sz + gap), yb + sz + gap, sz, sz);
-                    bool sel = duel.Selected == i;
-                    var oc = GUI.color;
-                    GUI.color = sel ? new Color(1f, 0.85f, 0.25f) : new Color(0f, 0f, 0f, 0.5f);
-                    GUI.DrawTexture(new Rect(fr.x - 3 * u, fr.y - 3 * u, fr.width + 6 * u, fr.height + 6 * u), Texture2D.whiteTexture);
-                    GUI.color = duel.Selected < 0 ? new Color(1f, 1f, 1f, 0.75f + 0.25f * Mathf.Sin(Time.time * 5f)) : sel ? Color.white : new Color(0.7f, 0.7f, 0.7f);
-                    Face(fr, h.Id);
-                    GUI.color = Color.white;
-                    var pf = Kit("portrait");
-                    if (pf != null) GUI.DrawTexture(new Rect(fr.x - fr.width * 0.12f, fr.y - fr.height * 0.12f, fr.width * 1.24f, fr.height * 1.24f), pf, ScaleMode.StretchToFill);
-                    GUI.color = oc;
-                    if (GUI.Button(fr, GUIContent.none, GUIStyle.none)) { touch?.IgnoreFor(0.4f); duel.Select(i); }
-                }
                 if (duel.Selected >= 0)
                 {
                     int i = duel.Selected;
@@ -295,15 +281,16 @@ namespace Sheytoonak.Prototype
                     var kr = new Rect(x + 2 * (sz + gap), yb, sz, sz);
                     if (IconButton(kr, "kick", duel.KickArmed ? new Color(1f, 0.85f, 0.25f) : new Color(0.2f, 0.45f, 0.75f), rules.ActionsLeft > 0, null)) { touch?.IgnoreFor(0.4f); duel.ArmKick(); }
                 }
+                HeroTaps(u, Screen.height - stripH);
                 float xr = Screen.width - pad - sz;
                 bool armed = Time.time < surrenderArmedUntil;
-                if (IconButton(new Rect(xr, yb + sz + gap, sz, sz), "surrender", armed ? new Color(0.95f, 0.75f, 0.2f) : ControlDark, true, null))
+                if (IconButton(new Rect(xr, yb, sz, sz), "surrender", armed ? new Color(0.95f, 0.75f, 0.2f) : ControlDark, true, null))
                 {
                     touch?.IgnoreFor(0.4f);
                     if (armed) duel.Surrender(); else { surrenderArmedUntil = Time.time + 3f; OnToast(Ar.SurrenderSure, 1.5f); } // two taps, like every costly button
                 }
-                if (IconButton(new Rect(xr - sz - gap, yb + sz + gap, sz, sz), "pass", ControlDark, true, null)) { touch?.IgnoreFor(0.4f); duel.Pass(); }
-                if (rules.RageReady[0] && IconButton(new Rect(xr, yb, sz, sz), "rage", new Color(0.85f, 0.4f, 0.1f), true, null)) { touch?.IgnoreFor(0.4f); duel.Rage(); }
+                if (IconButton(new Rect(xr - sz - gap, yb, sz, sz), "pass", ControlDark, true, null)) { touch?.IgnoreFor(0.4f); duel.Pass(); }
+                if (rules.RageReady[0] && IconButton(new Rect(xr - 2 * (sz + gap), yb, sz, sz), "rage", new Color(0.85f, 0.4f, 0.1f), true, null)) { touch?.IgnoreFor(0.4f); duel.Rage(); }
             }
 
             TurnBanner(u, big);
@@ -420,6 +407,34 @@ namespace Sheytoonak.Prototype
 
         /// <summary>The run at a glance: 12 win slots, 3 hearts, the prize now and after the next win.</summary>
         static readonly System.Collections.Generic.Dictionary<string, Texture2D> faces = new System.Collections.Generic.Dictionary<string, Texture2D>();
+        /// <summary>My three heroes are the buttons: a tap on a body selects him. A gold marker hangs over the chosen one;
+        /// while nobody is chosen all three markers pulse ("pick one").</summary>
+        void HeroTaps(float u, float bottom)
+        {
+            if (stage == null) return;
+            for (int i = 0; i < 3; i++)
+            {
+                if (!stage.HeroScreenRect(duel.Me, i, out var r)) continue;
+                r.yMax = Mathf.Min(r.yMax, bottom);
+                bool sel = duel.Selected == i;
+                if (sel || duel.Selected < 0)
+                {
+                    float m = (sel ? 26f : 20f) * u, bobY = 6f * u * Mathf.Sin(Time.time * 5f);
+                    var c = new Vector2(r.center.x, r.yMin - m * 1.1f + bobY);
+                    var oc = GUI.color; var om = GUI.matrix;
+                    GUIUtility.RotateAroundPivot(45f, c);
+                    GUI.color = new Color(0f, 0f, 0f, 0.6f);
+                    GUI.DrawTexture(new Rect(c.x - m * 0.5f - 2 * u, c.y - m * 0.5f - 2 * u, m + 4 * u, m + 4 * u), Texture2D.whiteTexture);
+                    GUI.color = sel ? new Color(1f, 0.85f, 0.25f) : new Color(1f, 1f, 1f, 0.6f + 0.4f * Mathf.Sin(Time.time * 5f));
+                    GUI.DrawTexture(new Rect(c.x - m * 0.5f, c.y - m * 0.5f, m, m), Texture2D.whiteTexture);
+                    GUI.matrix = om; GUI.color = oc;
+                }
+                // ⚠️ the kicker standing at the ball is not a button: a tap on him is a tap-kick (TouchKickInput)
+                if (sel && duel.KickArmed) continue;
+                if (GUI.Button(r, GUIContent.none, GUIStyle.none)) { touch?.IgnoreFor(0.4f); duel.Select(i); }
+            }
+        }
+
         /// <summary>The hero's painted portrait (or the top of the standing figure) cropped into the rect.</summary>
         static void Face(Rect r, string heroId)
         {
