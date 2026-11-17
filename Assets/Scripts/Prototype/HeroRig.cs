@@ -94,23 +94,33 @@ namespace Sheytoonak.Prototype
             },
             ["hamada"] = new[]
             {
-                new Part("shorts", null, 0.4858f, 0.9188f, -0.210f, 7.910f, 4),
-                new Part("torso", "shorts", 0.5051f, 0.0000f, 0.000f, 0.000f, 6),
-                new Part("head", "torso", 0.4817f, 0.1178f, 0.100f, 3.250f, 3),
-                new Part("arm_far", "torso", 0.6173f, 0.8639f, -1.600f, 2.000f, 5),
-                new Part("arm_near", "torso", 0.2317f, 0.8732f, 1.100f, 2.300f, 7),
-                new Part("leg_far", "shorts", 0.6816f, 0.9492f, -0.800f, -3.900f, 1),
-                new Part("leg_near", "shorts", 0.1704f, 0.9526f, 1.000f, -3.900f, 2),
+                new Part("shorts", null, 0.5109f, 0.7115f, 0.245f, 5.330f, 4),
+                new Part("torso", "shorts", 0.5336f, 0.0000f, 0.000f, 0.000f, 6),
+                new Part("head", "torso", 0.4234f, 0.2213f, 0.100f, 5.850f, 3),
+                new Part("arm_far", "torso", 0.4565f, 0.7523f, -2.550f, 4.800f, 5),
+                new Part("arm_near", "torso", 0.2000f, 0.9307f, 1.300f, 5.000f, 7),
+                new Part("leg_far", "shorts", 0.5433f, 0.9554f, -1.400f, -0.900f, 1),
+                new Part("leg_near", "shorts", 0.3931f, 0.9569f, 0.800f, -0.900f, 2),
             },
             ["bubakr"] = new[]
             {
-                new Part("shorts", null, 0.5181f, 0.7630f, -0.025f, 6.160f, 4),
-                new Part("torso", "shorts", 0.5182f, -0.0098f, 0.000f, 0.000f, 6),
-                new Part("head", "torso", 0.4817f, 0.1568f, 0.200f, 5.100f, 3),
-                new Part("arm_far", "torso", 0.5455f, 0.8759f, -2.000f, 3.600f, 5),
-                new Part("arm_near", "torso", 0.2542f, 0.8785f, 1.200f, 3.800f, 7),
-                new Part("leg_far", "shorts", 0.6652f, 0.9599f, -0.800f, -1.100f, 1),
-                new Part("leg_near", "shorts", 0.3723f, 0.9620f, 1.000f, -1.100f, 2),
+                new Part("shorts", null, 0.5029f, 0.9055f, 0.280f, 8.910f, 4),
+                new Part("torso", "shorts", 0.6745f, 0.0000f, 0.000f, 0.000f, 6),
+                new Part("head", "torso", 0.5654f, 0.1581f, 0.200f, 3.200f, 3),
+                new Part("arm_far", "torso", 0.4365f, 0.8872f, -1.800f, 2.000f, 5),
+                new Part("arm_near", "torso", 0.1515f, 0.9527f, 1.200f, 2.700f, 7),
+                new Part("leg_far", "shorts", 0.5263f, 0.9584f, -0.800f, -4.100f, 1),
+                new Part("leg_near", "shorts", 0.2629f, 0.9602f, 1.000f, -4.100f, 2),
+            },
+            ["shadi"] = new[]
+            {
+                new Part("shorts", null, 0.4832f, 0.9191f, -0.240f, 9.420f, 4),
+                new Part("torso", "shorts", 0.4912f, 0.0000f, 0.000f, 0.000f, 6),
+                new Part("head", "torso", 0.5409f, 0.1993f, 0.000f, 3.100f, 3),
+                new Part("arm_far", "torso", 0.4526f, 0.8852f, -1.700f, 2.200f, 5),
+                new Part("arm_near", "torso", 0.2513f, 0.9303f, 1.200f, 2.400f, 7),
+                new Part("leg_far", "shorts", 0.5475f, 0.9531f, -1.000f, -4.900f, 1),
+                new Part("leg_near", "shorts", 0.3546f, 0.9577f, 1.000f, -4.900f, 2),
             },
         };
 
@@ -126,7 +136,7 @@ namespace Sheytoonak.Prototype
         Dictionary<string, float> rest = new Dictionary<string, float>();
 
         /// <summary>Height of each puppet from the feet to the top of the head, in its own units (reference px / 100).</summary>
-        static readonly Dictionary<string, float> Heights = new Dictionary<string, float> { ["abu_shahata"] = 14.81f, ["rima"] = 14.69f, ["zaatar"] = 14.32f, ["fulla"] = 14.75f, ["toni"] = 14.54f, ["um_arabiyat"] = 14.67f, ["hamada"] = 14.54f, ["bubakr"] = 14.39f };
+        static readonly Dictionary<string, float> Heights = new Dictionary<string, float> { ["abu_shahata"] = 14.81f, ["rima"] = 14.69f, ["zaatar"] = 14.32f, ["fulla"] = 14.75f, ["toni"] = 14.54f, ["um_arabiyat"] = 14.67f, ["hamada"] = 13.16f, ["bubakr"] = 14.57f, ["shadi"] = 14.78f };
 
         // User (2026-11-17): «مثلاً چاق و لاغر کن یا کوتاه و بلند … تنوع رو زیاد کن و توی قهرمان هایی که بعداً هم اضافه
         // میکنی این تنوع رو ببین». Every picture fills the same height on screen, so a short hero drawn short would still
@@ -154,7 +164,7 @@ namespace Sheytoonak.Prototype
         // User (2026-11-17) on the new back-view Zaatar: «با توجه به این که بدن زاویه یک سوم به دوربین داره پا هم باید یک
         // سوم باشه ولی الان پا رفته راست کامل موقع شوت». Seen from behind, a kick goes INTO the picture, away from the
         // camera: the leg only swings a little sideways and mostly gets shorter. Only heroes drawn from behind.
-        static readonly HashSet<string> BackView = new HashSet<string> { "zaatar", "abu_shahata", "rima", "fulla", "toni", "um_arabiyat" };
+        static readonly HashSet<string> BackView = new HashSet<string> { "zaatar", "abu_shahata", "rima", "fulla", "toni", "um_arabiyat", "hamada", "bubakr", "shadi" };
         const float DepthSwing = 0.4f, DepthShorten = 0.4f;
         bool foreshorten;
         readonly Dictionary<string, Vector3> legScale = new Dictionary<string, Vector3>();
