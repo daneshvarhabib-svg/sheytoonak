@@ -644,18 +644,18 @@ namespace Sheytoonak.Prototype
                 var wsp = Sprite.Create(wheelT, new Rect(0, 0, wheelT.width, wheelT.height), new Vector2(0.5f, 0.5f), 100f);
                 // ⚠️ the centres are pixels of the original 1508-wide picture; the phone imports it at 1024 (user's phone
                 // screenshots 2026-11-12: «چرخشون مچ نیست»), so they are scaled by the actual width
-                float ps = truckT.width / 1508f;
-                foreach (var c0 in new[] { new Vector2(565f, 753f), new Vector2(1216f, 757f) })
+                float ps = truckT.width / 797f; // medieval repaint 2026-11-18: one wooden wheel where the barrow's iron hoop was
+                foreach (var c0 in new[] { new Vector2(235f, 590f) })
                 {
                     var w = new GameObject("Wheel").AddComponent<SpriteRenderer>();
                     w.sprite = wsp; w.sortingOrder = truck.sortingOrder - 1; // the arches cover the tops of the tyres
                     w.transform.SetParent(truck.transform, false);
                     var c = c0 * ps;
                     w.transform.localPosition = new Vector3((c.x - truckT.width * 0.5f) / 100f, (truckT.height - c.y) / 100f, 0.01f);
-                    w.transform.localScale = Vector3.one * (276f * ps / wheelT.width);
+                    w.transform.localScale = Vector3.one * (92f * ps / wheelT.width);
                     wheels.Add(w.transform);
                 }
-                wheelR = 1.38f * ps * k; // 138 original px at 100 ppu, in world units
+                wheelR = 0.46f * ps * k; // 46 original px at 100 ppu, in world units
             }
             System.Action<float, float> roll = (from, to) =>
             {

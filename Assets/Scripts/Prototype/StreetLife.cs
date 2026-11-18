@@ -38,6 +38,7 @@ namespace Sheytoonak
             public Transform t; public SpriteRenderer sr; public List<Sprite> frames; public float speed, endX, frame;
             public Transform[] wheels; public float wheelRadius; // painted cars: wheels spin with the distance driven
             public bool cyclist; // a rider on two wheels: wheels roll, the walk frames pedal, no bob
+            public float[] radii; public float spinSign = -1f; // loose wheels of different sizes (a carriage); +1: painted facing left
             public bool traffic; // medieval road traffic (Art/Traffic): counted apart from the walkers on the pavement
         }
 
@@ -478,7 +479,8 @@ namespace Sheytoonak
             return go.transform;
         }
 
-        class TrafficDef { public List<Sprite> frames = new List<Sprite>(); public float height = 2.2f, speed = 1.8f; }
+        class TrafficWheel { public Sprite pic; public float r, x, y; public bool front; }
+        class TrafficDef { public List<Sprite> frames = new List<Sprite>(); public float height = 2.2f, speed = 1.8f, width; public List<TrafficWheel> wheels = new List<TrafficWheel>(); }
         List<TrafficDef> traffic;
         List<TrafficDef> Traffic()
         {
@@ -501,6 +503,20 @@ namespace Sheytoonak
                     if (f.Length < 3 || f[0].StartsWith("#") || !byName.TryGetValue(f[0], out var d)) continue;
                     float.TryParse(f[1], System.Globalization.NumberStyles.Float, inv, out d.height);
                     float.TryParse(f[2], System.Globalization.NumberStyles.Float, inv, out d.speed);
+                    if (f.Length > 3) float.TryParse(f[3], System.Globalization.NumberStyles.Float, inv, out d.width);
+                    for (int i = 4; i < f.Length; i++)
+                    {
+                        // wheelPicture:radius:cx:cy:front|back -- a loose wheel (Art/Poison/<picture>) where the painted one was cut out
+                        var w = f[i].Split(':');
+                        if (w.Length < 5) continue;
+                        var wt = Resources.Load<Texture2D>("Art/Poison/" + w[0]);
+                        if (wt == null) continue;
+                        var tw = new TrafficWheel { pic = Sprite.Create(wt, new Rect(0, 0, wt.width, wt.height), new Vector2(0.5f, 0.5f), 100f), front = w[4] == "front" };
+                        float.TryParse(w[1], System.Globalization.NumberStyles.Float, inv, out tw.r);
+                        float.TryParse(w[2], System.Globalization.NumberStyles.Float, inv, out tw.x);
+                        float.TryParse(w[3], System.Globalization.NumberStyles.Float, inv, out tw.y);
+                        d.wheels.Add(tw);
+                    }
                 }
             foreach (var kv in byName) { kv.Value.frames.Sort((a, b) => string.CompareOrdinal(a.name, b.name)); traffic.Add(kv.Value); }
             return traffic;
@@ -546,7 +562,28 @@ namespace Sheytoonak
                 nextCar = t + Random.Range(carEvery.x, carEvery.y);
                 var tr = traffic[Random.Range(0, traffic.Count)];
                 Spawn(tr.frames, tr.height, roadZ, tr.speed * Random.Range(0.9f, 1.1f), 30f, false);
-                movers[movers.Count - 1].traffic = true;
+                var mv = movers[movers.Count - 1]; mv.traffic = true;
+                if (tr.wheels.Count > 0)
+                {
+                    // User (2026-11-18): «مهمه برام چرخ حرکت کنه». The painted wheels were cut out of the picture
+                    // (tools/frames/cut_wheels.py); loose wooden wheels turn in their place, the far ones behind the body and darker.
+                    var tex = tr.frames[0].texture; float ps = tr.width > 1f ? tex.width / tr.width : 1f; // the phone imports big pictures smaller
+                    float sc = Mathf.Abs(mv.t.localScale.y);
+                    var ws = new Transform[tr.wheels.Count]; var rr = new float[tr.wheels.Count];
+                    for (int i = 0; i < ws.Length; i++)
+                    {
+                        var w = tr.wheels[i];
+                        var wr = new GameObject("Wheel").AddComponent<SpriteRenderer>();
+                        wr.sprite = w.pic; wr.sortingOrder = w.front ? 1 : -1;
+                        if (!w.front) wr.color = new Color(0.62f, 0.6f, 0.58f);
+                        wr.transform.SetParent(mv.t, false);
+                        wr.transform.localPosition = new Vector3((w.x * ps - tex.width * 0.5f) / 100f, (tex.height - w.y * ps) / 100f, w.front ? -0.01f : 0.01f);
+                        wr.transform.localScale = Vector3.one * (2f * w.r * ps / w.pic.rect.width);
+                        ws[i] = wr.transform; rr[i] = w.r * ps / 100f * sc;
+                    }
+                    mv.t.gameObject.AddComponent<UnityEngine.Rendering.SortingGroup>();
+                    mv.wheels = ws; mv.radii = rr; mv.spinSign = 1f;
+                }
             }
             else if (VehiclesOn && paintedCars.Count > 0 && t >= nextCar && !carOut)
             {
@@ -568,8 +605,12 @@ namespace Sheytoonak
                 if (m.wheels != null)
                 {
                     // rolling without slipping: angle = distance / radius; the mirrored root flips the sense by itself
-                    float deg = Mathf.Abs(m.speed) * Time.deltaTime / Mathf.Max(0.01f, m.wheelRadius) * Mathf.Rad2Deg;
-                    foreach (var w in m.wheels) w.Rotate(0f, 0f, -deg, Space.Self);
+                    for (int wi = 0; wi < m.wheels.Length; wi++)
+                    {
+                        float rad = m.radii != null && wi < m.radii.Length ? m.radii[wi] : m.wheelRadius;
+                        float deg = Mathf.Abs(m.speed) * Time.deltaTime / Mathf.Max(0.01f, rad) * Mathf.Rad2Deg;
+                        m.wheels[wi].Rotate(0f, 0f, m.spinSign * deg, Space.Self);
+                    }
                 }
                 if (m.cyclist)
                 {
