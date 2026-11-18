@@ -244,6 +244,11 @@ namespace Sheytoonak.Prototype
             StartCoroutine(WalkHome(side, kickSlot[(int)side])); // not tracked: a newly chosen hero may walk up at the same time
         }
 
+        // User (2026-11-18, screenshot of Fulla winding up): «توپ باید جلوی پایی باشه که داره ضربه میزنه نه اون یکی پا». The
+        // heroes are painted from behind, so with the kicker on the ball's own depth (0.04 nearer, since 2026-11-11) the
+        // ball sat under the standing foot. He stands a third of a metre nearer the camera: the ball lies ahead of the feet.
+        const float KickerNear = 0.3f;
+
         /// <summary>Behind and to the side of the ball (right-footers stand left of it), so the ball itself stays visible.</summary>
         Vector3 Spot(Side side)
         {
@@ -257,7 +262,7 @@ namespace Sheytoonak.Prototype
             {
                 Vector3 fo = rig.FootOffset(HeroRig.ContactDeg);
                 float r = duel.ball != null ? duel.ball.Radius : 0.11f;
-                return new Vector3(b.x - fo.x - Mathf.Sign(fo.x) * r * 0.7f, 0f, b.z - 0.04f);
+                return new Vector3(b.x - fo.x - Mathf.Sign(fo.x) * r * 0.7f, 0f, b.z - KickerNear);
             }
             return new Vector3(b.x + off, 0f, b.z - 0.35f);
         }
@@ -463,7 +468,7 @@ namespace Sheytoonak.Prototype
             float r = duel.ball.Radius;
             float deg = rig.ContactAngleFor(b);
             Vector3 fo = rig.FootOffset(deg);
-            hero.position = new Vector3(b.x - fo.x - Mathf.Sign(fo.x) * r * 0.7f, hero.position.y, b.z - 0.04f);
+            hero.position = new Vector3(b.x - fo.x - Mathf.Sign(fo.x) * r * 0.7f, hero.position.y, b.z - KickerNear);
             kickFrom[(int)side] = deg;
         }
 
@@ -632,7 +637,8 @@ namespace Sheytoonak.Prototype
                 brushR.sortingOrder = truck.sortingOrder + 1;
                 brushR.transform.SetParent(truck.transform, false);
                 brushR.transform.localPosition = brushLocal;
-                brushR.transform.localScale = Vector3.one * (sp.bounds.size.x * 0.232f / Mathf.Max(0.01f, brushR.sprite.bounds.size.x));
+                brushR.transform.localScale = Vector3.one * (sp.bounds.size.x * 0.5f / Mathf.Max(0.01f, brushR.sprite.bounds.size.x));
+                brushR.enabled = false; // medieval: he takes the broom out only to sweep
             }
             // the wheels turn with the distance driven (user 2026-11-12: «چرخ های جاروکش هم باید بچرخه … هر ماشینی هست باید
             // چرخش بچرخه»): sweeper.png has empty arches, sweeper_wheel.png sits in each, centres measured on the picture
@@ -666,9 +672,13 @@ namespace Sheytoonak.Prototype
             // "spins" by flipping its bristles and a slight wobble instead
             System.Action<float> spin = speed =>
             {
+                // user (2026-11-18): «کارگر شهرداری … باید جارو بکشه و بعد پرنده ها از رو زمین محو شن». Walking, the broom
+                // rides in the barrow (painted there); stopped over a bird, a broom sweeps to and fro along the ground.
                 if (brushR == null) return;
-                brushR.flipX = ((int)(Time.time * speed)) % 2 == 0;
-                var l = brushR.transform.localScale; brushR.transform.localScale = new Vector3(Mathf.Abs(l.y) * (1f + 0.04f * Mathf.Sin(Time.time * speed * 3f)), l.y, l.z);
+                brushR.enabled = speed > 15f;
+                float sw = Mathf.Sin(Time.time * 9f);
+                brushR.transform.localPosition = brushLocal + new Vector3(sw * sp.bounds.size.x * 0.12f, sp.bounds.size.y * (0.03f + 0.02f * Mathf.Abs(sw)), 0f);
+                brushR.transform.localRotation = Quaternion.Euler(0f, 0f, sw * 8f);
             };
             float dir = fromLeft ? 1f : -1f; // the way it drives
             float brushOff = brushLocal.x * truck.transform.localScale.x; // brush x relative to the truck
@@ -692,14 +702,22 @@ namespace Sheytoonak.Prototype
                     spin(14f);
                     yield return null;
                 }
-                for (float t = 0f; t < 1.0f; t += Time.deltaTime)
+                for (float t = 0f; t < 1.8f; t += Time.deltaTime)
                 {
                     spin(20f);
-                    if (t > 0.4f) // everything under the brush goes
+                    if (t > 0.5f) // everything under the broom fades off the road
                         for (int i = corpses.Count - 1; i >= 0; i--)
-                            if (corpses[i] != null && Mathf.Abs(corpses[i].position.x - (truck.transform.position.x + brushOff)) < 0.7f) { Destroy(corpses[i].gameObject); corpses.RemoveAt(i); }
+                            if (corpses[i] != null && Mathf.Abs(corpses[i].position.x - (truck.transform.position.x + brushOff)) < 0.9f)
+                            {
+                                float left = 1f;
+                                foreach (var cr in corpses[i].GetComponentsInChildren<SpriteRenderer>()) { var c = cr.color; c.a -= Time.deltaTime / 1.0f; cr.color = c; left = Mathf.Min(left, c.a); }
+                                if (left <= 0.02f) { Destroy(corpses[i].gameObject); corpses.RemoveAt(i); }
+                            }
                     yield return null;
                 }
+                spin(0f);
+                for (int i = corpses.Count - 1; i >= 0; i--) // whatever was under it is gone by now
+                    if (corpses[i] != null && Mathf.Abs(corpses[i].position.x - (truck.transform.position.x + brushOff)) < 0.9f) { Destroy(corpses[i].gameObject); corpses.RemoveAt(i); }
             }
             float xs = truck.transform.position.x, xe = fromLeft ? sEdge : -sEdge;
             for (float t = 0f; t < 1f; t += Time.deltaTime / 2.4f)
@@ -856,7 +874,17 @@ namespace Sheytoonak.Prototype
             float t0 = Time.time;
             while (cloud != null && (Time.time - t0 < 2.5f || (duel.Rules != null && !duel.Rules.Finished && duel.Rules.ActiveProtection(Effect.Chance) == "fart")))
             {
-                cloud.transform.localScale = Vector3.one * (1f + 0.05f * Mathf.Sin(Time.time * 2f)); // a slow, smelly wobble
+                // user (2026-11-18): «گوز باید هی بزرگتر بشه و بعد رنگش فید بشه»: it keeps spreading while it hangs
+                float grow = 1f + Mathf.Min(1.6f, (Time.time - t0) * 0.22f);
+                cloud.transform.localScale = Vector3.one * grow * (1f + 0.04f * Mathf.Sin(Time.time * 2f));
+                yield return null;
+            }
+            if (cloud == null) yield break;
+            Vector3 s0 = cloud.transform.localScale; var rs = cloud.GetComponentsInChildren<SpriteRenderer>();
+            for (float k = 0f; k < 1f && cloud != null; k += Time.deltaTime / 1.2f)
+            {
+                cloud.transform.localScale = s0 * (1f + 0.35f * k);
+                foreach (var r in rs) if (r != null) { var c = r.color; c.a = 1f - k; r.color = c; }
                 yield return null;
             }
             if (cloud != null) Destroy(cloud);

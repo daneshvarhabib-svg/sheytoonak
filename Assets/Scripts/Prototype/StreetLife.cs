@@ -479,6 +479,31 @@ namespace Sheytoonak
             return go.transform;
         }
 
+        // User (2026-11-18): «اگر توپ خورد به گاری رهگذر یا آدم رهگذر مثل دیوار باهاش برخورد بشه و برگرده و نره سمت شیشه».
+        // A ball flying toward the house that crosses the depth of a walker or a cart, inside its picture, comes back off
+        // it (slower, a little sideways) and never reaches the glass; the duel then ends the kick on its ground bounces.
+        Sheytoonak.BallController flyingBall; Vector3 lastBall; bool hadBall;
+        void BallMeetsPassers()
+        {
+            if (flyingBall == null) flyingBall = FindAnyObjectByType<Sheytoonak.BallController>();
+            if (flyingBall == null || !flyingBall.InPlay) { hadBall = false; return; }
+            Vector3 now = flyingBall.transform.position, v = flyingBall.Body.linearVelocity;
+            Vector3 before = hadBall ? lastBall : now; lastBall = now; hadBall = true;
+            if (v.z < 0.5f) return; // only on its way to the wall
+            foreach (var m in movers)
+            {
+                if (m.t == null || m.sr == null) continue;
+                float z = m.t.position.z;
+                if (!(before.z < z && now.z >= z)) continue;
+                var b = m.sr.bounds; float inset = b.size.x * 0.12f;
+                if (now.x < b.min.x + inset || now.x > b.max.x - inset || now.y > b.min.y + b.size.y * 0.92f) continue;
+                flyingBall.transform.position = new Vector3(now.x, now.y, z - 0.05f);
+                flyingBall.SetVelocity(new Vector3(v.x * 0.4f + Random.Range(-0.8f, 0.8f), Mathf.Max(1.2f, v.y * 0.3f), -Mathf.Abs(v.z) * 0.35f));
+                Debug.Log("BALL hit a passer-by: " + m.t.name);
+                return;
+            }
+        }
+
         class TrafficWheel { public Sprite pic; public float r, x, y; public bool front; }
         class TrafficDef { public List<Sprite> frames = new List<Sprite>(); public float height = 2.2f, speed = 1.8f, width; public List<TrafficWheel> wheels = new List<TrafficWheel>(); }
         List<TrafficDef> traffic;
@@ -598,6 +623,7 @@ namespace Sheytoonak
                 float h = carLength * sp.bounds.size.y / Mathf.Max(0.01f, sp.bounds.size.x);
                 Spawn(set, h, roadZ, carSpeed * Random.Range(0.85f, 1.15f), 30f, carsFaceRight);
             }
+            BallMeetsPassers();
             for (int i = movers.Count - 1; i >= 0; i--)
             {
                 var m = movers[i];
