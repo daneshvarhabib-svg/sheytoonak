@@ -30,6 +30,40 @@ namespace Sheytoonak.Tests
             Assert.AreEqual((r.Shards[1], 0), r.RewardFor(Side.Right));
         }
 
+        // User (2026-11-18): «گوز الان همه موجودات زنده رو بی هوش می‌کنه … مگر این که سم دو پله بالاتر از قدرت گوز باشه».
+        [Test]
+        public void A_fart_knocks_out_every_living_poison_unless_it_is_two_levels_above()
+        {
+            var fart1 = new Tool("fart", "ضرطة", Effect.Chance, 1);
+            Tool bus(int lv) => new Tool("bus", "قافلة", Effect.Cover, lv, Lifetime.OneTurn);
+            Assert.IsTrue(DuelRules.FartKnocksOut(fart1, bus(1)));
+            Assert.IsTrue(DuelRules.FartKnocksOut(fart1, bus(2)));
+            Assert.IsFalse(DuelRules.FartKnocksOut(fart1, bus(3)), "two levels above: untouched");
+            Assert.IsFalse(DuelRules.FartKnocksOut(fart1, new Tool("cart", "عربة", Effect.Cover, 1, Lifetime.OneTurn)), "a cart is not alive");
+
+            // the caravan already parked drops when the other side farts
+            var r = Make(); r.Start(Side.Right);
+            Assert.AreEqual(ActionReject.None, r.Poison(Side.Right, bus(2), new[] { 0 }));
+            if (r.Current != Side.Left) r.Pass(Side.Right);
+            Assert.IsTrue(r.IsCovered(0));
+            Assert.AreEqual(ActionReject.None, r.Antidote(Side.Left, fart1));
+            Assert.IsFalse(r.IsCovered(0), "the camels are out cold");
+
+            // a level 3 caravan walks through a level 1 fart
+            r = Make(); r.Start(Side.Right);
+            r.Poison(Side.Right, bus(3), new[] { 0 });
+            if (r.Current != Side.Left) r.Pass(Side.Right);
+            r.Antidote(Side.Left, fart1);
+            Assert.IsTrue(r.IsCovered(0), "too strong for this fart");
+
+            // a caravan sent into a fart that still hangs drops on arrival
+            r = Make(); r.Start(Side.Left);
+            r.Antidote(Side.Left, fart1);
+            if (r.Current != Side.Right) r.Pass(Side.Left);
+            Assert.AreEqual(ActionReject.None, r.Poison(Side.Right, bus(1), new[] { 0 }));
+            Assert.IsFalse(r.IsCovered(0));
+        }
+
         // User (2026-11-14): «قدرت گوز مگه قرار نبود جلوی پرنده‌ها رو بگیره؟». The stage asks the rules whether a fart is up.
         [Test]
         public void A_fart_shows_as_the_active_protection_against_the_pigeon()

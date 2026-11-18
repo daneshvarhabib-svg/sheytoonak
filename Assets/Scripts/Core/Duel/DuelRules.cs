@@ -203,6 +203,9 @@ namespace Sheytoonak.Core.Duel
             foreach (var p in Poisons)
             {
                 int power = Math.Max(0, p.Tool.Power - Protection(s, p.Tool.Effect));
+                // the fart is all or nothing on a living poison: out cold, or (two levels above it) untouched
+                Tool? fart = IsLiving(p.Tool) ? FartOf(s) : null;
+                if (fart != null) power = FartKnocksOut(fart.Value, p.Tool) ? 0 : p.Tool.Power;
                 if (power == 0) continue;
                 switch (p.Tool.Effect)
                 {
@@ -314,6 +317,9 @@ namespace Sheytoonak.Core.Duel
             Poisons.Add(p);
             ActionsLeft--;
             PoisonPlaced?.Invoke(s, p);
+            // walking into a fart that still hangs: the living poison drops as soon as it arrives
+            var cloud = FartOf(s == Side.Left ? Side.Right : Side.Left);
+            if (cloud != null && FartKnocksOut(cloud.Value, poison)) { Poisons.Remove(p); PoisonExpired?.Invoke(p); }
             if (ActionsLeft <= 0) EndTurn();
             return ActionReject.None;
         }
@@ -340,6 +346,7 @@ namespace Sheytoonak.Core.Duel
             {
                 bool sameEffect = p.Tool.Effect == antidote.Effect && Lifts(antidote, p.Tool);
                 bool lift = sameEffect && (p.Tool.Life == Lifetime.UntilAntidote || (windowEffect && p.By != s));
+                if (p.By != s && FartKnocksOut(antidote, p.Tool)) lift = true; // every living poison of the other side drops
                 if (lift) PoisonExpired?.Invoke(p);
                 return lift;
             });
@@ -347,6 +354,21 @@ namespace Sheytoonak.Core.Duel
             AntidoteUsed?.Invoke(s, antidote);
             if (ActionsLeft <= 0) EndTurn();
             return ActionReject.None;
+        }
+
+        /// <summary>
+        /// User (2026-11-18): «گوز الان همه موجودات زنده رو بی هوش می‌کنه، اعم از انسان و حیوان و شتر و پرنده و گاو و اسب …
+        /// گوز زورش خیلی زیاده، مگر این که سم دو پله بالاتر از قدرت گوز باشه، در اون صورت بی اثر می‌شه». The poisons that
+        /// are alive: the pigeon, the camel caravan (bus) and the ox wagon (truck). The fart knocks them out whatever their
+        /// effect, unless the poison is two levels (or more) above the fart: then the fart does nothing to it at all.
+        /// </summary>
+        public static bool IsLiving(Tool t) => t.Id == "pigeon" || t.Id == "bus" || t.Id == "truck";
+        public static bool FartKnocksOut(Tool fart, Tool poison) => fart.Id == "fart" && IsLiving(poison) && poison.Power < fart.Power + 2;
+        Tool? FartOf(Side s)
+        {
+            Tool? best = null;
+            foreach (var a in protections[(int)s]) if (a.Tool.Id == "fart" && (best == null || a.Tool.Power > best.Value.Power)) best = a.Tool;
+            return best;
         }
 
         /// <summary>An antidote lifts a poison of its effect that is at most one level above it.</summary>
