@@ -39,6 +39,7 @@ namespace Sheytoonak
             public Transform[] wheels; public float wheelRadius; // painted cars: wheels spin with the distance driven
             public bool cyclist; // a rider on two wheels: wheels roll, the walk frames pedal, no bob
             public float[] radii; public float spinSign = -1f; // loose wheels of different sizes (a carriage); +1: painted facing left
+            public float down; // 0 walking .. 1 lying on the road, gassed by the fart
             public bool traffic; // medieval road traffic (Art/Traffic): counted apart from the walkers on the pavement
         }
 
@@ -504,6 +505,9 @@ namespace Sheytoonak
             }
         }
 
+        /// <summary>Set by the duel stage while a fart hangs over the street.</summary>
+        public static bool Gassed;
+
         class TrafficWheel { public Sprite pic; public float r, x, y; public bool front; }
         class TrafficDef { public List<Sprite> frames = new List<Sprite>(); public float height = 2.2f, speed = 1.8f, width; public List<TrafficWheel> wheels = new List<TrafficWheel>(); }
         List<TrafficDef> traffic;
@@ -564,7 +568,7 @@ namespace Sheytoonak
                 if ((m.wheels != null && !m.cyclist) || m.traffic) { carOut = true; continue; }
                 pedsOut++; nearestPedX = Mathf.Min(nearestPedX, Mathf.Abs(m.t.position.x));
             }
-            if (peds.Count > 0 && t >= nextPed && (pedsOut == 0 || (pedsOut == 1 && nearestPedX > 5f)))
+            if (!Gassed && peds.Count > 0 && t >= nextPed && (pedsOut == 0 || (pedsOut == 1 && nearestPedX > 5f)))
             {
                 nextPed = t + Random.Range(pedEvery.x, pedEvery.y) * (pedsOut == 0 ? 1f : 0.6f);
                 ++walkers;
@@ -580,7 +584,7 @@ namespace Sheytoonak
                     Spawn(set, pedHeight * PedHeightScale(set), farSidewalkZ + Random.Range(-0.3f, 0.3f), pedSpeed * PedSpeedScale(set) * Random.Range(0.8f, 1.2f), 16f, pedsFaceRight);
                 }
             }
-            if (!VehiclesOn && t >= nextCar && !carOut && Traffic().Count > 0)
+            if (!Gassed && !VehiclesOn && t >= nextCar && !carOut && Traffic().Count > 0)
             {
                 // User (2026-11-18): «به جای اون پنج تا ماشینی که رد می‌شد … کالسکه و این چیزها که چند مدل باشه و رد شه یا یه آدم
                 // اسب سوار». Whatever is painted in Art/Traffic passes on the road, one at a time, at its own height and pace.
@@ -627,6 +631,18 @@ namespace Sheytoonak
             for (int i = movers.Count - 1; i >= 0; i--)
             {
                 var m = movers[i];
+                // User (2026-11-18): «گوز همه موجودات زنده رو زمین گیر میکنه … باید مسموم شن و دراز بکشن زمین و تاثیر گوز که
+                // رفت به حرکتشون ادامه بدن». While the cloud hangs every walker and animal on the street stops and goes down
+                // (a person falls flat; a cart or a team of animals sags), then gets up and walks on.
+                if (Gassed || m.down > 0f)
+                {
+                    m.down = Mathf.MoveTowards(m.down, Gassed ? 1f : 0f, Time.deltaTime / 0.6f);
+                    bool tall = m.sr != null && m.sr.sprite != null && m.sr.sprite.bounds.size.x < m.sr.sprite.bounds.size.y;
+                    float e = m.down * m.down * (3f - 2f * m.down);
+                    m.t.localRotation = Quaternion.Euler(0f, 0f, (tall ? 86f : 7f) * e * (m.speed >= 0f ? 1f : -1f));
+                    m.t.position = new Vector3(m.t.position.x, tall ? 0.12f * e : -0.1f * e, m.t.position.z);
+                    if (m.down > 0f) continue;
+                }
                 m.t.position += Vector3.right * m.speed * Time.deltaTime;
                 if (m.wheels != null)
                 {

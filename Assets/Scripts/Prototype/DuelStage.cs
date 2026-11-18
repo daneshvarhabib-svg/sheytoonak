@@ -335,6 +335,7 @@ namespace Sheytoonak.Prototype
 
         void LateUpdate()
         {
+            StreetLife.Gassed = FartUp;
             Breathe();
             if (duel == null || duel.ball == null) return;
             ballX = Mathf.Lerp(ballX, duel.ball.transform.position.x, 4f * Time.deltaTime);
@@ -898,7 +899,23 @@ namespace Sheytoonak.Prototype
         IEnumerator LiftFallback(GameObject go)
         {
             yield return null; yield return null;
-            if (go != null && lifted.Remove(go)) StartCoroutine(DriveOff(go));
+            if (go != null && lifted.Remove(go)) StartCoroutine(FartUp ? GassedThenLeave(go) : DriveOff(go));
+        }
+
+        bool FartUp => duel != null && duel.Rules != null && !duel.Rules.Finished && duel.Rules.ActiveProtection(Effect.Chance) == "fart";
+
+        /// <summary>User (2026-11-18): the camels and the ox knocked out by the fart sink down where they stand, lie there
+        /// while the cloud hangs, then get up and go on their way.</summary>
+        IEnumerator GassedThenLeave(GameObject go)
+        {
+            var t = go.transform; Vector3 s0 = t.localScale, p0 = t.position;
+            for (float k = 0f; k < 1f && t != null; k += Time.deltaTime / 0.7f)
+            { t.localScale = new Vector3(s0.x, s0.y * (1f - 0.22f * k), s0.z); t.rotation = Quaternion.Euler(0f, 0f, 5f * k); yield return null; }
+            float until = Time.time + 1.5f;
+            while (t != null && (FartUp || Time.time < until)) yield return null;
+            for (float k = 0f; k < 1f && t != null; k += Time.deltaTime / 0.7f)
+            { t.localScale = new Vector3(s0.x, s0.y * (0.78f + 0.22f * k), s0.z); t.rotation = Quaternion.Euler(0f, 0f, 5f * (1f - k)); yield return null; }
+            if (t != null) { t.localScale = s0; t.rotation = Quaternion.identity; StartCoroutine(DriveOff(go)); }
         }
 
         static Bounds BoundsOf(GameObject go)
