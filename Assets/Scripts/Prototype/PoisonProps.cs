@@ -494,7 +494,10 @@ namespace Sheytoonak.Prototype
             if (art == null) return null;
             var root = new GameObject("Poison rain").transform;
             root.position = at;
-            var r = Spr(art, root, Vector3.zero, 2.4f * (1f + 0.2f * (Mathf.Clamp(level, 1, 5) - 1)));
+            // medieval repaint: the picture is the cloud (its top 45 %) with the falling rain under it, so it is 2.2x as tall as
+            // the old cloud-only picture and hangs lower by half the difference: the cloud stays where it was
+            float cloudH = 2.4f * (1f + 0.2f * (Mathf.Clamp(level, 1, 5) - 1));
+            var r = Spr(art, root, new Vector3(0f, -0.6f * cloudH, 0f), 2.2f * cloudH);
             host.StartCoroutine(Bob(root));
             return root.gameObject;
         }

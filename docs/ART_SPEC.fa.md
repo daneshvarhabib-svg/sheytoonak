@@ -1176,7 +1176,7 @@ A neighbour leaning out of a window, seen from the front from the waist up, full
 ```
 `Art/Poison/resident_06.png`
 ```
-A neighbour leaning out of a window, seen from the front from the waist up, fully clothed in medieval Middle-Eastern linen and wool: a young woman, a cloth over her hair, holding a crying swaddled baby (the baby unmasked, the woman in a mask of painted leather), shouting, eyes visible through the mask holes, the mouth area open so the shouting shows. Only the person, no window frame. Photorealistic, soft daylight. Isolated on a flat solid bright green background #00FF00, no shadow. No text, no religious or political symbols.
+A neighbour leaning out of a window, seen from the front from the waist up, fully clothed in medieval Middle-Eastern linen and wool: a young woman, a cloth over her hair, holding a crying swaddled baby (the woman in a mask of painted leather, the baby in a tiny soft cloth mask), shouting, eyes visible through the mask holes, the mouth area open so the shouting shows. Only the person, no window frame. Photorealistic, soft daylight. Isolated on a flat solid bright green background #00FF00, no shadow. No text, no religious or political symbols.
 ```
 
 ### قاب‌های حرکت به‌جای عروسک (۲۷ آبان)
@@ -1205,3 +1205,29 @@ A studio portrait of the SAME character as the attached picture (same mask, same
 ```
 
 - (۲۷ آبان) فلّه: کاربر: «ته روسریش همیشه بالاست. انگار همیشه توفانه. اینم درستش کنیم تو پرامپت جدید». در برگه‌های فلّه جمله‌ی «روسری آرام از پشت آویزان است، بادی نیست؛ فقط در قاب‌های شوت کمی تکان می‌خورد» اضافه می‌شود و «same clothes» با «the scarf is the same scarf but hanging down» همراه می‌شود (تصویرِ پیوست روسریِ در باد دارد).
+
+### عابرها با ماسک، برگه‌ی ۶ قابی (۲۸ آبان)
+`Art/Props/ped_01_merchant.png`
+```
+A pedestrian walking to the right, exact side view, full body, fully clothed: a fat merchant in a striped robe and a felt cap carrying a cloth bundle under his arm, wearing a full-face mask of polished brass. A horizontal sprite sheet of 6 walk-cycle frames in one row, the same person, same mask and clothes in every frame, same size and spacing, feet on the same baseline, legs clearly apart in different step positions. Photorealistic photograph, soft natural daylight, medieval Middle-Eastern era, nothing modern. Isolated on a flat solid bright green background #00FF00, no ground, no shadow. No text, no letters, no logo, no religious or political symbols.
+```
+`Art/Props/ped_02_shopper.png`
+```
+A pedestrian walking to the right, exact side view, full body, fully clothed: a woman in a long dress, a cloth over her hair, carrying a woven basket of bread, wearing a full-face mask of embroidered linen. A horizontal sprite sheet of 6 walk-cycle frames in one row, the same person, same mask and clothes in every frame, same size and spacing, feet on the same baseline, legs clearly apart in different step positions. Photorealistic photograph, soft natural daylight, medieval Middle-Eastern era, nothing modern. Isolated on a flat solid bright green background #00FF00, no ground, no shadow. No text, no letters, no logo, no religious or political symbols.
+```
+`Art/Props/ped_03_oldman.png`
+```
+A pedestrian walking to the right, exact side view, full body, fully clothed: a bent old man with a walking stick and a long grey beard showing under a full-face mask of pale birch bark. A horizontal sprite sheet of 6 walk-cycle frames in one row, the same person, same mask and clothes in every frame, same size and spacing, feet on the same baseline, legs clearly apart in different step positions. Photorealistic photograph, soft natural daylight, medieval Middle-Eastern era, nothing modern. Isolated on a flat solid bright green background #00FF00, no ground, no shadow. No text, no letters, no logo, no religious or political symbols.
+```
+`Art/Props/ped_04_hurried.png`
+```
+A pedestrian walking to the right, exact side view, full body, fully clothed: a thin young man hurrying with a clay jar on his shoulder, wearing a full-face mask of red clay. A horizontal sprite sheet of 6 walk-cycle frames in one row, the same person, same mask and clothes in every frame, same size and spacing, feet on the same baseline, legs clearly apart in different step positions. Photorealistic photograph, soft natural daylight, medieval Middle-Eastern era, nothing modern. Isolated on a flat solid bright green background #00FF00, no ground, no shadow. No text, no letters, no logo, no religious or political symbols.
+```
+`Art/Props/ped_05_crutches.png`
+```
+A pedestrian walking to the right, exact side view, full body, fully clothed: a man with a bandaged leg walking on two wooden crutches, wearing a full-face mask of patched sackcloth. A horizontal sprite sheet of 6 walk-cycle frames in one row, the same person, same mask and clothes in every frame, same size and spacing, feet on the same baseline, legs clearly apart in different step positions. Photorealistic photograph, soft natural daylight, medieval Middle-Eastern era, nothing modern. Isolated on a flat solid bright green background #00FF00, no ground, no shadow. No text, no letters, no logo, no religious or political symbols.
+```
+`Art/Props/ped_06_boy.png`
+```
+A pedestrian walking to the right, exact side view, full body, fully clothed: a small boy in a patched tunic and trousers running with a rag ball under his arm, wearing a full-face mask of painted gourd. A horizontal sprite sheet of 6 walk-cycle frames in one row, the same person, same mask and clothes in every frame, same size and spacing, feet on the same baseline, legs clearly apart in different step positions. Photorealistic photograph, soft natural daylight, medieval Middle-Eastern era, nothing modern. Isolated on a flat solid bright green background #00FF00, no ground, no shadow. No text, no letters, no logo, no religious or political symbols.
+```
