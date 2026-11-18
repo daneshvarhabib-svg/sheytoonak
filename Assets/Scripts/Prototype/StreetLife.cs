@@ -507,7 +507,9 @@ namespace Sheytoonak
                     // Walk cycle when frames exist; otherwise a small bob and lean so it at least does not glide.
                     if (m.frames.Count > 1)
                     {
-                        m.frame += Time.deltaTime * walkFps;
+                        // user (2026-11-18): the pedestrians got RIFE in-betweens like the heroes (two between every painted
+                        // pair, tools/frames/rife_peds.py), so a long set plays three times as fast: the stride lasts the same
+                        m.frame += Time.deltaTime * walkFps * (m.frames.Count > 8 ? 3f : 1f);
                         m.sr.sprite = m.frames[(int)m.frame % m.frames.Count];
                     }
                     // user (2026-11-04): «حرکت عابر پیاده هنوز مصنوعیه». The rocking tilt looked like a toy: gone. The step bob
