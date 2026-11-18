@@ -25,7 +25,7 @@ def rife(a,b,t,tmp):
     r=subprocess.run([BIN,'-0',tmp+'/a.png','-1',tmp+'/b.png','-o',tmp+'/o.png','-m',MODEL,'-s',str(t),'-g','-1','-j','1:4:1'],capture_output=True,text=True)
     if not os.path.exists(tmp+'/o.png'): raise SystemExit(r.stderr[-800:])
     o=np.array(Image.open(tmp+'/o.png').convert('RGB')); os.remove(tmp+'/o.png'); return o
-def tween(A,B,t,tmp):
+def tween(A,B,t,tmp,one=True):
     # the same pair twice, once over black and once over white: where the two answers agree the pixel is the figure,
     # where they differ it is backdrop. The alpha then moves WITH the picture (interpolating it apart left grey halos).
     def comp(x,bg):
@@ -33,11 +33,13 @@ def tween(A,B,t,tmp):
     k=rife(comp(A,0.0),comp(B,0.0),t,tmp).astype(np.float32); w=rife(comp(A,255.0),comp(B,255.0),t,tmp).astype(np.float32)
     a=1-np.clip((w-k).mean(-1),0,255)/255
     fg=k/np.maximum(a[...,None],0.12)           # the colour, taken back out of the black backdrop with the RAW alpha
-    a=np.clip((a-0.5)/0.3,0,1)                  # then harden: a half-there ghost of a limb goes, it does not turn to mist
+    a=np.clip((a-0.5)/0.3,0,1) if one else np.clip((a-0.22)/0.2,0,1)   # scenes: a leg the two runs half agree on stays solid                  # then harden: a half-there ghost of a limb goes, it does not turn to mist
     from scipy import ndimage
     lab,n=ndimage.label(a>0.5)
     if n>1:
-        sz=ndimage.sum(np.ones_like(lab),lab,range(1,n+1)); a[(lab!=1+int(np.argmax(sz)))&(lab>0)]=0   # stray specks
+        sz=ndimage.sum(np.ones_like(lab),lab,range(1,n+1))
+        if one: a[(lab!=1+int(np.argmax(sz)))&(lab>0)]=0   # stray specks
+        else: a[np.isin(lab,[i+1 for i,z in enumerate(sz) if z<600])]=0   # a scene of several figures: only specks go
     return np.dstack([np.clip(fg,0,255),a*255]).astype(np.uint8)
 def seq(F,prefix,loop):
     keys=[]; i=0
