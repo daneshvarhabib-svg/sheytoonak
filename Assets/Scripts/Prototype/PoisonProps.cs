@@ -144,7 +144,7 @@ namespace Sheytoonak.Prototype
                 float real = id == "cart" ? 2.4f : id == "truck" ? 3.6f : 3.4f;
                 h = Mathf.Clamp(h, real, real * 1.2f);
                 var r = Spr(busArt, root, new Vector3(0f, 0f, -w * 0.5f), h);
-                r.flipX = busArt.name.StartsWith("bus");
+                r.flipX = !busArt.name.StartsWith("cart"); // caravan and hay wagon are painted facing left; all come in from the left
                 AddWheels(r, busArt.name);
                 // parked on a hidden (unbroken) window: the middle of the covered run can fall on broken glass between two
                 // covered windows, so the covered window nearest that middle is the parking spot

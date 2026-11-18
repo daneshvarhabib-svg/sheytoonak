@@ -891,10 +891,10 @@ namespace Sheytoonak.Prototype
         {
             var v = go.transform; var b = BoundsOf(go);
             var tow = new GameObject("Tow truck").transform;
-            var r = PoisonProps.Vehicle("tow_truck", tow, 3.4f, true);
+            var r = PoisonProps.Vehicle("tow_truck", tow, 2.9f, true); // two market guards on foot (medieval repaint), a head over the heroes
             if (r == null) { Destroy(tow.gameObject); StartCoroutine(DriveOff(go)); yield break; }
             float w = r.bounds.size.x, z = v.position.z - 0.9f;
-            float hookX = -(1408f / 1507f - 0.5f) * w; // mirrored picture: the hook is at its left end
+            float hookX = -(960f / 998f - 0.5f) * w; // mirrored picture: the hook hangs at its left end
             float stop = b.max.x - 0.35f - hookX, edge = StreetLife.OffScreenX(z, w * 0.5f, 30f);
             Vector3 from = new Vector3(-edge, 0f, z), at = new Vector3(stop, 0f, z);
             for (float k = 0f; k < 1f && tow != null; k += Time.deltaTime / 1.8f) { Roll(tow, from, at, 1f - (1f - k) * (1f - k)); yield return null; }
@@ -971,10 +971,10 @@ namespace Sheytoonak.Prototype
             foreach (var kv in props) foreach (var g in kv.Value) if (g != null && g.name == "Poison puddle") puddle = g;
             Vector3 px = puddle != null ? puddle.transform.position : new Vector3(0f, 0f, foot.Z + 1.5f);
             var tk = new GameObject("Suction tanker").transform;
-            var r = PoisonProps.Vehicle("tanker_0", tk, 3.0f, true);
+            var r = PoisonProps.Vehicle("tanker_0", tk, 2.6f, true); // the water carrier on foot (medieval repaint)
             if (r == null) { Destroy(tk.gameObject); yield break; }
             float w = r.bounds.size.x, z = px.z + 0.6f;
-            float nozzle = -(1400f / 1528f - 0.5f) * w;
+            float nozzle = 0.1f * w; // he stops just left of the puddle and pours onto it
             float stop = px.x - nozzle, edge = StreetLife.OffScreenX(z, w * 0.5f, 30f);
             Vector3 from = new Vector3(-edge, 0f, z), at = new Vector3(stop, 0f, z);
             for (float k = 0f; k < 1f && tk != null; k += Time.deltaTime / 1.8f) { Roll(tk, from, at, 1f - (1f - k) * (1f - k)); yield return null; }
