@@ -1,8 +1,0 @@
-# piece width height in the original picture (pixels). Android may import a piece smaller; HeroRig keeps its size
-arm_far 137 566
-arm_near 199 574
-head 220 281
-leg_far 221 426
-leg_near 282 473
-shorts 447 556
-torso 342 384

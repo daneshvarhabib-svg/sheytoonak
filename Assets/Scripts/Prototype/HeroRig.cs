@@ -307,7 +307,7 @@ namespace Sheytoonak.Prototype
         // that picture: the three sheets were painted at three sizes, and the phone imports them smaller still.
         bool frameMode;
         readonly Dictionary<string, Sprite> frame = new Dictionary<string, Sprite>();
-        readonly List<Sprite> idleClip = new List<Sprite>(), walkClip = new List<Sprite>();
+        readonly List<Sprite> idleClip = new List<Sprite>(), walkClip = new List<Sprite>(), shotClip = new List<Sprite>();
         SpriteRenderer under, over;
         float fade = 1f, fadeDur = 0.2f, idleClock, walkClock, facing = 1f;
         Vector3 toe;
@@ -333,11 +333,18 @@ namespace Sheytoonak.Prototype
                 if (f.Length >= 7 && f[4] == "toe")
                     toe = new Vector3((float.Parse(f[5], inv) - px) * tex.width / ppu, (float.Parse(f[6], inv) - py) * tex.height / ppu, 0f);
             }
-            for (int i = 0; i < 12; i++)
+            // User (2026-11-18): «بیا حالا فواصل بین هر دو تصویر رو خودت بساز … دیگه آدم ها دست و پاشون نباید شکافته بشه».
+            // step_N / shot_N are the six painted pictures of the walk and of the kick (from the contact on) with two
+            // in-betweens made between every pair: each in-between is ONE of its two neighbours bent a third of the way
+            // toward the other (optical flow, offline), so it is sharp, whole, and never two pictures at once.
+            for (int i = 0; i < 40; i++)
             {
                 if (frame.TryGetValue("idle_" + i, out var a)) idleClip.Add(a);
-                if (frame.TryGetValue("walk_" + i, out var b)) walkClip.Add(b);
+                if (frame.TryGetValue("step_" + i, out var b)) walkClip.Add(b);
+                if (frame.TryGetValue("shot_" + i, out var c)) shotClip.Add(c);
             }
+            if (walkClip.Count == 0)
+                for (int i = 0; i < 12; i++) if (frame.TryGetValue("walk_" + i, out var b)) walkClip.Add(b);
             under = Layer("under", 100); over = Layer("over", 101);
             under.sprite = idleClip.Count > 0 ? idleClip[0] : host.sprite;
             over.sprite = under.sprite; fade = 1f;
@@ -395,7 +402,13 @@ namespace Sheytoonak.Prototype
                 // right (user on Zaatar's and Rima's: «سومی از راست … زاویه پاش مناسب نیست»).
                 kickT += dt;
                 bool high = KickFrame(3) != null;
-                if (kickT < 0.10f) Cut(KickFrame(2));
+                if (shotClip.Count > 0)
+                {
+                    // contact on the first frame, then the whole follow-through and landing in 0.55 s, eased out
+                    float q = Mathf.Clamp01(kickT / 0.55f);
+                    Cut(shotClip[Mathf.Min(shotClip.Count - 1, (int)((1f - (1f - q) * (1f - q) * 0.5f - 0.5f * (1f - q)) * shotClip.Count))]);
+                }
+                else if (kickT < 0.10f) Cut(KickFrame(2));
                 else if (high && kickT < 0.30f) Cut(KickFrame(3));
                 else if (kickT < (high ? 0.44f : 0.34f)) Cut(KickFrame(4));
                 else if (kickT < 0.60f) Cut(KickFrame(5));
