@@ -182,7 +182,46 @@ namespace Sheytoonak
             var amb = Resources.Load<Texture2D>("Art/Props/ambulance");
             // ⚠️ medieval (see VehiclesOn): no motor ambulance; the victim just lies there and fades.
             if (!VehiclesOn) { closed = null; open = null; amb = null; }
-            if (closed != null && open != null && emptyT.Count > 0 && loadedT.Count > 0)
+            if (!VehiclesOn && emptyT.Count > 0 && loadedT.Count > 0)
+            {
+                // Medieval (user 2026-11-18): two masked bearers with a pole stretcher instead of the ambulance. Painted
+                // walking LEFT. They come in from the nearer edge with the empty stretcher, stop over him, he is lifted on
+                // (the loaded pictures), and they carry him on, off the far edge. The user's two pictures of each differ
+                // only a little in the legs, with two RIFE in-betweens (a..d): played back and forth with a small step bob.
+                System.Func<List<Texture2D>, List<Sprite>> mk = l => { var o = new List<Sprite>(); foreach (var tx in l) o.Add(Sprite.Create(tx, new Rect(0, 0, tx.width, tx.height), new Vector2(0.5f, 0f), 100f)); return o; };
+                var fe = mk(emptyT); var fl = mk(loadedT);
+                bool goLeft = t.position.x >= 0f;               // from the right edge walking left, else mirrored
+                float mz = farSidewalkZ - 0.25f, mh = 1.95f;
+                float edge = OffScreenX(mz, mh * emptyT[0].width / emptyT[0].height * 0.5f + 0.5f, 24f);
+                float xa = goLeft ? edge : -edge, xm = t.position.x, xb = -xa;
+                var med = Make("Stretcher bearers", fe[0], mh, new Vector3(xa, 0f, mz));
+                var mr = med.GetComponent<SpriteRenderer>();
+                if (!goLeft) med.localScale = new Vector3(-med.localScale.x, med.localScale.y, med.localScale.z);
+                const float pace = 2.4f;                         // metres a second: they hurry
+                for (int leg = 0; leg < 2; leg++)
+                {
+                    var fr = leg == 0 ? fe : fl; float from = leg == 0 ? xa : xm, to = leg == 0 ? xm : xb;
+                    float dur = Mathf.Max(0.5f, Mathf.Abs(to - from) / pace), walked = 0f;
+                    for (float k = 0f; k < 1f; k += Time.deltaTime / dur)
+                    {
+                        if (med == null) yield break;
+                        walked += Time.deltaTime * pace;
+                        float ph = walked / 0.75f;                // one step every 0.75 m
+                        mr.sprite = fr[Mathf.Clamp(Mathf.RoundToInt(Mathf.PingPong(ph * (fr.Count - 1), fr.Count - 1)), 0, fr.Count - 1)];
+                        med.position = new Vector3(Mathf.Lerp(from, to, k), Mathf.Abs(Mathf.Sin(ph * Mathf.PI)) * 0.035f, mz);
+                        yield return null;
+                    }
+                    if (leg == 0)
+                    {
+                        yield return new WaitForSeconds(0.6f);
+                        if (t != null) Destroy(t.gameObject);    // lifted onto the stretcher
+                        if (med != null) mr.sprite = fl[0];
+                        yield return new WaitForSeconds(0.5f);
+                    }
+                }
+                if (med != null) Destroy(med.gameObject);
+            }
+            else if (closed != null && open != null && emptyT.Count > 0 && loadedT.Count > 0)
             {
                 // User (2026-11-08): «نباید تعداد بیشتری تصویر از آمبولانس و پرسنلش داشته باشی؟ اینطوری که نمی‌تونی طبیعی در
                 // بیاری حرکتشون رو». Staged: the van drives in and parks beside him, doors open, two medics wheel an empty
