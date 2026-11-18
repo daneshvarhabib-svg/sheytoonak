@@ -363,6 +363,14 @@ namespace Sheytoonak.Prototype
             over.sprite = sp; fade = 0f; fadeDur = Mathf.Max(0.01f, seconds);
         }
 
+        /// <summary>This picture at once, nothing of the old one left (movement: two poses blended are a ghost).</summary>
+        void Cut(Sprite sp)
+        {
+            if (sp == null) return;
+            over.sprite = sp; under.sprite = sp; fade = 1f;
+        }
+        float readyT; bool wasMoving;
+
         Sprite KickFrame(int i) => frame.TryGetValue("kick_" + i, out var sp) ? sp : null;
 
         void FrameUpdate()
@@ -376,44 +384,53 @@ namespace Sheytoonak.Prototype
             float walk = Mathf.Clamp01((speed - 0.15f) / 0.8f);
             float home = host.flipX ? -1f : 1f;
 
+            // User (2026-11-18, with a screen recording): «حرکت بازیکنا موقع شوت و راه رفتن خیلی بدتر شد که. یه حال ماتی داره».
+            // The cross-fade between two different poses drew both at once: a ghost with four legs. Walking and kicking
+            // now CUT from picture to picture (Cut), like any frame animation; only the standing pictures, which are
+            // nearly the same, still melt into each other.
             if (kickT >= 0f)
             {
                 // ⚠️ the ball leaves on the first frame of the kick: that frame is the contact picture (kick_2; the wind-up
-                // kick_0 is the Ready stance, kick_1 the leg coming down is skipped over by the snap). User on the sheet:
-                // «سومی از راست … زاویه پاش مناسب نیست» (he first said «از چپ», then corrected himself): kick_3, the high
-                // follow-through with the leg out to the side, is not used; from the contact the leg comes down.
+                // kick_0 is the Ready stance). kick_3 (the high follow-through) is only in a sheet where it came out
+                // right (user on Zaatar's and Rima's: «سومی از راست … زاویه پاش مناسب نیست»).
                 kickT += dt;
-                // a hero whose sheet has a good follow-through (kick_3: the leg up and away from the camera) plays it
                 bool high = KickFrame(3) != null;
-                if (kickT < (high ? 0.09f : 0.22f)) Show(KickFrame(2), 0.04f);
-                else if (high && kickT < 0.32f) Show(KickFrame(3), 0.09f);
-                else if (kickT < (high ? 0.46f : 0.42f)) Show(KickFrame(4), 0.14f);
-                else if (kickT < 0.60f) Show(KickFrame(5), 0.14f);
-                else if (idleClip.Count > 0) Show(idleClip[0], 0.14f);
+                if (kickT < 0.10f) Cut(KickFrame(2));
+                else if (high && kickT < 0.30f) Cut(KickFrame(3));
+                else if (kickT < (high ? 0.44f : 0.34f)) Cut(KickFrame(4));
+                else if (kickT < 0.60f) Cut(KickFrame(5));
+                else if (idleClip.Count > 0) Cut(idleClip[0]);
                 facing = home;
                 if (kickT >= KickSeconds) { kickT = -1f; idleClock = 0f; }
             }
             else if (Ready)
             {
-                Show(KickFrame(0), 0.2f);
+                // drawing the leg back: the swing-down picture for a moment, then the wind-up
+                readyT += dt;
+                Cut(readyT < 0.09f && KickFrame(1) != null ? KickFrame(1) : KickFrame(0));
                 facing = home;
             }
-            else if (walk > 0.25f && walkClip.Count > 0)
+            else if (walk > 0.2f && walkClip.Count > 0)
             {
-                // the walk sheet is a profile walking right: he turns to where he is going
+                // the walk sheet is a profile walking right: he turns to where he is going. The pictures advance with
+                // the ground covered, not with the clock, so the planted foot does not slide: one cycle of the sheet
+                // (two steps) is about 0.9 of his height.
                 if (Mathf.Abs(step.x) > 0.0005f) facing = step.x > 0f ? 1f : -1f;
-                float rate = Mathf.Lerp(5f, 10f, walk); // frames a second
-                walkClock += dt * rate;
-                Show(walkClip[(int)walkClock % walkClip.Count], 0.9f / rate);
+                float height = host.sprite != null ? host.sprite.bounds.size.y * Mathf.Abs(host.transform.lossyScale.y) : 1f;
+                walkClock += step.magnitude / Mathf.Max(0.01f, 0.9f * height) * walkClip.Count;
+                Cut(walkClip[(int)walkClock % walkClip.Count]);
             }
             else if (idleClip.Count > 0)
             {
                 // six nearly identical pictures of him breathing and shifting his weight, each melting into the next
                 const float hold = 0.8f;
+                if (wasMoving) { Cut(idleClip[0]); idleClock = 0f; }
                 idleClock += dt;
                 Show(idleClip[(int)(idleClock / hold) % idleClip.Count], hold);
                 facing = home;
             }
+            if (!Ready) readyT = 0f;
+            wasMoving = kickT >= 0f || Ready || (walk > 0.2f && walkClip.Count > 0);
 
             fade = Mathf.Min(1f, fade + dt / fadeDur);
             var col = host.color;
