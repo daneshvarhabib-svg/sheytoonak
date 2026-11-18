@@ -333,6 +333,12 @@ namespace Sheytoonak.Prototype
                 if (f.Length >= 7 && f[4] == "toe")
                     toe = new Vector3((float.Parse(f[5], inv) - px) * tex.width / ppu, (float.Parse(f[6], inv) - py) * tex.height / ppu, 0f);
             }
+            // User (2026-11-18, twice, with screenshots): «توپ باید جلوی پایی باشه که داره ضربه میزنه نه اون یکی پا». The toe
+            // measured on the contact picture (frames.txt) was the standing foot for half the heroes, and the contact
+            // picture stands a little aside of the idle one, so the ball lay beside or under the wrong foot. The heroes
+            // are seen from behind and all swing the right leg: the ball lies a tenth of the hero's height to the right of
+            // his middle, just ahead of the right foot he waits on (DuelStage.KickerNear puts him nearer the camera).
+            toe = new Vector3(0.10f * hostH, 0.02f * hostH, 0f);
             // User (2026-11-18): «بیا حالا فواصل بین هر دو تصویر رو خودت بساز … دیگه آدم ها دست و پاشون نباید شکافته بشه».
             // step_N / shot_N are the six painted pictures of the walk and of the kick (from the contact on) with two
             // in-betweens made between every pair: each in-between is ONE of its two neighbours bent a third of the way
