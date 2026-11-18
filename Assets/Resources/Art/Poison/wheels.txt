@@ -2,4 +2,4 @@
 # cartoon repaint 2026-11-12. A vehicle listed here has empty arches and its wheels turn as it drives.
 # medieval 2026-11-18: caravan, guards and water carrier walk (no wheels); the hay wagon keeps two wooden wheels
 truck truck_wheel 150 1504 840,810 1290,810 front
-cart cart_wheel 158 1087 192,791 824,794 front
+cart cart_wheel 125 1110 428,486 911,486 front

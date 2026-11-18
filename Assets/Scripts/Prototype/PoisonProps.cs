@@ -600,8 +600,8 @@ namespace Sheytoonak.Prototype
                     case "vane": root.position = heroPos + new Vector3(heroPos.x < 0f ? -0.6f : 0.6f, 0f, 0.3f); Spr(art, root, Vector3.zero, 1.4f); break;
                     case "plank": root.position = heroPos + new Vector3(0f, 0.04f, 1.0f); Spr(art, root, Vector3.zero, 0.9f, true); break;
                     case "complaint": root.position = heroPos + new Vector3(0f, 1.9f, 0f); Spr(art, root, Vector3.zero, 0.7f); break; // waved over the head
-                    case "umbrella": root.position = heroPos + new Vector3(heroPos.x < 0f ? 0.3f : -0.3f, 0.6f, -0.1f); Spr(art, root, Vector3.zero, 1.5f); break;
-                    case "flashlight": root.position = heroPos + new Vector3(0f, 1.2f, 0.2f); Spr(art, root, Vector3.zero, 0.45f); break;
+                    case "umbrella": root.position = heroPos + new Vector3(0f, 0f, 0.25f); Spr(art, root, Vector3.zero, 3.3f); break; // medieval repaint: a market awning on four poles, the hero stands under it
+                    case "flashlight": root.position = heroPos + new Vector3(0f, 1.2f, 0.2f); Spr(art, root, Vector3.zero, 0.75f); break; // an iron candle lantern (was an electric torch)
                     case "net": root.position = heroPos + new Vector3(heroPos.x < 0f ? 0.4f : -0.4f, 1.7f, 0.2f); Spr(art, root, Vector3.zero, 1.2f); break; // raised over the head
                     default: root.position = heroPos + Vector3.up * 1.4f; Spr(art, root, Vector3.zero, 0.22f); break; // pebble
                 }

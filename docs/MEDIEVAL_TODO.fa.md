@@ -8,8 +8,8 @@
 | # | چه | فایل‌ها | پرامپت |
 |---|---|---|---|
 | ۱ ✅ (جز `truck_wheel`) | قدرت‌های جاندار با ماسک | bus (کاروانِ شتر)، truck + truck_wheel (گاریِ علف)، tow_truck (نگهبان‌ها)، tanker_0/1 (سقّا)، rug_pusher_0/1 | داده شد («همه‌ی موجودات ماسک دارند») |
-| ۲ | قدرت‌های بی‌جان | cart + cart_wheel، umbrella، flashlight (فانوس)، net، vane، carpet، puddle، plank، rain | داده شد (بخشِ ۴) |
-| ۳ | آیکنِ قدرت‌ها (۱۷ تا) | Icons/pigeon، bus، truck، cart، nails، plank، umbrella، flashlight، net، vane، carpet، rug_push، puddle، rain، wind، fart، complaint، pebble، open_window | داده شد (بخشِ ۴) |
+| ۲ ✅ | قدرت‌های بی‌جان | cart + cart_wheel، umbrella، flashlight (فانوس)، net، vane، carpet، puddle، plank، rain | داده شد (بخشِ ۴) |
+| ۳ | آیکنِ قدرت‌ها (۱۷ تا) | Icons/pigeon، bus، truck، cart، nails، plank، umbrella، flashlight، net، vane، carpet، rug_push، puddle، rain، wind، fart، complaint (pebble و open_window حذف شدند؛ مانده: pigeon، bus، truck، complaint) | داده شد (بخشِ ۴) |
 | ۴ | همسایه‌ها با ماسک | granny2، resident_01..06، window_open_0/1 | داده شد (در ART_SPEC؛ در چت هنوز نه) |
 | ۵ | عابرها با ماسک | ped_01..06 (هر کدام برگه‌ی ۶ قابیِ نیم‌رخ) | باید با ماسک بازنویسی شود |
 | ۶ | صحنه‌ی زخمی | برانکاردارها (خالی/پر، برگه‌ی ۶ قابی)، رفتگر + چرخ، الاغ و گاری + چرخ | باید با ماسک بازنویسی شود |

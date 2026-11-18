@@ -1263,7 +1263,7 @@ namespace Sheytoonak
                     return;
                 }
                 if (w == Rules.SealedWindow) Toast?.Invoke(Ar.Sealed, 1.4f); // the one window of an even house that never breaks
-                else if (!Rules.IsBroken(w)) Pop?.Invoke(Rules.IsCovered(w) ? "bus" : "open_window", kicker, PopKind.Poison); // the poison that stopped it
+                else if (!Rules.IsBroken(w)) Pop?.Invoke(Rules.IsCovered(w) ? "bus" : "carpet", kicker, PopKind.Poison); // the poison that stopped it
             }
             GameEvents.RaiseWallHit(point);
             // ⚠️ until 2026-11-02 the ball was just dropped here and the action ended: one shot, no rebound.
