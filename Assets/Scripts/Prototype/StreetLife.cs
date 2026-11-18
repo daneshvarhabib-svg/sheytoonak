@@ -38,6 +38,7 @@ namespace Sheytoonak
             public Transform t; public SpriteRenderer sr; public List<Sprite> frames; public float speed, endX, frame;
             public Transform[] wheels; public float wheelRadius; // painted cars: wheels spin with the distance driven
             public bool cyclist; // a rider on two wheels: wheels roll, the walk frames pedal, no bob
+            public bool traffic; // medieval road traffic (Art/Traffic): counted apart from the walkers on the pavement
         }
 
         void Awake()
@@ -477,6 +478,34 @@ namespace Sheytoonak
             return go.transform;
         }
 
+        class TrafficDef { public List<Sprite> frames = new List<Sprite>(); public float height = 2.2f, speed = 1.8f; }
+        List<TrafficDef> traffic;
+        List<TrafficDef> Traffic()
+        {
+            if (traffic != null) return traffic;
+            traffic = new List<TrafficDef>();
+            var byName = new SortedDictionary<string, TrafficDef>();
+            foreach (var tex in Resources.LoadAll<Texture2D>("Art/Traffic"))
+            {
+                string key = SetKey(tex.name);
+                if (!byName.TryGetValue(key, out var d)) byName[key] = d = new TrafficDef();
+                var sp = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0f), 100f); sp.name = tex.name;
+                d.frames.Add(sp);
+            }
+            var txt = Resources.Load<TextAsset>("Art/Traffic/traffic");
+            var inv = System.Globalization.CultureInfo.InvariantCulture;
+            if (txt != null)
+                foreach (var line in txt.text.Split('\n'))
+                {
+                    var f = line.Trim().Split(' ');
+                    if (f.Length < 3 || f[0].StartsWith("#") || !byName.TryGetValue(f[0], out var d)) continue;
+                    float.TryParse(f[1], System.Globalization.NumberStyles.Float, inv, out d.height);
+                    float.TryParse(f[2], System.Globalization.NumberStyles.Float, inv, out d.speed);
+                }
+            foreach (var kv in byName) { kv.Value.frames.Sort((a, b) => string.CompareOrdinal(a.name, b.name)); traffic.Add(kv.Value); }
+            return traffic;
+        }
+
         void Update()
         {
             float t = Time.time;
@@ -491,7 +520,7 @@ namespace Sheytoonak
             int pedsOut = 0; bool carOut = false; float nearestPedX = 99f;
             foreach (var m in movers)
             {
-                if (m.wheels != null && !m.cyclist) { carOut = true; continue; }
+                if ((m.wheels != null && !m.cyclist) || m.traffic) { carOut = true; continue; }
                 pedsOut++; nearestPedX = Mathf.Min(nearestPedX, Mathf.Abs(m.t.position.x));
             }
             if (peds.Count > 0 && t >= nextPed && (pedsOut == 0 || (pedsOut == 1 && nearestPedX > 5f)))
@@ -510,7 +539,16 @@ namespace Sheytoonak
                     Spawn(set, pedHeight * PedHeightScale(set), farSidewalkZ + Random.Range(-0.3f, 0.3f), pedSpeed * PedSpeedScale(set) * Random.Range(0.8f, 1.2f), 16f, pedsFaceRight);
                 }
             }
-            if (VehiclesOn && paintedCars.Count > 0 && t >= nextCar && !carOut)
+            if (!VehiclesOn && t >= nextCar && !carOut && Traffic().Count > 0)
+            {
+                // User (2026-11-18): «به جای اون پنج تا ماشینی که رد می‌شد … کالسکه و این چیزها که چند مدل باشه و رد شه یا یه آدم
+                // اسب سوار». Whatever is painted in Art/Traffic passes on the road, one at a time, at its own height and pace.
+                nextCar = t + Random.Range(carEvery.x, carEvery.y);
+                var tr = traffic[Random.Range(0, traffic.Count)];
+                Spawn(tr.frames, tr.height, roadZ, tr.speed * Random.Range(0.9f, 1.1f), 30f, false);
+                movers[movers.Count - 1].traffic = true;
+            }
+            else if (VehiclesOn && paintedCars.Count > 0 && t >= nextCar && !carOut)
             {
                 nextCar = t + Random.Range(carEvery.x, carEvery.y);
                 SpawnCar(paintedCars[Random.Range(0, paintedCars.Count)], carSpeed * Random.Range(0.85f, 1.15f));
@@ -541,7 +579,7 @@ namespace Sheytoonak
                         m.sr.sprite = m.frames[(int)m.frame % m.frames.Count];
                     }
                 }
-                else if (Mathf.Abs(m.speed) < 3f)
+                else if (Mathf.Abs(m.speed) < 3f || m.traffic)
                 {
                     // Walk cycle when frames exist; otherwise a small bob and lean so it at least does not glide.
                     if (m.frames.Count > 1)

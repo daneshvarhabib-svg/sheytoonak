@@ -611,13 +611,13 @@ namespace Sheytoonak.Prototype
             var sp = Sprite.Create(truckT, new Rect(0, 0, truckT.width, truckT.height), new Vector2(0.5f, 0f), 100f);
             var truck = new GameObject("Sweeper").AddComponent<SpriteRenderer>();
             truck.sprite = sp;
-            float k = 2.4f / Mathf.Max(0.01f, sp.bounds.size.y);
+            float k = 2.1f / Mathf.Max(0.01f, sp.bounds.size.y); // medieval repaint: a man with a barrow and a palm broom
             truck.transform.localScale = new Vector3(fromLeft ? -k : k, k, k);
             float z = first.position.z - 0.6f;
             // the painted brush of sweeper.png sits at 11.9 % of the width from the front and 13.4 % up from the wheels'
             // line, 23.2 % of the width wide (cartoon repaint 2026-11-12, measured on the picture; was 11.8/9/22.5); the
             // separate sweeper_brush.png is laid exactly over it
-            var brushLocal = new Vector3(sp.bounds.size.x * (0.119f - 0.5f), sp.bounds.size.y * 0.134f, -0.01f);
+            var brushLocal = new Vector3(sp.bounds.size.x * (0.17f - 0.5f), sp.bounds.size.y * 0.134f, -0.01f);
             truck.gameObject.AddComponent<UnityEngine.Rendering.SortingGroup>(); // body, brush and wheels as one picture by distance (user 2026-11-13)
                         float sEdge = StreetLife.OffScreenX(z, sp.bounds.size.x * k * 0.5f, 26f); // from the picture's edge (phone is wider)
             float x0 = fromLeft ? -sEdge : sEdge;

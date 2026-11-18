@@ -1,0 +1,8 @@
+# name height(m) speed(m/s) -- what passes on the road in place of the cars (medieval, 2026-11-18). Pictures face LEFT.
+# One picture (name.png) slides with a step bob; name_a.png, name_b.png ... are walk frames.
+donkey_cart 2.0 1.5
+horseman 2.7 3.2
+carriage 2.9 2.8
+porter_cart 2.0 1.7
+litter 2.3 1.6
+shepherd 1.9 1.2
