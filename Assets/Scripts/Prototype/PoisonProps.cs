@@ -55,6 +55,7 @@ namespace Sheytoonak.Prototype
             var r = Spr(art, parent, Vector3.zero, height);
             r.flipX = faceRight;
             AddWheels(r, picture);
+            AddWalk(r, "Poison", picture);
             return r;
         }
         public static Sprite Picture(string name) => Art(name);
@@ -95,6 +96,48 @@ namespace Sheytoonak.Prototype
                 int i = (int)((t - delay) * fps);
                 r.sprite = frames[loop ? i % frames.Length : Mathf.Min(i, frames.Length - 1)];
             }
+        }
+
+        /// <summary>
+        /// User (2026-11-18): «کسی نباید کلا سر بخوره تو تصویر». Anything on legs that moves across the picture steps: its
+        /// picture has extra frames beside it (name_step1, name_step2 ... : the same scene on the same canvas with the legs
+        /// further into the step, made by tools/frames/rife_pair.py from two painted pictures), played back and forth by
+        /// the distance it has moved, with a small step bob. Standing still it keeps whatever sprite the scene gave it.
+        /// </summary>
+        public class WalkFrames : MonoBehaviour
+        {
+            public SpriteRenderer r; public Sprite[] frames; public float stride = 0.8f;
+            Vector3 last; float walked, baseY; bool started;
+            void LateUpdate()
+            {
+                if (r == null || frames == null || frames.Length < 2) return;
+                Vector3 p = transform.position;
+                if (!started) { started = true; last = p; baseY = r.transform.localPosition.y; return; }
+                float d = Mathf.Abs(p.x - last.x); last = p;
+                if (d < 1e-5f) return;
+                walked += d;
+                float ph = walked / Mathf.Max(0.05f, stride);
+                int n = frames.Length - 1;
+                r.sprite = frames[Mathf.Clamp(Mathf.RoundToInt(Mathf.PingPong(ph * n, n)), 0, n)];
+                var lp = r.transform.localPosition;
+                r.transform.localPosition = new Vector3(lp.x, baseY + Mathf.Abs(Mathf.Sin(ph * Mathf.PI)) * 0.03f / Mathf.Max(0.01f, Mathf.Abs(r.transform.lossyScale.y)) * Mathf.Abs(r.transform.localScale.y), lp.z);
+            }
+        }
+
+        /// <summary>Gives <paramref name="r"/> its step frames (Art/&lt;folder&gt;/&lt;name&gt;_step1..) if they are painted.</summary>
+        public static void AddWalk(SpriteRenderer r, string folder, string name, float stride = 0.8f)
+        {
+            if (r == null || r.sprite == null) return;
+            var b = r.sprite; var list = new List<Sprite> { b };
+            for (int i = 1; i < 12; i++)
+            {
+                var tex = Resources.Load<Texture2D>("Art/" + folder + "/" + name + "_step" + i);
+                if (tex == null) break;
+                var sp = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(b.pivot.x / b.rect.width, b.pivot.y / b.rect.height), b.pixelsPerUnit * tex.width / b.rect.width);
+                sp.name = b.name; list.Add(sp);
+            }
+            if (list.Count < 2) return;
+            var w = r.gameObject.AddComponent<WalkFrames>(); w.r = r; w.frames = list.ToArray(); w.stride = stride;
         }
 
         // ------------------------------------------------------------------ bus (Cover)
@@ -146,6 +189,7 @@ namespace Sheytoonak.Prototype
                 var r = Spr(busArt, root, new Vector3(0f, 0f, -w * 0.5f), h);
                 r.flipX = !busArt.name.StartsWith("cart"); // caravan and hay wagon are painted facing left; all come in from the left
                 AddWheels(r, busArt.name);
+                AddWalk(r, "Poison", busArt.name, 1.1f);
                 // parked on a hidden (unbroken) window: the middle of the covered run can fall on broken glass between two
                 // covered windows, so the covered window nearest that middle is the parking spot
                 float mid = (xMin + xMax) * 0.5f, parkX = mid, bestD = float.MaxValue;

@@ -587,7 +587,9 @@ namespace Sheytoonak
                         // user (2026-11-18): the pedestrians got RIFE in-betweens like the heroes (two between every painted
                         // pair, tools/frames/rife_peds.py), so a long set plays three times as fast: the stride lasts the same
                         m.frame += Time.deltaTime * walkFps * (m.frames.Count > 8 ? 3f : 1f);
-                        m.sr.sprite = m.frames[(int)m.frame % m.frames.Count];
+                        // road traffic has two painted poses and the in-betweens (a..d): there and back, not round
+                        if (m.traffic) m.sr.sprite = m.frames[Mathf.Clamp(Mathf.RoundToInt(Mathf.PingPong(m.frame * 0.6f, m.frames.Count - 1)), 0, m.frames.Count - 1)];
+                        else m.sr.sprite = m.frames[(int)m.frame % m.frames.Count];
                     }
                     // user (2026-11-04): «حرکت عابر پیاده هنوز مصنوعیه». The rocking tilt looked like a toy: gone. The step bob
                     // now follows the walking speed (two steps per stride, ~0.7 m a step) and is a little smaller; a real walk

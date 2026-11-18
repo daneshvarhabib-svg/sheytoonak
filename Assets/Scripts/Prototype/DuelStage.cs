@@ -611,6 +611,7 @@ namespace Sheytoonak.Prototype
             var sp = Sprite.Create(truckT, new Rect(0, 0, truckT.width, truckT.height), new Vector2(0.5f, 0f), 100f);
             var truck = new GameObject("Sweeper").AddComponent<SpriteRenderer>();
             truck.sprite = sp;
+            PoisonProps.AddWalk(truck, "Props", "sweeper");
             float k = 2.1f / Mathf.Max(0.01f, sp.bounds.size.y); // medieval repaint: a man with a barrow and a palm broom
             truck.transform.localScale = new Vector3(fromLeft ? -k : k, k, k);
             float z = first.position.z - 0.6f;
