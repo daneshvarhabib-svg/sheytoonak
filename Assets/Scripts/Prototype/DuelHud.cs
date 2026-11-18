@@ -462,7 +462,8 @@ namespace Sheytoonak.Prototype
         /// <summary>Icons that are painted (full colour, from the ChatGPT sheet) are never tinted, only faded.</summary>
         static readonly System.Collections.Generic.HashSet<string> Painted = new System.Collections.Generic.HashSet<string>
             { "pigeon","bus","wind","carpet","rug_push","puddle","nails","vane","plank","fart","rage","pass","surrender","window","shards","curse","clock","replay",
-              "truck","cart","rain","complaint","umbrella","flashlight","net" };
+              "truck","cart","rain","complaint","umbrella","flashlight","net",
+              "bag","ban","duel","heart","home","kick","pick","trophy" }; // photographed 2026-11-18: full colour, never tinted
 
         public static bool ShowWindowValues = false;
 
