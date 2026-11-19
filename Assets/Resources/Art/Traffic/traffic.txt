@@ -1,8 +1,8 @@
 # name height(m) speed(m/s) pictureWidth [wheelPicture:radius:cx:cy:front|back ...]  (pixels of the saved picture, y down)
-# What passes on the road in place of the cars (medieval, 2026-11-18). Pictures face LEFT. name.png alone, or name_a.. name_d as step frames.
-horseman 2.7 3.0 710
+# What passes on the road in place of the cars (medieval, 2026-11-18). Pictures face LEFT. name.png alone, or name_a.. as step frames: four = two poses with in-betweens (there and back), six = a whole walking cycle (round).
+horseman 2.7 3.0 521
 carriage 2.9 2.6 1268 truck_wheel:100:646:435:front truck_wheel:127:1148:408:front truck_wheel:86:533:430:back truck_wheel:112:1023:405:back
-shepherd 1.9 1.1 1148
-litter 2.3 1.5 1043
+shepherd 1.9 1.1 686
+litter 2.3 1.5 485
 porter_cart 2.0 1.6 782 cart_wheel:108:584:499:front cart_wheel:82:462:472:back
 donkey_cart 2.0 1.4 1076 cart_wheel:73:900:418:front cart_wheel:60:745:386:back

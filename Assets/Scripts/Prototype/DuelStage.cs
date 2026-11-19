@@ -1032,7 +1032,15 @@ namespace Sheytoonak.Prototype
             var down = PoisonProps.Picture("tanker_1"); var up = r.sprite;
             if (down != null) r.sprite = down;
             Vector3 s0 = puddle != null ? puddle.transform.localScale : Vector3.one;
-            for (float k = 0f; k < 1f; k += Time.deltaTime / 1.6f) { if (puddle != null) puddle.transform.localScale = s0 * (1f - k); yield return null; }
+            // six pictures of him pouring among his animals (user 2026-11-19), six a second while the puddle goes
+            var pour = new List<Sprite>();
+            for (int i = 1; i < 12; i++) { var ps = PoisonProps.Picture("tanker_1_pour" + i); if (ps == null) break; pour.Add(ps); }
+            for (float k = 0f; k < 1f; k += Time.deltaTime / 1.6f)
+            {
+                if (pour.Count > 1 && r != null) r.sprite = pour[(int)(k * 1.6f * 6f) % pour.Count];
+                if (puddle != null) puddle.transform.localScale = s0 * (1f - k);
+                yield return null;
+            }
             if (puddle != null) puddle.SetActive(false);
             yield return new WaitForSeconds(0.2f);
             r.sprite = up;

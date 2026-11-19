@@ -107,6 +107,8 @@ namespace Sheytoonak.Prototype
         public class WalkFrames : MonoBehaviour
         {
             public SpriteRenderer r; public Sprite[] frames; public float stride = 0.8f;
+            /// <summary>The frames are one whole walking cycle (name_walk1.., a six-pose sheet): played round, two steps a turn.</summary>
+            public bool loop;
             Vector3 last; float walked, baseY; bool started;
             void LateUpdate()
             {
@@ -118,7 +120,8 @@ namespace Sheytoonak.Prototype
                 walked += d;
                 float ph = walked / Mathf.Max(0.05f, stride);
                 int n = frames.Length - 1;
-                r.sprite = frames[Mathf.Clamp(Mathf.RoundToInt(Mathf.PingPong(ph * n, n)), 0, n)];
+                if (loop) r.sprite = frames[(int)(Mathf.Repeat(ph * 0.5f, 1f) * frames.Length) % frames.Length];
+                else r.sprite = frames[Mathf.Clamp(Mathf.RoundToInt(Mathf.PingPong(ph * n, n)), 0, n)];
                 var lp = r.transform.localPosition;
                 r.transform.localPosition = new Vector3(lp.x, baseY + Mathf.Abs(Mathf.Sin(ph * Mathf.PI)) * 0.03f / Mathf.Max(0.01f, Mathf.Abs(r.transform.lossyScale.y)) * Mathf.Abs(r.transform.localScale.y), lp.z);
             }
@@ -129,6 +132,20 @@ namespace Sheytoonak.Prototype
         {
             if (r == null || r.sprite == null) return;
             var b = r.sprite; var list = new List<Sprite> { b };
+            // a six-pose sheet (user 2026-11-19), cut on one canvas with the base picture: name_walk1.. is the whole cycle
+            var cyc = new List<Sprite>();
+            for (int i = 1; i < 12; i++)
+            {
+                var tex = Resources.Load<Texture2D>("Art/" + folder + "/" + name + "_walk" + i);
+                if (tex == null) break;
+                var sp = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(b.pivot.x / b.rect.width, b.pivot.y / b.rect.height), b.pixelsPerUnit * tex.width / b.rect.width);
+                sp.name = b.name; cyc.Add(sp);
+            }
+            if (cyc.Count >= 2)
+            {
+                var wc = r.gameObject.AddComponent<WalkFrames>(); wc.r = r; wc.frames = cyc.ToArray(); wc.stride = stride; wc.loop = true;
+                return;
+            }
             for (int i = 1; i < 12; i++)
             {
                 var tex = Resources.Load<Texture2D>("Art/" + folder + "/" + name + "_step" + i);

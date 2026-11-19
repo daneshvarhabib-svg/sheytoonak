@@ -210,7 +210,9 @@ namespace Sheytoonak
                         if (med == null) yield break;
                         walked += Time.deltaTime * pace;
                         float ph = walked / 0.75f;                // one step every 0.75 m
-                        mr.sprite = fr[Mathf.Clamp(Mathf.RoundToInt(Mathf.PingPong(ph * (fr.Count - 1), fr.Count - 1)), 0, fr.Count - 1)];
+                        // six painted frames (2026-11-19) are a whole cycle of two steps, played round
+                        if (fr.Count >= 6) mr.sprite = fr[(int)(Mathf.Repeat(ph * 0.5f, 1f) * fr.Count) % fr.Count];
+                        else mr.sprite = fr[Mathf.Clamp(Mathf.RoundToInt(Mathf.PingPong(ph * (fr.Count - 1), fr.Count - 1)), 0, fr.Count - 1)];
                         med.position = new Vector3(Mathf.Lerp(from, to, k), Mathf.Abs(Mathf.Sin(ph * Mathf.PI)) * 0.035f, mz);
                         yield return null;
                     }
@@ -669,10 +671,16 @@ namespace Sheytoonak
                     {
                         // user (2026-11-18): the pedestrians got RIFE in-betweens like the heroes (two between every painted
                         // pair, tools/frames/rife_peds.py), so a long set plays three times as fast: the stride lasts the same
-                        m.frame += Time.deltaTime * walkFps * (m.frames.Count > 8 ? 3f : 1f);
-                        // road traffic has two painted poses and the in-betweens (a..d): there and back, not round
-                        if (m.traffic) m.sr.sprite = m.frames[Mathf.Clamp(Mathf.RoundToInt(Mathf.PingPong(m.frame * 0.6f, m.frames.Count - 1)), 0, m.frames.Count - 1)];
-                        else m.sr.sprite = m.frames[(int)m.frame % m.frames.Count];
+                        // User (2026-11-19): «هنوز راه رفتن عابرا درست نیست. پاهاشون خوب تکون نمیخوره ... واسه هر کدوم تصویر شیش
+                        // تایی بگیریم». The frames now follow the ground covered, not the clock, so a foot on the ground stays
+                        // where it is: six frames or more are one whole walking cycle (two steps) played round; fewer are two
+                        // painted poses with in-betweens (a..d), one step there and one back.
+                        float tall = m.sr.sprite != null ? m.sr.bounds.size.y : 1.7f;
+                        float cycle = m.traffic ? 1.5f : Mathf.Clamp(tall * 0.8f, 0.8f, 1.6f); // metres per two steps
+                        m.frame += Mathf.Abs(m.speed) * Time.deltaTime / cycle;                 // in cycles
+                        int n = m.frames.Count;
+                        if (n >= 6) m.sr.sprite = m.frames[(int)(Mathf.Repeat(m.frame, 1f) * n) % n];
+                        else m.sr.sprite = m.frames[Mathf.Clamp(Mathf.RoundToInt(Mathf.PingPong(m.frame * 2f * (n - 1), n - 1)), 0, n - 1)];
                     }
                     // user (2026-11-04): «حرکت عابر پیاده هنوز مصنوعیه». The rocking tilt looked like a toy: gone. The step bob
                     // now follows the walking speed (two steps per stride, ~0.7 m a step) and is a little smaller; a real walk
