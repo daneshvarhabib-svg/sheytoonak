@@ -50,6 +50,21 @@ namespace Sheytoonak.Core.Bags
 
         // ------------------------------------------------------------------ the special offer (half price, 3 days)
 
+        /// <summary>
+        /// Telegram Stars price of a money pack (user 2026-11-19: «با استار تلگرام بخرنش فعلا. بعدا که اپش منتشر شد واحدهای دیگه رو هم می‌دیم»).
+        /// A star costs the buyer about two cents, so $0.99 is 50 stars. ⚠️ server/stars/worker.js keeps the same table.
+        /// </summary>
+        public static int StarsFor(int usdCents) => (usdCents + 1) / 2;
+
+        /// <summary>Stars price of a money sku of the shop («special_a_full» is the crossed-out one); 0 when it is not one.</summary>
+        public static int StarsOf(string sku)
+        {
+            bool full = sku.EndsWith("_full"); if (full) sku = sku.Substring(0, sku.Length - 5);
+            foreach (var p in LiraPacks) if (p.Sku == sku) return StarsFor(p.PriceCents);
+            foreach (var p in Specials) if (p.Sku == sku) return StarsFor(full ? p.FullCents : p.PriceCents);
+            return 0;
+        }
+
         public struct Special { public string Sku; public BagSize Bag; public int Shards; public int PriceCents, FullCents; public DateTime EndsUtc; }
         public const int SpecialDays = 3;
         static readonly Special[] Specials =

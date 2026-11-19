@@ -37,5 +37,20 @@ mergeInto(LibraryManager.library, {
       w.shareToStory(media, { text: UTF8ToString(text), widget_link: { url: UTF8ToString(link), name: UTF8ToString(linkName) } });
       return 1;
     } catch (e) { return 0; }
-  }
+  },
+  // Telegram Stars: our small server (server/stars) makes the invoice link with the bot's token; Telegram's own sheet charges.
+  // The answer is polled by SheytoonakTgPayState: 0 waiting, 1 paid, 2 not paid.
+  SheytoonakTgPay: function (backend, sku) {
+    try {
+      var w = window.Telegram && window.Telegram.WebApp;
+      window.__sheyPay = 0;
+      if (!w || !w.initData || !w.openInvoice) { window.__sheyPay = 2; return; }
+      var url = UTF8ToString(backend) + '/invoice?sku=' + encodeURIComponent(UTF8ToString(sku)) + '&init=' + encodeURIComponent(w.initData);
+      fetch(url).then(function (r) { return r.json(); }).then(function (j) {
+        if (!j || !j.link) { window.__sheyPay = 2; return; }
+        w.openInvoice(j.link, function (status) { window.__sheyPay = status === 'paid' ? 1 : 2; });
+      }).catch(function () { window.__sheyPay = 2; });
+    } catch (e) { window.__sheyPay = 2; }
+  },
+  SheytoonakTgPayState: function () { return window.__sheyPay | 0; }
 });

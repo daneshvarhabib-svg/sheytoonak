@@ -1,4 +1,7 @@
+using System;
+using System.Collections;
 using System.Runtime.InteropServices;
+using UnityEngine;
 
 namespace Sheytoonak
 {
@@ -13,6 +16,19 @@ namespace Sheytoonak
         public const string BotUsername = "MadinatAlFajiaBot";
         /// <summary>start parameter of an invite: "r_" + the inviter's Telegram id.</summary>
         public const string RefPrefix = "r_";
+
+        /// <summary>
+        /// Address of our Stars server (server/stars, no trailing slash). ⚠️ Empty until the owner has put the worker up with the bot's
+        /// token as its secret: until then every money button stays «قريباً» and nothing can be charged.
+        /// </summary>
+        public const string StarsBackend = "";
+
+        /// <summary>«٥٠ نجمة» for a money sku of the shop, or null when it is not one.</summary>
+        public static string StarsText(string sku)
+        {
+            int n = Sheytoonak.Core.Bags.ShopCatalog.StarsOf(sku);
+            return n > 0 ? Ar.T(n + " نجمة") : null;
+        }
 
         /// <summary>The invite link of this player (empty outside Telegram).</summary>
         public static string InviteLink => string.IsNullOrEmpty(UserId) ? "" : "https://t.me/" + BotUsername + "?startapp=" + RefPrefix + UserId;
@@ -30,6 +46,39 @@ namespace Sheytoonak
         }
 
 #if UNITY_WEBGL && !UNITY_EDITOR
+        [DllImport("__Internal")] static extern void SheytoonakTgPay(string backend, string sku);
+        [DllImport("__Internal")] static extern int SheytoonakTgPayState();
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+        static void ConnectStars()
+        {
+            if (string.IsNullOrEmpty(StarsBackend) || !Inside) return;
+            var go = new GameObject("StarsPay"); UnityEngine.Object.DontDestroyOnLoad(go);
+            var runner = go.AddComponent<StarsRunner>();
+            Sheytoonak.Gameplay.Store.StorePayments.Provider = (sku, done) => runner.StartCoroutine(runner.Pay(sku, done));
+            Sheytoonak.Gameplay.Store.StorePayments.LocalPrice = StarsText;
+        }
+
+        sealed class StarsRunner : MonoBehaviour
+        {
+            bool busy;
+            public IEnumerator Pay(string sku, Action<bool> done)
+            {
+                if (busy) { done?.Invoke(false); yield break; }
+                busy = true;
+                bool sent = true;
+                try { SheytoonakTgPay(StarsBackend, sku); } catch { sent = false; }
+                int state = sent ? 0 : 2; float until = Time.realtimeSinceStartup + 600f; // the sheet may stay open while they top up stars
+                while (state == 0 && Time.realtimeSinceStartup < until)
+                {
+                    yield return null;
+                    try { state = SheytoonakTgPayState(); } catch { state = 2; }
+                }
+                busy = false;
+                done?.Invoke(state == 1);
+            }
+        }
+
         [DllImport("__Internal")] static extern void SheytoonakTgHaptic(int strength);
         [DllImport("__Internal")] static extern int SheytoonakTgInside();
         [DllImport("__Internal")] static extern string SheytoonakTgStartParam();

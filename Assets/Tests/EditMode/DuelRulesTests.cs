@@ -32,6 +32,16 @@ namespace Sheytoonak.Tests
 
         // User (2026-11-19): «هر تیله بیست تا خرده شیشه است».
         [Test]
+        public void Every_money_pack_has_a_star_price()
+        {
+            Assert.AreEqual(50, Sheytoonak.Core.Bags.ShopCatalog.StarsOf("lira_200"));
+            Assert.AreEqual(1000, Sheytoonak.Core.Bags.ShopCatalog.StarsOf("lira_6500"));
+            Assert.AreEqual(500, Sheytoonak.Core.Bags.ShopCatalog.StarsOf("special_a"));
+            Assert.AreEqual(1000, Sheytoonak.Core.Bags.ShopCatalog.StarsOf("special_a_full"));
+            Assert.AreEqual(0, Sheytoonak.Core.Bags.ShopCatalog.StarsOf("nothing"));
+        }
+
+        [Test]
         public void A_marble_always_breaks_into_twenty_shards()
         {
             Assert.AreEqual(20, Sheytoonak.Core.Bags.ShopCatalog.ShardsPerMarble);
