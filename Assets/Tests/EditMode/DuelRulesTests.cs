@@ -32,6 +32,31 @@ namespace Sheytoonak.Tests
 
         // User (2026-11-19): «هر تیله بیست تا خرده شیشه است».
         [Test]
+        public void Daily_missions_count_pay_once_and_reset_with_the_day()
+        {
+            var day = new System.DateTime(2026, 11, 19);
+            var jobs = Sheytoonak.Core.Missions.DailyMissions.For(day);
+            Assert.AreEqual(3, jobs.Length);
+            Assert.AreNotEqual(jobs[0].Kind, jobs[1].Kind); Assert.AreNotEqual(jobs[1].Kind, jobs[2].Kind); Assert.AreNotEqual(jobs[0].Kind, jobs[2].Kind);
+            Assert.AreEqual(jobs[0].Kind, Sheytoonak.Core.Missions.DailyMissions.For(day)[0].Kind);
+            var m = new Sheytoonak.Core.Missions.DailyMissions();
+            Assert.AreEqual(0, m.Claim(0, day));
+            Assert.IsFalse(m.AnyReady(day));
+            for (int i = 0; i < 3; i++) m.Note(jobs[i].Kind, jobs[i].Goal + 5, day);
+            Assert.AreEqual(jobs[1].Goal, m.Progress(1, day));
+            Assert.IsTrue(m.AnyReady(day));
+            Assert.AreEqual(0, m.ClaimBonus(day), "the three prizes first");
+            m = Sheytoonak.Core.Missions.DailyMissions.Parse(m.Serialize());
+            for (int i = 0; i < 3; i++) { Assert.AreEqual(jobs[i].Shards, m.Claim(i, day)); Assert.AreEqual(0, m.Claim(i, day)); }
+            Assert.AreEqual(Sheytoonak.Core.Missions.DailyMissions.BonusMarbles, m.ClaimBonus(day));
+            Assert.AreEqual(0, m.ClaimBonus(day));
+            Assert.IsFalse(m.AnyReady(day));
+            var next = day.AddDays(1);
+            Assert.AreEqual(0, m.Progress(0, next));
+            Assert.IsFalse(m.Claimed(0, next));
+        }
+
+        [Test]
         public void Every_money_pack_has_a_star_price()
         {
             Assert.AreEqual(50, Sheytoonak.Core.Bags.ShopCatalog.StarsOf("lira_200"));

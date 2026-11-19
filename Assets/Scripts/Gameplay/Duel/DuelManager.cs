@@ -346,6 +346,7 @@ namespace Sheytoonak
                 Levels.AddCards(c.Value.UpgradeCards);
                 SaveLevels();
                 SaveBags();
+                NoteMission(Sheytoonak.Core.Missions.MissionKind.OpenBags);
                 BagOpened?.Invoke(slot, c.Value.Shards, c.Value.UpgradeCards);
                 return true;
             }
@@ -489,6 +490,31 @@ namespace Sheytoonak
         // ------------------------------------------------------------------ «تركيبة اليوم» (research proposal 39)
         /// <summary>A line on the duel's own toast (the HUD draws it), for the stage and the bootstrap.</summary>
         public void Say(string text, float seconds) => Toast?.Invoke(text, seconds);
+
+        // ---- «مهمّات اليوم»: three jobs a day, counted on the phone (Core/Missions)
+        const string PrefMissions = "sheytoonak.missions";
+        Sheytoonak.Core.Missions.DailyMissions missions;
+        public Sheytoonak.Core.Missions.DailyMissions Missions => missions ?? (missions = Sheytoonak.Core.Missions.DailyMissions.Parse(PlayerPrefs.GetString(PrefMissions, "")));
+        void SaveMissions() { PlayerPrefs.SetString(PrefMissions, Missions.Serialize()); PlayerPrefs.Save(); }
+        void NoteMission(Sheytoonak.Core.Missions.MissionKind kind, int n = 1)
+        {
+            if (Missions.Note(kind, n, ShopDay)) Toast?.Invoke(Ar.MissionDone, 1.8f);
+            SaveMissions();
+        }
+        /// <summary>Takes the shards of a finished job.</summary>
+        public int ClaimMission(int i)
+        {
+            int got = Missions.Claim(i, ShopDay);
+            if (got > 0) { ShardBank += got; PlayerPrefs.SetInt(PrefShards, ShardBank); SaveMissions(); }
+            return got;
+        }
+        /// <summary>Takes the marbles for all three.</summary>
+        public int ClaimMissionBonus()
+        {
+            int got = Missions.ClaimBonus(ShopDay);
+            if (got > 0) { LiraBank += got; SaveMissions(); }
+            return got;
+        }
 
         const string PrefCombo = "sheytoonak.combo.claimed";
         public event Action<int> ComboWon; // shards paid
@@ -683,6 +709,8 @@ namespace Sheytoonak
             // Review 2026-11-07 §2.6: no timers — the bag you tapped opens with your next win.
             if (winner == Me && !Rules.Draw) Bags.AddFromWin();
             if (winner == Me && !Rules.Draw) ClaimCombo();
+            NoteMission(Sheytoonak.Core.Missions.MissionKind.PlayDuels);
+            if (winner == Me && !Rules.Draw) NoteMission(Sheytoonak.Core.Missions.MissionKind.WinDuels);
             SaveBags();
             ball.Hide();
             Finished?.Invoke(winner, winner == Me && !Rules.Draw);
@@ -740,13 +768,13 @@ namespace Sheytoonak
             {
                 int[] targets = TargetsFor(h.Poison);
                 var r = Rules.Poison(s, h.Poison, targets);
-                if (r == ActionReject.None) { Rules.NoteActivity(s); Pop?.Invoke(h.Poison.Id, s, PopKind.Poison); }
+                if (r == ActionReject.None) { Rules.NoteActivity(s); Pop?.Invoke(h.Poison.Id, s, PopKind.Poison); if (s == Me) NoteMission(Sheytoonak.Core.Missions.MissionKind.UsePoisons); }
                 return r;
             }
             else
             {
                 var r = Rules.Antidote(s, h.Antidote);
-                if (r == ActionReject.None) { Rules.NoteActivity(s); Pop?.Invoke(h.Antidote.Id, s, PopKind.Antidote); }
+                if (r == ActionReject.None) { Rules.NoteActivity(s); Pop?.Invoke(h.Antidote.Id, s, PopKind.Antidote); if (s == Me) NoteMission(Sheytoonak.Core.Missions.MissionKind.UseAntidotes); }
                 else if (r == ActionReject.NoTarget && s == Me) Toast?.Invoke(Ar.NothingToClear, 1.3f);
                 else if (r == ActionReject.TooWeak && s == Me) Toast?.Invoke(Ar.TooWeak, 1.6f);
                 return r;
@@ -1265,6 +1293,7 @@ namespace Sheytoonak
                 {
                     ball.Hide();
                     if (Rules.Windows[(int)kicker] + Rules.WindowValue[w] >= Rules.Majority) FinalBlow?.Invoke(point);
+                    if (kicker == Me) NoteMission(Sheytoonak.Core.Missions.MissionKind.BreakWindows);
                     GameEvents.RaiseWindowBroken(w, point);
                     if (resolveRoutine == null) resolveRoutine = StartCoroutine(ResolveAfter(1.0f));
                     return;

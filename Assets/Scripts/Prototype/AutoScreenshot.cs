@@ -141,6 +141,9 @@ namespace Sheytoonak.Prototype
                         boot.ScrollShopForShot(0f);
                         boot.Duel.BuyOffer(1);
                         yield return Shot("16-shop-bought", 1.4f);
+                        boot.DismissLootForShot();
+                        boot.ShowMissionsFromScript();
+                        yield return Shot("17-missions", 0.6f);
                     }
                     else
                     {

@@ -463,7 +463,8 @@ namespace Sheytoonak.Prototype
         static readonly System.Collections.Generic.HashSet<string> Painted = new System.Collections.Generic.HashSet<string>
             { "pigeon","bus","wind","carpet","rug_push","puddle","nails","vane","plank","fart","rage","pass","surrender","window","shards","curse","clock","replay",
               "truck","cart","rain","complaint","umbrella","flashlight","net",
-              "bag","ban","duel","heart","home","kick","pick","trophy" }; // photographed 2026-11-18: full colour, never tinted
+              "bag","ban","duel","heart","home","kick","pick","trophy",
+              "hub_duel","hub_challenge","hub_shop","hub_alliance","hub_missions","hub_jar","hub_chest","hub_season" }; // photographed 2026-11-18: full colour, never tinted
 
         public static bool ShowWindowValues = false;
 

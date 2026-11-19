@@ -86,6 +86,25 @@ namespace Sheytoonak
         public const string Story = "حطّها بالستوري";
         public const string StoryText = "كسّرت شبابيك الحارة كلها! تعال جرّب.";
         public const string StoryOld = "حدّث تلغرام لتنشر بالستوري";
+        public const string MissionsTitle = "مهمّات اليوم";
+        public const string MissionDone = "خلصت مهمّة!";
+        public const string MissionTake = "خُذ";
+        public const string MissionTaken = "أخدتها";
+        public const string MissionAll = "الثلاثة كلّها";
+        /// <summary>Text of one job of the day; {0} is its goal.</summary>
+        public static string MissionText(Sheytoonak.Core.Missions.MissionKind k, int goal)
+        {
+            string n = goal.ToString();
+            switch (k)
+            {
+                case Sheytoonak.Core.Missions.MissionKind.PlayDuels: return "العب " + n + " مبارزات";
+                case Sheytoonak.Core.Missions.MissionKind.WinDuels: return "اربح " + n + " مبارزات";
+                case Sheytoonak.Core.Missions.MissionKind.BreakWindows: return "اكسر " + n + " شبابيك";
+                case Sheytoonak.Core.Missions.MissionKind.UsePoisons: return "ارمِ " + n + " سموم";
+                case Sheytoonak.Core.Missions.MissionKind.UseAntidotes: return "استعمل " + n + " ترياق";
+                default: return "افتح " + n + " كيس";
+            }
+        }
         public const string ComboTitle = "تركيبة اليوم";
         public const string ComboDone = "أخدتها اليوم";
         public const string ComboWon = "تركيبة اليوم! +";

@@ -1714,6 +1714,10 @@ namespace Sheytoonak.Prototype
             {
                 HeroesScreen(u, big);
             }
+            else if (showStart && duel && showMissions)
+            {
+                MissionsScreen(u, big);
+            }
             else if (showStart && duel && showShop)
             {
                 ShopScreen(u, big);
@@ -1820,9 +1824,9 @@ namespace Sheytoonak.Prototype
             float bw = Mathf.Min(230 * u, Screen.width * 0.18f), bh = bw * 0.62f, by = ribR.yMax + 18 * u;
             var duelR = new Rect(Screen.width * 0.5f + 10 * u, by, bw, bh);
             var chalR = new Rect(Screen.width * 0.5f - 10 * u - bw, by, bw, bh);
-            if (BigButton(duelR, "btn_orange", "duel", "مبارزة", true, u)) StartGameFromScript();
+            if (BigButton(duelR, "btn_orange", "hub_duel", "مبارزة", true, u)) StartGameFromScript();
             bool can = duelGame.CanEnterChallenge;
-            if (BigButton(chalR, "btn_blue", "trophy", "تحدّي", can, u))
+            if (BigButton(chalR, "btn_blue", "hub_challenge", "تحدّي", can, u))
             {
                 showStart = false; endTitle = null; touch?.IgnoreFor(0.5f); duelGame.PlayChallenge();
             }
@@ -1843,7 +1847,13 @@ namespace Sheytoonak.Prototype
 
             // side buttons: what is planned (docs/RESEARCH.fa.md queue), honest about not being there yet
             float sbw = Mathf.Min(200 * u, Screen.width * 0.15f), sbh = sbw * 0.62f;
-            SideSoon(new Rect(pad, top + barH + 30 * u, sbw, sbh), "btn_green", "pick", "مهمّات", u);
+            var misR = new Rect(pad, top + barH + 30 * u, sbw, sbh);
+            if (BigButton(misR, "btn_green", "hub_missions", "مهمّات", true, u)) { showMissions = true; touch?.IgnoreFor(0.4f); }
+            if (duelGame.Missions.AnyReady(DuelManager.ShopDay))
+            {
+                var o = GUI.color; GUI.color = new Color(0.95f, 0.2f, 0.15f);
+                GUI.DrawTexture(new Rect(misR.xMax - 26 * u, misR.y - 6 * u, 26 * u, 26 * u), DotTex()); GUI.color = o;
+            }
             // the heroes screen: levels of every poison and antidote (SCENARIO §8). A dot when something can be upgraded now.
             var heroesR = new Rect(Screen.width - pad - sbw, top + barH + 30 * u, sbw, sbh);
             if (BigButton(heroesR, "btn_red", "duel", Ar.Heroes, true, u)) { showHeroes = true; heroesScroll = Vector2.zero; touch?.IgnoreFor(0.4f); }
@@ -1854,13 +1864,13 @@ namespace Sheytoonak.Prototype
             }
             // the shop (2026-11-11): a red dot while today's free pile is still there
             var shopR = new Rect(pad, Screen.height - sbh - pad, sbw, sbh);
-            if (BigButton(shopR, "btn_orange", "shards", "دكّان", true, u)) { showShop = true; shopScroll = Vector2.zero; touch?.IgnoreFor(0.4f); }
+            if (BigButton(shopR, "btn_orange", "hub_shop", "دكّان", true, u)) { showShop = true; shopScroll = Vector2.zero; touch?.IgnoreFor(0.4f); }
             if (!duelGame.Shop.Bought(DuelManager.ShopDay, 0))
             {
                 var o = GUI.color; GUI.color = new Color(0.95f, 0.2f, 0.15f);
                 GUI.DrawTexture(new Rect(shopR.xMax - 26 * u, shopR.y - 6 * u, 26 * u, 26 * u), DotTex()); GUI.color = o;
             }
-            SideSoon(new Rect(Screen.width - pad - sbw, Screen.height - sbh - pad, sbw, sbh), "btn_blue", "trophy", "الحارة", u);
+            SideSoon(new Rect(Screen.width - pad - sbw, Screen.height - sbh - pad, sbw, sbh), "btn_blue", "hub_alliance", "الحارة", u);
             ComboCard(new Rect(pad, top + barH + 30 * u + sbh + 18 * u, sbw * 1.1f, Mathf.Max(60 * u, (Screen.height - sbh - pad) - (top + barH + 30 * u + sbh + 18 * u) - 18 * u)), u);
 
             // the bag rack sits in a dark panel along the bottom
@@ -1910,8 +1920,95 @@ namespace Sheytoonak.Prototype
         // ------------------------------------------------------------------ heroes: levels (SCENARIO §8)
 
         bool showHeroes; Vector2 heroesScroll;
+        bool showMissions;
+        public void ShowMissionsFromScript() { showStart = true; showHeroes = false; showShop = false; showMissions = true; }
+
+        /// <summary>
+        /// «مهمّات اليوم» (2026-11-19): three rows on painted panels: the job, a bar of how far it is, its shards and a «take»
+        /// button when finished; under them the marbles for all three and the time left until the jobs change (Tehran midnight).
+        /// </summary>
+        void MissionsScreen(float u, GUIStyle big)
+        {
+            HomeBackdrop();
+            float pad = 14 * u, top = pad + SafeTop(), barH = 58 * u;
+            var num = new GUIStyle(big) { fontSize = Mathf.RoundToInt(26 * u), alignment = TextAnchor.MiddleCenter };
+            var small = new GUIStyle(num) { fontSize = Mathf.RoundToInt(20 * u), fontStyle = FontStyle.Normal };
+            var backR = new Rect(pad, top, Mathf.Min(170 * u, Screen.width * 0.15f), barH);
+            Plank(backR);
+            if (GUI.Button(backR, Ar.T("رجوع"), num)) { showMissions = false; touch?.IgnoreFor(0.4f); return; }
+            float barW = Mathf.Min(230 * u, Screen.width * 0.18f);
+            var shardsR = new Rect(Screen.width - pad - barW, top, barW, barH);
+            var liraR = new Rect(shardsR.x - 10 * u - barW, top, barW, barH);
+            Plank(shardsR); Plank(liraR);
+            DuelHud.DrawIcon(new Rect(shardsR.xMax - barH * 0.95f, top + barH * 0.12f, barH * 0.76f, barH * 0.76f), "shards", Color.white);
+            GUI.Label(new Rect(shardsR.x + 10 * u, top, shardsR.width - barH, barH), Ar.N(duelGame.ShardBank), num);
+            LiraCoin(new Rect(liraR.xMax - barH * 0.9f, top + barH * 0.15f, barH * 0.7f, barH * 0.7f), u);
+            GUI.Label(new Rect(liraR.x + 10 * u, top, liraR.width - barH, barH), Ar.N(duelGame.LiraBank), num);
+            var titleR = new Rect(backR.xMax + 12 * u, top, liraR.x - backR.xMax - 24 * u, barH);
+            var gold = new GUIStyle(num); gold.normal.textColor = new Color(1f, 0.85f, 0.4f);
+            var left = DuelManager.ShopDay.AddDays(1) - System.DateTime.UtcNow.AddHours(3.5);
+            GUI.Label(titleR, Ar.T(Ar.MissionsTitle) + "   " + Ar.N(Mathf.Max(0, (int)left.TotalHours)) + ":" + Ar.N(Mathf.Max(0, left.Minutes)).PadLeft(2, '٠'), gold);
+
+            var day = DuelManager.ShopDay;
+            var jobs = Sheytoonak.Core.Missions.DailyMissions.For(day);
+            var ms = duelGame.Missions;
+            var panel = DuelHud.Kit("panel");
+            float rowW = Mathf.Min(Screen.width - 2 * pad, 900 * u), x0 = (Screen.width - rowW) * 0.5f;
+            float y0 = top + barH + 14 * u, gap = 10 * u;
+            float rowH = Mathf.Min(96 * u, (Screen.height - y0 - pad - gap * 3) / 4f);
+            var ink = new GUIStyle(small) { alignment = TextAnchor.MiddleRight, fontSize = Mathf.RoundToInt(rowH * 0.27f), fontStyle = FontStyle.Bold };
+            ink.normal.textColor = Color.white;
+            var prize = new GUIStyle(small) { alignment = TextAnchor.MiddleRight, fontSize = Mathf.RoundToInt(rowH * 0.25f) };
+            for (int i = 0; i <= jobs.Length; i++)
+            {
+                bool bonus = i == jobs.Length;
+                var r = new Rect(x0, y0 + i * (rowH + gap), rowW, rowH);
+                if (panel != null) GUI.DrawTexture(r, panel, ScaleMode.StretchToFill);
+                else { var o0 = GUI.color; GUI.color = new Color(0f, 0f, 0f, 0.6f); GUI.DrawTexture(r, Texture2D.whiteTexture); GUI.color = o0; }
+                float bw = rowH * 1.5f, bh = rowH * 0.62f, inx = rowH * 0.3f;
+                var btn = new Rect(r.x + inx, r.center.y - bh * 0.5f, bw, bh);
+                // the prize, left of the text (a right-to-left reader meets the job first, then what it pays)
+                var pr = new Rect(btn.xMax + 14 * u, r.y, rowH * 1.5f, rowH);
+                float isz = rowH * 0.4f;
+                if (bonus) LiraCoin(new Rect(pr.xMax - isz, r.center.y - isz * 0.5f, isz, isz), u);
+                else DuelHud.DrawIcon(new Rect(pr.xMax - isz, r.center.y - isz * 0.5f, isz, isz), "shards", Color.white);
+                GUI.Label(new Rect(pr.x, r.y, pr.width - isz - 6 * u, rowH), "+" + Ar.N(bonus ? Sheytoonak.Core.Missions.DailyMissions.BonusMarbles : jobs[i].Shards), prize);
+                var tr = new Rect(pr.xMax + 10 * u, r.y + rowH * 0.12f, r.xMax - inx - pr.xMax - 10 * u, rowH * 0.42f);
+                int have, goal; bool done, taken;
+                if (bonus)
+                {
+                    goal = jobs.Length; have = 0; for (int k = 0; k < jobs.Length; k++) if (ms.Claimed(k, day)) have++;
+                    done = have >= goal; taken = ms.BonusClaimed;
+                    GUI.Label(tr, Ar.T(Ar.MissionAll), ink);
+                }
+                else
+                {
+                    goal = jobs[i].Goal; have = ms.Progress(i, day); done = ms.Done(i, day); taken = ms.Claimed(i, day);
+                    GUI.Label(tr, Ar.T(Ar.MissionText(jobs[i].Kind, goal)), ink);
+                }
+                // the bar fills from the right, like the text
+                var bar = new Rect(tr.x, r.y + rowH * 0.6f, tr.width, rowH * 0.2f);
+                var oc = GUI.color; GUI.color = new Color(0f, 0f, 0f, 0.55f); GUI.DrawTexture(bar, Texture2D.whiteTexture);
+                float f = Mathf.Clamp01(have / (float)Mathf.Max(1, goal));
+                GUI.color = done ? new Color(0.45f, 0.85f, 0.35f) : new Color(1f, 0.75f, 0.25f);
+                GUI.DrawTexture(new Rect(bar.xMax - bar.width * f, bar.y, bar.width * f, bar.height), Texture2D.whiteTexture); GUI.color = oc;
+                var cnt = new GUIStyle(small) { fontSize = Mathf.RoundToInt(bar.height * 0.85f) };
+                GUI.Label(bar, Ar.N(have) + "/" + Ar.N(goal), cnt);
+                if (taken) GUI.Label(btn, Ar.T(Ar.MissionTaken), small);
+                else
+                {
+                    MoneyButton(btn, Ar.T(Ar.MissionTake), done, u, small);
+                    if (done && GUI.Button(btn, GUIContent.none, GUIStyle.none))
+                    {
+                        if (bonus) duelGame.ClaimMissionBonus(); else duelGame.ClaimMission(i);
+                        TelegramWeb.Haptic(1); touch?.IgnoreFor(0.3f);
+                    }
+                }
+            }
+        }
+
         bool showShop; Vector2 shopScroll;
-        public void ShowShopFromScript() { showStart = true; showHeroes = false; showShop = true; }
+        public void ShowShopFromScript() { showStart = true; showHeroes = false; showMissions = false; showShop = true; }
         public void ScrollShopForShot(float y) { shopScroll = new Vector2(0f, y); }
         /// <summary>CI only: the loot reveal waits for a tap that never comes in the screenshot run.</summary>
         public void DismissLootForShot() { lootShown = false; }
