@@ -298,6 +298,23 @@ namespace Sheytoonak
             Sheytoonak.Gameplay.Store.StorePayments.Buy(p.Sku, paid => { if (paid) { LiraBank += p.Lira; ShopNote?.Invoke("+" + Ar.N(p.Lira)); } });
         }
 
+        // ---- the jar: fills with every win, bought full at half price (ShopCatalog.Jar*)
+        const string PrefJar = "sheytoonak.jar";
+        public int JarMarbles { get => PlayerPrefs.GetInt(PrefJar, 0); private set { PlayerPrefs.SetInt(PrefJar, value); PlayerPrefs.Save(); } }
+        public bool JarFull => JarMarbles >= ShopCatalog.JarCapacity;
+        /// <summary>Real money only; with no store connected it says «soon» and the jar stays as it is.</summary>
+        public void BuyJar()
+        {
+            if (!JarFull) { ShopNote?.Invoke(Ar.JarNotFull); return; }
+            if (!Sheytoonak.Gameplay.Store.StorePayments.Available) { ShopNote?.Invoke(Ar.PaySoon); return; }
+            Sheytoonak.Gameplay.Store.StorePayments.Buy(ShopCatalog.JarSku, paid =>
+            {
+                if (!paid) return;
+                LiraBank += JarMarbles; JarMarbles = 0;
+                ShopNote?.Invoke("+" + Ar.N(ShopCatalog.JarCapacity));
+            });
+        }
+
         public bool SpecialBought(ShopCatalog.Special s) => PlayerPrefs.GetString(PrefSpecial, "") == s.Sku + s.EndsUtc.Ticks;
         public void BuySpecial()
         {
@@ -711,6 +728,7 @@ namespace Sheytoonak
             if (winner == Me && !Rules.Draw) ClaimCombo();
             NoteMission(Sheytoonak.Core.Missions.MissionKind.PlayDuels);
             if (winner == Me && !Rules.Draw) NoteMission(Sheytoonak.Core.Missions.MissionKind.WinDuels);
+            if (winner == Me && !Rules.Draw) JarMarbles = ShopCatalog.JarAfterWin(JarMarbles);
             SaveBags();
             ball.Hide();
             Finished?.Invoke(winner, winner == Me && !Rules.Draw);

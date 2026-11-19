@@ -56,10 +56,20 @@ namespace Sheytoonak.Core.Bags
         /// </summary>
         public static int StarsFor(int usdCents) => (usdCents + 1) / 2;
 
+        // ---- the jar (user 2026-11-19: «اگر برنده بشه قلکی از تیله ها برات پر می‌شه که میتونی با پنجاه درصد تخفیف بخریش»).
+        // Every win drops marbles into it; a full jar is bought with real money (Stars) at half the price of the same
+        // marbles in the shop. One size, so the server can check the price without knowing the player.
+        public const string JarSku = "jar_400";
+        public const int JarCapacity = 400, JarPerWin = 25;
+        /// <summary>400 marbles cost $1.98 in packs (200 for $0.99); the jar is half of that.</summary>
+        public const int JarCents = 99, JarFullCents = 199;
+        public static int JarAfterWin(int inJar) => Math.Min(JarCapacity, Math.Max(0, inJar) + JarPerWin);
+
         /// <summary>Stars price of a money sku of the shop («special_a_full» is the crossed-out one); 0 when it is not one.</summary>
         public static int StarsOf(string sku)
         {
             bool full = sku.EndsWith("_full"); if (full) sku = sku.Substring(0, sku.Length - 5);
+            if (sku == JarSku) return StarsFor(full ? JarFullCents : JarCents);
             foreach (var p in LiraPacks) if (p.Sku == sku) return StarsFor(p.PriceCents);
             foreach (var p in Specials) if (p.Sku == sku) return StarsFor(full ? p.FullCents : p.PriceCents);
             return 0;

@@ -86,6 +86,10 @@ namespace Sheytoonak
         public const string Story = "حطّها بالستوري";
         public const string StoryText = "كسّرت شبابيك الحارة كلها! تعال جرّب.";
         public const string StoryOld = "حدّث تلغرام لتنشر بالستوري";
+        public const string JarTitle = "الحصّالة";
+        public const string JarNotFull = "الحصّالة ما امتلأت بعد";
+        public const string JarHow = "كلّ فوز يزيدها. إذا امتلأت خُذها بنصف السعر";
+        public const string JarHalf = "خصم ٥٠٪";
         public const string MissionsTitle = "مهمّات اليوم";
         public const string MissionDone = "خلصت مهمّة!";
         public const string MissionTake = "خُذ";

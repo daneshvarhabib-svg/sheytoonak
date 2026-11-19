@@ -1714,6 +1714,10 @@ namespace Sheytoonak.Prototype
             {
                 HeroesScreen(u, big);
             }
+            else if (showStart && duel && showJar)
+            {
+                JarScreen(u, big);
+            }
             else if (showStart && duel && showMissions)
             {
                 MissionsScreen(u, big);
@@ -1862,6 +1866,18 @@ namespace Sheytoonak.Prototype
                 var o = GUI.color; GUI.color = new Color(0.95f, 0.2f, 0.15f);
                 GUI.DrawTexture(new Rect(heroesR.xMax - 26 * u, heroesR.y - 6 * u, 26 * u, 26 * u), DotTex()); GUI.color = o;
             }
+            // the jar (2026-11-19): its picture fills with the wins; a dot once it is full
+            {
+                float jh = sbh * 1.25f; int jm = duelGame.JarMarbles, jc = Sheytoonak.Core.Bags.ShopCatalog.JarCapacity;
+                var jarTex = DuelHud.Kit(jm >= jc ? "jar_2" : jm * 2 >= jc ? "jar_1" : "jar_0");
+                var jr = new Rect(heroesR.center.x - jh * 0.5f, heroesR.yMax + 16 * u, jh, jh);
+                if (jarTex != null) GUI.DrawTexture(jr, jarTex, ScaleMode.ScaleToFit);
+                var jl = new Rect(heroesR.x, jr.yMax - 4 * u, heroesR.width, 26 * u);
+                var oj = GUI.color; GUI.color = new Color(0f, 0f, 0f, 0.55f); GUI.DrawTexture(jl, Texture2D.whiteTexture); GUI.color = oj;
+                GUI.Label(jl, Ar.N(jm) + "/" + Ar.N(jc), small);
+                if (jm >= jc) { GUI.color = new Color(0.95f, 0.2f, 0.15f); GUI.DrawTexture(new Rect(jr.xMax - 20 * u, jr.y, 26 * u, 26 * u), DotTex()); GUI.color = oj; }
+                if (GUI.Button(new Rect(jr.x, jr.y, jr.width, jr.height + 26 * u), GUIContent.none, GUIStyle.none)) { showJar = true; touch?.IgnoreFor(0.4f); }
+            }
             // the shop (2026-11-11): a red dot while today's free pile is still there
             var shopR = new Rect(pad, Screen.height - sbh - pad, sbw, sbh);
             if (BigButton(shopR, "btn_orange", "hub_shop", "دكّان", true, u)) { showShop = true; shopScroll = Vector2.zero; touch?.IgnoreFor(0.4f); }
@@ -1920,8 +1936,69 @@ namespace Sheytoonak.Prototype
         // ------------------------------------------------------------------ heroes: levels (SCENARIO §8)
 
         bool showHeroes; Vector2 heroesScroll;
+        bool showJar;
+        public void ShowJarFromScript() { showStart = true; showHeroes = false; showShop = false; showMissions = false; showJar = true; }
+
+        /// <summary>
+        /// The jar (user 2026-11-19: «قلک پر می‌شه و با صرف استار خریده می‌شه ... با پنجاه درصد تخفیف»): the big picture, how many
+        /// marbles are in it, one line of how it works, the crossed-out full price next to the half price. The button is grey
+        /// until the jar is full; with no store connected it answers «soon» like every money button.
+        /// </summary>
+        void JarScreen(float u, GUIStyle big)
+        {
+            HomeBackdrop();
+            if (!shopNoteHooked) { shopNoteHooked = true; duelGame.ShopNote += m => { shopNote = m; shopNoteUntil = Time.time + 1.8f; }; }
+            float pad = 14 * u, top = pad + SafeTop(), barH = 58 * u;
+            var num = new GUIStyle(big) { fontSize = Mathf.RoundToInt(26 * u), alignment = TextAnchor.MiddleCenter };
+            var small = new GUIStyle(num) { fontSize = Mathf.RoundToInt(20 * u), fontStyle = FontStyle.Normal };
+            var backR = new Rect(pad, top, Mathf.Min(170 * u, Screen.width * 0.15f), barH);
+            Plank(backR);
+            if (GUI.Button(backR, Ar.T("رجوع"), num)) { showJar = false; touch?.IgnoreFor(0.4f); return; }
+            float barW = Mathf.Min(230 * u, Screen.width * 0.18f);
+            var liraR = new Rect(Screen.width - pad - barW, top, barW, barH);
+            Plank(liraR);
+            LiraCoin(new Rect(liraR.xMax - barH * 0.9f, top + barH * 0.15f, barH * 0.7f, barH * 0.7f), u);
+            GUI.Label(new Rect(liraR.x + 10 * u, top, liraR.width - barH, barH), Ar.N(duelGame.LiraBank), num);
+
+            int jm = duelGame.JarMarbles, jc = Sheytoonak.Core.Bags.ShopCatalog.JarCapacity; bool full = jm >= jc;
+            float ph = Screen.height - top - barH - pad * 2, pw = Mathf.Min(Screen.width - 2 * pad, ph * 1.7f);
+            var pr = new Rect((Screen.width - pw) * 0.5f, top + barH + pad, pw, ph);
+            var panel = DuelHud.Kit("panel");
+            if (panel != null) GUI.DrawTexture(pr, panel, ScaleMode.StretchToFill);
+            var gold = new GUIStyle(num) { fontSize = Mathf.RoundToInt(ph * 0.09f) }; gold.normal.textColor = new Color(1f, 0.85f, 0.4f);
+            GUI.Label(new Rect(pr.x, pr.y + ph * 0.06f, pw, ph * 0.12f), Ar.T(Ar.JarTitle), gold);
+            // the jar on the right half, the numbers on the left
+            float jh = ph * 0.62f;
+            var jarTex = DuelHud.Kit(full ? "jar_2" : jm * 2 >= jc ? "jar_1" : "jar_0");
+            if (jarTex != null) GUI.DrawTexture(new Rect(pr.center.x + pw * 0.05f, pr.y + ph * 0.2f, pw * 0.38f, jh), jarTex, ScaleMode.ScaleToFit);
+            var lx = new Rect(pr.x + pw * 0.08f, pr.y + ph * 0.2f, pw * 0.44f, jh);
+            var cnt = new GUIStyle(num) { fontSize = Mathf.RoundToInt(ph * 0.11f) };
+            float isz = ph * 0.12f;
+            LiraCoin(new Rect(lx.xMax - isz, lx.y + ph * 0.01f, isz, isz), u);
+            GUI.Label(new Rect(lx.x, lx.y, lx.width - isz, ph * 0.14f), Ar.N(jm) + "/" + Ar.N(jc), cnt);
+            var bar = new Rect(lx.x, lx.y + ph * 0.16f, lx.width, ph * 0.04f);
+            var oc = GUI.color; GUI.color = new Color(0f, 0f, 0f, 0.55f); GUI.DrawTexture(bar, Texture2D.whiteTexture);
+            float f = Mathf.Clamp01(jm / (float)jc);
+            GUI.color = full ? new Color(0.45f, 0.85f, 0.35f) : new Color(1f, 0.75f, 0.25f);
+            GUI.DrawTexture(new Rect(bar.xMax - bar.width * f, bar.y, bar.width * f, bar.height), Texture2D.whiteTexture); GUI.color = oc;
+            var how = new GUIStyle(small) { fontSize = Mathf.RoundToInt(ph * 0.05f), wordWrap = true };
+            GUI.Label(new Rect(lx.x, bar.yMax + ph * 0.02f, lx.width, ph * 0.14f), Ar.T(Ar.JarHow), how);
+            // crossed-out full price, the half price on the button
+            var strike = new GUIStyle(small) { fontSize = Mathf.RoundToInt(ph * 0.055f) }; strike.normal.textColor = new Color(1f, 1f, 1f, 0.6f);
+            var sr = new Rect(lx.x, bar.yMax + ph * 0.17f, lx.width * 0.5f, ph * 0.08f);
+            GUI.Label(sr, Sheytoonak.Gameplay.Store.StorePayments.PriceText(Sheytoonak.Core.Bags.ShopCatalog.JarSku + "_full", Sheytoonak.Core.Bags.ShopCatalog.JarFullCents), strike);
+            GUI.color = new Color(1f, 1f, 1f, 0.7f); GUI.DrawTexture(new Rect(sr.center.x - sr.width * 0.3f, sr.center.y, sr.width * 0.6f, 2 * u), Texture2D.whiteTexture); GUI.color = oc;
+            var half = new GUIStyle(strike); half.normal.textColor = new Color(0.55f, 0.95f, 0.45f);
+            GUI.Label(new Rect(sr.xMax, sr.y, lx.width * 0.5f, sr.height), Ar.T(Ar.JarHalf), half);
+            var btn = new Rect(lx.center.x - ph * 0.3f, sr.yMax + ph * 0.02f, ph * 0.6f, ph * 0.14f);
+            MoneyButton(btn, Sheytoonak.Gameplay.Store.StorePayments.PriceText(Sheytoonak.Core.Bags.ShopCatalog.JarSku, Sheytoonak.Core.Bags.ShopCatalog.JarCents), full, u, small);
+            if (GUI.Button(btn, GUIContent.none, GUIStyle.none)) { touch?.IgnoreFor(0.3f); duelGame.BuyJar(); }
+            if (Time.time < shopNoteUntil && !string.IsNullOrEmpty(shopNote))
+                GUI.Label(new Rect(pr.x, pr.yMax - ph * 0.12f, pw, ph * 0.08f), Ar.T(shopNote), gold);
+        }
+
         bool showMissions;
-        public void ShowMissionsFromScript() { showStart = true; showHeroes = false; showShop = false; showMissions = true; }
+        public void ShowMissionsFromScript() { showStart = true; showHeroes = false; showShop = false; showJar = false; showMissions = true; }
 
         /// <summary>
         /// «مهمّات اليوم» (2026-11-19): three rows on painted panels: the job, a bar of how far it is, its shards and a «take»
@@ -2008,7 +2085,7 @@ namespace Sheytoonak.Prototype
         }
 
         bool showShop; Vector2 shopScroll;
-        public void ShowShopFromScript() { showStart = true; showHeroes = false; showMissions = false; showShop = true; }
+        public void ShowShopFromScript() { showStart = true; showHeroes = false; showMissions = false; showJar = false; showShop = true; }
         public void ScrollShopForShot(float y) { shopScroll = new Vector2(0f, y); }
         /// <summary>CI only: the loot reveal waits for a tap that never comes in the screenshot run.</summary>
         public void DismissLootForShot() { lootShown = false; }

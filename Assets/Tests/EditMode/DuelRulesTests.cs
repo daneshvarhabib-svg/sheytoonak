@@ -64,6 +64,10 @@ namespace Sheytoonak.Tests
             Assert.AreEqual(500, Sheytoonak.Core.Bags.ShopCatalog.StarsOf("special_a"));
             Assert.AreEqual(1000, Sheytoonak.Core.Bags.ShopCatalog.StarsOf("special_a_full"));
             Assert.AreEqual(0, Sheytoonak.Core.Bags.ShopCatalog.StarsOf("nothing"));
+            // the jar: half the price of the same marbles in packs, and it never overflows
+            Assert.AreEqual(50, Sheytoonak.Core.Bags.ShopCatalog.StarsOf(Sheytoonak.Core.Bags.ShopCatalog.JarSku));
+            Assert.AreEqual(Sheytoonak.Core.Bags.ShopCatalog.JarCapacity, 2 * 200 * Sheytoonak.Core.Bags.ShopCatalog.JarCents / 99);
+            Assert.AreEqual(Sheytoonak.Core.Bags.ShopCatalog.JarCapacity, Sheytoonak.Core.Bags.ShopCatalog.JarAfterWin(Sheytoonak.Core.Bags.ShopCatalog.JarCapacity - 1));
         }
 
         [Test]

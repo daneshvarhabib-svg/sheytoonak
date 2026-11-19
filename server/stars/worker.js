@@ -13,6 +13,7 @@ const PACKS = {
   lira_1200: { stars: 200,  title: '١٢٠٠ بِلّية' },
   lira_2500: { stars: 400,  title: '٢٥٠٠ بِلّية' },
   lira_6500: { stars: 1000, title: '٦٥٠٠ بِلّية' },
+  jar_400:   { stars: 50,   title: 'حصّالة: ٤٠٠ بِلّية' },
   special_a: { stars: 500,  title: 'عرض خاص' },
   special_b: { stars: 250,  title: 'عرض خاص' },
 };
