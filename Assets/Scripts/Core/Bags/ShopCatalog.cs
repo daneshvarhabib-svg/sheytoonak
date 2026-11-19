@@ -27,10 +27,10 @@ namespace Sheytoonak.Core.Bags
         public static readonly LiraPack[] LiraPacks =
         {
             new LiraPack { Sku = "lira_200",   NameAr = "قبضة",   Lira = 200,   PriceCents = 99 },
-            new LiraPack { Sku = "lira_500",   NameAr = "كمشة",   Lira = 500,   PriceCents = 199 },
+            new LiraPack { Sku = "lira_500",   NameAr = "حفنة",   Lira = 500,   PriceCents = 199 },
             new LiraPack { Sku = "lira_1200",  NameAr = "كيس",    Lira = 1200,  PriceCents = 399 },
             new LiraPack { Sku = "lira_2500",  NameAr = "صندوق",  Lira = 2500,  PriceCents = 799 },
-            new LiraPack { Sku = "lira_6500",  NameAr = "خزنة",   Lira = 6500,  PriceCents = 1999 },
+            new LiraPack { Sku = "lira_6500",  NameAr = "خزانة",   Lira = 6500,  PriceCents = 1999 },
         };
 
         /// <summary>User (2026-11-19): «هر تیله بیست تا خرده شیشه است. آدم ها می‌تونن تیله هاشون رو خرده شیشه کنن». One

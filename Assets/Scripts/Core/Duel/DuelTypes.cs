@@ -54,15 +54,15 @@ namespace Sheytoonak.Core.Duel
             new HeroDef("abu_shahata", "أبو شحّاطة البيروتي",
                 new Tool("pigeon", "حمامة", Effect.Chance, 1, Lifetime.OneTurn),
                 // User (2026-11-13): «به جای میخ همون ماشین شهرداری باشه». Same id (cards and levels kept), the city tow truck now.
-                new Tool("nails", "ونش البلدية", Effect.Cover, 1)),
+                new Tool("nails", "حرّاس المدينة", Effect.Cover, 1)),
             new HeroDef("zaatar", "زعتر الشامي",
-                new Tool("bus", "باص", Effect.Cover, 1, Lifetime.OneTurn) /* two turns until the human test (review 2026-11-07 §2.4) */,
-                new Tool("vane", "دوّارة هوا", Effect.Accuracy, 1)),
+                new Tool("bus", "قافلة الجِمال", Effect.Cover, 1, Lifetime.OneTurn) /* two turns until the human test (review 2026-11-07 §2.4) */,
+                new Tool("vane", "دوّارة الريح", Effect.Accuracy, 1)),
             new HeroDef("fulla", "فُلّة الإسكندرانية",
-                new Tool("wind", "هوا قوي", Effect.Accuracy, 1, Lifetime.OneTurn),
+                new Tool("wind", "ريح قويّة", Effect.Accuracy, 1, Lifetime.OneTurn),
                 // User (2026-11-10): «دکمه سنگ ریزه دیگه کاربرد نداره و باید بشه پادزهر آویزون کردن فرش. اگر کسی فرش آویزون کرد
                 // این هل بده فرش رو از پشت بوم و بندازه رو زمین». The pebble (it was thrown at the neighbour) is gone with her.
-                new Tool("rug_push", "زقّ السجّادة", Effect.Close, 1)),
+                new Tool("rug_push", "دفع السجّادة", Effect.Close, 1)),
             new HeroDef("rima", "ريما الشرشوحة الصيداوية",
                 // ⚠️ until 2026-11-04 the neighbour stayed until an antidote (pebble). User: «اون سه تا شیشه‌ای که بازه چیه؟ … نباید بعد از
                 // یکی دو نوبت خودش بسته شه؟» -- with every other window broken the duel could not end. Now she shuts it after two turns.
@@ -70,29 +70,29 @@ namespace Sheytoonak.Core.Duel
                 // فرش از پشت بوم آویزون کنیم روی پنجره‌ای که طبقه بالا هست … هرچی قدرتش بیشتر شد طول فرش بیشتر بشه و بیاد
                 // تعداد پنجره‌های پایینترش رو هم بگیره». The neighbour is gone; a rug hung from the roof covers one column of
                 // windows from the top, one more window down at each level (DuelManager.TargetsFor).
-                new Tool("carpet", "سجّادة عالسطح", Effect.Close, 1, Lifetime.OneTurn),
+                new Tool("carpet", "سجّادة على السطح", Effect.Close, 1, Lifetime.OneTurn),
                 // User (2026-11-13): the plank was useless; the city suction tanker sucks the puddle dry (same id and effect).
-                new Tool("plank", "صهريج الشفط", Effect.Reach, 1)),
+                new Tool("plank", "السقّاء", Effect.Reach, 1)),
             new HeroDef("toni", "طوني الزعران البيروتي",
-                new Tool("puddle", "جورة مي", Effect.Reach, 1, Lifetime.OneTurn),
+                new Tool("puddle", "حفرة ماء", Effect.Reach, 1, Lifetime.OneTurn),
                 new Tool("fart", "ضرطة", Effect.Chance, 1)),
             // ⚠️ heroes 4, 5 and 7 of docs/HEROES.fa.md (2026-11-04): grown-ups after the five kids (user: «باقی قهرمانان
             // همه بچه نباشن … تا پیرمرد و پیرزن»). Their poisons reuse the stage props of the same effect until their
             // own art arrives (painted the same day: lorry, pickle cart, rain cloud, complaint, umbrella, flashlight). Um al-Arabiyat kicks with her left foot.
             new HeroDef("um_arabiyat", "أم العربيات البغدادية",
-                new Tool("truck", "شاحنة عالية", Effect.Cover, 1, Lifetime.OneTurn) /* two turns until the human test (review 2026-11-07 §2.4) */,
+                new Tool("truck", "عربة الثور", Effect.Cover, 1, Lifetime.OneTurn) /* two turns until the human test (review 2026-11-07 §2.4) */,
                 // User (2026-11-13): «به جای شکایت یه چیز جذاب تر از نظر بصری» → «زور ام العربیات خوبه»: she shoves the vehicle away.
-                new Tool("complaint", "دفشة أم العربيات", Effect.Cover, 1)),
+                new Tool("complaint", "دفعة أم العربيات", Effect.Cover, 1)),
             new HeroDef("hamada", "حمادة الطرشجي المصراوي",
-                new Tool("cart", "عربية البياع", Effect.Cover, 1, Lifetime.OneTurn),
-                new Tool("umbrella", "شمسية", Effect.Reach, 1)),
+                new Tool("cart", "عربة البائع", Effect.Cover, 1, Lifetime.OneTurn),
+                new Tool("umbrella", "مظلّة", Effect.Reach, 1)),
             new HeroDef("bubakr", "بوبكر الصيّاد التونسي",
                 new Tool("rain", "مطر", Effect.Reach, 1, Lifetime.OneTurn) /* two turns until the human test (review 2026-11-07 §2.4) */,
                 // User (2026-11-15): «چراغ قوه به کار نمیاد» (a lit street, nothing to light) and, the same day: «چراغ قوه رو حذف
                 // نکن؛ یه قهرمان دیگه بسازیم که قدرتش خسوفه و جلوی خورشید رو میگیره و چراغ قوه به کار میاد». The flashlight stays
                 // (the original design: Bubakr's light answers Shadi's darkness, docs/HEROES.fa.md); the fishing net ("net",
                 // Chance) waits as Shadi's antidote until his pictures arrive.
-                new Tool("flashlight", "ضو بطارية", Effect.Accuracy, 1)),
+                new Tool("flashlight", "فانوس", Effect.Accuracy, 1)),
         };
 
         public static HeroDef Get(string id)

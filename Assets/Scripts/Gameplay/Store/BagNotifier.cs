@@ -25,7 +25,7 @@ namespace Sheytoonak.Gameplay.Store
 
         const string PrefOn = "sheytoonak.notify", PrefLastFire = "sheytoonak.notify.last", PrefPending = "sheytoonak.notify.pending";
         public const string Title = "مدينة الفاجعة";
-        public const string Body = "كيسك جاهز! تعال افتحه 🎒";
+        public const string Body = "كيسك جاهز! تعال وافتحه 🎒";
 
         /// <summary>The switch in the lobby; on by default (Android 13+ still asks the player once).</summary>
         public static bool On

@@ -166,7 +166,7 @@ namespace Sheytoonak.Prototype
                     var tr = new Rect(left ? x + isz0 + 70 * u : x - 180 * u, top + 8 * u, 56 * u, 24 * u);
                     var o = GUI.color; GUI.color = new Color(0f, 0f, 0f, 0.55f); GUI.DrawTexture(tr, Texture2D.whiteTexture); GUI.color = o;
                     var bt = new GUIStyle(small) { alignment = TextAnchor.MiddleCenter, fontSize = Mathf.RoundToInt(16 * u) }; bt.normal.textColor = new Color(0.85f, 0.85f, 0.85f);
-                    GUI.Label(tr, Ar.T("بوت"), bt);
+                    GUI.Label(tr, Ar.T("آليّ"), bt);
                 }
             }
             // the match clock (user 2026-11-13: «تایم کلی بازی ۴ دقیقه … تایمر رو هم ببینیم»): top centre, red in the last 30 s

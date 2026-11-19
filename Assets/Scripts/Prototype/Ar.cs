@@ -6,86 +6,89 @@ namespace Sheytoonak
 {
     /// <summary>
     /// The game's UI language is spoken Levantine Arabic (user, 2026-10-27: "زبان بازی باید عربی محاوره باشه").
+    /// ⚠️ Since 2026-11-19 it is simple modern standard Arabic instead (user 2026-11-17, after the game turned medieval: «زبان جملات ...
+    /// عربی فصیح بشه. اینطوری چالش لهجه هم حل میشه. ولی باید جملاتی از فصحی برداریم که الآن هم شبیهش استفاده می‌شه و خیلی نامفهوم
+    /// نباشه»): everyday words every Arab reader knows, no dialect, nothing bookish.
     /// IMGUI cannot shape Arabic, so every string goes through <see cref="T"/> (contextual forms +
     /// visual order) and is drawn with the bundled Vazirmatn font (OFL), which has the presentation glyphs.
     /// </summary>
     public static class Ar
     {
         // ---- duel (docs/SCENARIO.fa.md)
-        public const string DuelIntro = "مبارزة شبابيك: كل واحد بدوره، حركتين بالدور. شباك تحتاني = ١، فوقاني = ٢، وفي شباك مخبّى = ٣. اللي بياخد أكتر من النص بيربح.";
+        public const string DuelIntro = "مبارزة النوافذ: لكلٍّ دوره، وفي الدور حركتان. نافذة سفلى = ١، عليا = ٢، وهناك نافذة مخفيّة = ٣. من يكسر أكثر من النصف يفوز.";
         public const string YourTurn = "دورك";
         public const string TheirTurn = "دور الخصم";
         public const string Actions = "حركات";
-        public const string Rage = "غيظ";
-        public const string RageReady = "عندك غيظ: حركة زيادة!";
-        public const string RageUsed = "غيظ! حركة زيادة";
-        public const string PassTurn = "خلص دوري";
-        public const string Surrender = "بسلّم";
-        public const string DraftTitle = "اختار فريقك";
-        public const string DraftBanYou = "شيل بطل (بينشال من الكل)";
-        public const string DraftPickYou = "اختار بطل";
-        public const string DraftWait = "الخصم عم يختار...";
+        public const string Rage = "غضب";
+        public const string RageReady = "أنت غاضب: حركة إضافيّة!";
+        public const string RageUsed = "غضب! حركة إضافيّة";
+        public const string PassTurn = "انتهى دوري";
+        public const string Surrender = "أستسلم";
+        public const string DraftTitle = "اختر فريقك";
+        public const string DraftBanYou = "استبعد بطلاً (يُستبعد عن الجميع)";
+        public const string DraftPickYou = "اختر بطلاً";
+        public const string DraftWait = "الخصم يختار...";
         public const string DraftYourPick = "اختيارك";
         public const string DraftTheirPick = "اختيار الخصم";
-        public const string DraftYouBanned = "شلت";
-        public const string DraftTheyBanned = "الخصم شال";
-        public const string YouBan = "شلت:";
-        public const string Sealed = "ما بتنكسر!"; // the sealed window took the ball (user: one window per round never breaks)
+        public const string DraftYouBanned = "استبعدتَ";
+        public const string DraftTheyBanned = "الخصم استبعد";
+        public const string YouBan = "استبعدتَ:";
+        public const string Sealed = "لا تنكسر!"; // the sealed window took the ball (user: one window per round never breaks)
         public const string HitsLeft = "ضربات باقية"; // hits left on this ball (user: three per ball)
-        public const string TheyBan = "الخصم شال:";
-        public const string Banned = "مشطوب";
-        public const string Mine = "إلك";
+        public const string TheyBan = "الخصم استبعد:";
+        public const string Banned = "مستبعَد";
+        public const string Mine = "لك";
         public const string TheirPicks = "فريق الخصم";
-        public const string SurrenderSure = "أكيد؟ دقّ كمان مرّة";
-        public const string NoActions = "ما بقي حركات";
-        public const string TimeUp = "خلص الوقت";
-        public const string HiddenThree = "هيدا الشباك المخبّى: ٣!";
-        public const string Intercepted = "خبطت بشي بالهوا!";
-        public const string Covered = "مغطّى!";
-        public const string Shut = "مسكّر!";
-        public const string AlreadyBroken = "مكسور من قبل";
-        public const string Missed = "طابت";
-        public const string YouPoison = "رميت:";
+        public const string SurrenderSure = "متأكّد؟ اضغط مرّة أخرى";
+        public const string NoActions = "لم تبقَ حركات";
+        public const string TimeUp = "انتهى الوقت";
+        public const string HiddenThree = "هذه النافذة المخفيّة: ٣!";
+        public const string Intercepted = "اصطدمت بشيء في الهواء!";
+        public const string Covered = "مغطّاة!";
+        public const string Shut = "مغلقة!";
+        public const string AlreadyBroken = "مكسورة من قبل";
+        public const string Missed = "أخطأت";
+        public const string YouPoison = "رميتَ:";
         public const string TheyPoison = "الخصم رمى:";
-        public const string YouAntidote = "دواك:";
-        public const string TheyAntidote = "دوا الخصم:";
+        public const string YouAntidote = "ترياقك:";
+        public const string TheyAntidote = "ترياق الخصم:";
         public const string PoisonWord = "سمّ";
-        public const string AntidoteWord = "دوا";
-        public const string Won = "ربحت!";
+        public const string AntidoteWord = "ترياق";
+        public const string Won = "فزت!";
         public const string Lost = "خسرت";
         public const string Draw = "تعادل";
-        public static string WindowsLine(int mine, int theirs, int majority) => "شبابيك " + N(mine) + " – " + N(theirs) + "  (الربح من " + N(majority) + ")";
-        public static string Reward(int shards, int curseDelta, int curses) => "زجاج: +" + N(shards) + "   فحش: " + (curseDelta >= 0 ? "+" : "−") + N(Math.Abs(curseDelta)) + " (" + N(curses) + ")";
+        public static string WindowsLine(int mine, int theirs, int majority) => "نوافذ " + N(mine) + " – " + N(theirs) + "  (الفوز من " + N(majority) + ")";
+        public static string Reward(int shards, int curseDelta, int curses) => "زجاج: +" + N(shards) + "   شتائم: " + (curseDelta >= 0 ? "+" : "−") + N(Math.Abs(curseDelta)) + " (" + N(curses) + ")";
         public static string Timer(int seconds) => N(seconds) + " ث";
         public const string Title = "مدينة الفاجعة";
-        public const string Intro = "كبّ الطابة عالشبابيك! حطّ إصبعك جنب الطابة واسحب صوب الشبّاك وشيل إصبعك: كل ما سحبت أكتر بتروح أقوى وأعلى. لما ترجع الطابة من الحيط فيك تضربها كمان تلات مرّات، بس قبل ما تنطّ عالأرض مرّتين.";
-        public const string Play = "يلا نلعب";
-        public const string PlayAgain = "عيد اللعب";
-        public const string ServeHint = "اسحب من الطابة صوب الشبّاك"; // 2026-11-09: the kick is a swipe, not a tap
-        public const string VibrateOn = "هزّة: أيوه";
-        public const string NothingToClear = "ما في شي يشيلو";
+        public const string Intro = "اركل الكرة نحو النوافذ! ضع إصبعك قرب الكرة واسحب نحو النافذة ثم ارفعه: كلّما سحبت أطول ذهبت أقوى وأعلى. حين تعود الكرة من الجدار يمكنك أن تضربها ثلاث مرّات أخرى، قبل أن ترتدّ عن الأرض مرّتين.";
+        public const string Play = "هيّا نلعب";
+        public const string PlayAgain = "العب ثانية";
+        public const string ServeHint = "اسحب من الكرة نحو النافذة"; // 2026-11-09: the kick is a swipe, not a tap
+        public const string VibrateOn = "الاهتزاز: نعم";
+        public const string NothingToClear = "لا شيء لتزيله";
         /// <summary>The antidote is two levels or more below the poison (SCENARIO §8).</summary>
         public const string TooWeak = "الترياق أضعف من السمّ";
         // user 2026-11-19: «تیله خوبه»: the second currency is glass marbles (whole glass, against the shards of broken glass), not gold coins.
         // ⚠️ the code still says Lira everywhere (saves, ShopCatalog): only the word and the picture changed.
         public const string Lira = "بِلّي";
-        public const string NotEnoughLira = "ما معك بِلّي كفاية";
+        public const string NotEnoughLira = "ليس معك بِلّي كافٍ";
         public const string PaySoon = "الدفع قريباً";
-        public const string CodeWrong = "الكود غلط أو مستعمل";
-        public const string Upgrade = "قوّي";
+        public const string CodeWrong = "الرمز خطأ أو مستعمل";
+        public const string Upgrade = "قوِّ";
         public const string Heroes = "الأبطال";
-        public const string MaxLevel = "أقوى شي";
+        public const string MaxLevel = "الأقوى";
         public static string Lv(int l) => "مستوى " + N(l);
-        public const string VibrateOff = "هزّة: لأ";
-        public const string NotifyOn = "تنبيه: أيوه";
-        public const string NotifyOff = "تنبيه: لأ";
-        public const string Smashed = "+١  كسرت الشباك!";
-        public const string Invite = "ادعي صاحبك";
-        public const string InviteText = "تعال كسّر شبابيك معي بمدينة الفاجعة! افتح الرابط وخود ٥٠٠ زجاج هدية.";
+        public const string VibrateOff = "الاهتزاز: لا";
+        public const string NotifyOn = "التنبيه: نعم";
+        public const string NotifyOff = "التنبيه: لا";
+        public const string Smashed = "+١  كسرت النافذة!";
+        public const string Invite = "ادعُ صديقك";
+        public const string InviteText = "تعال نكسر النوافذ معاً في مدينة الفاجعة! افتح الرابط وخذ ٥٠٠ زجاج هديّة.";
         public static string InviteGot(int n) => "هدية من صاحبك: +" + N(n) + " زجاج";
-        public const string Story = "حطّها بالستوري";
-        public const string StoryText = "كسّرت شبابيك الحارة كلها! تعال جرّب.";
-        public const string StoryOld = "حدّث تلغرام لتنشر بالستوري";
+        public const string Story = "انشرها في القصّة";
+        public const string StoryText = "كسرت نوافذ الحارة كلّها! تعال جرّب.";
+        public const string StoryOld = "حدّث تلغرام لتنشر في القصّة";
         public const string MapTitle = "خريطة المدينة";
         public const string MapButton = "الخريطة";
         public const string MapQuarters = "حارات مفتوحة: ";
@@ -114,13 +117,13 @@ namespace Sheytoonak
         static readonly string[] Districts = { "سوق العطّارين", "حارة الدبّاغين", "باب النهر", "درب النحّاسين", "حارة الخبّازين", "سوق الصاغة", "درب القوافل", "حارة البساتين", "ساحة البئر", "القلعة العالية" };
         public static string District(int i) => Districts[System.Math.Max(0, System.Math.Min(Districts.Length - 1, i))];
         public const string JarTitle = "الحصّالة";
-        public const string JarNotFull = "الحصّالة ما امتلأت بعد";
+        public const string JarNotFull = "الحصّالة لم تمتلئ بعد";
         public const string JarHow = "كلّ فوز يزيدها. إذا امتلأت خُذها بنصف السعر";
         public const string JarHalf = "خصم ٥٠٪";
-        public const string MissionsTitle = "مهمّات اليوم";
-        public const string MissionDone = "خلصت مهمّة!";
+        public const string MissionsTitle = "مهامّ اليوم";
+        public const string MissionDone = "أنجزت مهمّة!";
         public const string MissionTake = "خُذ";
-        public const string MissionTaken = "أخدتها";
+        public const string MissionTaken = "أخذتها";
         public const string MissionAll = "الثلاثة كلّها";
         /// <summary>Text of one job of the day; {0} is its goal.</summary>
         public static string MissionText(Sheytoonak.Core.Missions.MissionKind k, int goal)
@@ -130,30 +133,30 @@ namespace Sheytoonak
             {
                 case Sheytoonak.Core.Missions.MissionKind.PlayDuels: return "العب " + n + " مبارزات";
                 case Sheytoonak.Core.Missions.MissionKind.WinDuels: return "اربح " + n + " مبارزات";
-                case Sheytoonak.Core.Missions.MissionKind.BreakWindows: return "اكسر " + n + " شبابيك";
+                case Sheytoonak.Core.Missions.MissionKind.BreakWindows: return "اكسر " + n + " نوافذ";
                 case Sheytoonak.Core.Missions.MissionKind.UsePoisons: return "ارمِ " + n + " سموم";
                 case Sheytoonak.Core.Missions.MissionKind.UseAntidotes: return "استعمل " + n + " ترياق";
                 default: return "افتح " + n + " كيس";
             }
         }
         public const string ComboTitle = "تركيبة اليوم";
-        public const string ComboDone = "أخدتها اليوم";
+        public const string ComboDone = "أخذتها اليوم";
         public const string ComboWon = "تركيبة اليوم! +";
-        public const string DoubleWindow = "+٢  شباك الفحش!"; // a window worth 2: the resident leans out and curses
-        public const string BounceFirst = "خلّيها تنطّ مرّة أول";
+        public const string DoubleWindow = "+٢  نافذة الشتائم!"; // a window worth 2: the resident leans out and curses
+        public const string BounceFirst = "دعها ترتدّ مرّة أوّلاً";
         public const string TooFar = "بعيدة عنك";
-        public const string Now = "هلّق!";
-        public const string IntoFlatBack = "راحت جوّا البيت... صاحب البيت رجّعها!";
-        public const string IntoFlat = "راحت جوّا البيت!";
-        public const string GameOver = "خلصت اللعبة";
-        public const string Victory = "كسّرت زجاج الشارع كلّو!";
-        public const string WindCalm = "هادي";
+        public const string Now = "الآن!";
+        public const string IntoFlatBack = "دخلت البيت... صاحب البيت أعادها!";
+        public const string IntoFlat = "دخلت البيت!";
+        public const string GameOver = "انتهت اللعبة";
+        public const string Victory = "كسرت زجاج الشارع كلّه!";
+        public const string WindCalm = "هادئة";
         public const string LifeLost = "(−١ روح)";
-        public const string LostTwice = "نطّت مرتين";
-        public const string LostShort = "قصيرة، ما وصلت";
-        public const string LostStreet = "راحت عالشارع";
-        public const string LostKept = "صاحب البيت خلّاها";
-        public const string LostPast = "فاتت من عندك";
+        public const string LostTwice = "ارتدّت مرّتين";
+        public const string LostShort = "قصيرة، لم تصل";
+        public const string LostStreet = "ذهبت إلى الشارع";
+        public const string LostKept = "صاحب البيت احتفظ بها";
+        public const string LostPast = "فاتتك";
 
         static Font font;
         public static Font Font
@@ -203,16 +206,16 @@ namespace Sheytoonak
         public static string T(string s) => ArabicShaper.ForLtrRenderer(ArabicShaper.EasternDigits(s));
         public static string N(int n) => ArabicShaper.EasternDigits(n.ToString());
         public static string House(int oneBased) => "البيت " + N(oneBased);
-        public static string Medal(string house) => "ميدالية! ما بقي زجاج بـ" + house;
-        public static string Walking(string house) => "عم نمشي عـ" + house + "...";
+        public static string Medal(string house) => "وسام! لم يبقَ زجاج في " + house;
+        public static string Walking(string house) => "نمشي إلى " + house + "...";
         public static string Hud1(int glass) => "زجاج: " + N(glass);
         public static string Hud2(int lives, int maxLives, int house, int houses, int broken, int windows)
             => "أرواح: " + new string('♥', Mathf.Max(0, lives)) + new string('♡', Mathf.Max(0, maxLives - lives))
-               + "   بيت " + N(house) + "/" + N(houses) + "   شبابيك " + N(broken) + "/" + N(windows);
+               + "   بيت " + N(house) + "/" + N(houses) + "   نوافذ " + N(broken) + "/" + N(windows);
         public static string Hud3(float wind, int medals)
-            => "هوا: " + (Mathf.Abs(wind) < 0.05f ? WindCalm : (wind > 0f ? "← " : "→ ") + ArabicShaper.EasternDigits(Mathf.Abs(wind).ToString("0.0")))
-               + "   ميداليات: " + N(medals);
+            => "الريح: " + (Mathf.Abs(wind) < 0.05f ? WindCalm : (wind > 0f ? "← " : "→ ") + ArabicShaper.EasternDigits(Mathf.Abs(wind).ToString("0.0")))
+               + "   أوسمة: " + N(medals);
         public static string End(int score, int best, int medals)
-            => "زجاج مكسور: " + N(score) + "   أحسن نتيجة: " + N(best) + "   ميداليات: " + N(medals);
+            => "زجاج مكسور: " + N(score) + "   أفضل نتيجة: " + N(best) + "   أوسمة: " + N(medals);
     }
 }

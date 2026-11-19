@@ -1609,7 +1609,7 @@ namespace Sheytoonak.Prototype
 
         void OnKicked(KickGesture g, float quality, Vector3 velocity)
         {
-            if (quality > 0.85f) Toast("ضربة نضيفة!", 0.7f);
+            if (quality > 0.85f) Toast("ضربة نظيفة!", 0.7f);
         }
 
         void OnKickRejected(KickRejectReason why)
@@ -1861,7 +1861,7 @@ namespace Sheytoonak.Prototype
             // side buttons: what is planned (docs/RESEARCH.fa.md queue), honest about not being there yet
             float sbw = Mathf.Min(200 * u, Screen.width * 0.15f), sbh = sbw * 0.62f;
             var misR = new Rect(pad, top + barH + 30 * u, sbw, sbh);
-            if (BigButton(misR, "btn_green", "hub_missions", "مهمّات", true, u)) { showMissions = true; touch?.IgnoreFor(0.4f); }
+            if (BigButton(misR, "btn_green", "hub_missions", "مهامّ", true, u)) { showMissions = true; touch?.IgnoreFor(0.4f); }
             if (duelGame.Missions.AnyReady(DuelManager.ShopDay))
             {
                 var o = GUI.color; GUI.color = new Color(0.95f, 0.2f, 0.15f);
@@ -2364,13 +2364,13 @@ namespace Sheytoonak.Prototype
             DuelHud.DrawIcon(new Rect(bagR.x - 20 * u - sh * 0.7f, sy + sh * 0.1f, sh * 0.6f, sh * 0.6f), "shards", Color.white);
             GUI.Label(new Rect(bagR.x - 30 * u - sh * 0.8f, sy + sh * 0.72f, sh * 0.8f, 30 * u), Ar.N(sp.Shards), small);
             var tag = new GUIStyle(title) { fontSize = Mathf.RoundToInt(30 * u) }; tag.normal.textColor = new Color(1f, 0.35f, 0.25f);
-            GUI.Label(new Rect(sr.x + 30 * u, sy, 300 * u, 44 * u), Ar.T("تخفيض ٥٠٪"), tag);
+            GUI.Label(new Rect(sr.x + 30 * u, sy, 300 * u, 44 * u), Ar.T("خصم ٥٠٪"), tag);
             var strike = new GUIStyle(small); strike.normal.textColor = new Color(1f, 1f, 1f, 0.6f);
             GUI.Label(new Rect(sr.x + 30 * u, sy + 46 * u, 300 * u, 28 * u), Sheytoonak.Gameplay.Store.StorePayments.PriceText(sp.Sku + "_full", sp.FullCents), strike);
             var old = GUI.color; GUI.color = new Color(1f, 1f, 1f, 0.6f); GUI.DrawTexture(new Rect(sr.x + 110 * u, sy + 60 * u, 140 * u, 2 * u), Texture2D.whiteTexture); GUI.color = old;
             bool spDone = duelGame.SpecialBought(sp);
             var spBtn = new Rect(sr.x + 30 * u, sy + 84 * u, 300 * u, 50 * u);
-            MoneyButton(spBtn, spDone ? Ar.T("انشرى") : Sheytoonak.Gameplay.Store.StorePayments.PriceText(sp.Sku, sp.PriceCents), !spDone, u, small);
+            MoneyButton(spBtn, spDone ? Ar.T("تمّ الشراء") : Sheytoonak.Gameplay.Store.StorePayments.PriceText(sp.Sku, sp.PriceCents), !spDone, u, small);
             if (!spDone && GUI.Button(spBtn, GUIContent.none, GUIStyle.none)) { touch?.IgnoreFor(0.3f); duelGame.BuySpecial(); }
             y += hSpecial + g;
 
@@ -2390,7 +2390,7 @@ namespace Sheytoonak.Prototype
                     touch?.IgnoreFor(0.3f);
                     int slot = i;
                     if (o.Price == 0) Sheytoonak.Gameplay.Store.RewardedAds.Show(ok => { if (ok) duelGame.BuyOffer(slot); });
-                    else if (duelGame.BuyOffer(i) == Sheytoonak.Core.Bags.ShopRules.Reject.NotEnoughShards) { shopNote = "ما معك زجاج كفاية"; shopNoteUntil = Time.time + 1.6f; }
+                    else if (duelGame.BuyOffer(i) == Sheytoonak.Core.Bags.ShopRules.Reject.NotEnoughShards) { shopNote = "ليس معك زجاج كافٍ"; shopNoteUntil = Time.time + 1.6f; }
                 }
             }
             y += hOffers + g;
@@ -2404,11 +2404,11 @@ namespace Sheytoonak.Prototype
                 var bt = Resources.Load<Texture2D>("Art/Bags/bag_" + (int)size);
                 var ir = new Rect(r.center.x - r.height * 0.28f, r.y + 4 * u, r.height * 0.56f, r.height * 0.56f);
                 if (bt != null) GUI.DrawTexture(ir, bt, ScaleMode.ScaleToFit); else DuelHud.DrawIcon(ir, "bag", BagTint[(int)size]);
-                string nm = size == Sheytoonak.Core.Bags.BagSize.Huge ? "كيس ضخم" : size == Sheytoonak.Core.Bags.BagSize.Large ? "كيس كبير" : "كيس وسط";
+                string nm = size == Sheytoonak.Core.Bags.BagSize.Huge ? "كيس ضخم" : size == Sheytoonak.Core.Bags.BagSize.Large ? "كيس كبير" : "كيس متوسّط";
                 GUI.Label(new Rect(r.x, r.y + r.height * 0.6f, r.width, 26 * u), Ar.T(nm) + "  ×" + Ar.N(Sheytoonak.Core.Bags.BagRules.CardsIn(size)), small);
                 // the odds, said up front: N cards of tools picked at random (every tool the same chance) + a shard range
                 var odds = new GUIStyle(small) { fontSize = Mathf.RoundToInt(13 * u) }; odds.normal.textColor = new Color(1f, 1f, 1f, 0.75f);
-                GUI.Label(new Rect(r.x, r.y + r.height * 0.6f + 24 * u, r.width, 22 * u), Ar.T("كروت عشوائية") + "  " + Ar.N(Sheytoonak.Core.Bags.BagRules.ShardsMinIn(size)) + "–" + Ar.N(Sheytoonak.Core.Bags.BagRules.ShardsMaxIn(size)), odds);
+                GUI.Label(new Rect(r.x, r.y + r.height * 0.6f + 24 * u, r.width, 22 * u), Ar.T("بطاقات عشوائيّة") + "  " + Ar.N(Sheytoonak.Core.Bags.BagRules.ShardsMinIn(size)) + "–" + Ar.N(Sheytoonak.Core.Bags.BagRules.ShardsMaxIn(size)), odds);
                 var pr = new Rect(r.x + 10 * u, r.yMax - 40 * u, r.width - 20 * u, 34 * u);
                 if (size == Sheytoonak.Core.Bags.BagSize.Huge)
                 {
@@ -2420,7 +2420,7 @@ namespace Sheytoonak.Prototype
                 {
                     int price = Sheytoonak.Core.Bags.ShopRules.BagPrice(size);
                     PriceButton(pr, price, duelGame.ShardBank >= price, u, small);
-                    if (GUI.Button(r, GUIContent.none, GUIStyle.none)) { touch?.IgnoreFor(0.3f); if (!duelGame.BuyBag(size)) { shopNote = "ما معك زجاج كفاية"; shopNoteUntil = Time.time + 1.6f; } }
+                    if (GUI.Button(r, GUIContent.none, GUIStyle.none)) { touch?.IgnoreFor(0.3f); if (!duelGame.BuyBag(size)) { shopNote = "ليس معك زجاج كافٍ"; shopNoteUntil = Time.time + 1.6f; } }
                 }
             });
             y += hRow + g;
@@ -2459,7 +2459,7 @@ namespace Sheytoonak.Prototype
             y += hRow + g;
 
             // --- 6. prize code
-            var cr = Panel(new Rect(0, y, w, hCode), Ar.T("كود جائزة"), title, u);
+            var cr = Panel(new Rect(0, y, w, hCode), Ar.T("رمز جائزة"), title, u);
             var field = new GUIStyle(GUI.skin.textField) { fontSize = Mathf.RoundToInt(24 * u), alignment = TextAnchor.MiddleCenter };
             var fr = new Rect(cr.center.x - 60 * u, cr.y + 62 * u, Mathf.Min(360 * u, cr.width * 0.4f), 52 * u);
             prizeCode = GUI.TextField(fr, prizeCode ?? "", 20, field);
@@ -2571,7 +2571,7 @@ namespace Sheytoonak.Prototype
             if (o.Price == 0)
             {
                 var free = new GUIStyle(small) { fontStyle = FontStyle.Bold }; free.normal.textColor = new Color(0.15f, 0.6f, 0.2f);
-                GUI.Label(pr, Ar.T(Sheytoonak.Gameplay.Store.RewardedAds.Available ? "شوف واربح" : "ببلاش!"), free);
+                GUI.Label(pr, Ar.T(Sheytoonak.Gameplay.Store.RewardedAds.Available ? "شاهد واربح" : "مجّاناً!"), free);
             }
             else PriceButton(pr, o.Price, duelGame.ShardBank >= o.Price, u, small);
             if (sold)
@@ -2583,7 +2583,7 @@ namespace Sheytoonak.Prototype
                 var rib = new Rect(r.x - 10 * u, r.center.y - 18 * u, r.width + 20 * u, 36 * u);
                 GUI.DrawTexture(rib, Texture2D.whiteTexture); GUI.color = old;
                 var w = new GUIStyle(small) { fontStyle = FontStyle.Bold }; w.normal.textColor = Color.white;
-                GUI.Label(rib, Ar.T("انباع"), w);
+                GUI.Label(rib, Ar.T("بيع"), w);
                 GUI.matrix = m;
             }
         }
@@ -2795,7 +2795,7 @@ namespace Sheytoonak.Prototype
             title.normal.textColor = new Color(1f, 0.85f, 0.4f);
             var lab = new GUIStyle(title) { fontSize = Mathf.RoundToInt(20 * u), fontStyle = FontStyle.Normal }; lab.normal.textColor = Color.white;
             var big = new GUIStyle(title) { fontSize = Mathf.RoundToInt(30 * u) }; big.normal.textColor = Color.white;
-            GUI.Label(new Rect(0, Screen.height * 0.1f, Screen.width, 50 * u), Ar.T("شو طلع من الكيس"), title);
+            GUI.Label(new Rect(0, Screen.height * 0.1f, Screen.width, 50 * u), Ar.T("ما خرج من الكيس"), title);
 
             // group the cards by tool, in the order they came
             var ids = new System.Collections.Generic.List<string>(); var counts = new System.Collections.Generic.Dictionary<string, int>();
@@ -2843,7 +2843,7 @@ namespace Sheytoonak.Prototype
                 GUI.Label(new Rect(bar.x, bar.y - 24 * u, bar.width, 22 * u), need > 0 ? Ar.N(Mathf.Min(have, need)) + " / " + Ar.N(need) : Ar.T(Ar.MaxLevel), new GUIStyle(lab) { fontSize = Mathf.RoundToInt(15 * u) });
             }
             if (Time.time - lootAt > n * 0.25f + 0.4f)
-                GUI.Label(new Rect(0, Screen.height * 0.84f, Screen.width, 40 * u), Ar.T("دوس لتكمّل"), lab);
+                GUI.Label(new Rect(0, Screen.height * 0.84f, Screen.width, 40 * u), Ar.T("اضغط لتكمل"), lab);
             // tap anywhere to close (not in the first half second: the tap that opened the bag must not close it)
             if (Time.time - lootAt > 0.5f && GUI.Button(all, GUIContent.none, GUIStyle.none)) { lootShown = false; touch?.IgnoreFor(0.3f); }
         }
