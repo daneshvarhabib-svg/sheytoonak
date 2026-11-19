@@ -33,11 +33,16 @@ namespace Sheytoonak.Core.Bags
             new LiraPack { Sku = "lira_6500",  NameAr = "خزنة",   Lira = 6500,  PriceCents = 1999 },
         };
 
+        /// <summary>User (2026-11-19): «هر تیله بیست تا خرده شیشه است. آدم ها می‌تونن تیله هاشون رو خرده شیشه کنن». One
+        /// marble (the code's "lira") breaks into 20 shards, at any size, one way only. The old three packs gave 16.7,
+        /// 20 and 22.2 a marble.</summary>
+        public const int ShardsPerMarble = 20;
         public static readonly ShardPack[] ShardPacks =
         {
-            new ShardPack { NameAr = "كمشة زجاج", Shards = 1000,  Lira = 60 },
-            new ShardPack { NameAr = "سطل زجاج",  Shards = 10000, Lira = 500 },
-            new ShardPack { NameAr = "برميل زجاج", Shards = 100000, Lira = 4500 },
+            new ShardPack { NameAr = "اكسر بِلّية",  Shards = 1 * ShardsPerMarble,    Lira = 1 },
+            new ShardPack { NameAr = "اكسر ١٠",      Shards = 10 * ShardsPerMarble,   Lira = 10 },
+            new ShardPack { NameAr = "اكسر ١٠٠",     Shards = 100 * ShardsPerMarble,  Lira = 100 },
+            new ShardPack { NameAr = "اكسر ١٠٠٠",    Shards = 1000 * ShardsPerMarble, Lira = 1000 },
         };
 
         /// <summary>Bags for lira (open at once).</summary>

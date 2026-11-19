@@ -30,6 +30,14 @@ namespace Sheytoonak.Tests
             Assert.AreEqual((r.Shards[1], 0), r.RewardFor(Side.Right));
         }
 
+        // User (2026-11-19): «هر تیله بیست تا خرده شیشه است».
+        [Test]
+        public void A_marble_always_breaks_into_twenty_shards()
+        {
+            Assert.AreEqual(20, Sheytoonak.Core.Bags.ShopCatalog.ShardsPerMarble);
+            foreach (var p in Sheytoonak.Core.Bags.ShopCatalog.ShardPacks) Assert.AreEqual(p.Lira * 20, p.Shards);
+        }
+
         // User (2026-11-18): «گوز الان همه موجودات زنده رو بی هوش می‌کنه … مگر این که سم دو پله بالاتر از قدرت گوز باشه».
         [Test]
         public void A_fart_knocks_out_every_living_poison_unless_it_is_two_levels_above()
