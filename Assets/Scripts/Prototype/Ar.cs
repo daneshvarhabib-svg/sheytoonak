@@ -88,6 +88,8 @@ namespace Sheytoonak
         public const string StoryOld = "حدّث تلغرام لتنشر بالستوري";
         public const string MapTitle = "خريطة المدينة";
         public const string MapButton = "الخريطة";
+        public const string MapQuarters = "حارات مفتوحة: ";
+        public const string MapPrizeReady = "جائزتك جاهزة! اضغط لتأخذها";
         public const string MapHouses = "بيوت مهدومة: ";
         public const string MapHow = "كلّ فوز يضيء بيتاً. الخسارة ترجعك";
         public const string MapWhole = "المدينة كلّها لك!";
