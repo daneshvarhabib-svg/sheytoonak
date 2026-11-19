@@ -1830,8 +1830,16 @@ namespace Sheytoonak.Prototype
 
             // the two big buttons under the card: duel (orange) on the right, the 12/3 challenge (blue) on the left
             float bw = Mathf.Min(230 * u, Screen.width * 0.18f), bh = bw * 0.62f, by = ribR.yMax + 18 * u;
-            var duelR = new Rect(Screen.width * 0.5f + 10 * u, by, bw, bh);
-            var chalR = new Rect(Screen.width * 0.5f - 10 * u - bw, by, bw, bh);
+            // 2026-11-19: three in a row now, the map of the city on the left (user: «یه دکمه جدا بساز براش. اتحاد جداست»)
+            var duelR = new Rect(Screen.width * 0.5f + bw * 0.5f + 20 * u, by, bw, bh);
+            var chalR = new Rect(Screen.width * 0.5f - bw * 0.5f, by, bw, bh);
+            var mapR = new Rect(Screen.width * 0.5f - bw * 1.5f - 20 * u, by, bw, bh);
+            if (BigButton(mapR, "btn_green", "hub_season", Ar.MapButton, true, u)) { showMap = true; touch?.IgnoreFor(0.4f); }
+            if (duelGame.MapWaiting > 0)
+            {
+                var o = GUI.color; GUI.color = new Color(0.95f, 0.2f, 0.15f);
+                GUI.DrawTexture(new Rect(mapR.xMax - 26 * u, mapR.y - 6 * u, 26 * u, 26 * u), DotTex()); GUI.color = o;
+            }
             if (BigButton(duelR, "btn_orange", "hub_duel", "مبارزة", true, u)) StartGameFromScript();
             bool can = duelGame.CanEnterChallenge;
             if (BigButton(chalR, "btn_blue", "hub_challenge", "تحدّي", can, u))
@@ -1844,8 +1852,8 @@ namespace Sheytoonak.Prototype
             {
                 DuelHud.ChallengeStrip(new Rect(chalR.x - 20 * u, sy, chalR.width + 40 * u, 34 * u), run, u);
                 var left = run.EndsUtc - System.DateTime.UtcNow;
-                DuelHud.DrawIcon(new Rect(chalR.x - 150 * u, sy + 3 * u, 28 * u, 28 * u), "clock", Color.white);
-                GUI.Label(new Rect(chalR.x - 120 * u, sy, 100 * u, 34 * u), Ar.N(Mathf.Max(0, (int)left.TotalHours)) + ":" + Ar.N(Mathf.Max(0, left.Minutes)).PadLeft(2, '٠'), small);
+                DuelHud.DrawIcon(new Rect(mapR.center.x + 10 * u, sy + 3 * u, 28 * u, 28 * u), "clock", Color.white);
+                GUI.Label(new Rect(mapR.center.x - 90 * u, sy, 100 * u, 34 * u), Ar.N(Mathf.Max(0, (int)left.TotalHours)) + ":" + Ar.N(Mathf.Max(0, left.Minutes)).PadLeft(2, '٠'), small);
             }
             else
             {
@@ -1890,14 +1898,7 @@ namespace Sheytoonak.Prototype
                 var o = GUI.color; GUI.color = new Color(0.95f, 0.2f, 0.15f);
                 GUI.DrawTexture(new Rect(shopR.xMax - 26 * u, shopR.y - 6 * u, 26 * u, 26 * u), DotTex()); GUI.color = o;
             }
-            // the map of the city (2026-11-19) stands where the alliance button waited: the alliance needs a server (LAUNCH queue)
-            var mapR = new Rect(Screen.width - pad - sbw, Screen.height - sbh - pad, sbw, sbh);
-            if (BigButton(mapR, "btn_blue", "hub_season", Ar.MapButton, true, u)) { showMap = true; touch?.IgnoreFor(0.4f); }
-            if (duelGame.MapWaiting > 0)
-            {
-                var o = GUI.color; GUI.color = new Color(0.95f, 0.2f, 0.15f);
-                GUI.DrawTexture(new Rect(mapR.xMax - 26 * u, mapR.y - 6 * u, 26 * u, 26 * u), DotTex()); GUI.color = o;
-            }
+            SideSoon(new Rect(Screen.width - pad - sbw, Screen.height - sbh - pad, sbw, sbh), "btn_blue", "hub_alliance", "الحارة", u);
             ComboCard(new Rect(pad, top + barH + 30 * u + sbh + 18 * u, sbw * 1.1f, Mathf.Max(60 * u, (Screen.height - sbh - pad) - (top + barH + 30 * u + sbh + 18 * u) - 18 * u)), u);
 
             // the bag rack sits in a dark panel along the bottom
