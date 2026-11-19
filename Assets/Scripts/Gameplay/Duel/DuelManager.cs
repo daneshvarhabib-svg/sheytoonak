@@ -989,6 +989,9 @@ namespace Sheytoonak
             float spread = Mathf.Min(0.15f, house != null ? house.returnSpreadX : 0.15f);
             float x = Mathf.Clamp(foot.X + (rallyHits + 1 < HitsPerBall ? 0f : Random.Range(-1f, 1f) * spread), -config.laneHalfWidth, config.laneHalfWidth);
             float z = foot.Z + Random.Range(config.returnLandingDepth.x, config.returnLandingDepth.y);
+            // User (2026-11-19): «نقطه فرود رو بیار درست جلوی پا». While another hit may follow, the rebound comes down a
+            // step ahead of where the ball lies for a kick (1.2-1.9 m ahead until now), so the foot is on it as it lands.
+            if (rallyHits + 1 < HitsPerBall) z = foot.StrikeSpot.z + 0.35f;
             float flight = house != null ? house.returnFlightTime : 1.6f;
             if (rallyHits + 1 >= HitsPerBall)
             {
