@@ -47,6 +47,15 @@ namespace Sheytoonak.Prototype
             if (jingle != null) src.PlayOneShot(jingle, 0.9f);
         }
 
+        /// <summary>The same balloons and jingle for a prize taken (user 2026-11-19: «وقتی من جایزه مأموریت رو میگیرم باید
+        /// خوشحالی پلی بشه. مثل وقتی که قهرمان ها ارتقا پیدا میکنن»): an icon of the HUD and a line of text, already Arabic.</summary>
+        public void PlayPrize(string iconId, string text)
+        {
+            toolId = iconId; title = text;
+            start = Time.realtimeSinceStartup;
+            if (jingle != null) src.PlayOneShot(jingle, 0.9f);
+        }
+
         void OnGUI()
         {
             float t = Time.realtimeSinceStartup - start;

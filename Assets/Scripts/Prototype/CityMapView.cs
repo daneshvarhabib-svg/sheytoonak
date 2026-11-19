@@ -13,8 +13,10 @@ namespace Sheytoonak
     /// </summary>
     public static class CityMapView
     {
-        const int W = 512, H = 256;
-        const float Wash = 0.30f;
+        const int W = 1024, H = 512;
+        // ⚠️ the user asked for 30 %, then saw it on the phone: «اون سی درصد خیلی کم رنگه تو بازی و دیده نمی‌شه» → 50 %, purer
+        // colours, and the quarter being fought for starts at 20 % instead of from nothing
+        const float Wash = 0.50f, FrontFloor = 0.20f;
         static Texture2D map, layer; static bool looked;
         static int[] cell; static bool[] edge; static int[] order;
         static int bakedCurses = -1, bakedPeak = -1;
@@ -41,7 +43,7 @@ namespace Sheytoonak
                 if (x * x + y * y > 0.92f) continue;
                 if (InRiver(cx + x * rx, cy + y * ry - 0.03f)) continue;
                 float px = (cx + x * rx) * W, py = (cy + y * ry) * H; bool far = true;
-                for (int k = 0; k < i && far; k++) far = (sx[k] - px) * (sx[k] - px) + (sy[k] - py) * (sy[k] - py) > 30f * 30f;
+                for (int k = 0; k < i && far; k++) far = (sx[k] - px) * (sx[k] - px) + (sy[k] - py) * (sy[k] - py) > 60f * 60f;
                 if (!far) continue;
                 sx[i] = px; sy[i] = py; i++;
             }
@@ -59,7 +61,7 @@ namespace Sheytoonak
                         if (d < d1) { d2 = d1; d1 = d; best = k; } else if (d < d2) d2 = d;
                     }
                     cell[y * W + x] = best;
-                    edge[y * W + x] = Mathf.Sqrt(d2) - Mathf.Sqrt(d1) < 1.6f || wall > 0.975f || InRiver(x / (float)W, y / (float)H - 0.012f);
+                    edge[y * W + x] = Mathf.Sqrt(d2) - Mathf.Sqrt(d1) < 2.6f || wall > 0.975f || InRiver(x / (float)W, y / (float)H - 0.012f);
                 }
             // the order the quarters fall in: shuffled once, the same for everyone
             order = new int[n];
@@ -77,12 +79,12 @@ namespace Sheytoonak
             for (int i = 0; i < n; i++)
             {
                 int q = order[i];
-                if (i < held) wash[q] = new Color32(40, 200, 70, a);
-                else if (i < peakHeld) wash[q] = new Color32(225, 45, 35, a);
-                else if (i == held) wash[q] = new Color32(40, 200, 70, (byte)(a * CityMap.HousesInFront(curses) / (float)CityMap.HousesPerQuarter));
+                if (i < held) wash[q] = new Color32(20, 215, 60, a);
+                else if (i < peakHeld) wash[q] = new Color32(235, 30, 25, a);
+                else if (i == held) wash[q] = new Color32(20, 215, 60, (byte)(255 * Mathf.Lerp(FrontFloor, Wash, CityMap.HousesInFront(curses) / (float)CityMap.HousesPerQuarter)));
                 else wash[q] = new Color32(0, 0, 0, 0);
             }
-            var px = new Color32[W * H]; var line = new Color32(40, 22, 10, 120);
+            var px = new Color32[W * H]; var line = new Color32(40, 22, 10, 170);
             for (int i = 0; i < px.Length; i++) px[i] = cell[i] < 0 ? new Color32(0, 0, 0, 0) : edge[i] ? line : wash[cell[i]];
             layer.SetPixels32(px); layer.Apply(false);
             bakedCurses = curses; bakedPeak = peak;

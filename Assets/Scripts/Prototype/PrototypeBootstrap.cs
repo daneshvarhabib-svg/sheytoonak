@@ -1799,13 +1799,14 @@ namespace Sheytoonak.Prototype
             GUI.Label(new Rect(shardsR.x + 10 * u, top, shardsR.width - barH, barH), Ar.N(duelGame.ShardBank), num);
             DuelHud.DrawIcon(new Rect(cursesR.xMax - barH * 0.95f, top + barH * 0.12f, barH * 0.76f, barH * 0.76f), "curse", Color.white);
             GUI.Label(new Rect(cursesR.x + 10 * u, top, cursesR.width - barH, barH), Ar.N(duelGame.Curses[0]), num);
-            var titleR = new Rect(pad, top, Mathf.Min(330 * u, Screen.width * 0.3f), barH);
+            // user (2026-11-19): «اون دکمه سه خطی ... بره منتهی الیه بالا سمت چپ و جاش رو با دکمه کناری عوض کن»
+            var menuR = new Rect(pad, top, barH * 1.15f, barH);
+            var titleR = new Rect(menuR.xMax + 12 * u, top, Mathf.Min(330 * u, Screen.width * 0.3f), barH);
             Plank(titleR);
             GUI.Label(titleR, Ar.T(Ar.Title), num);
             // User (2026-11-19, with a recording of the reference's menu): «اون اعلانات رو ببر مثل پسرخوانده تو پستو. دیفالت روشن
             // بذار». The buzz, the notice and the invite left the top bar for a back room behind one small plank; both
             // switches are on unless the player turns them off there.
-            var menuR = new Rect(titleR.xMax + 12 * u, top, barH * 1.15f, barH);
             Plank(menuR);
             {
                 var o = GUI.color; GUI.color = new Color(1f, 0.92f, 0.7f);
@@ -2303,7 +2304,8 @@ namespace Sheytoonak.Prototype
                     MoneyButton(btn, Ar.T(Ar.MissionTake), done, u, small);
                     if (done && GUI.Button(btn, GUIContent.none, GUIStyle.none))
                     {
-                        if (bonus) duelGame.ClaimMissionBonus(); else duelGame.ClaimMission(i);
+                        int got = bonus ? duelGame.ClaimMissionBonus() : duelGame.ClaimMission(i);
+                        if (got > 0) Sheytoonak.Prototype.UpgradeCelebration.Instance?.PlayPrize(bonus ? "lira" : "shards", "+" + Ar.N(got));
                         TelegramWeb.Haptic(1); touch?.IgnoreFor(0.3f);
                     }
                 }
