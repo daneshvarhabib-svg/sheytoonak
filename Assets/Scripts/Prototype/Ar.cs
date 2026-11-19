@@ -100,6 +100,10 @@ namespace Sheytoonak
         public const string ChallengeStart = "ابدأ";
         public const string ChallengeGo = "تابع";
         public const string ChallengeFreeOnce = "الأولى مجّاناً";
+        /// <summary>What a window antidote works against, said when it is pressed with nothing of its kind on the wall.</summary>
+        public static string AntidoteIsFor(Sheytoonak.Core.Duel.Effect e) =>
+            e == Sheytoonak.Core.Duel.Effect.Close ? "هذه تُسقط السجّادة فقط" :
+            e == Sheytoonak.Core.Duel.Effect.Cover ? "هذه تُبعد العربات والقوافل فقط" : NothingToClear;
         public const string GatePassed = "عبرت الباب! صار لك: ";
         public const string MapNext = "التالي: ";
         public const string JarFree = "مجّاناً";

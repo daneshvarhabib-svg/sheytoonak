@@ -845,7 +845,9 @@ namespace Sheytoonak
             {
                 var r = Rules.Antidote(s, h.Antidote);
                 if (r == ActionReject.None) { Rules.NoteActivity(s); Pop?.Invoke(h.Antidote.Id, s, PopKind.Antidote); if (s == Me) NoteMission(Sheytoonak.Core.Missions.MissionKind.UseAntidotes); }
-                else if (r == ActionReject.NoTarget && s == Me) Toast?.Invoke(Ar.NothingToClear, 1.3f);
+                // User (2026-11-19, pressing the rug push at a parked cart: «این زور هل دادن کار نمی‌کنه چرا؟»): the refusal now
+                // says what this antidote is for, instead of «nothing to clear».
+                else if (r == ActionReject.NoTarget && s == Me) Toast?.Invoke(Ar.AntidoteIsFor(h.Antidote.Effect), 2.0f);
                 else if (r == ActionReject.TooWeak && s == Me) Toast?.Invoke(Ar.TooWeak, 1.6f);
                 return r;
             }
