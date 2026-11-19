@@ -198,6 +198,7 @@ namespace Sheytoonak
                 float edge = OffScreenX(mz, mh * emptyT[0].width / emptyT[0].height * 0.5f + 0.5f, 24f);
                 float xa = goLeft ? edge : -edge, xm = t.position.x, xb = -xa;
                 var med = Make("Stretcher bearers", fe[0], mh, new Vector3(xa, 0f, mz));
+                PlayFx("siren", 0.7f, ref lastSiren); // medieval: no siren, the bearers shout «أفسحوا الطريق!» (recorded 2026-11-19, same file name)
                 var mr = med.GetComponent<SpriteRenderer>();
                 if (!goLeft) med.localScale = new Vector3(-med.localScale.x, med.localScale.y, med.localScale.z);
                 const float pace = 2.4f;                         // metres a second: they hurry
