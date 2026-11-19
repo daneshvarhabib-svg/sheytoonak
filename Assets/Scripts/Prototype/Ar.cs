@@ -66,8 +66,10 @@ namespace Sheytoonak
         public const string NothingToClear = "ما في شي يشيلو";
         /// <summary>The antidote is two levels or more below the poison (SCENARIO §8).</summary>
         public const string TooWeak = "الترياق أضعف من السمّ";
-        public const string Lira = "ليرة";
-        public const string NotEnoughLira = "ما معك ليرات كفاية";
+        // user 2026-11-19: «تیله خوبه»: the second currency is glass marbles (whole glass, against the shards of broken glass), not gold coins.
+        // ⚠️ the code still says Lira everywhere (saves, ShopCatalog): only the word and the picture changed.
+        public const string Lira = "بِلّي";
+        public const string NotEnoughLira = "ما معك بِلّي كفاية";
         public const string PaySoon = "الدفع قريباً";
         public const string CodeWrong = "الكود غلط أو مستعمل";
         public const string Upgrade = "قوّي";

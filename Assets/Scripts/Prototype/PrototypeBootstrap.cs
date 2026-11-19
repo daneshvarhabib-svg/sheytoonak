@@ -2026,7 +2026,7 @@ namespace Sheytoonak.Prototype
             y += hRow + g;
 
             // --- 4. lira for money (through the store; «soon» until one is connected)
-            var lr = Panel(new Rect(0, y, w, hRow), Ar.T("ليرات"), title, u);
+            var lr = Panel(new Rect(0, y, w, hRow), Ar.T("بِلّي"), title, u);
             var packs = Sheytoonak.Core.Bags.ShopCatalog.LiraPacks;
             Row(lr, packs.Length, u, (k, r) =>
             {
