@@ -91,7 +91,9 @@ namespace Sheytoonak
                 else if (lobbyLoop == null && r == null && live != null) Switch(null);
                 return;
             }
-            bool nearEnd = r.Windows[0] >= r.Majority - 1 || r.Windows[1] >= r.Majority - 1;
+            // User (2026-11-19, sending «Final Stand»): «سی ثانیه اخر». The duel is decided by the clock now, not by a
+            // majority, so the tense tune belongs to the last thirty seconds (the old "one window short" test is gone).
+            bool nearEnd = duel.MatchTimeLeft > 0f && duel.MatchTimeLeft <= 30f;
             if (nearEnd && !tense && tensionLoop != null) { tense = true; Switch(tensionLoop); }
         }
 
