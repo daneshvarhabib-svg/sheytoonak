@@ -1824,22 +1824,36 @@ namespace Sheytoonak.Prototype
             }
             var ribbon = DuelHud.Kit("ribbon");
             var ribR = new Rect(card.center.x - cw * 0.42f, card.yMax - ch * 0.2f, cw * 0.84f, cw * 0.84f * 246f / 969f);
-            if (ribbon != null) GUI.DrawTexture(ribR, ribbon, ScaleMode.StretchToFill);
-            var ink = new GUIStyle(small) { fontSize = Mathf.RoundToInt(22 * u) }; ink.normal.textColor = new Color(0.35f, 0.18f, 0.08f);
-            GUI.Label(new Rect(ribR.x, ribR.y + ribR.height * 0.05f, ribR.width, ribR.height * 0.6f), Ar.T(Ar.Title), ink);
+            // User (2026-11-19): «ببرش بالای صفحه بذار ... یه بنر براش بالای اون دو تا دکمه. روی بنر که کلیک کردن نقشه بزرگ شه و
+            // جایزه پوش شه». The ribbon's place is the map's banner now: a band of the painting, how far the line is, a red dot
+            // when a prize waits. A tap opens the map; a waiting prize is paid as it opens. (The game's name stays in the top bar.)
+            {
+                if (!mapLooked) { mapLooked = true; mapTex = Resources.Load<Texture2D>("Art/UI/city_map"); }
+                var o = GUI.color; float bt = 3 * u;
+                GUI.color = new Color(0.95f, 0.75f, 0.3f); GUI.DrawTexture(new Rect(ribR.x - bt, ribR.y - bt, ribR.width + 2 * bt, ribR.height + 2 * bt), Texture2D.whiteTexture); GUI.color = o;
+                if (mapTex != null)
+                {
+                    float band = Mathf.Clamp01((ribR.height / ribR.width) * (mapTex.width / (float)mapTex.height));
+                    GUI.DrawTextureWithTexCoords(ribR, mapTex, new Rect(0f, 0.5f - band * 0.5f, 1f, band));
+                }
+                int mc = Mathf.Min(duelGame.Curses[0], Sheytoonak.Core.Missions.CityMap.Total); float mf = mc / (float)Sheytoonak.Core.Missions.CityMap.Total;
+                // fog over what is not ours yet (the line advances from the right, like the text)
+                GUI.color = new Color(0.06f, 0.05f, 0.09f, 0.72f); GUI.DrawTexture(new Rect(ribR.x, ribR.y, ribR.width * (1f - mf), ribR.height), Texture2D.whiteTexture);
+                GUI.color = new Color(0f, 0f, 0f, 0.3f); GUI.DrawTexture(ribR, Texture2D.whiteTexture);
+                GUI.color = new Color(0.95f, 0.2f, 0.15f); GUI.DrawTexture(new Rect(ribR.x + ribR.width * (1f - mf) - 1.5f * u, ribR.y, 3 * u, ribR.height), Texture2D.whiteTexture);
+                GUI.color = o;
+                var mt = new GUIStyle(small) { fontSize = Mathf.RoundToInt(ribR.height * 0.3f), fontStyle = FontStyle.Bold }; mt.normal.textColor = new Color(1f, 0.9f, 0.55f);
+                GUI.Label(new Rect(ribR.x, ribR.y + ribR.height * 0.06f, ribR.width, ribR.height * 0.5f), Ar.T(Ar.MapTitle), mt);
+                var mn = new GUIStyle(small) { fontSize = Mathf.RoundToInt(ribR.height * 0.24f) };
+                GUI.Label(new Rect(ribR.x, ribR.y + ribR.height * 0.52f, ribR.width, ribR.height * 0.42f), Ar.N(mc) + "/" + Ar.N(Sheytoonak.Core.Missions.CityMap.Total), mn);
+                if (duelGame.MapWaiting > 0) { GUI.color = new Color(0.95f, 0.2f, 0.15f); GUI.DrawTexture(new Rect(ribR.xMax - 14 * u, ribR.y - 12 * u, 26 * u, 26 * u), DotTex()); GUI.color = o; }
+                if (GUI.Button(ribR, GUIContent.none, GUIStyle.none)) { showMap = true; touch?.IgnoreFor(0.4f); duelGame.ClaimMapPrize(); }
+            }
 
             // the two big buttons under the card: duel (orange) on the right, the 12/3 challenge (blue) on the left
             float bw = Mathf.Min(230 * u, Screen.width * 0.18f), bh = bw * 0.62f, by = ribR.yMax + 18 * u;
-            // 2026-11-19: three in a row now, the map of the city on the left (user: «یه دکمه جدا بساز براش. اتحاد جداست»)
-            var duelR = new Rect(Screen.width * 0.5f + bw * 0.5f + 20 * u, by, bw, bh);
-            var chalR = new Rect(Screen.width * 0.5f - bw * 0.5f, by, bw, bh);
-            var mapR = new Rect(Screen.width * 0.5f - bw * 1.5f - 20 * u, by, bw, bh);
-            if (BigButton(mapR, "btn_green", "hub_season", Ar.MapButton, true, u)) { showMap = true; touch?.IgnoreFor(0.4f); }
-            if (duelGame.MapWaiting > 0)
-            {
-                var o = GUI.color; GUI.color = new Color(0.95f, 0.2f, 0.15f);
-                GUI.DrawTexture(new Rect(mapR.xMax - 26 * u, mapR.y - 6 * u, 26 * u, 26 * u), DotTex()); GUI.color = o;
-            }
+            var duelR = new Rect(Screen.width * 0.5f + 10 * u, by, bw, bh);
+            var chalR = new Rect(Screen.width * 0.5f - 10 * u - bw, by, bw, bh);
             if (BigButton(duelR, "btn_orange", "hub_duel", "مبارزة", true, u)) StartGameFromScript();
             bool can = duelGame.CanEnterChallenge;
             if (BigButton(chalR, "btn_blue", "hub_challenge", "تحدّي", can, u))
@@ -1852,8 +1866,8 @@ namespace Sheytoonak.Prototype
             {
                 DuelHud.ChallengeStrip(new Rect(chalR.x - 20 * u, sy, chalR.width + 40 * u, 34 * u), run, u);
                 var left = run.EndsUtc - System.DateTime.UtcNow;
-                DuelHud.DrawIcon(new Rect(mapR.center.x + 10 * u, sy + 3 * u, 28 * u, 28 * u), "clock", Color.white);
-                GUI.Label(new Rect(mapR.center.x - 90 * u, sy, 100 * u, 34 * u), Ar.N(Mathf.Max(0, (int)left.TotalHours)) + ":" + Ar.N(Mathf.Max(0, left.Minutes)).PadLeft(2, '٠'), small);
+                DuelHud.DrawIcon(new Rect(chalR.x - 150 * u, sy + 3 * u, 28 * u, 28 * u), "clock", Color.white);
+                GUI.Label(new Rect(chalR.x - 120 * u, sy, 100 * u, 34 * u), Ar.N(Mathf.Max(0, (int)left.TotalHours)) + ":" + Ar.N(Mathf.Max(0, left.Minutes)).PadLeft(2, '٠'), small);
             }
             else
             {
