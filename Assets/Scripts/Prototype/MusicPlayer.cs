@@ -19,7 +19,7 @@ namespace Sheytoonak
         public float fadeOutSeconds = 1.2f, gapSeconds = 0.35f, fadeInSeconds = 2.5f;
 
         AudioClip duelLoop, tensionLoop, stingWin, stingLose, stingDraw, lobbyLoop;
-        AudioSource a, b, sting;   // a/b alternate as the music bed, sting is one-shot
+        AudioSource a, b;          // a/b alternate as the music bed (the result tune is a bed too, unlooped)
         AudioSource live;          // the bed currently fading in / playing
         DuelManager duel;
         bool tense;
@@ -33,8 +33,6 @@ namespace Sheytoonak
             stingDraw = Resources.Load<AudioClip>("Audio/Music/sting_draw"); // a draw's own sting (user 2026-11-14); silent until it exists
             lobbyLoop = Resources.Load<AudioClip>("Audio/Music/lobby_loop");
             a = Bed(); b = Bed();
-            sting = gameObject.AddComponent<AudioSource>();
-            sting.playOnAwake = false; sting.spatialBlend = 0f;
             duel = GetComponent<DuelManager>();
         }
 
@@ -61,20 +59,23 @@ namespace Sheytoonak
             duel.Finished -= OnFinished;
         }
 
-        void OnDraft() { tense = false; lobbyAt = -1f; Switch(duelLoop); }
+        void OnDraft() { tense = false; resultEnds = -1f; Switch(duelLoop); }
         void OnDuel() { tense = false; if (live == null || live.clip != duelLoop) Switch(duelLoop); }
 
+        // User (2026-11-19) sent minute-long result pieces: «نیازی نیست کات بزنی / ممکنه بازیکن بخواد بیشتر بمونه تو
+        // اون صفحه و موسیقی بهتر پلی بمونه». So the result tune is a bed of its own (not a one-shot under a timer):
+        // it plays whole while the result card is up, and only leaving the card (or its natural end) brings the lobby tune.
         void OnFinished(Side winner, bool iWon)
         {
-            Switch(null);
-            // a draw (user 2026-11-14): its own sting, never the win or lose one
+            // a draw (user 2026-11-14): its own tune, never the win or lose one
             bool draw = duel != null && duel.Rules != null && duel.Rules.Draw;
             var c = draw ? stingDraw : iWon ? stingWin : stingLose;
-            if (c != null) sting.PlayOneShot(c, volume);
-            lobbyAt = Time.unscaledTime + (c != null ? c.length : 0f) + 0.5f; // the lobby tune waits for the sting
+            Switch(c);
+            resultEnds = c != null ? Time.unscaledTime + 0.5f + c.length : -1f;
         }
 
-        float lobbyAt = -1f;
+        float resultEnds = -1f;
+        bool IsResult(AudioClip c) => c != null && (c == stingWin || c == stingLose || c == stingDraw);
         bool OnLobby => live != null && (live.clip == lobbyLoop || pendingClip == lobbyLoop);
         AudioClip pendingClip;
 
@@ -83,8 +84,10 @@ namespace Sheytoonak
             var r = duel != null ? duel.Rules : null;
             if (r == null || r.Finished)
             {
-                // home screen (ToHome nulls the rules) or the result card: the lobby tune, once the sting has played
-                if (lobbyLoop != null && !OnLobby && Time.unscaledTime >= lobbyAt) Switch(lobbyLoop);
+                // still on the result card and its tune has not run out: leave it alone
+                if (r != null && IsResult(pendingClip) && Time.unscaledTime < resultEnds) return;
+                // home screen (ToHome nulls the rules), or the result tune ended: the lobby tune
+                if (lobbyLoop != null && !OnLobby) Switch(lobbyLoop);
                 else if (lobbyLoop == null && r == null && live != null) Switch(null);
                 return;
             }
@@ -104,22 +107,25 @@ namespace Sheytoonak
 
         IEnumerator Fade(AudioSource from, AudioSource to, AudioClip clip)
         {
+            // the result tune answers the last hit, so it comes in quickly; the loops keep their slow fades
+            bool quick = IsResult(clip);
+            float outS = quick ? 0.3f : fadeOutSeconds, inS = quick ? 0.15f : fadeInSeconds;
             float t = 0f, f0 = from != null ? from.volume : 0f;
-            while (from != null && t < fadeOutSeconds)
+            while (from != null && t < outS)
             {
                 t += Time.unscaledDeltaTime;
-                from.volume = Mathf.Lerp(f0, 0f, Mathf.Clamp01(t / fadeOutSeconds));
+                from.volume = Mathf.Lerp(f0, 0f, Mathf.Clamp01(t / outS));
                 yield return null;
             }
             if (from != null) { from.volume = 0f; from.Stop(); }
             if (to == null) yield break;
-            if (from != null) yield return new WaitForSecondsRealtime(gapSeconds);
-            to.clip = clip; to.volume = 0f; to.Play();
+            if (from != null && !quick) yield return new WaitForSecondsRealtime(gapSeconds);
+            to.clip = clip; to.loop = !quick; to.volume = 0f; to.Play();
             t = 0f;
-            while (t < fadeInSeconds)
+            while (t < inS)
             {
                 t += Time.unscaledDeltaTime;
-                to.volume = Mathf.Lerp(0f, volume, Mathf.Clamp01(t / fadeInSeconds));
+                to.volume = Mathf.Lerp(0f, volume, Mathf.Clamp01(t / inS));
                 yield return null;
             }
             to.volume = volume;
