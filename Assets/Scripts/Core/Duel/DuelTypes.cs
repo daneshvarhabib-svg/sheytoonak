@@ -51,19 +51,22 @@ namespace Sheytoonak.Core.Duel
     {
         public static readonly HeroDef[] All =
         {
-            new HeroDef("abu_shahata", "أبو شحّاطة البيروتي",
+            new HeroDef("abu_shahata", "أبو نعل البيروتي",
                 new Tool("pigeon", "حمامة", Effect.Chance, 1, Lifetime.OneTurn),
                 // User (2026-11-13): «به جای میخ همون ماشین شهرداری باشه». Same id (cards and levels kept), the city tow truck now.
                 new Tool("nails", "حرّاس المدينة", Effect.Cover, 1)),
-            new HeroDef("zaatar", "زعتر الشامي",
+            // ⚠️ 2026-11-19 (user: «اسم قهرمان ها هم عوض شه به کلاسیک»): the names are classical now, like the rest of the text.
+            // Ids, pictures and saves keep the old words (abu_shahata, toni, hamada ...): أبو شحّاطة → أبو نعل, طوني الزعران →
+            // طنّوس الشقيّ, ريما الشرشوحة → ريما السليطة, أم العربيات → أمّ العربات, حمادة الطرشجي → حمّاد الخلّال, الشامي → الدمشقي.
+            new HeroDef("zaatar", "زعتر الدمشقي",
                 new Tool("bus", "قافلة الجِمال", Effect.Cover, 1, Lifetime.OneTurn) /* two turns until the human test (review 2026-11-07 §2.4) */,
                 new Tool("vane", "دوّارة الريح", Effect.Accuracy, 1)),
-            new HeroDef("fulla", "فُلّة الإسكندرانية",
+            new HeroDef("fulla", "فُلّة الإسكندرانيّة",
                 new Tool("wind", "ريح قويّة", Effect.Accuracy, 1, Lifetime.OneTurn),
                 // User (2026-11-10): «دکمه سنگ ریزه دیگه کاربرد نداره و باید بشه پادزهر آویزون کردن فرش. اگر کسی فرش آویزون کرد
                 // این هل بده فرش رو از پشت بوم و بندازه رو زمین». The pebble (it was thrown at the neighbour) is gone with her.
                 new Tool("rug_push", "دفع السجّادة", Effect.Close, 1)),
-            new HeroDef("rima", "ريما الشرشوحة الصيداوية",
+            new HeroDef("rima", "ريما السليطة الصيداويّة",
                 // ⚠️ until 2026-11-04 the neighbour stayed until an antidote (pebble). User: «اون سه تا شیشه‌ای که بازه چیه؟ … نباید بعد از
                 // یکی دو نوبت خودش بسته شه؟» -- with every other window broken the duel could not end. Now she shuts it after two turns.
                 // User (2026-11-09): «تصویر زنی که پنجره رو باز می‌کنه خیلی نمی‌خوره به کادر … به جای زنی که پنجره رو باز می‌کنه یه
@@ -73,17 +76,17 @@ namespace Sheytoonak.Core.Duel
                 new Tool("carpet", "سجّادة على السطح", Effect.Close, 1, Lifetime.OneTurn),
                 // User (2026-11-13): the plank was useless; the city suction tanker sucks the puddle dry (same id and effect).
                 new Tool("plank", "السقّاء", Effect.Reach, 1)),
-            new HeroDef("toni", "طوني الزعران البيروتي",
+            new HeroDef("toni", "طنّوس الشقيّ البيروتي",
                 new Tool("puddle", "حفرة ماء", Effect.Reach, 1, Lifetime.OneTurn),
                 new Tool("fart", "ضرطة", Effect.Chance, 1)),
             // ⚠️ heroes 4, 5 and 7 of docs/HEROES.fa.md (2026-11-04): grown-ups after the five kids (user: «باقی قهرمانان
             // همه بچه نباشن … تا پیرمرد و پیرزن»). Their poisons reuse the stage props of the same effect until their
             // own art arrives (painted the same day: lorry, pickle cart, rain cloud, complaint, umbrella, flashlight). Um al-Arabiyat kicks with her left foot.
-            new HeroDef("um_arabiyat", "أم العربيات البغدادية",
+            new HeroDef("um_arabiyat", "أمّ العربات البغداديّة",
                 new Tool("truck", "عربة الثور", Effect.Cover, 1, Lifetime.OneTurn) /* two turns until the human test (review 2026-11-07 §2.4) */,
                 // User (2026-11-13): «به جای شکایت یه چیز جذاب تر از نظر بصری» → «زور ام العربیات خوبه»: she shoves the vehicle away.
-                new Tool("complaint", "دفعة أم العربيات", Effect.Cover, 1)),
-            new HeroDef("hamada", "حمادة الطرشجي المصراوي",
+                new Tool("complaint", "دفعة أمّ العربات", Effect.Cover, 1)),
+            new HeroDef("hamada", "حمّاد الخلّال المصري",
                 new Tool("cart", "عربة البائع", Effect.Cover, 1, Lifetime.OneTurn),
                 new Tool("umbrella", "مظلّة", Effect.Reach, 1)),
             new HeroDef("bubakr", "بوبكر الصيّاد التونسي",

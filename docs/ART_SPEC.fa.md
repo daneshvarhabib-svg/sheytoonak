@@ -1252,3 +1252,16 @@ A pedestrian walking to the right, exact side view, full body, fully clothed: a 
 | curse_m_06 | مرد | `[indignant, shouting] من سيدفع ثمن الزجاج؟! من؟!` |
 
 **جایِ آژیر** (`Audio/Fx/siren_01`، برانکاردچی‌ها): `[two men shouting urgently while running] أفسحوا الطريق! أفسحوا الطريق!`
+
+**فریادِ شوتِ قهرمان‌ها به فصحی** (۱۹ نوامبر؛ `Audio/Heroes/<id>/kick_01..03`، ElevenLabs v3، Stability ~۴۰، بی‌نامِ خدا):
+
+| id | نامِ تازه | صدا | ۱ | ۲ | ۳ |
+|---|---|---|---|---|---|
+| abu_shahata | أبو نعل | مرد، میان‌سال، خشن | `[gruff, shouting] خذ هذه!` | `[boasting] انظر جيّداً!` | `[roaring] طِر أيّها الزجاج!` |
+| zaatar | زعتر | مرد، جوان، شاد | `[cheerful, excited] هيّا بنا!` | `[proud] انظروا هذه الضربة!` | `[laughing] هكذا تُكسر النوافذ!` |
+| fulla | فُلّة | زن، جوان، پرانرژی | `[playful shout] خذها يا صديقي!` | `[delighted] نعم، هكذا!` | `[teasing] وداعاً أيّتها النافذة!` |
+| rima | ريما | زن، میان‌سال، بلند | `[sharp, threatening] الويل لك!` | `[urging loudly] هيّا! هيّا!` | `[triumphant] هذه من ريما!` |
+| toni | طنّوس | مرد، جوان، زورگو | `[bully shout] اذهبي!` | `[mocking] هذه لك!` | `[impressed with himself] يا لها من ضربة!` |
+| um_arabiyat | أمّ العربات | زن، مسن، محکم | `[short hard grunt] ها!` | `[firm, motherly] خذها يا بنيّ!` | `[warning] الآن سترى!` |
+| hamada | حمّاد | مرد، جوان، شوخ | `[joking, loud] يا سلام!` | `[cheeky] خذ نصيبك!` | `[street-seller call] من يريد مخلّلاً؟!` |
+| bubakr | بوبكر | مرد، میان‌سال، خونسرد | `[calm, dry] انتهى الأمر.` | `[short, firm] هيّا!` | `[relaxed] حسناً، خذها!` |
