@@ -336,6 +336,10 @@ namespace Sheytoonak.Prototype
         void LateUpdate()
         {
             StreetLife.Gassed = FartUp;
+            bool rally = duel != null && duel.RallyActive;
+            for (int sd = 0; sd < 2; sd++)
+                for (int sl = 0; painted[sd] != null && sl < painted[sd].Length; sl++)
+                    if (painted[sd][sl] != null) { var rg = painted[sd][sl].GetComponent<HeroRig>(); if (rg != null) rg.Rallying = rally; }
             Breathe();
             if (duel == null || duel.ball == null) return;
             ballX = Mathf.Lerp(ballX, duel.ball.transform.position.x, 4f * Time.deltaTime);

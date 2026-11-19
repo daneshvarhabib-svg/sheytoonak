@@ -285,6 +285,8 @@ namespace Sheytoonak.Prototype
             p.x *= host.flipX ? -rigScale : rigScale; p.y *= rigScale;
             return transform.TransformVector(p);
         }
+        /// <summary>Set by the stage while the kicked ball is still alive (more hits may follow): no walk pictures.</summary>
+        public bool Rallying;
         public bool Kicking => kickT >= 0f && kickT < KickSeconds;
         const float KickSeconds = 0.7f; // 0.55 until 2026-11-17: room for the leg to come down and settle
 
@@ -428,6 +430,14 @@ namespace Sheytoonak.Prototype
                 readyT += dt;
                 Cut(readyT < 0.09f && KickFrame(1) != null ? KickFrame(1) : KickFrame(0));
                 facing = home;
+            }
+            else if (Rallying && idleClip.Count > 0)
+            {
+                // User (2026-11-19): «از وقتی شوت اول رو میزنه تا شوت دوم و بعد سوم … قهرمان اشتباهی نیم رخ می‌شه و یه حرکتی
+                // میکنه. بعد دوباره لحظه ضربه زدن برمی‌گرده و پشتش به دوربین می‌شه». Between the kicks of one ball the stage
+                // moves him to the rebound (DuelStage.ToeToBall): that jump read as walking and the profile walk sheet
+                // flashed. While the ball is alive he keeps his back to the camera, waiting for it.
+                Cut(idleClip[0]); facing = home; idleClock = 0f;
             }
             else if (walk > 0.2f && walkClip.Count > 0)
             {
