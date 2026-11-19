@@ -1880,7 +1880,7 @@ namespace Sheytoonak.Prototype
             float sbw = Mathf.Min(200 * u, Screen.width * 0.15f), sbh = sbw * 0.62f;
             var misR = new Rect(pad, top + barH + 30 * u, sbw, sbh);
             if (BigButton(misR, "btn_green", "hub_missions", "مهمّات", true, u)) { showMissions = true; touch?.IgnoreFor(0.4f); }
-            if (duelGame.Missions.AnyReady(DuelManager.ShopDay) || duelGame.Season.Waiting(DuelManager.ShopDay) > 0)
+            if (duelGame.Missions.AnyReady(DuelManager.ShopDay))
             {
                 var o = GUI.color; GUI.color = new Color(0.95f, 0.2f, 0.15f);
                 GUI.DrawTexture(new Rect(misR.xMax - 26 * u, misR.y - 6 * u, 26 * u, 26 * u), DotTex()); GUI.color = o;
@@ -2151,8 +2151,7 @@ namespace Sheytoonak.Prototype
                 GUI.Label(new Rect(pr.x, pr.yMax - ph * 0.12f, pw, ph * 0.08f), Ar.T(shopNote), gold);
         }
 
-        bool showMissions, seasonTab;
-        public void ShowSeasonFromScript() { ShowMissionsFromScript(); seasonTab = true; }
+        bool showMissions;
         public void ShowMissionsFromScript() { showStart = true; showHeroes = false; showShop = false; showJar = false; showMap = false; showMissions = true; }
 
         /// <summary>
@@ -2180,25 +2179,6 @@ namespace Sheytoonak.Prototype
             var gold = new GUIStyle(num); gold.normal.textColor = new Color(1f, 0.85f, 0.4f);
             var left = DuelManager.ShopDay.AddDays(1) - System.DateTime.UtcNow.AddHours(3.5);
             GUI.Label(titleR, Ar.T(Ar.MissionsTitle) + "   " + Ar.N(Mathf.Max(0, (int)left.TotalHours)) + ":" + Ar.N(Mathf.Max(0, left.Minutes)).PadLeft(2, '٠'), gold);
-
-            // two tabs under the bar: today's jobs and the season road they feed (2026-11-19)
-            if (!shopNoteHooked) { shopNoteHooked = true; duelGame.ShopNote += m => { shopNote = m; shopNoteUntil = Time.time + 1.8f; }; }
-            float tabW = Mathf.Min(260 * u, Screen.width * 0.3f), tabH = 44 * u, tabY = top + barH + 8 * u;
-            for (int t = 0; t < 2; t++)
-            {
-                // right-to-left: the jobs tab on the right
-                var tr0 = new Rect(Screen.width * 0.5f + (t == 0 ? 6 * u : -6 * u - tabW), tabY, tabW, tabH);
-                bool on = seasonTab == (t == 1);
-                var oc0 = GUI.color; GUI.color = on ? new Color(0.95f, 0.6f, 0.15f, 0.95f) : new Color(0f, 0f, 0f, 0.6f);
-                GUI.DrawTexture(tr0, Texture2D.whiteTexture); GUI.color = oc0;
-                GUI.Label(tr0, Ar.T(t == 0 ? Ar.MissionsTitle : Ar.SeasonTitle), small);
-                bool dot = t == 0 ? duelGame.Missions.AnyReady(DuelManager.ShopDay) : duelGame.Season.Waiting(DuelManager.ShopDay) > 0;
-                if (dot) { GUI.color = new Color(0.95f, 0.2f, 0.15f); GUI.DrawTexture(new Rect(tr0.xMax - 14 * u, tr0.y - 8 * u, 22 * u, 22 * u), DotTex()); GUI.color = oc0; }
-                if (GUI.Button(tr0, GUIContent.none, GUIStyle.none)) { seasonTab = t == 1; touch?.IgnoreFor(0.3f); }
-            }
-            if (lootShown) { LootReveal(u); return; }
-            if (seasonTab) { SeasonRoadPanel(new Rect(pad, tabY + tabH + 10 * u, Screen.width - 2 * pad, Screen.height - tabY - tabH - 10 * u - pad), u, num, small); return; }
-            barH += tabH + 10 * u;
 
             var day = DuelManager.ShopDay;
             var jobs = Sheytoonak.Core.Missions.DailyMissions.For(day);
@@ -2256,58 +2236,6 @@ namespace Sheytoonak.Prototype
                     }
                 }
             }
-        }
-
-        /// <summary>
-        /// «طريق الموسم», free row: 30 steps in 3 rows of 10 walked like a snake from the top right, each with its prize.
-        /// Taken steps are dim, the reached ones glow and pay on a tap (in order), the rest wait. Above: the season's points
-        /// bar, how points come, the days left. Below: the golden row, honest about not being there yet.
-        /// </summary>
-        void SeasonRoadPanel(Rect area, float u, GUIStyle num, GUIStyle small)
-        {
-            var day = DuelManager.ShopDay; var road = duelGame.Season;
-            int S = Sheytoonak.Core.Missions.SeasonRoad.Steps, reached = road.StepsReached(day), taken = road.Taken(day);
-            var old = GUI.color;
-            var panel = DuelHud.Kit("panel");
-            if (panel != null) GUI.DrawTexture(area, panel, ScaleMode.StretchToFill);
-            float inx = area.width * 0.04f, iny = area.height * 0.07f;
-            var inner = new Rect(area.x + inx, area.y + iny, area.width - 2 * inx, area.height - 2 * iny);
-            float headH = inner.height * 0.16f, goldH = inner.height * 0.12f;
-            // head: the bar of the step being walked, how points come, the days left
-            var bar = new Rect(inner.x + inner.width * 0.3f, inner.y + headH * 0.2f, inner.width * 0.4f, headH * 0.42f);
-            GUI.color = new Color(0f, 0f, 0f, 0.55f); GUI.DrawTexture(bar, Texture2D.whiteTexture);
-            float f = reached >= S ? 1f : road.PointsInStep(day) / (float)Sheytoonak.Core.Missions.SeasonRoad.PointsPerStep;
-            GUI.color = new Color(1f, 0.75f, 0.25f); GUI.DrawTexture(new Rect(bar.xMax - bar.width * f, bar.y, bar.width * f, bar.height), Texture2D.whiteTexture); GUI.color = old;
-            var tiny = new GUIStyle(small) { fontSize = Mathf.RoundToInt(headH * 0.34f) };
-            GUI.Label(bar, Ar.N(Mathf.Min(reached + 1, S)), tiny);
-            bool note = Time.time < shopNoteUntil && !string.IsNullOrEmpty(shopNote);
-            GUI.Label(new Rect(bar.xMax, inner.y, inner.xMax - bar.xMax, headH * 0.8f), Ar.T(note ? shopNote : Ar.SeasonHow), tiny);
-            GUI.Label(new Rect(inner.x, inner.y, bar.x - inner.x, headH * 0.8f), Ar.T(Ar.SeasonDays + Sheytoonak.Core.Missions.SeasonRoad.DaysLeft(day)), tiny);
-
-            const int cols = 10, rows = 3;
-            var grid = new Rect(inner.x, inner.y + headH, inner.width, inner.height - headH - goldH - 6 * u);
-            float cw = grid.width / cols, ch = grid.height / rows, g = 3 * u;
-            var nn = new GUIStyle(small) { fontSize = Mathf.RoundToInt(ch * 0.2f) };
-            for (int s = 0; s < S; s++)
-            {
-                int row = s / cols, c = s % cols; if (row % 2 == 0) c = cols - 1 - c;
-                var r = new Rect(grid.x + c * cw + g, grid.y + row * ch + g, cw - 2 * g, ch - 2 * g);
-                bool done = s < taken, ready = s >= taken && s < reached, next = ready && s == taken;
-                GUI.color = done ? new Color(0.2f, 0.45f, 0.2f, 0.8f) : ready ? new Color(0.95f, 0.6f, 0.15f, next ? 0.75f + 0.25f * Mathf.Sin(Time.time * 5f) : 0.7f) : new Color(0f, 0f, 0f, 0.55f);
-                GUI.DrawTexture(r, Texture2D.whiteTexture); GUI.color = old;
-                var p = Sheytoonak.Core.Missions.SeasonRoad.PrizeOf(s + 1);
-                float isz = Mathf.Min(r.width, r.height) * 0.6f;
-                MapPrizeIcon(new Rect(r.center.x - isz * 0.5f, r.y + r.height * 0.06f, isz, isz), p, new Color(1f, 1f, 1f, done ? 0.35f : ready ? 1f : 0.7f), u);
-                string label = p.Kind == Sheytoonak.Core.Missions.MapPrizeKind.Bag ? Ar.N(s + 1) : Ar.N(s + 1) + "  +" + Ar.N(p.Amount);
-                GUI.Label(new Rect(r.x, r.yMax - r.height * 0.32f, r.width, r.height * 0.3f), done ? Ar.T(Ar.MissionTaken) : label, nn);
-                // only the next one in order pays; a tap on any glowing step takes that next one
-                if (ready && GUI.Button(r, GUIContent.none, GUIStyle.none)) { duelGame.ClaimSeasonPrize(); TelegramWeb.Haptic(1); touch?.IgnoreFor(0.3f); }
-            }
-            // the golden row: real money, waits for the server
-            var gr = new Rect(inner.x, inner.yMax - goldH, inner.width, goldH);
-            GUI.color = new Color(0.85f, 0.65f, 0.15f, 0.35f); GUI.DrawTexture(gr, Texture2D.whiteTexture); GUI.color = old;
-            var gs = new GUIStyle(small) { fontSize = Mathf.RoundToInt(goldH * 0.45f) }; gs.normal.textColor = new Color(1f, 0.9f, 0.55f);
-            GUI.Label(gr, Ar.T(Ar.SeasonGold), gs);
         }
 
         bool showShop; Vector2 shopScroll;

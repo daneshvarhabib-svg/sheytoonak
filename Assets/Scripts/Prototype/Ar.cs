@@ -93,10 +93,6 @@ namespace Sheytoonak
         public const string MapHouses = "بيوت مهدومة: ";
         public const string MapHow = "كلّ فوز يضيء بيتاً. الخسارة ترجعك";
         public const string MapWhole = "المدينة كلّها لك!";
-        public const string SeasonTitle = "طريق الموسم";
-        public const string SeasonHow = "فوز +٣   مبارزة +١   مهمّة +٥";
-        public const string SeasonDays = "أيّام باقية: ";
-        public const string SeasonGold = "الطريق الذهبي — قريباً";
         public const string JarTitle = "الحصّالة";
         public const string JarNotFull = "الحصّالة ما امتلأت بعد";
         public const string JarHow = "كلّ فوز يزيدها. إذا امتلأت خُذها بنصف السعر";

@@ -319,27 +319,6 @@ namespace Sheytoonak
             int q = MapPaid + 1;
             var p = Sheytoonak.Core.Missions.CityMap.PrizeOf(q);
             PlayerPrefs.SetInt(PrefMapPeak, MapPeak); PlayerPrefs.SetInt(PrefMapPaid, q);
-            PayPrize(p);
-            Debug.Log("SHEYTOONAK MAP prize of quarter " + q + ": " + p.Kind);
-            return true;
-        }
-
-        // ---- «طريق الموسم» (Core/Missions/SeasonRoad): the free row, a month of the Tehran date
-        const string PrefSeason = "sheytoonak.season";
-        Sheytoonak.Core.Missions.SeasonRoad season;
-        public Sheytoonak.Core.Missions.SeasonRoad Season => season ?? (season = Sheytoonak.Core.Missions.SeasonRoad.Parse(PlayerPrefs.GetString(PrefSeason, "")));
-        void AddSeason(int n) { Season.Add(n, ShopDay); PlayerPrefs.SetString(PrefSeason, Season.Serialize()); PlayerPrefs.Save(); }
-        /// <summary>Pays the next reached step (a bag opens at once). False when nothing waits.</summary>
-        public bool ClaimSeasonPrize()
-        {
-            var got = Season.TakeNext(ShopDay);
-            if (got == null) return false;
-            PlayerPrefs.SetString(PrefSeason, Season.Serialize());
-            PayPrize(got.Value);
-            return true;
-        }
-        void PayPrize(Sheytoonak.Core.Missions.MapPrize p)
-        {
             switch (p.Kind)
             {
                 case Sheytoonak.Core.Missions.MapPrizeKind.Bag: GrantBag(p.Bag); break;
@@ -347,6 +326,8 @@ namespace Sheytoonak
                 default: ShardBank += p.Amount; ShopNote?.Invoke("+" + Ar.N(p.Amount)); break;
             }
             PlayerPrefs.SetInt(PrefShards, ShardBank); PlayerPrefs.Save();
+            Debug.Log("SHEYTOONAK MAP prize of quarter " + q + ": " + p.Kind);
+            return true;
         }
 
         // ---- the jar: fills with every win, bought full at half price (ShopCatalog.Jar*)
@@ -573,7 +554,7 @@ namespace Sheytoonak
         public int ClaimMission(int i)
         {
             int got = Missions.Claim(i, ShopDay);
-            if (got > 0) { ShardBank += got; PlayerPrefs.SetInt(PrefShards, ShardBank); SaveMissions(); AddSeason(Sheytoonak.Core.Missions.SeasonRoad.MissionPoints); }
+            if (got > 0) { ShardBank += got; PlayerPrefs.SetInt(PrefShards, ShardBank); SaveMissions(); }
             return got;
         }
         /// <summary>Takes the marbles for all three.</summary>
@@ -781,7 +762,6 @@ namespace Sheytoonak
             if (winner == Me && !Rules.Draw) NoteMission(Sheytoonak.Core.Missions.MissionKind.WinDuels);
             if (winner == Me && !Rules.Draw) JarMarbles = ShopCatalog.JarAfterWin(JarMarbles);
             NoteMapAfterDuel(winner == Me && !Rules.Draw);
-            AddSeason(winner == Me && !Rules.Draw ? Sheytoonak.Core.Missions.SeasonRoad.WinPoints : Sheytoonak.Core.Missions.SeasonRoad.DuelPoints);
             SaveBags();
             ball.Hide();
             Finished?.Invoke(winner, winner == Me && !Rules.Draw);

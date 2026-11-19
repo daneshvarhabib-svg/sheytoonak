@@ -77,25 +77,6 @@ namespace Sheytoonak.Tests
         }
 
         [Test]
-        public void The_season_road_pays_each_step_once_in_order_and_starts_over_with_the_month()
-        {
-            var day = new System.DateTime(2026, 11, 19);
-            var r = new Sheytoonak.Core.Missions.SeasonRoad();
-            Assert.IsNull(r.TakeNext(day));
-            r.Add(25, day);
-            Assert.AreEqual(2, r.StepsReached(day)); Assert.AreEqual(5, r.PointsInStep(day)); Assert.AreEqual(2, r.Waiting(day));
-            r = Sheytoonak.Core.Missions.SeasonRoad.Parse(r.Serialize());
-            Assert.AreEqual(Sheytoonak.Core.Missions.MapPrizeKind.Shards, r.TakeNext(day).Value.Kind);
-            Assert.AreEqual(Sheytoonak.Core.Missions.MapPrizeKind.Marbles, r.TakeNext(day).Value.Kind);
-            Assert.IsNull(r.TakeNext(day));
-            r.Add(100000, day);
-            Assert.AreEqual(Sheytoonak.Core.Missions.SeasonRoad.Steps, r.StepsReached(day));
-            Assert.AreEqual(12, Sheytoonak.Core.Missions.SeasonRoad.DaysLeft(day));
-            var next = new System.DateTime(2026, 12, 1);
-            Assert.AreEqual(0, r.Points(next)); Assert.AreEqual(0, r.Waiting(next));
-        }
-
-        [Test]
         public void Every_money_pack_has_a_star_price()
         {
             Assert.AreEqual(50, Sheytoonak.Core.Bags.ShopCatalog.StarsOf("lira_200"));
