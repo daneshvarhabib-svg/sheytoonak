@@ -93,6 +93,13 @@ namespace Sheytoonak
         public const string MapHouses = "بيوت مهدومة: ";
         public const string MapHow = "كلّ فوز يضيء بيتاً. الخسارة ترجعك";
         public const string MapWhole = "المدينة كلّها لك!";
+        public const string Searching = "ندقّ الطبل... نبحث عن خصم";
+        public const string Found = "وُجد خصم!";
+        public const string ChallengeTitle = "التحدّي";
+        public const string ChallengeHow = "١٢ فوزاً تملأ الحلقات. ٣ خسارات تنهيه. كلّ فوز يكبّر الجائزة";
+        public const string ChallengeStart = "ابدأ";
+        public const string ChallengeGo = "تابع";
+        public const string ChallengeFreeOnce = "الأولى مجّاناً";
         public const string JarTitle = "الحصّالة";
         public const string JarNotFull = "الحصّالة ما امتلأت بعد";
         public const string JarHow = "كلّ فوز يزيدها. إذا امتلأت خُذها بنصف السعر";

@@ -1714,6 +1714,14 @@ namespace Sheytoonak.Prototype
             {
                 HeroesScreen(u, big);
             }
+            else if (showStart && duel && searchUntil > 0f)
+            {
+                SearchScreen(u, big);
+            }
+            else if (showStart && duel && showChallenge)
+            {
+                ChallengeScreen(u, big);
+            }
             else if (showStart && duel && showMap)
             {
                 MapScreen(u, big);
@@ -1855,12 +1863,10 @@ namespace Sheytoonak.Prototype
             float bw = Mathf.Min(230 * u, Screen.width * 0.18f), bh = bw * 0.62f, by = ribR.yMax + 18 * u;
             var duelR = new Rect(Screen.width * 0.5f + 10 * u, by, bw, bh);
             var chalR = new Rect(Screen.width * 0.5f - 10 * u - bw, by, bw, bh);
-            if (BigButton(duelR, "btn_orange", "hub_duel", "مبارزة", true, u)) StartGameFromScript();
+            if (BigButton(duelR, "btn_orange", "hub_duel", "مبارزة", true, u)) SearchThen(StartGameFromScript);
             bool can = duelGame.CanEnterChallenge;
-            if (BigButton(chalR, "btn_blue", "hub_challenge", "تحدّي", can, u))
-            {
-                showStart = false; endTitle = null; touch?.IgnoreFor(0.5f); duelGame.PlayChallenge();
-            }
+            // 2026-11-19: the challenge has its own page (the ring rack, what it costs, what it pays) before it starts
+            if (BigButton(chalR, "btn_blue", "hub_challenge", "تحدّي", true, u)) { showChallenge = true; touch?.IgnoreFor(0.4f); }
             float sy = by + bh + 6 * u;
             var run = duelGame.Challenge;
             if (duelGame.ChallengeActive)
@@ -2090,6 +2096,86 @@ namespace Sheytoonak.Prototype
             else DuelHud.DrawIcon(ir, "shards", tint);
         }
 
+        // ---- looking for an opponent (docs/META_SCREENS.fa.md #8): the drum is beaten for two seconds, then the duel starts
+        float searchUntil; System.Action searchThen; Texture2D drumTex; bool drumLooked;
+        const float SearchSeconds = 2.2f, FoundSeconds = 0.6f;
+        void SearchThen(System.Action start) { searchThen = start; searchUntil = Time.unscaledTime + SearchSeconds; touch?.IgnoreFor(SearchSeconds + 0.5f); }
+
+        void SearchScreen(float u, GUIStyle big)
+        {
+            HomeBackdrop();
+            var old = GUI.color; GUI.color = new Color(0f, 0f, 0f, 0.45f); GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), Texture2D.whiteTexture); GUI.color = old;
+            if (!drumLooked) { drumLooked = true; drumTex = Resources.Load<Texture2D>("Art/UI/searching"); }
+            float left = searchUntil - Time.unscaledTime; bool found = left < FoundSeconds;
+            // the drum jumps on every beat (two a second) and stands still once someone answered
+            float beat = found ? 0f : Mathf.Pow(Mathf.Abs(Mathf.Sin(Time.unscaledTime * Mathf.PI * 2f)), 6f);
+            float h = Screen.height * 0.56f * (1f + 0.05f * beat), w = h * 332f / 520f;
+            if (drumTex != null) GUI.DrawTexture(new Rect(Screen.width * 0.5f - w * 0.5f, Screen.height * 0.47f - h * 0.5f, w, h), drumTex, ScaleMode.ScaleToFit);
+            var say = new GUIStyle(big) { fontSize = Mathf.RoundToInt(34 * u), alignment = TextAnchor.MiddleCenter };
+            say.normal.textColor = found ? new Color(0.55f, 0.95f, 0.45f) : new Color(1f, 0.85f, 0.4f);
+            GUI.Label(new Rect(0, Screen.height * 0.8f, Screen.width, 60 * u), Ar.T(found ? Ar.Found : Ar.Searching), say);
+            if (left <= 0f) { searchUntil = 0f; var go = searchThen; searchThen = null; go?.Invoke(); }
+        }
+
+        // ---- the challenge's own page
+        bool showChallenge; Texture2D rackTex; bool rackLooked;
+        void ChallengeScreen(float u, GUIStyle big)
+        {
+            HomeBackdrop();
+            float pad = 14 * u, top = pad + SafeTop(), barH = 58 * u;
+            var num = new GUIStyle(big) { fontSize = Mathf.RoundToInt(26 * u), alignment = TextAnchor.MiddleCenter };
+            var small = new GUIStyle(num) { fontSize = Mathf.RoundToInt(20 * u), fontStyle = FontStyle.Normal };
+            var backR = new Rect(pad, top, Mathf.Min(170 * u, Screen.width * 0.15f), barH);
+            Plank(backR);
+            if (GUI.Button(backR, Ar.T("رجوع"), num)) { showChallenge = false; touch?.IgnoreFor(0.4f); return; }
+            float barW = Mathf.Min(230 * u, Screen.width * 0.18f);
+            var shardsR = new Rect(Screen.width - pad - barW, top, barW, barH);
+            Plank(shardsR);
+            DuelHud.DrawIcon(new Rect(shardsR.xMax - barH * 0.95f, top + barH * 0.12f, barH * 0.76f, barH * 0.76f), "shards", Color.white);
+            GUI.Label(new Rect(shardsR.x + 10 * u, top, shardsR.width - barH, barH), Ar.N(duelGame.ShardBank), num);
+
+            float ph = Screen.height - top - barH - pad * 2, pw = Mathf.Min(Screen.width - 2 * pad, ph * 1.8f);
+            var pr = new Rect((Screen.width - pw) * 0.5f, top + barH + pad, pw, ph);
+            var panel = DuelHud.Kit("panel");
+            if (panel != null) GUI.DrawTexture(pr, panel, ScaleMode.StretchToFill);
+            var gold = new GUIStyle(num) { fontSize = Mathf.RoundToInt(ph * 0.09f) }; gold.normal.textColor = new Color(1f, 0.85f, 0.4f);
+            GUI.Label(new Rect(pr.x, pr.y + ph * 0.06f, pw, ph * 0.12f), Ar.T(Ar.ChallengeTitle), gold);
+            // the ring rack on the right, the words on the left
+            if (!rackLooked) { rackLooked = true; rackTex = Resources.Load<Texture2D>("Art/UI/challenge"); }
+            float rh = ph * 0.68f;
+            if (rackTex != null) GUI.DrawTexture(new Rect(pr.center.x + pw * 0.1f, pr.y + ph * 0.2f, pw * 0.3f, rh), rackTex, ScaleMode.ScaleToFit);
+            var lx = new Rect(pr.x + pw * 0.08f, pr.y + ph * 0.22f, pw * 0.48f, rh);
+            var how = new GUIStyle(small) { fontSize = Mathf.RoundToInt(ph * 0.05f), wordWrap = true };
+            GUI.Label(new Rect(lx.x, lx.y, lx.width, ph * 0.18f), Ar.T(Ar.ChallengeHow), how);
+            bool active = duelGame.ChallengeActive, can = duelGame.CanEnterChallenge;
+            var run = duelGame.Challenge;
+            float y = lx.y + ph * 0.22f;
+            if (active)
+            {
+                DuelHud.ChallengeStrip(new Rect(lx.x, y, lx.width, ph * 0.1f), run, u);
+                var left = run.EndsUtc - System.DateTime.UtcNow;
+                DuelHud.DrawIcon(new Rect(lx.xMax - 34 * u, y + ph * 0.17f, 28 * u, 28 * u), "clock", Color.white);
+                GUI.Label(new Rect(lx.xMax - 140 * u, y + ph * 0.165f, 100 * u, 34 * u), Ar.N(Mathf.Max(0, (int)left.TotalHours)) + ":" + Ar.N(Mathf.Max(0, left.Minutes)).PadLeft(2, '٠'), small);
+            }
+            else
+            {
+                // what it costs to enter, and what a full rack pays
+                int entry = Sheytoonak.Core.Challenge.ChallengeRun.DefaultEntry; float isz = ph * 0.08f;
+                var line = new GUIStyle(small) { fontSize = Mathf.RoundToInt(ph * 0.06f), alignment = TextAnchor.MiddleRight };
+                DuelHud.DrawIcon(new Rect(lx.xMax - isz, y, isz, isz), "shards", can ? Color.white : new Color(1f, 0.4f, 0.4f));
+                GUI.Label(new Rect(lx.x, y, lx.width - isz - 8 * u, isz), duelGame.ChallengeFree ? Ar.T(Ar.ChallengeFreeOnce) : Ar.N(entry), line);
+                DuelHud.DrawIcon(new Rect(lx.xMax - isz, y + isz * 1.3f, isz, isz), "trophy", Color.white);
+                GUI.Label(new Rect(lx.x, y + isz * 1.3f, lx.width - isz - 8 * u, isz), Ar.N(Sheytoonak.Core.Challenge.ChallengeRun.PrizeFor(entry, Sheytoonak.Core.Challenge.ChallengeRun.MaxWins)), line);
+            }
+            var btn = new Rect(lx.center.x - ph * 0.3f, pr.yMax - ph * 0.26f, ph * 0.6f, ph * 0.15f);
+            MoneyButton(btn, Ar.T(active ? Ar.ChallengeGo : Ar.ChallengeStart), can, u, small);
+            if (can && GUI.Button(btn, GUIContent.none, GUIStyle.none))
+            {
+                showChallenge = false;
+                SearchThen(() => { showStart = false; endTitle = null; touch?.IgnoreFor(0.5f); duelGame.PlayChallenge(); });
+            }
+        }
+
         bool showJar;
         public void ShowJarFromScript() { showStart = true; showHeroes = false; showShop = false; showMissions = false; showMap = false; showJar = true; }
 
@@ -2253,7 +2339,7 @@ namespace Sheytoonak.Prototype
         /// </summary>
         void ShopScreen(float u, GUIStyle big)
         {
-            HomeBackdrop();
+            HomeBackdrop(true);
             if (lootShown) { LootReveal(u); return; }
             if (!shopNoteHooked) { shopNoteHooked = true; duelGame.ShopNote += m => { shopNote = m; shopNoteUntil = Time.time + 1.8f; }; }
             float pad = 14 * u, top = pad + SafeTop(), barH = 58 * u;
@@ -2644,19 +2730,23 @@ namespace Sheytoonak.Prototype
         /// docs/ART_SPEC.fa.md, «قهرمان‌ها در حال نبرد»), until then the splash painting, darkened so the planks and
         /// buttons stay readable on top.
         /// </summary>
-        static void HomeBackdrop()
+        static Texture2D shopBg; static bool shopBgLooked;
+        /// <summary>The shop has its own painting (Art/UI/shop, 2026-11-19); every other lobby screen shares the home one.</summary>
+        static void HomeBackdrop(bool shop = false)
         {
             if (!homeBgLooked)
             {
                 homeBgLooked = true;
                 homeBg = Resources.Load<Texture2D>("Art/UI/home") ?? Resources.Load<Texture2D>("Art/UI/splash");
             }
+            if (shop && !shopBgLooked) { shopBgLooked = true; shopBg = Resources.Load<Texture2D>("Art/UI/shop"); }
+            var bg = shop && shopBg != null ? shopBg : homeBg;
             var all = new Rect(0, 0, Screen.width, Screen.height);
-            if (homeBg != null)
+            if (bg != null)
             {
-                float k = Mathf.Max(Screen.width / (float)homeBg.width, Screen.height / (float)homeBg.height);
-                float w = homeBg.width * k, h = homeBg.height * k;
-                GUI.DrawTexture(new Rect((Screen.width - w) * 0.5f, (Screen.height - h) * 0.5f, w, h), homeBg, ScaleMode.StretchToFill);
+                float k = Mathf.Max(Screen.width / (float)bg.width, Screen.height / (float)bg.height);
+                float w = bg.width * k, h = bg.height * k;
+                GUI.DrawTexture(new Rect((Screen.width - w) * 0.5f, (Screen.height - h) * 0.5f, w, h), bg, ScaleMode.StretchToFill);
             }
             else { var c = GUI.color; GUI.color = new Color(0.08f, 0.1f, 0.18f); GUI.DrawTexture(all, Texture2D.whiteTexture); GUI.color = c; }
             // darken so the UI reads; the middle a touch lighter than the edges
