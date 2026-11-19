@@ -1231,3 +1231,24 @@ A pedestrian walking to the right, exact side view, full body, fully clothed: a 
 ```
 A pedestrian walking to the right, exact side view, full body, fully clothed: a small boy in a patched tunic and trousers running with a rag ball under his arm, wearing a full-face mask of painted gourd. A horizontal sprite sheet of 6 walk-cycle frames in one row, the same person, same mask and clothes in every frame, same size and spacing, feet on the same baseline, legs clearly apart in different step positions. Photorealistic photograph, soft natural daylight, medieval Middle-Eastern era, nothing modern. Isolated on a flat solid bright green background #00FF00, no ground, no shadow. No text, no letters, no logo, no religious or political symbols.
 ```
+
+## صداها به فصحی (۱۹ نوامبر) — جایگزینِ خط‌هایِ لهجه‌ایِ بالا
+
+بعد از فصحی شدنِ متن‌ها. همان روشِ قبل (ElevenLabs v3، برچسبِ حس در کروشه، هر خط یک فایل با همان نام تا کد دست نخورد). بی‌نامِ خدا، بی‌لهجه.
+
+**فریادِ ساکنان** (`Audio/Curses/`):
+
+| فایل | صدا | خط |
+|---|---|---|
+| curse_f_01 | زن | `[shrieking, outraged] يا مجنون! ما هذه المصيبة؟!` |
+| curse_f_02 | زن | `[threatening, sharp] سأخبر أباك! أتسمع؟ سأخبره!` |
+| curse_f_03 | زن | `[screaming at the top of her lungs] تعالَ إلى هنا أيّها الشقيّ!` |
+| curse_f_04 | زن | `[wailing, dramatic] ويلي! ويلي من أولاد هذه الحارة!` |
+| curse_m_01 | مرد | `[furious, voice cracking] أيّها الأحمق! ماذا فعلت؟!` |
+| curse_m_02 | مرد | `[growling, then shouting] خربتَ بيتي! خربتَ بيتي!` |
+| curse_m_03 | مرد | `[exasperated, shouting] كلَّ يوم القصّة نفسها! كلَّ يوم!` |
+| curse_m_04 | مرد | `[shocked, then angry] نافذتي! نافذتي الجديدة!` |
+| curse_m_05 | مرد | `[roaring down the street] أمسكوا هذا الولد!` |
+| curse_m_06 | مرد | `[indignant, shouting] من سيدفع ثمن الزجاج؟! من؟!` |
+
+**جایِ آژیر** (`Audio/Fx/siren_01`، برانکاردچی‌ها): `[two men shouting urgently while running] أفسحوا الطريق! أفسحوا الطريق!`
