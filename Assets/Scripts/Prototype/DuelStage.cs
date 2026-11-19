@@ -464,7 +464,7 @@ namespace Sheytoonak.Prototype
         /// the leg angle the kick starts from. User (2026-11-12): «ضربه دوم و سوم و چهارم رو هم درست کن بخوره به پاش
         /// حتماً» -- a rebound left from wherever the ball was while the hero kicked from his old spot.
         /// </summary>
-        void ToeToBall(Side side, Transform hero)
+        void ToeToBall(Side side, Transform hero, bool move = true)
         {
             var pr = painted[(int)side][K(side)];
             var rig = pr != null ? pr.GetComponent<HeroRig>() : null;
@@ -473,7 +473,7 @@ namespace Sheytoonak.Prototype
             float r = duel.ball.Radius;
             float deg = rig.ContactAngleFor(b);
             Vector3 fo = rig.FootOffset(deg);
-            hero.position = new Vector3(b.x - fo.x - Mathf.Sign(fo.x) * r * 0.7f, hero.position.y, b.z - KickerNear);
+            if (move) hero.position = new Vector3(b.x - fo.x - Mathf.Sign(fo.x) * r * 0.7f, hero.position.y, b.z - KickerNear);
             kickFrom[(int)side] = deg;
         }
 
@@ -481,7 +481,8 @@ namespace Sheytoonak.Prototype
         {
             var hero = Heroes[(int)side][K(side)];
             if (hero == null) return;
-            ToeToBall(side, hero); // the rebound is struck where it is (the kid runs to it)
+            // user (2026-11-19): the rebound comes to him (DuelManager.SendBack); he keeps his spot and only takes the swing angle
+            ToeToBall(side, hero, false);
             if (striking[(int)side] != null) StopCoroutine(striking[(int)side]);
             striking[(int)side] = StartCoroutine(Strike(hero, side));
         }

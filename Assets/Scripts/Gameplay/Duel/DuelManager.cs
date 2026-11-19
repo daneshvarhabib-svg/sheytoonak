@@ -987,7 +987,7 @@ namespace Sheytoonak
             // User (2026-11-07): the rebound used to land up to returnSpreadX (~2 m) left or right of the kicker, so he
             // ran sideways after every hit. It now comes back onto his own line, with at most a hand's width of wobble.
             float spread = Mathf.Min(0.15f, house != null ? house.returnSpreadX : 0.15f);
-            float x = Mathf.Clamp(foot.X + Random.Range(-1f, 1f) * spread, -config.laneHalfWidth, config.laneHalfWidth);
+            float x = Mathf.Clamp(foot.X + (rallyHits + 1 < HitsPerBall ? 0f : Random.Range(-1f, 1f) * spread), -config.laneHalfWidth, config.laneHalfWidth);
             float z = foot.Z + Random.Range(config.returnLandingDepth.x, config.returnLandingDepth.y);
             float flight = house != null ? house.returnFlightTime : 1.6f;
             if (rallyHits + 1 >= HitsPerBall)
@@ -1001,7 +1001,11 @@ namespace Sheytoonak
                 real *= 0.5f;
             }
             var d = KickSolver.BallisticVelocity(new Vec3(from.x, from.y, from.z), new Vec3(x, ball.Radius, z), flight, -Physics.gravity.y);
-            ball.SetVelocity(Vector3.Lerp(real, new Vector3(d.X, d.Y, d.Z), config.returnAssist));
+            // User (2026-11-19): «یه کاری کنیم که در هر صورت توپ بیاد همون جایی که بازیکن هست موقع برگشت که مجبور به راه رفتن
+            // نشه». While a follow-up hit is still possible the rebound flies the designed arc exactly (no share of the
+            // real bounce), straight onto the kicker's own spot; the stage no longer moves him to the ball.
+            bool more = rallyHits + 1 < HitsPerBall;
+            ball.SetVelocity(more ? new Vector3(d.X, d.Y, d.Z) : Vector3.Lerp(real, new Vector3(d.X, d.Y, d.Z), config.returnAssist));
             returning = true; bouncesSinceWall = 0;
         }
 
