@@ -1815,49 +1815,26 @@ namespace Sheytoonak.Prototype
                 if (GUI.Button(invR, Ar.T(Ar.Invite), gold)) { duelGame.ShareInvite(); touch?.IgnoreFor(0.5f); }
             }
 
-            // arena card in the middle
+            // the card in the middle. User (2026-11-19): «تصویر اصلی بالای دو دکمه نقشه باشه و میزان پیش روی در نقشه» — the
+            // painting of the city with its survey layer (CityMapView) fills the frame the heroes' picture had; the ribbon
+            // under it says how many quarters are ours. A tap opens the map; a red dot when a prize waits there.
             float cw = Mathf.Min(430 * u, Screen.width * 0.34f), ch = cw * 0.56f;
             var card = new Rect((Screen.width - cw) * 0.5f, top + barH + 16 * u, cw, ch);
             var kitPanel = DuelHud.Kit("panel");
             if (kitPanel != null) GUI.DrawTexture(card, kitPanel, ScaleMode.StretchToFill);
-            // User (2026-11-07): «عکسی هم که هست عکس خونه نباشه. عکس قهرمان‌ها باشه در حال نبرد» — Art/UI/heroes_battle.png
-            // when painted, the splash painting (the kids with the ball) until then. The house is never shown here.
-            if (!heroesCardLooked) { heroesCardLooked = true; heroesCardTex = Resources.Load<Texture2D>("Art/UI/heroes_battle") ?? Resources.Load<Texture2D>("Art/UI/splash"); }
-            if (heroesCardTex != null)
             {
                 var inner = new Rect(card.x + cw * 0.05f, card.y + ch * 0.08f, cw * 0.9f, ch * 0.84f);
-                float ta = heroesCardTex.width / (float)heroesCardTex.height, ia = inner.width / inner.height;
+                float ia = inner.width / inner.height, ta = CityMapView.Aspect;
                 var tc = ia > ta ? new Rect(0f, (1f - ta / ia) * 0.5f, 1f, ta / ia) : new Rect((1f - ia / ta) * 0.5f, 0f, ia / ta, 1f);
-                GUI.DrawTextureWithTexCoords(inner, heroesCardTex, tc);
+                CityMapView.Draw(inner, duelGame.Curses[0], duelGame.MapPeak, tc);
             }
             var ribbon = DuelHud.Kit("ribbon");
             var ribR = new Rect(card.center.x - cw * 0.42f, card.yMax - ch * 0.2f, cw * 0.84f, cw * 0.84f * 246f / 969f);
-            // User (2026-11-19): «ببرش بالای صفحه بذار ... یه بنر براش بالای اون دو تا دکمه. روی بنر که کلیک کردن نقشه بزرگ شه و
-            // جایزه پوش شه». The ribbon's place is the map's banner now: a band of the painting, how far the line is, a red dot
-            // when a prize waits. A tap opens the map; a waiting prize is paid as it opens. (The game's name stays in the top bar.)
-            {
-                if (!mapLooked) { mapLooked = true; mapTex = Resources.Load<Texture2D>("Art/UI/city_map"); }
-                var o = GUI.color; float bt = 3 * u;
-                GUI.color = new Color(0.95f, 0.75f, 0.3f); GUI.DrawTexture(new Rect(ribR.x - bt, ribR.y - bt, ribR.width + 2 * bt, ribR.height + 2 * bt), Texture2D.whiteTexture); GUI.color = o;
-                if (mapTex != null)
-                {
-                    float band = Mathf.Clamp01((ribR.height / ribR.width) * (mapTex.width / (float)mapTex.height));
-                    GUI.DrawTextureWithTexCoords(ribR, mapTex, new Rect(0f, 0.5f - band * 0.5f, 1f, band));
-                }
-                int mc = Mathf.Min(duelGame.Curses[0], Sheytoonak.Core.Missions.CityMap.Total); float mf = mc / (float)Sheytoonak.Core.Missions.CityMap.Total;
-                // fog over what is not ours yet (the line advances from the right, like the text)
-                GUI.color = new Color(0.06f, 0.05f, 0.09f, 0.72f); GUI.DrawTexture(new Rect(ribR.x, ribR.y, ribR.width * (1f - mf), ribR.height), Texture2D.whiteTexture);
-                GUI.color = new Color(0f, 0f, 0f, 0.3f); GUI.DrawTexture(ribR, Texture2D.whiteTexture);
-                GUI.color = new Color(0.95f, 0.2f, 0.15f); GUI.DrawTexture(new Rect(ribR.x + ribR.width * (1f - mf) - 1.5f * u, ribR.y, 3 * u, ribR.height), Texture2D.whiteTexture);
-                GUI.color = o;
-                var mt = new GUIStyle(small) { fontSize = Mathf.RoundToInt(ribR.height * 0.3f), fontStyle = FontStyle.Bold }; mt.normal.textColor = new Color(1f, 0.9f, 0.55f);
-                GUI.Label(new Rect(ribR.x, ribR.y + ribR.height * 0.06f, ribR.width, ribR.height * 0.5f), Ar.T(Ar.MapTitle), mt);
-                var mn = new GUIStyle(small) { fontSize = Mathf.RoundToInt(ribR.height * 0.24f) };
-                // no «/5000»: the city may grow later (user 2026-11-19: «۵۰۰۰ رو نشون نده ... شاید بعداً مجبور شیم شهر رو بزرگتر کنیم»)
-                GUI.Label(new Rect(ribR.x, ribR.y + ribR.height * 0.52f, ribR.width, ribR.height * 0.42f), Ar.T(Ar.MapQuarters + Sheytoonak.Core.Missions.CityMap.QuartersHeld(duelGame.Curses[0])), mn);
-                if (duelGame.MapWaiting > 0) { GUI.color = new Color(0.95f, 0.2f, 0.15f); GUI.DrawTexture(new Rect(ribR.xMax - 14 * u, ribR.y - 12 * u, 26 * u, 26 * u), DotTex()); GUI.color = o; }
-                if (GUI.Button(ribR, GUIContent.none, GUIStyle.none)) { showMap = true; touch?.IgnoreFor(0.4f); }
-            }
+            if (ribbon != null) GUI.DrawTexture(ribR, ribbon, ScaleMode.StretchToFill);
+            var ink = new GUIStyle(small) { fontSize = Mathf.RoundToInt(22 * u) }; ink.normal.textColor = new Color(0.35f, 0.18f, 0.08f);
+            GUI.Label(new Rect(ribR.x, ribR.y + ribR.height * 0.05f, ribR.width, ribR.height * 0.6f), Ar.T(Ar.MapQuarters + Sheytoonak.Core.Missions.CityMap.QuartersHeld(duelGame.Curses[0])), ink);
+            if (duelGame.MapWaiting > 0) { var o = GUI.color; GUI.color = new Color(0.95f, 0.2f, 0.15f); GUI.DrawTexture(new Rect(card.xMax - 20 * u, card.y - 6 * u, 26 * u, 26 * u), DotTex()); GUI.color = o; }
+            if (GUI.Button(new Rect(card.x, card.y, card.width, ribR.yMax - card.y), GUIContent.none, GUIStyle.none)) { showMap = true; touch?.IgnoreFor(0.4f); }
 
             // the two big buttons under the card: duel (orange) on the right, the 12/3 challenge (blue) on the left
             float bw = Mathf.Min(230 * u, Screen.width * 0.18f), bh = bw * 0.62f, by = ribR.yMax + 18 * u;
@@ -1969,7 +1946,7 @@ namespace Sheytoonak.Prototype
         // ------------------------------------------------------------------ heroes: levels (SCENARIO §8)
 
         bool showHeroes; Vector2 heroesScroll;
-        bool showMap; Texture2D mapTex; bool mapLooked;
+        bool showMap;
         public void ShowMapFromScript() { showStart = true; showHeroes = false; showShop = false; showMissions = false; showJar = false; showMap = true; }
 
         /// <summary>
@@ -2001,62 +1978,15 @@ namespace Sheytoonak.Prototype
             var gold = new GUIStyle(num); gold.normal.textColor = new Color(1f, 0.85f, 0.4f);
             GUI.Label(new Rect(backR.xMax, top, housesR.x - backR.xMax, barH), Ar.T(curses >= total ? Ar.MapWhole : Ar.MapTitle), gold);
 
-            // the map itself
-            float footH = 64 * u;
-            var area = new Rect(pad, top + barH + 10 * u, Screen.width - 2 * pad, Screen.height - top - barH - 10 * u - footH - pad);
-            const int cols = 10, rows = 5;
-            float cw = Mathf.Min(area.width / cols, area.height / rows * 1.6f), ch = Mathf.Min(area.height / rows, cw / 1.2f);
-            var map = new Rect(area.center.x - cw * cols * 0.5f, area.center.y - ch * rows * 0.5f, cw * cols, ch * rows);
-            if (!mapLooked) { mapLooked = true; mapTex = Resources.Load<Texture2D>("Art/UI/city_map"); }
+            // the map itself: the whole painting as large as the screen allows, with the survey layer and nothing on top of it
+            float footH = 44 * u;
+            var area = new Rect(pad, top + barH + 8 * u, Screen.width - 2 * pad, Screen.height - top - barH - 8 * u - footH - pad);
+            float ma = CityMapView.Aspect, mw = Mathf.Min(area.width, area.height * ma), mh = mw / ma;
+            var map = new Rect(area.center.x - mw * 0.5f, area.center.y - mh * 0.5f, mw, mh);
             var old = GUI.color;
-            if (mapTex != null) GUI.DrawTexture(map, mapTex, ScaleMode.StretchToFill);
-            else { GUI.color = new Color(0.78f, 0.66f, 0.45f); GUI.DrawTexture(map, Texture2D.whiteTexture); GUI.color = old; }
-            int held = Sheytoonak.Core.Missions.CityMap.QuartersHeld(curses), front = Sheytoonak.Core.Missions.CityMap.HousesInFront(curses);
-            int paid = duelGame.MapPaid, peakHeld = Sheytoonak.Core.Missions.CityMap.QuartersHeld(duelGame.MapPeak);
-            var tiny = new GUIStyle(small) { fontSize = Mathf.RoundToInt(ch * 0.2f) };
-            for (int q = 0; q < Q; q++)
-            {
-                // the snake: quarter 1 at the bottom right, each row above it runs the other way
-                int row = q / cols, c = q % cols; if (row % 2 == 0) c = cols - 1 - c;
-                var r = new Rect(map.x + c * cw, map.yMax - (row + 1) * ch, cw, ch);
-                bool mine = q < held, line = q == held;
-                if (!mine)
-                {
-                    GUI.color = new Color(0.06f, 0.05f, 0.09f, line ? 0.55f : 0.8f); GUI.DrawTexture(r, Texture2D.whiteTexture);
-                }
-                else if (mapTex == null) { GUI.color = new Color(0.95f, 0.6f, 0.2f, 0.85f); GUI.DrawTexture(r, Texture2D.whiteTexture); }
-                // thin borders between quarters
-                GUI.color = new Color(0f, 0f, 0f, 0.45f);
-                GUI.DrawTexture(new Rect(r.x, r.y, r.width, 1.5f * u), Texture2D.whiteTexture); GUI.DrawTexture(new Rect(r.x, r.y, 1.5f * u, r.height), Texture2D.whiteTexture);
-                GUI.color = old;
-                if (line)
-                {
-                    // the houses of the quarter being fought for: 5 x 4, lit ones are ours
-                    float hw = cw * 0.84f / 5f, hh = ch * 0.6f / 4f, hx = r.x + cw * 0.08f, hy = r.y + ch * 0.08f;
-                    for (int h = 0; h < Sheytoonak.Core.Missions.CityMap.HousesPerQuarter; h++)
-                    {
-                        GUI.color = h < front ? new Color(1f, 0.7f, 0.2f) : new Color(1f, 1f, 1f, 0.22f);
-                        GUI.DrawTexture(new Rect(hx + (h % 5) * hw + hw * 0.15f, hy + (h / 5) * hh + hh * 0.15f, hw * 0.7f, hh * 0.7f), Texture2D.whiteTexture);
-                    }
-                    // the front: a red frame that breathes
-                    GUI.color = new Color(0.95f, 0.2f, 0.15f, 0.6f + 0.4f * Mathf.Sin(Time.time * 4f));
-                    float t = 3f * u;
-                    GUI.DrawTexture(new Rect(r.x, r.y, r.width, t), Texture2D.whiteTexture); GUI.DrawTexture(new Rect(r.x, r.yMax - t, r.width, t), Texture2D.whiteTexture);
-                    GUI.DrawTexture(new Rect(r.x, r.y, t, r.height), Texture2D.whiteTexture); GUI.DrawTexture(new Rect(r.xMax - t, r.y, t, r.height), Texture2D.whiteTexture);
-                    GUI.color = old;
-                }
-                // the prize of the quarter until it is taken: its icon, bright once owed
-                if (q >= paid)
-                {
-                    var p = Sheytoonak.Core.Missions.CityMap.PrizeOf(q + 1);
-                    bool owed = q < peakHeld;
-                    float isz = ch * (line ? 0.26f : 0.42f);
-                    var ir = line ? new Rect(r.xMax - isz - 4 * u, r.yMax - isz - 2 * u, isz, isz) : new Rect(r.center.x - isz * 0.5f, r.center.y - isz * 0.6f, isz, isz);
-                    var tint = new Color(1f, 1f, 1f, owed ? 1f : 0.55f);
-                    MapPrizeIcon(ir, p, tint, u);
-                    if (!line) GUI.Label(new Rect(r.x, r.yMax - ch * 0.3f, r.width, ch * 0.28f), Ar.N((q + 1) * Sheytoonak.Core.Missions.CityMap.PerQuarter), tiny);
-                }
-            }
+            GUI.color = new Color(0.95f, 0.75f, 0.3f); GUI.DrawTexture(new Rect(map.x - 3 * u, map.y - 3 * u, map.width + 6 * u, map.height + 6 * u), Texture2D.whiteTexture); GUI.color = old;
+            CityMapView.Draw(map, curses, duelGame.MapPeak);
+            int paid = duelGame.MapPaid;
 
             // foot: how it works
             var foot = new Rect(pad, Screen.height - pad - footH, Screen.width - 2 * pad, footH);
