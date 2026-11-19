@@ -2064,19 +2064,39 @@ namespace Sheytoonak.Prototype
 
         // ---- looking for an opponent (docs/META_SCREENS.fa.md #8): the drum is beaten for two seconds, then the duel starts
         float searchUntil; System.Action searchThen; Texture2D drumTex; bool drumLooked;
-        const float SearchSeconds = 2.2f, FoundSeconds = 0.6f;
-        void SearchThen(System.Action start) { searchThen = start; searchUntil = Time.unscaledTime + SearchSeconds; touch?.IgnoreFor(SearchSeconds + 0.5f); }
+        // 2026-11-19: a masked drummer beats it (Art/UI/searching_1..6, two strokes a second) and it is heard
+        // (Audio/Fx/search_drum: four beats at 120 and a last loud one, 2.5 s); the search lasts as long as the sound
+        readonly List<Texture2D> drumBeat = new List<Texture2D>(); AudioClip drumClip;
+        const float SearchSeconds = 2.6f, FoundSeconds = 0.6f;
+        void SearchThen(System.Action start)
+        {
+            searchThen = start; searchUntil = Time.unscaledTime + SearchSeconds; touch?.IgnoreFor(SearchSeconds + 0.5f);
+            if (drumClip == null) drumClip = Resources.Load<AudioClip>("Audio/Fx/search_drum");
+            if (drumClip != null && Camera.main != null) AudioSource.PlayClipAtPoint(drumClip, Camera.main.transform.position, 0.9f);
+        }
 
         void SearchScreen(float u, GUIStyle big)
         {
             HomeBackdrop();
             var old = GUI.color; GUI.color = new Color(0f, 0f, 0f, 0.45f); GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), Texture2D.whiteTexture); GUI.color = old;
-            if (!drumLooked) { drumLooked = true; drumTex = Resources.Load<Texture2D>("Art/UI/searching"); }
+            if (!drumLooked)
+            {
+                drumLooked = true; drumTex = Resources.Load<Texture2D>("Art/UI/searching");
+                for (int i = 1; i < 12; i++) { var bt = Resources.Load<Texture2D>("Art/UI/searching_" + i); if (bt == null) break; drumBeat.Add(bt); }
+            }
             float left = searchUntil - Time.unscaledTime; bool found = left < FoundSeconds;
             // the drum jumps on every beat (two a second) and stands still once someone answered
             float beat = found ? 0f : Mathf.Pow(Mathf.Abs(Mathf.Sin(Time.unscaledTime * Mathf.PI * 2f)), 6f);
             float h = Screen.height * 0.56f * (1f + 0.05f * beat), w = h * 332f / 520f;
-            if (drumTex != null) GUI.DrawTexture(new Rect(Screen.width * 0.5f - w * 0.5f, Screen.height * 0.47f - h * 0.5f, w, h), drumTex, ScaleMode.ScaleToFit);
+            if (drumBeat.Count > 1)
+            {
+                // six pictures = two strokes = one second; the last picture (the stick on the hide) stays once someone answered
+                float el = SearchSeconds - left;
+                var bt = drumBeat[found ? drumBeat.Count - 1 : (int)(el * drumBeat.Count) % drumBeat.Count];
+                float bh = Screen.height * 0.62f, bw = bh * bt.width / bt.height;
+                GUI.DrawTexture(new Rect(Screen.width * 0.5f - bw * 0.5f, Screen.height * 0.46f - bh * 0.5f, bw, bh), bt, ScaleMode.ScaleToFit);
+            }
+            else if (drumTex != null) GUI.DrawTexture(new Rect(Screen.width * 0.5f - w * 0.5f, Screen.height * 0.47f - h * 0.5f, w, h), drumTex, ScaleMode.ScaleToFit);
             var say = new GUIStyle(big) { fontSize = Mathf.RoundToInt(34 * u), alignment = TextAnchor.MiddleCenter };
             say.normal.textColor = found ? new Color(0.55f, 0.95f, 0.45f) : new Color(1f, 0.85f, 0.4f);
             GUI.Label(new Rect(0, Screen.height * 0.8f, Screen.width, 60 * u), Ar.T(found ? Ar.Found : Ar.Searching), say);

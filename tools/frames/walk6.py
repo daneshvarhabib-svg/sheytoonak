@@ -39,3 +39,12 @@ def frames(path, cols, rows, use=None, xr=None, flip=False):
     al=np.max([o[...,3] for o in out],0); ys,xs=np.where(al>8)
     y0,y1,x0,x1=max(0,ys.min()-4),ys.max()+1,max(0,xs.min()-4),min(Wc,xs.max()+5)
     return [Image.fromarray(o[y0:y1,x0:x1],'RGBA') for o in out]
+
+def cells_as_drawn(path, cols, rows):
+    """Frames of something that stands still (a drummer at his drum, a man sweeping): the cells as the sheet has them,
+    no sliding, cut to their common box."""
+    im=np.asarray(Image.open(path).convert('RGB')); H,W=im.shape[:2]; ch=H//rows; cw=W//cols
+    cs=[key(im[(c//cols)*ch:(c//cols+1)*ch,(c%cols)*cw:(c%cols+1)*cw]) for c in range(cols*rows)]
+    al=np.max([c[...,3] for c in cs],0); ys,xs=np.where(al>128)
+    y0,y1,x0,x1=max(0,ys.min()-3),ys.max()+2,max(0,xs.min()-3),min(cw,xs.max()+4)
+    return [Image.fromarray(c[y0:y1,x0:x1],'RGBA') for c in cs]

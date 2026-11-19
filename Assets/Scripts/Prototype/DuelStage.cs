@@ -631,6 +631,30 @@ namespace Sheytoonak.Prototype
             // separate sweeper_brush.png is laid exactly over it
             var brushLocal = new Vector3(sp.bounds.size.x * (0.17f - 0.5f), sp.bounds.size.y * 0.134f, -0.01f);
             truck.gameObject.AddComponent<UnityEngine.Rendering.SortingGroup>(); // body, brush and wheels as one picture by distance (user 2026-11-13)
+            // User (2026-11-19, with a six-pose sheet): «برای این جاروکش هم ... که جارو کنه». Stopped at a bird he lets go of the
+            // barrow, steps beside it and sweeps the road ahead of it: the walking picture is swapped for the barrow alone
+            // (the left 60 % of the same picture) and the sweeping man in front of it, broom head on the bird.
+            var sweepS = new List<Sprite>(); SpriteRenderer sweepR = null, barrowR = null;
+            for (int i = 1; i < 12; i++)
+            {
+                var st = Resources.Load<Texture2D>("Art/Props/sweeper_sweep" + i);
+                if (st == null) break;
+                float ppu = st.height / (sp.bounds.size.y * 0.9f);              // bent over the broom he is a little shorter
+                float broomX = -(sp.bounds.size.x * 0.5f + 0.6f);               // the broom head, ahead of the barrow's wheel
+                float wS = st.width / ppu;
+                sweepS.Add(Sprite.Create(st, new Rect(0, 0, st.width, st.height), new Vector2(0.10f - broomX / wS, 0f), ppu));
+            }
+            if (sweepS.Count > 1)
+            {
+                brushLocal = new Vector3(-(sp.bounds.size.x * 0.5f + 0.6f), brushLocal.y, brushLocal.z);
+                sweepR = new GameObject("Sweeping").AddComponent<SpriteRenderer>();
+                sweepR.sprite = sweepS[0]; sweepR.sortingOrder = truck.sortingOrder + 2; sweepR.enabled = false;
+                sweepR.transform.SetParent(truck.transform, false);
+                barrowR = new GameObject("Barrow").AddComponent<SpriteRenderer>();
+                barrowR.sprite = Sprite.Create(truckT, new Rect(0, 0, truckT.width * 0.6f, truckT.height), new Vector2(0.5f / 0.6f, 0f), 100f);
+                barrowR.sortingOrder = truck.sortingOrder; barrowR.enabled = false;
+                barrowR.transform.SetParent(truck.transform, false);
+            }
                         float sEdge = StreetLife.OffScreenX(z, sp.bounds.size.x * k * 0.5f, 26f); // from the picture's edge (phone is wider)
             float x0 = fromLeft ? -sEdge : sEdge;
             truck.transform.position = new Vector3(x0, 0f, z);
@@ -680,6 +704,13 @@ namespace Sheytoonak.Prototype
             {
                 // user (2026-11-18): «کارگر شهرداری … باید جارو بکشه و بعد پرنده ها از رو زمین محو شن». Walking, the broom
                 // rides in the barrow (painted there); stopped over a bird, a broom sweeps to and fro along the ground.
+                if (sweepR != null)
+                {
+                    bool on = speed > 15f;
+                    sweepR.enabled = on; barrowR.enabled = on; truck.enabled = !on;
+                    if (on) sweepR.sprite = sweepS[(int)(Time.time * 6.7f) % sweepS.Count]; // two strokes in the 1.8 s he sweeps
+                    return;
+                }
                 if (brushR == null) return;
                 brushR.enabled = speed > 15f;
                 float sw = Mathf.Sin(Time.time * 9f);
