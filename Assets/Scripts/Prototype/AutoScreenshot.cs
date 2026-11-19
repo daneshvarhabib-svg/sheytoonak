@@ -146,6 +146,8 @@ namespace Sheytoonak.Prototype
                         yield return Shot("17-missions", 0.6f);
                         boot.ShowJarFromScript();
                         yield return Shot("18-jar", 0.6f);
+                        boot.ShowMapFromScript();
+                        yield return Shot("19-map", 0.6f);
                     }
                     else
                     {

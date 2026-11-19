@@ -298,6 +298,38 @@ namespace Sheytoonak
             Sheytoonak.Gameplay.Store.StorePayments.Buy(p.Sku, paid => { if (paid) { LiraBank += p.Lira; ShopNote?.Invoke("+" + Ar.N(p.Lira)); } });
         }
 
+        // ---- the map of the city (Core/Missions/CityMap): the front line is the curse count
+        const string PrefMapPeak = "sheytoonak.map.peak", PrefMapPaid = "sheytoonak.map.paid", PrefHouses = "sheytoonak.housesDown";
+        /// <summary>Highest curse count ever reached: prizes of the quarters up to it stay owed after a retreat.</summary>
+        public int MapPeak => Mathf.Max(PlayerPrefs.GetInt(PrefMapPeak, 0), Curses[0]);
+        public int MapPaid => PlayerPrefs.GetInt(PrefMapPaid, 0);
+        public int MapWaiting => Sheytoonak.Core.Missions.CityMap.Waiting(MapPeak, MapPaid);
+        /// <summary>Houses brought down = duels won. Counted from 2026-11-19; before that, at least one per five curses.</summary>
+        public int HousesDown => Mathf.Max(PlayerPrefs.GetInt(PrefHouses, 0), Curses[0] / DuelRules.CurseWin);
+        void NoteMapAfterDuel(bool won)
+        {
+            if (won) PlayerPrefs.SetInt(PrefHouses, HousesDown + 1);
+            PlayerPrefs.SetInt(PrefMapPeak, MapPeak);
+            PlayerPrefs.Save();
+        }
+        /// <summary>Pays the next owed quarter prize (a bag opens at once). False when nothing waits.</summary>
+        public bool ClaimMapPrize()
+        {
+            if (MapWaiting <= 0) return false;
+            int q = MapPaid + 1;
+            var p = Sheytoonak.Core.Missions.CityMap.PrizeOf(q);
+            PlayerPrefs.SetInt(PrefMapPeak, MapPeak); PlayerPrefs.SetInt(PrefMapPaid, q);
+            switch (p.Kind)
+            {
+                case Sheytoonak.Core.Missions.MapPrizeKind.Bag: GrantBag(p.Bag); break;
+                case Sheytoonak.Core.Missions.MapPrizeKind.Marbles: LiraBank += p.Amount; ShopNote?.Invoke("+" + Ar.N(p.Amount)); break;
+                default: ShardBank += p.Amount; ShopNote?.Invoke("+" + Ar.N(p.Amount)); break;
+            }
+            PlayerPrefs.SetInt(PrefShards, ShardBank); PlayerPrefs.Save();
+            Debug.Log("SHEYTOONAK MAP prize of quarter " + q + ": " + p.Kind);
+            return true;
+        }
+
         // ---- the jar: fills with every win, bought full at half price (ShopCatalog.Jar*)
         const string PrefJar = "sheytoonak.jar";
         public int JarMarbles { get => PlayerPrefs.GetInt(PrefJar, 0); private set { PlayerPrefs.SetInt(PrefJar, value); PlayerPrefs.Save(); } }
@@ -729,6 +761,7 @@ namespace Sheytoonak
             NoteMission(Sheytoonak.Core.Missions.MissionKind.PlayDuels);
             if (winner == Me && !Rules.Draw) NoteMission(Sheytoonak.Core.Missions.MissionKind.WinDuels);
             if (winner == Me && !Rules.Draw) JarMarbles = ShopCatalog.JarAfterWin(JarMarbles);
+            NoteMapAfterDuel(winner == Me && !Rules.Draw);
             SaveBags();
             ball.Hide();
             Finished?.Invoke(winner, winner == Me && !Rules.Draw);

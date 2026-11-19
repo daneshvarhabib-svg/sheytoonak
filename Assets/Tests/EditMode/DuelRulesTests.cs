@@ -57,6 +57,26 @@ namespace Sheytoonak.Tests
         }
 
         [Test]
+        public void The_city_map_follows_the_curses_and_pays_each_quarter_once()
+        {
+            var M = typeof(Sheytoonak.Core.Missions.CityMap);
+            Assert.AreEqual(50, Sheytoonak.Core.Missions.CityMap.Quarters);
+            Assert.AreEqual(5, Sheytoonak.Core.Missions.CityMap.PerHouse, "one house per win");
+            Assert.AreEqual(Sheytoonak.Core.Missions.CityMap.PerHouse, DuelRules.CurseWin);
+            Assert.AreEqual(2, Sheytoonak.Core.Missions.CityMap.QuartersHeld(250));
+            Assert.AreEqual(10, Sheytoonak.Core.Missions.CityMap.HousesInFront(250));
+            Assert.AreEqual(1, Sheytoonak.Core.Missions.CityMap.QuartersHeld(198), "a loss gives ground back");
+            Assert.AreEqual(50, Sheytoonak.Core.Missions.CityMap.QuartersHeld(9999));
+            Assert.AreEqual(0, Sheytoonak.Core.Missions.CityMap.HousesInFront(5000));
+            Assert.AreEqual(2, Sheytoonak.Core.Missions.CityMap.Waiting(250, 0));
+            Assert.AreEqual(0, Sheytoonak.Core.Missions.CityMap.Waiting(250, 2), "retaking a quarter pays nothing again");
+            Assert.AreEqual(Sheytoonak.Core.Missions.MapPrizeKind.Bag, Sheytoonak.Core.Missions.CityMap.PrizeOf(50).Kind);
+            Assert.AreEqual(Sheytoonak.Core.Missions.MapPrizeKind.Shards, Sheytoonak.Core.Missions.CityMap.PrizeOf(1).Kind);
+            Assert.AreEqual(Sheytoonak.Core.Missions.MapPrizeKind.Marbles, Sheytoonak.Core.Missions.CityMap.PrizeOf(2).Kind);
+            Assert.IsNotNull(M);
+        }
+
+        [Test]
         public void Every_money_pack_has_a_star_price()
         {
             Assert.AreEqual(50, Sheytoonak.Core.Bags.ShopCatalog.StarsOf("lira_200"));

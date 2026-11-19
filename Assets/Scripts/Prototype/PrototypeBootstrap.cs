@@ -1714,6 +1714,10 @@ namespace Sheytoonak.Prototype
             {
                 HeroesScreen(u, big);
             }
+            else if (showStart && duel && showMap)
+            {
+                MapScreen(u, big);
+            }
             else if (showStart && duel && showJar)
             {
                 JarScreen(u, big);
@@ -1886,7 +1890,14 @@ namespace Sheytoonak.Prototype
                 var o = GUI.color; GUI.color = new Color(0.95f, 0.2f, 0.15f);
                 GUI.DrawTexture(new Rect(shopR.xMax - 26 * u, shopR.y - 6 * u, 26 * u, 26 * u), DotTex()); GUI.color = o;
             }
-            SideSoon(new Rect(Screen.width - pad - sbw, Screen.height - sbh - pad, sbw, sbh), "btn_blue", "hub_alliance", "الحارة", u);
+            // the map of the city (2026-11-19) stands where the alliance button waited: the alliance needs a server (LAUNCH queue)
+            var mapR = new Rect(Screen.width - pad - sbw, Screen.height - sbh - pad, sbw, sbh);
+            if (BigButton(mapR, "btn_blue", "hub_season", Ar.MapButton, true, u)) { showMap = true; touch?.IgnoreFor(0.4f); }
+            if (duelGame.MapWaiting > 0)
+            {
+                var o = GUI.color; GUI.color = new Color(0.95f, 0.2f, 0.15f);
+                GUI.DrawTexture(new Rect(mapR.xMax - 26 * u, mapR.y - 6 * u, 26 * u, 26 * u), DotTex()); GUI.color = o;
+            }
             ComboCard(new Rect(pad, top + barH + 30 * u + sbh + 18 * u, sbw * 1.1f, Mathf.Max(60 * u, (Screen.height - sbh - pad) - (top + barH + 30 * u + sbh + 18 * u) - 18 * u)), u);
 
             // the bag rack sits in a dark panel along the bottom
@@ -1936,8 +1947,115 @@ namespace Sheytoonak.Prototype
         // ------------------------------------------------------------------ heroes: levels (SCENARIO §8)
 
         bool showHeroes; Vector2 heroesScroll;
+        bool showMap; Texture2D mapTex; bool mapLooked;
+        public void ShowMapFromScript() { showStart = true; showHeroes = false; showShop = false; showMissions = false; showJar = false; showMap = true; }
+
+        /// <summary>
+        /// The map of the city (user 2026-11-19: «مثل نقشه پیشروی جنگ های زمینی»). 50 quarters in 5 rows of 10, walked like a
+        /// snake from the bottom right; the painting (Art/UI/city_map, when it is there) shows through the quarters we hold
+        /// and lies under a dark fog elsewhere. The quarter on the front line shows its 20 houses, lit one per win; a red
+        /// line marks the front. Each quarter carries its prize until it is taken.
+        /// </summary>
+        void MapScreen(float u, GUIStyle big)
+        {
+            HomeBackdrop();
+            if (lootShown) { LootReveal(u); return; }
+            if (!shopNoteHooked) { shopNoteHooked = true; duelGame.ShopNote += m => { shopNote = m; shopNoteUntil = Time.time + 1.8f; }; }
+            float pad = 14 * u, top = pad + SafeTop(), barH = 58 * u;
+            var num = new GUIStyle(big) { fontSize = Mathf.RoundToInt(26 * u), alignment = TextAnchor.MiddleCenter };
+            var small = new GUIStyle(num) { fontSize = Mathf.RoundToInt(20 * u), fontStyle = FontStyle.Normal };
+            var backR = new Rect(pad, top, Mathf.Min(170 * u, Screen.width * 0.15f), barH);
+            Plank(backR);
+            if (GUI.Button(backR, Ar.T("رجوع"), num)) { showMap = false; touch?.IgnoreFor(0.4f); return; }
+            int curses = duelGame.Curses[0], total = Sheytoonak.Core.Missions.CityMap.Total, Q = Sheytoonak.Core.Missions.CityMap.Quarters;
+            float barW = Mathf.Min(250 * u, Screen.width * 0.2f);
+            var cursesR = new Rect(Screen.width - pad - barW, top, barW, barH);
+            Plank(cursesR);
+            DuelHud.DrawIcon(new Rect(cursesR.xMax - barH * 0.95f, top + barH * 0.12f, barH * 0.76f, barH * 0.76f), "curse", Color.white);
+            GUI.Label(new Rect(cursesR.x + 6 * u, top, cursesR.width - barH, barH), Ar.N(Mathf.Min(curses, total)) + "/" + Ar.N(total), small);
+            var housesR = new Rect(cursesR.x - 12 * u - barW * 1.2f, top, barW * 1.2f, barH);
+            Plank(housesR);
+            GUI.Label(housesR, Ar.T(Ar.MapHouses + duelGame.HousesDown), small);
+            var gold = new GUIStyle(num); gold.normal.textColor = new Color(1f, 0.85f, 0.4f);
+            GUI.Label(new Rect(backR.xMax, top, housesR.x - backR.xMax, barH), Ar.T(curses >= total ? Ar.MapWhole : Ar.MapTitle), gold);
+
+            // the map itself
+            float footH = 64 * u;
+            var area = new Rect(pad, top + barH + 10 * u, Screen.width - 2 * pad, Screen.height - top - barH - 10 * u - footH - pad);
+            const int cols = 10, rows = 5;
+            float cw = Mathf.Min(area.width / cols, area.height / rows * 1.6f), ch = Mathf.Min(area.height / rows, cw / 1.2f);
+            var map = new Rect(area.center.x - cw * cols * 0.5f, area.center.y - ch * rows * 0.5f, cw * cols, ch * rows);
+            if (!mapLooked) { mapLooked = true; mapTex = Resources.Load<Texture2D>("Art/UI/city_map"); }
+            var old = GUI.color;
+            if (mapTex != null) GUI.DrawTexture(map, mapTex, ScaleMode.StretchToFill);
+            else { GUI.color = new Color(0.78f, 0.66f, 0.45f); GUI.DrawTexture(map, Texture2D.whiteTexture); GUI.color = old; }
+            int held = Sheytoonak.Core.Missions.CityMap.QuartersHeld(curses), front = Sheytoonak.Core.Missions.CityMap.HousesInFront(curses);
+            int paid = duelGame.MapPaid, peakHeld = Sheytoonak.Core.Missions.CityMap.QuartersHeld(duelGame.MapPeak);
+            var tiny = new GUIStyle(small) { fontSize = Mathf.RoundToInt(ch * 0.2f) };
+            for (int q = 0; q < Q; q++)
+            {
+                // the snake: quarter 1 at the bottom right, each row above it runs the other way
+                int row = q / cols, c = q % cols; if (row % 2 == 0) c = cols - 1 - c;
+                var r = new Rect(map.x + c * cw, map.yMax - (row + 1) * ch, cw, ch);
+                bool mine = q < held, line = q == held;
+                if (!mine)
+                {
+                    GUI.color = new Color(0.06f, 0.05f, 0.09f, line ? 0.55f : 0.8f); GUI.DrawTexture(r, Texture2D.whiteTexture);
+                }
+                else if (mapTex == null) { GUI.color = new Color(0.95f, 0.6f, 0.2f, 0.85f); GUI.DrawTexture(r, Texture2D.whiteTexture); }
+                // thin borders between quarters
+                GUI.color = new Color(0f, 0f, 0f, 0.45f);
+                GUI.DrawTexture(new Rect(r.x, r.y, r.width, 1.5f * u), Texture2D.whiteTexture); GUI.DrawTexture(new Rect(r.x, r.y, 1.5f * u, r.height), Texture2D.whiteTexture);
+                GUI.color = old;
+                if (line)
+                {
+                    // the houses of the quarter being fought for: 5 x 4, lit ones are ours
+                    float hw = cw * 0.84f / 5f, hh = ch * 0.6f / 4f, hx = r.x + cw * 0.08f, hy = r.y + ch * 0.08f;
+                    for (int h = 0; h < Sheytoonak.Core.Missions.CityMap.HousesPerQuarter; h++)
+                    {
+                        GUI.color = h < front ? new Color(1f, 0.7f, 0.2f) : new Color(1f, 1f, 1f, 0.22f);
+                        GUI.DrawTexture(new Rect(hx + (h % 5) * hw + hw * 0.15f, hy + (h / 5) * hh + hh * 0.15f, hw * 0.7f, hh * 0.7f), Texture2D.whiteTexture);
+                    }
+                    // the front: a red frame that breathes
+                    GUI.color = new Color(0.95f, 0.2f, 0.15f, 0.6f + 0.4f * Mathf.Sin(Time.time * 4f));
+                    float t = 3f * u;
+                    GUI.DrawTexture(new Rect(r.x, r.y, r.width, t), Texture2D.whiteTexture); GUI.DrawTexture(new Rect(r.x, r.yMax - t, r.width, t), Texture2D.whiteTexture);
+                    GUI.DrawTexture(new Rect(r.x, r.y, t, r.height), Texture2D.whiteTexture); GUI.DrawTexture(new Rect(r.xMax - t, r.y, t, r.height), Texture2D.whiteTexture);
+                    GUI.color = old;
+                }
+                // the prize of the quarter until it is taken: its icon, bright once owed
+                if (q >= paid)
+                {
+                    var p = Sheytoonak.Core.Missions.CityMap.PrizeOf(q + 1);
+                    bool owed = q < peakHeld;
+                    float isz = ch * (line ? 0.26f : 0.42f);
+                    var ir = line ? new Rect(r.xMax - isz - 4 * u, r.yMax - isz - 2 * u, isz, isz) : new Rect(r.center.x - isz * 0.5f, r.center.y - isz * 0.6f, isz, isz);
+                    var tint = new Color(1f, 1f, 1f, owed ? 1f : 0.55f);
+                    if (p.Kind == Sheytoonak.Core.Missions.MapPrizeKind.Marbles) { GUI.color = tint; LiraCoin(ir, u); GUI.color = old; }
+                    else if (p.Kind == Sheytoonak.Core.Missions.MapPrizeKind.Bag)
+                    {
+                        var bt = DuelHud.Kit("bag_" + (int)p.Bag) ?? Resources.Load<Texture2D>("Art/Bags/bag_" + (int)p.Bag);
+                        if (bt != null) { GUI.color = tint; GUI.DrawTexture(ir, bt, ScaleMode.ScaleToFit); GUI.color = old; }
+                        else DuelHud.DrawIcon(ir, "bag", tint);
+                    }
+                    else DuelHud.DrawIcon(ir, "shards", tint);
+                    if (!line) GUI.Label(new Rect(r.x, r.yMax - ch * 0.3f, r.width, ch * 0.28f), Ar.N((q + 1) * Sheytoonak.Core.Missions.CityMap.PerQuarter), tiny);
+                }
+            }
+
+            // foot: how it works, and the button for a prize that waits
+            var foot = new Rect(pad, Screen.height - pad - footH, Screen.width - 2 * pad, footH);
+            int waiting = duelGame.MapWaiting;
+            float bw = footH * 2.6f;
+            var btn = new Rect(foot.x, foot.y + footH * 0.1f, bw, footH * 0.8f);
+            MoneyButton(btn, Ar.T(Ar.MissionTake) + (waiting > 1 ? "  " + Ar.N(waiting) : ""), waiting > 0, u, small);
+            if (waiting > 0 && GUI.Button(btn, GUIContent.none, GUIStyle.none)) { duelGame.ClaimMapPrize(); TelegramWeb.Haptic(1); touch?.IgnoreFor(0.3f); }
+            bool note = Time.time < shopNoteUntil && !string.IsNullOrEmpty(shopNote);
+            GUI.Label(new Rect(btn.xMax + 10 * u, foot.y, foot.width - bw - 10 * u, footH), Ar.T(note ? shopNote : Ar.MapHow), note ? gold : small);
+        }
+
         bool showJar;
-        public void ShowJarFromScript() { showStart = true; showHeroes = false; showShop = false; showMissions = false; showJar = true; }
+        public void ShowJarFromScript() { showStart = true; showHeroes = false; showShop = false; showMissions = false; showMap = false; showJar = true; }
 
         /// <summary>
         /// The jar (user 2026-11-19: «قلک پر می‌شه و با صرف استار خریده می‌شه ... با پنجاه درصد تخفیف»): the big picture, how many
@@ -1998,7 +2116,7 @@ namespace Sheytoonak.Prototype
         }
 
         bool showMissions;
-        public void ShowMissionsFromScript() { showStart = true; showHeroes = false; showShop = false; showJar = false; showMissions = true; }
+        public void ShowMissionsFromScript() { showStart = true; showHeroes = false; showShop = false; showJar = false; showMap = false; showMissions = true; }
 
         /// <summary>
         /// «مهمّات اليوم» (2026-11-19): three rows on painted panels: the job, a bar of how far it is, its shards and a «take»
@@ -2085,7 +2203,7 @@ namespace Sheytoonak.Prototype
         }
 
         bool showShop; Vector2 shopScroll;
-        public void ShowShopFromScript() { showStart = true; showHeroes = false; showMissions = false; showJar = false; showShop = true; }
+        public void ShowShopFromScript() { showStart = true; showHeroes = false; showMissions = false; showJar = false; showMap = false; showShop = true; }
         public void ScrollShopForShot(float y) { shopScroll = new Vector2(0f, y); }
         /// <summary>CI only: the loot reveal waits for a tap that never comes in the screenshot run.</summary>
         public void DismissLootForShot() { lootShown = false; }
