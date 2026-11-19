@@ -320,6 +320,13 @@ namespace Sheytoonak.Prototype
                         Shadowed(new Rect(ex + esz + 10 * u, ey, 200 * u, esz), vals[k], enumSt);
                     }
                 }
+                // research p49: what this win dropped into the jar, small, under the numbers
+                if (duel.JarLastGain > 0)
+                {
+                    var jt = Kit("jar_1"); float jz = 44 * u;
+                    if (jt != null) GUI.DrawTexture(new Rect(cx + 6 * u, ey + esz + 14 * u, jz, jz), jt, ScaleMode.ScaleToFit);
+                    Shadowed(new Rect(cx - 160 * u, ey + esz + 14 * u, 160 * u, jz), "+" + Ar.N(duel.JarLastGain), new GUIStyle(enumSt) { fontSize = Mathf.RoundToInt(26 * u), alignment = TextAnchor.MiddleRight });
+                }
                 bool more = !duel.InChallenge || duel.ChallengeActive;
                 var br = new Rect(cx + 10 * u, y0 + 190 * u, 140 * u, 90 * u);
                 if (more && IconButton(br, "replay", AntidoteGreen, true, Ar.PlayAgain)) { touch?.IgnoreFor(0.5f); onPlayAgain?.Invoke(); }

@@ -63,6 +63,13 @@ namespace Sheytoonak.Tests
             Assert.AreEqual(50, Sheytoonak.Core.Missions.CityMap.Quarters);
             Assert.AreEqual(5, Sheytoonak.Core.Missions.CityMap.PerHouse, "one house per win");
             Assert.AreEqual(Sheytoonak.Core.Missions.CityMap.PerHouse, DuelRules.CurseWin);
+            // the gates (research p48): past a gate (every 5 quarters) the line never falls behind it
+            Assert.AreEqual(620, Sheytoonak.Core.Missions.CityMap.Line(620, 640));
+            Assert.AreEqual(500, Sheytoonak.Core.Missions.CityMap.Line(430, 640));
+            Assert.AreEqual(430, Sheytoonak.Core.Missions.CityMap.Line(430, 480));
+            Assert.AreEqual(0, Sheytoonak.Core.Missions.CityMap.District(499));
+            Assert.AreEqual(1, Sheytoonak.Core.Missions.CityMap.District(500));
+            Assert.AreEqual(9, Sheytoonak.Core.Missions.CityMap.District(99999));
             Assert.AreEqual(2, Sheytoonak.Core.Missions.CityMap.QuartersHeld(250));
             Assert.AreEqual(10, Sheytoonak.Core.Missions.CityMap.HousesInFront(250));
             Assert.AreEqual(1, Sheytoonak.Core.Missions.CityMap.QuartersHeld(198), "a loss gives ground back");
@@ -99,36 +106,21 @@ namespace Sheytoonak.Tests
 
         // User (2026-11-18): «گوز الان همه موجودات زنده رو بی هوش می‌کنه … مگر این که سم دو پله بالاتر از قدرت گوز باشه».
         [Test]
-        public void A_fart_knocks_out_every_living_poison_unless_it_is_two_levels_above()
+        public void A_fart_knocks_out_only_the_birds()
         {
             var fart1 = new Tool("fart", "ضرطة", Effect.Chance, 1);
             Tool bus(int lv) => new Tool("bus", "قافلة", Effect.Cover, lv, Lifetime.OneTurn);
-            Assert.IsTrue(DuelRules.FartKnocksOut(fart1, bus(1)));
-            Assert.IsTrue(DuelRules.FartKnocksOut(fart1, bus(2)));
-            Assert.IsFalse(DuelRules.FartKnocksOut(fart1, bus(3)), "two levels above: untouched");
-            Assert.IsFalse(DuelRules.FartKnocksOut(fart1, new Tool("cart", "عربة", Effect.Cover, 1, Lifetime.OneTurn)), "a cart is not alive");
+            Assert.IsTrue(DuelRules.FartKnocksOut(fart1, new Tool("pigeon", "حمامة", Effect.Chance, 1)));
+            Assert.IsFalse(DuelRules.FartKnocksOut(fart1, bus(1)), "2026-11-19: birds only, the caravan walks on");
+            Assert.IsFalse(DuelRules.FartKnocksOut(fart1, new Tool("cart", "عربة", Effect.Cover, 1, Lifetime.OneTurn)));
 
-            // the caravan already parked drops when the other side farts
+            // the caravan already parked stays when the other side farts
             var r = Make(); r.Start(Side.Right);
-            Assert.AreEqual(ActionReject.None, r.Poison(Side.Right, bus(2), new[] { 0 }));
+            Assert.AreEqual(ActionReject.None, r.Poison(Side.Right, bus(1), new[] { 0 }));
             if (r.Current != Side.Left) r.Pass(Side.Right);
             Assert.IsTrue(r.IsCovered(0));
-            Assert.AreEqual(ActionReject.None, r.Antidote(Side.Left, fart1));
-            Assert.IsFalse(r.IsCovered(0), "the camels are out cold");
-
-            // a level 3 caravan walks through a level 1 fart
-            r = Make(); r.Start(Side.Right);
-            r.Poison(Side.Right, bus(3), new[] { 0 });
-            if (r.Current != Side.Left) r.Pass(Side.Right);
             r.Antidote(Side.Left, fart1);
-            Assert.IsTrue(r.IsCovered(0), "too strong for this fart");
-
-            // a caravan sent into a fart that still hangs drops on arrival
-            r = Make(); r.Start(Side.Left);
-            r.Antidote(Side.Left, fart1);
-            if (r.Current != Side.Right) r.Pass(Side.Left);
-            Assert.AreEqual(ActionReject.None, r.Poison(Side.Right, bus(1), new[] { 0 }));
-            Assert.IsFalse(r.IsCovered(0));
+            Assert.IsTrue(r.IsCovered(0));
         }
 
         // User (2026-11-14): «قدرت گوز مگه قرار نبود جلوی پرنده‌ها رو بگیره؟». The stage asks the rules whether a fart is up.

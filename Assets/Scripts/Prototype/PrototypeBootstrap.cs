@@ -1714,6 +1714,10 @@ namespace Sheytoonak.Prototype
             {
                 HeroesScreen(u, big);
             }
+            else if (showStart && duel && showSettings)
+            {
+                HomeBackdrop(); SettingsPanel(u, big);
+            }
             else if (showStart && duel && searchUntil > 0f)
             {
                 SearchScreen(u, big);
@@ -1798,22 +1802,17 @@ namespace Sheytoonak.Prototype
             var titleR = new Rect(pad, top, Mathf.Min(330 * u, Screen.width * 0.3f), barH);
             Plank(titleR);
             GUI.Label(titleR, Ar.T(Ar.Title), num);
-            // research proposal 18: the buzz on a broken window can be switched off
-            var vibR = new Rect(titleR.xMax + 12 * u, top, Mathf.Min(170 * u, Screen.width * 0.14f), barH);
-            Plank(vibR);
-            if (GUI.Button(vibR, Ar.T(KickFeel.VibrateOn ? Ar.VibrateOn : Ar.VibrateOff), small)) { KickFeel.VibrateOn = !KickFeel.VibrateOn; touch?.IgnoreFor(0.4f); }
-            // research proposal 25: «كيسك جاهز!» on the phone while the game is closed; switched off here
-            var notR = new Rect(vibR.xMax + 12 * u, top, vibR.width, barH);
-            Plank(notR);
-            if (GUI.Button(notR, Ar.T(Sheytoonak.Gameplay.Store.BagNotifier.On ? Ar.NotifyOn : Ar.NotifyOff), small)) { Sheytoonak.Gameplay.Store.BagNotifier.On = !Sheytoonak.Gameplay.Store.BagNotifier.On; touch?.IgnoreFor(0.4f); }
-            // research proposal 40 (2026-11-16): my invite link through Telegram's share sheet; only inside Telegram
-            if (TelegramWeb.Inside)
+            // User (2026-11-19, with a recording of the reference's menu): «اون اعلانات رو ببر مثل پسرخوانده تو پستو. دیفالت روشن
+            // بذار». The buzz, the notice and the invite left the top bar for a back room behind one small plank; both
+            // switches are on unless the player turns them off there.
+            var menuR = new Rect(titleR.xMax + 12 * u, top, barH * 1.15f, barH);
+            Plank(menuR);
             {
-                var invR = new Rect(notR.xMax + 12 * u, top, vibR.width * 1.15f, barH);
-                Plank(invR);
-                var gold = new GUIStyle(small); gold.normal.textColor = new Color(1f, 0.85f, 0.35f);
-                if (GUI.Button(invR, Ar.T(Ar.Invite), gold)) { duelGame.ShareInvite(); touch?.IgnoreFor(0.5f); }
+                var o = GUI.color; GUI.color = new Color(1f, 0.92f, 0.7f);
+                for (int k = 0; k < 3; k++) GUI.DrawTexture(new Rect(menuR.x + menuR.width * 0.28f, menuR.y + barH * (0.3f + k * 0.17f), menuR.width * 0.44f, 4 * u), Texture2D.whiteTexture);
+                GUI.color = o;
             }
+            if (GUI.Button(menuR, GUIContent.none, GUIStyle.none)) { showSettings = true; touch?.IgnoreFor(0.3f); }
 
             // the card in the middle. User (2026-11-19): «تصویر اصلی بالای دو دکمه نقشه باشه و میزان پیش روی در نقشه» — the
             // painting of the city with its survey layer (CityMapView) fills the frame the heroes' picture had; the ribbon
@@ -1826,13 +1825,13 @@ namespace Sheytoonak.Prototype
                 var inner = new Rect(card.x + cw * 0.05f, card.y + ch * 0.08f, cw * 0.9f, ch * 0.84f);
                 float ia = inner.width / inner.height, ta = CityMapView.Aspect;
                 var tc = ia > ta ? new Rect(0f, (1f - ta / ia) * 0.5f, 1f, ta / ia) : new Rect((1f - ia / ta) * 0.5f, 0f, ia / ta, 1f);
-                CityMapView.Draw(inner, duelGame.Curses[0], duelGame.MapPeak, tc);
+                CityMapView.Draw(inner, duelGame.MapLine, duelGame.MapPeak, tc);
             }
             var ribbon = DuelHud.Kit("ribbon");
             var ribR = new Rect(card.center.x - cw * 0.42f, card.yMax - ch * 0.2f, cw * 0.84f, cw * 0.84f * 246f / 969f);
             if (ribbon != null) GUI.DrawTexture(ribR, ribbon, ScaleMode.StretchToFill);
             var ink = new GUIStyle(small) { fontSize = Mathf.RoundToInt(22 * u) }; ink.normal.textColor = new Color(0.35f, 0.18f, 0.08f);
-            GUI.Label(new Rect(ribR.x, ribR.y + ribR.height * 0.05f, ribR.width, ribR.height * 0.6f), Ar.T(Ar.MapQuarters + Sheytoonak.Core.Missions.CityMap.QuartersHeld(duelGame.Curses[0])), ink);
+            GUI.Label(new Rect(ribR.x, ribR.y + ribR.height * 0.05f, ribR.width, ribR.height * 0.6f), Ar.T(Ar.MapQuarters + Sheytoonak.Core.Missions.CityMap.QuartersHeld(duelGame.MapLine)), ink);
             if (duelGame.MapWaiting > 0) { var o = GUI.color; GUI.color = new Color(0.95f, 0.2f, 0.15f); GUI.DrawTexture(new Rect(card.xMax - 20 * u, card.y - 6 * u, 26 * u, 26 * u), DotTex()); GUI.color = o; }
             if (GUI.Button(new Rect(card.x, card.y, card.width, ribR.yMax - card.y), GUIContent.none, GUIStyle.none)) { showMap = true; touch?.IgnoreFor(0.4f); }
 
@@ -1974,9 +1973,9 @@ namespace Sheytoonak.Prototype
             GUI.Label(new Rect(cursesR.x + 6 * u, top, cursesR.width - barH, barH), Ar.N(curses), num);
             var housesR = new Rect(cursesR.x - 12 * u - barW * 1.2f, top, barW * 1.2f, barH);
             Plank(housesR);
-            GUI.Label(housesR, Ar.T(Ar.MapQuarters + Sheytoonak.Core.Missions.CityMap.QuartersHeld(curses)), small);
+            GUI.Label(housesR, Ar.T(Ar.MapQuarters + Sheytoonak.Core.Missions.CityMap.QuartersHeld(duelGame.MapLine)), small);
             var gold = new GUIStyle(num); gold.normal.textColor = new Color(1f, 0.85f, 0.4f);
-            GUI.Label(new Rect(backR.xMax, top, housesR.x - backR.xMax, barH), Ar.T(curses >= total ? Ar.MapWhole : Ar.MapTitle), gold);
+            GUI.Label(new Rect(backR.xMax, top, housesR.x - backR.xMax, barH), Ar.T(curses >= total ? Ar.MapWhole : Ar.District(Sheytoonak.Core.Missions.CityMap.District(duelGame.MapLine))), gold);
 
             // the map itself: the whole painting as large as the screen allows, with the survey layer and nothing on top of it
             float footH = 44 * u;
@@ -1985,14 +1984,14 @@ namespace Sheytoonak.Prototype
             var map = new Rect(area.center.x - mw * 0.5f, area.center.y - mh * 0.5f, mw, mh);
             var old = GUI.color;
             GUI.color = new Color(0.95f, 0.75f, 0.3f); GUI.DrawTexture(new Rect(map.x - 3 * u, map.y - 3 * u, map.width + 6 * u, map.height + 6 * u), Texture2D.whiteTexture); GUI.color = old;
-            CityMapView.Draw(map, curses, duelGame.MapPeak);
+            CityMapView.Draw(map, duelGame.MapLine, duelGame.MapPeak);
             int paid = duelGame.MapPaid;
 
             // foot: how it works
             var foot = new Rect(pad, Screen.height - pad - footH, Screen.width - 2 * pad, footH);
             int waiting = duelGame.MapWaiting;
             bool note = Time.time < shopNoteUntil && !string.IsNullOrEmpty(shopNote);
-            GUI.Label(foot, Ar.T(note ? shopNote : Ar.MapHow + "   " + Ar.MapHouses + duelGame.HousesDown), note ? gold : small);
+            GUI.Label(foot, Ar.T(note ? shopNote : MapFoot()), note ? gold : small);
 
             // User (2026-11-19): «جایزه خودکار داده نشه. اول آیکون جایزه بزرگ نشون داده شه و یه جمله که جایزه ات آماده است. بعدش
             // که زد رو آیکون جایزه رو بگیره». The prize that waits covers the map: its picture, big and breathing, the
@@ -2011,6 +2010,43 @@ namespace Sheytoonak.Prototype
                 if (waiting > 1) GUI.Label(new Rect(0, pr.yMax + 46 * u, Screen.width, 34 * u), "×" + Ar.N(waiting), small);
                 if (GUI.Button(pr, GUIContent.none, GUIStyle.none)) { duelGame.ClaimMapPrize(); TelegramWeb.Haptic(1); touch?.IgnoreFor(0.3f); }
             }
+        }
+
+        string MapFoot()
+        {
+            int d = Sheytoonak.Core.Missions.CityMap.District(duelGame.MapLine);
+            string next = d + 1 < Sheytoonak.Core.Missions.CityMap.Districts ? "   " + Ar.MapNext + Ar.District(d + 1) : "";
+            return Ar.MapHouses + duelGame.HousesDown + next;
+        }
+
+        // ---- the back room: the switches that used to crowd the top bar
+        bool showSettings;
+        void SettingsPanel(float u, GUIStyle big)
+        {
+            var old = GUI.color; GUI.color = new Color(0f, 0f, 0f, 0.7f); GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), Texture2D.whiteTexture); GUI.color = old;
+            float pw = Mathf.Min(Screen.width * 0.6f, 620 * u), ph = Mathf.Min(Screen.height * 0.8f, 430 * u);
+            var pr = new Rect((Screen.width - pw) * 0.5f, (Screen.height - ph) * 0.5f, pw, ph);
+            var panel = DuelHud.Kit("panel");
+            if (panel != null) GUI.DrawTexture(pr, panel, ScaleMode.StretchToFill);
+            var num = new GUIStyle(big) { fontSize = Mathf.RoundToInt(ph * 0.085f), alignment = TextAnchor.MiddleCenter };
+            var gold = new GUIStyle(num); gold.normal.textColor = new Color(1f, 0.85f, 0.4f);
+            GUI.Label(new Rect(pr.x, pr.y + ph * 0.07f, pw, ph * 0.13f), Ar.T(Ar.Settings), gold);
+            float rw = pw * 0.7f, rh = ph * 0.15f, rx = pr.center.x - rw * 0.5f, ry = pr.y + ph * 0.24f, gap = ph * 0.03f;
+            Plank(new Rect(rx, ry, rw, rh));
+            if (GUI.Button(new Rect(rx, ry, rw, rh), Ar.T(KickFeel.VibrateOn ? Ar.VibrateOn : Ar.VibrateOff), num)) { KickFeel.VibrateOn = !KickFeel.VibrateOn; touch?.IgnoreFor(0.3f); }
+            ry += rh + gap;
+            Plank(new Rect(rx, ry, rw, rh));
+            if (GUI.Button(new Rect(rx, ry, rw, rh), Ar.T(Sheytoonak.Gameplay.Store.BagNotifier.On ? Ar.NotifyOn : Ar.NotifyOff), num)) { Sheytoonak.Gameplay.Store.BagNotifier.On = !Sheytoonak.Gameplay.Store.BagNotifier.On; touch?.IgnoreFor(0.3f); }
+            ry += rh + gap;
+            if (TelegramWeb.Inside)
+            {
+                Plank(new Rect(rx, ry, rw, rh));
+                if (GUI.Button(new Rect(rx, ry, rw, rh), Ar.T(Ar.Invite), gold)) { duelGame.ShareInvite(); touch?.IgnoreFor(0.5f); }
+                ry += rh + gap;
+            }
+            var close = new Rect(pr.center.x - rw * 0.3f, pr.yMax - rh - ph * 0.09f, rw * 0.6f, rh);
+            MoneyButton(close, Ar.T(Ar.Close), true, u, num);
+            if (GUI.Button(close, GUIContent.none, GUIStyle.none)) { showSettings = false; touch?.IgnoreFor(0.3f); }
         }
 
         static void MapPrizeIcon(Rect ir, Sheytoonak.Core.Missions.MapPrize p, Color tint, float u)
@@ -2161,7 +2197,7 @@ namespace Sheytoonak.Prototype
             var half = new GUIStyle(strike); half.normal.textColor = new Color(0.55f, 0.95f, 0.45f);
             GUI.Label(new Rect(sr.xMax, sr.y, lx.width * 0.5f, sr.height), Ar.T(Ar.JarHalf), half);
             var btn = new Rect(lx.center.x - ph * 0.3f, sr.yMax + ph * 0.02f, ph * 0.6f, ph * 0.14f);
-            MoneyButton(btn, Sheytoonak.Gameplay.Store.StorePayments.PriceText(Sheytoonak.Core.Bags.ShopCatalog.JarSku, Sheytoonak.Core.Bags.ShopCatalog.JarCents), full, u, small);
+            MoneyButton(btn, duelGame.JarFirstFree ? Ar.T(Ar.JarFree) : Sheytoonak.Gameplay.Store.StorePayments.PriceText(Sheytoonak.Core.Bags.ShopCatalog.JarSku, Sheytoonak.Core.Bags.ShopCatalog.JarCents), full, u, small);
             if (GUI.Button(btn, GUIContent.none, GUIStyle.none)) { touch?.IgnoreFor(0.3f); duelGame.BuyJar(); }
             if (Time.time < shopNoteUntil && !string.IsNullOrEmpty(shopNote))
                 GUI.Label(new Rect(pr.x, pr.yMax - ph * 0.12f, pw, ph * 0.08f), Ar.T(shopNote), gold);

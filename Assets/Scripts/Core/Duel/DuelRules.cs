@@ -362,7 +362,9 @@ namespace Sheytoonak.Core.Duel
         /// are alive: the pigeon, the camel caravan (bus) and the ox wagon (truck). The fart knocks them out whatever their
         /// effect, unless the poison is two levels (or more) above the fart: then the fart does nothing to it at all.
         /// </summary>
-        public static bool IsLiving(Tool t) => t.Id == "pigeon" || t.Id == "bus" || t.Id == "truck";
+        // User (2026-11-19, after playing a day with the fart flooring every living thing): «گوز رو قدرتش رو کم کن و محدود
+        // کن به همون پرنده‌ها. خوب نمی‌شه اینطوری». Only the birds again; the caravan and the ox wagon walk through it.
+        public static bool IsLiving(Tool t) => t.Id == "pigeon";
         public static bool FartKnocksOut(Tool fart, Tool poison) => fart.Id == "fart" && IsLiving(poison) && poison.Power < fart.Power + 2;
         Tool? FartOf(Side s)
         {

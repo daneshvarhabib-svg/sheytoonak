@@ -18,6 +18,15 @@ namespace Sheytoonak.Core.Missions
         public const int Total = 5000, PerQuarter = 100, PerHouse = 5;
         public const int Quarters = Total / PerQuarter, HousesPerQuarter = PerQuarter / PerHouse;
 
+        /// <summary>Research p48 (approved 2026-11-19): a city gate every 5 quarters. Once the line has passed a gate it never
+        /// falls behind it again; a loss still gives ground, but only back to the last gate. ⚠️ The floor is for the map
+        /// only: the curse count itself keeps falling (it will pair opponents one day).</summary>
+        public const int QuartersPerGate = 5, PerGate = QuartersPerGate * PerQuarter, Districts = Quarters / QuartersPerGate;
+        /// <summary>Where the front line stands: the curses, but never behind the last gate the highest count passed.</summary>
+        public static int Line(int curses, int peakCurses) => Math.Max(Math.Max(0, curses), Math.Min(Total, Math.Max(0, peakCurses)) / PerGate * PerGate);
+        /// <summary>Research p50: the named district (0..9) the line is in; the last one once the city is held.</summary>
+        public static int District(int line) => Math.Max(0, Math.Min(Districts - 1, line / PerGate));
+
         /// <summary>Quarters fully held at that curse count.</summary>
         public static int QuartersHeld(int curses) => Math.Max(0, Math.Min(Quarters, curses / PerQuarter));
         /// <summary>Houses lit inside the quarter the line is in (0..19); 0 once the whole city is held.</summary>

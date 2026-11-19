@@ -335,7 +335,7 @@ namespace Sheytoonak.Prototype
 
         void LateUpdate()
         {
-            StreetLife.Gassed = FartUp;
+            StreetLife.Gassed = false; // 2026-11-19: the fart is for the birds only again; the street walks on
             bool rally = duel != null && duel.RallyActive;
             for (int sd = 0; sd < 2; sd++)
                 for (int sl = 0; painted[sd] != null && sl < painted[sd].Length; sl++)

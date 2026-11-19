@@ -100,6 +100,15 @@ namespace Sheytoonak
         public const string ChallengeStart = "ابدأ";
         public const string ChallengeGo = "تابع";
         public const string ChallengeFreeOnce = "الأولى مجّاناً";
+        public const string GatePassed = "عبرت الباب! صار لك: ";
+        public const string MapNext = "التالي: ";
+        public const string JarFree = "مجّاناً";
+        public const string Settings = "الإعدادات";
+        public const string Close = "إغلاق";
+        /// <summary>The ten districts of the city, five quarters each (research p50). Invented names of trades and places; no
+        /// real city, no religious name. ⚠️ Proposed 2026-11-19, the owner still has to approve the list.</summary>
+        static readonly string[] Districts = { "سوق العطّارين", "حارة الدبّاغين", "باب النهر", "درب النحّاسين", "حارة الخبّازين", "سوق الصاغة", "درب القوافل", "حارة البساتين", "ساحة البئر", "القلعة العالية" };
+        public static string District(int i) => Districts[System.Math.Max(0, System.Math.Min(Districts.Length - 1, i))];
         public const string JarTitle = "الحصّالة";
         public const string JarNotFull = "الحصّالة ما امتلأت بعد";
         public const string JarHow = "كلّ فوز يزيدها. إذا امتلأت خُذها بنصف السعر";

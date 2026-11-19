@@ -302,6 +302,8 @@ namespace Sheytoonak
         const string PrefMapPeak = "sheytoonak.map.peak", PrefMapPaid = "sheytoonak.map.paid", PrefHouses = "sheytoonak.housesDown";
         /// <summary>Highest curse count ever reached: prizes of the quarters up to it stay owed after a retreat.</summary>
         public int MapPeak => Mathf.Max(PlayerPrefs.GetInt(PrefMapPeak, 0), Curses[0]);
+        /// <summary>The front line of the map: the curses, held at the last gate passed (CityMap.Line).</summary>
+        public int MapLine => Sheytoonak.Core.Missions.CityMap.Line(Curses[0], MapPeak);
         public int MapPaid => PlayerPrefs.GetInt(PrefMapPaid, 0);
         public int MapWaiting => Sheytoonak.Core.Missions.CityMap.Waiting(MapPeak, MapPaid);
         /// <summary>Houses brought down = duels won. Counted from 2026-11-19; before that, at least one per five curses.</summary>
@@ -309,7 +311,11 @@ namespace Sheytoonak
         void NoteMapAfterDuel(bool won)
         {
             if (won) PlayerPrefs.SetInt(PrefHouses, HousesDown + 1);
+            int before = Sheytoonak.Core.Missions.CityMap.District(Sheytoonak.Core.Missions.CityMap.Line(0, PlayerPrefs.GetInt(PrefMapPeak, 0)));
             PlayerPrefs.SetInt(PrefMapPeak, MapPeak);
+            // a gate passed for the first time: the district behind it is ours for good (research p48/p50)
+            int after = Sheytoonak.Core.Missions.CityMap.District(MapLine);
+            if (won && after > before) Toast?.Invoke(Ar.GatePassed + Ar.District(after - 1), 2.4f);
             PlayerPrefs.Save();
         }
         /// <summary>Pays the next owed quarter prize (a bag opens at once). False when nothing waits.</summary>
@@ -333,11 +339,23 @@ namespace Sheytoonak
         // ---- the jar: fills with every win, bought full at half price (ShopCatalog.Jar*)
         const string PrefJar = "sheytoonak.jar";
         public int JarMarbles { get => PlayerPrefs.GetInt(PrefJar, 0); private set { PlayerPrefs.SetInt(PrefJar, value); PlayerPrefs.Save(); } }
+        const string PrefJarFree = "sheytoonak.jar.freeUsed";
+        public bool JarFirstFree => PlayerPrefs.GetInt(PrefJarFree, 0) == 0;
+        /// <summary>Marbles the last duel dropped into the jar (0 after a loss or with a full jar): the end screen shows it.</summary>
+        public int JarLastGain { get; private set; }
         public bool JarFull => JarMarbles >= ShopCatalog.JarCapacity;
         /// <summary>Real money only; with no store connected it says «soon» and the jar stays as it is.</summary>
         public void BuyJar()
         {
             if (!JarFull) { ShopNote?.Invoke(Ar.JarNotFull); return; }
+            // research p49 (approved 2026-11-19): the first full jar is broken for free, once, so the player tastes it
+            if (JarFirstFree)
+            {
+                PlayerPrefs.SetInt(PrefJarFree, 1);
+                LiraBank += JarMarbles; JarMarbles = 0;
+                ShopNote?.Invoke("+" + Ar.N(ShopCatalog.JarCapacity));
+                return;
+            }
             if (!Sheytoonak.Gameplay.Store.StorePayments.Available) { ShopNote?.Invoke(Ar.PaySoon); return; }
             Sheytoonak.Gameplay.Store.StorePayments.Buy(ShopCatalog.JarSku, paid =>
             {
@@ -760,7 +778,8 @@ namespace Sheytoonak
             if (winner == Me && !Rules.Draw) ClaimCombo();
             NoteMission(Sheytoonak.Core.Missions.MissionKind.PlayDuels);
             if (winner == Me && !Rules.Draw) NoteMission(Sheytoonak.Core.Missions.MissionKind.WinDuels);
-            if (winner == Me && !Rules.Draw) JarMarbles = ShopCatalog.JarAfterWin(JarMarbles);
+            JarLastGain = 0;
+            if (winner == Me && !Rules.Draw) { int was = JarMarbles; JarMarbles = ShopCatalog.JarAfterWin(was); JarLastGain = JarMarbles - was; }
             NoteMapAfterDuel(winner == Me && !Rules.Draw);
             SaveBags();
             ball.Hide();
