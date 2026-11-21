@@ -125,6 +125,8 @@ namespace Sheytoonak
         public const string MissionTake = "خُذ";
         public const string MissionTaken = "أخذتها";
         public const string MissionAll = "الثلاثة كلّها";
+        public const string MissionSwap = "بدّل";
+        public const string MissionSwapFree = "بدّل مجّاناً";
         /// <summary>Text of one job of the day; {0} is its goal.</summary>
         public static string MissionText(Sheytoonak.Core.Missions.MissionKind k, int goal)
         {

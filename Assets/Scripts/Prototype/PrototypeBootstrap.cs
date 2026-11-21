@@ -2254,8 +2254,8 @@ namespace Sheytoonak.Prototype
             GUI.Label(titleR, Ar.T(Ar.MissionsTitle) + "   " + Ar.N(Mathf.Max(0, (int)left.TotalHours)) + ":" + Ar.N(Mathf.Max(0, left.Minutes)).PadLeft(2, '٠'), gold);
 
             var day = DuelManager.ShopDay;
-            var jobs = Sheytoonak.Core.Missions.DailyMissions.For(day);
             var ms = duelGame.Missions;
+            var jobs = ms.Jobs(day); // the day's list with this player's trades
             var panel = DuelHud.Kit("panel");
             float rowW = Mathf.Min(Screen.width - 2 * pad, 900 * u), x0 = (Screen.width - rowW) * 0.5f;
             float y0 = top + barH + 14 * u, gap = 10 * u;
@@ -2299,6 +2299,25 @@ namespace Sheytoonak.Prototype
                 var cnt = new GUIStyle(small) { fontSize = Mathf.RoundToInt(bar.height * 0.85f) };
                 GUI.Label(bar, Ar.N(have) + "/" + Ar.N(goal), cnt);
                 if (taken) GUI.Label(btn, Ar.T(Ar.MissionTaken), small);
+                else if (!bonus && !done)
+                {
+                    // «بدّل» (user 2026-11-21): an unfinished job shows the trade instead of a dead «خُذ»:
+                    // free the first time each day, then five marbles a trade
+                    int cost = ms.SwapCost(day);
+                    MoneyButton(btn, "", true, u, small);
+                    if (cost == 0) GUI.Label(btn, Ar.T(Ar.MissionSwapFree), new GUIStyle(small) { fontSize = Mathf.RoundToInt(bh * 0.34f) });
+                    else
+                    {
+                        float cz = bh * 0.5f;
+                        LiraCoin(new Rect(btn.x + bw * 0.1f, btn.center.y - cz * 0.5f, cz, cz), u);
+                        GUI.Label(new Rect(btn.x + bw * 0.1f + cz, btn.y, bw * 0.9f - cz, bh), Ar.T(Ar.MissionSwap) + " " + Ar.N(cost), new GUIStyle(small) { fontSize = Mathf.RoundToInt(bh * 0.36f) });
+                    }
+                    if (GUI.Button(btn, GUIContent.none, GUIStyle.none))
+                    {
+                        if (duelGame.SwapMission(i)) TelegramWeb.Haptic(1);
+                        touch?.IgnoreFor(0.3f);
+                    }
+                }
                 else
                 {
                     MoneyButton(btn, Ar.T(Ar.MissionTake), done, u, small);

@@ -576,6 +576,18 @@ namespace Sheytoonak
             return got;
         }
         /// <summary>Takes the marbles for all three.</summary>
+        /// <summary>«بدّل»: the first trade of the day is free, each later one burns marbles. False when it cannot be done.</summary>
+        public bool SwapMission(int i)
+        {
+            if (!Missions.CanSwap(i, ShopDay)) return false;
+            int cost = Missions.SwapCost(ShopDay);
+            if (LiraBank < cost) { Toast?.Invoke(Ar.NotEnoughLira, 1.8f); return false; }
+            if (!Missions.Swap(i, ShopDay)) return false;
+            if (cost > 0) LiraBank -= cost;
+            SaveMissions();
+            return true;
+        }
+
         public int ClaimMissionBonus()
         {
             int got = Missions.ClaimBonus(ShopDay);

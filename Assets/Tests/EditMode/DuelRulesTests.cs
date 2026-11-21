@@ -30,6 +30,36 @@ namespace Sheytoonak.Tests
             Assert.AreEqual((r.Shards[1], 0), r.RewardFor(Side.Right));
         }
 
+        // User (2026-11-21): «۵۳ رو بساز / اگر خواست ماموریت های بیشتر تغییر بده باید ۵ تا تیله بسوزونه».
+        [Test]
+        public void A_mission_trade_is_free_once_a_day_then_costs_five_marbles()
+        {
+            var day = new System.DateTime(2026, 11, 21);
+            var m = new Sheytoonak.Core.Missions.DailyMissions();
+            var before = m.Jobs(day);
+            m.Note(before[0].Kind, 1, day);
+            Assert.AreEqual(0, m.SwapCost(day));
+            Assert.IsTrue(m.Swap(0, day));
+            var after = m.Jobs(day);
+            Assert.AreNotEqual(before[0].Kind, after[0].Kind);
+            Assert.AreNotEqual(after[0].Kind, after[1].Kind); Assert.AreNotEqual(after[0].Kind, after[2].Kind);
+            Assert.AreEqual(before[1].Kind, after[1].Kind);
+            Assert.AreEqual(0, m.Progress(0, day), "the traded job starts from zero");
+            Assert.AreEqual(Sheytoonak.Core.Missions.DailyMissions.SwapMarbles, m.SwapCost(day));
+            Assert.AreEqual(5, m.SwapCost(day));
+            // it survives a save and stays the same job for the rest of the day
+            var back = Sheytoonak.Core.Missions.DailyMissions.Parse(m.Serialize());
+            Assert.AreEqual(after[0].Kind, back.Jobs(day)[0].Kind);
+            Assert.AreEqual(5, back.SwapCost(day));
+            // a finished job cannot be traded
+            back.Note(after[1].Kind, 99, day);
+            Assert.IsFalse(back.Swap(1, day));
+            // an old save (before trades) still loads; tomorrow the trade is gone and free again
+            Assert.AreEqual(0, Sheytoonak.Core.Missions.DailyMissions.Parse("20261121,0,1,0,0,0,0,0").SwapCost(day));
+            Assert.AreEqual(0, back.SwapCost(day.AddDays(1)));
+            Assert.AreEqual(Sheytoonak.Core.Missions.DailyMissions.For(day.AddDays(1))[0].Kind, back.Jobs(day.AddDays(1))[0].Kind);
+        }
+
         // User (2026-11-19): «هر تیله بیست تا خرده شیشه است».
         [Test]
         public void Daily_missions_count_pay_once_and_reset_with_the_day()
