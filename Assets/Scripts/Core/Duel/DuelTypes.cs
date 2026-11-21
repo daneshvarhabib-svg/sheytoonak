@@ -102,6 +102,16 @@ namespace Sheytoonak.Core.Duel
             new HeroDef("shadi", "شادي الفلكيّ المسقطي",
                 new Tool("eclipse", "كسوف", Effect.Accuracy, 1, Lifetime.OneTurn),
                 new Tool("net", "شبكة الصيد", Effect.Chance, 1)),
+            // Heroes ten and eleven (2026-11-21, docs/HEROES.fa.md). Nour the weaver shuts windows behind heavy wooden
+            // shutters (Close, like the rug: the rug push and the hook pole open them) and plants a scarecrow against
+            // birds (Chance). Samir the porter sends two men with barrels on a pole to stand before the ground floor
+            // (Cover, like the carts) and pulls rugs and shutters down with a hooked pole (Close).
+            new HeroDef("nour", "نور الحائكة الحلبيّة",
+                new Tool("shutters", "مصاريع مغلقة", Effect.Close, 1, Lifetime.OneTurn),
+                new Tool("scarecrow", "فزّاعة", Effect.Chance, 1)),
+            new HeroDef("samir", "سمير الحمّال الحلبي",
+                new Tool("barrels", "حمّالو البراميل", Effect.Cover, 1, Lifetime.OneTurn),
+                new Tool("hook_pole", "عصا الخطّاف", Effect.Close, 1)),
         };
 
         public static HeroDef Get(string id)

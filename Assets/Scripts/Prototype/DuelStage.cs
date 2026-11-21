@@ -864,6 +864,7 @@ namespace Sheytoonak.Prototype
                     break;
                 case Effect.Close:
                     if (p.Tool.Id == "carpet") { if (p.Windows.Length > 0) list.Add(PoisonProps.Carpet(this, duel.CarpetSpan(p), mapper.FacadeZ)); }
+                    else if (p.Tool.Id == "shutters") foreach (int w in p.Windows) list.Add(PoisonProps.Shutters(this, mapper.WindowRects[w], mapper.FacadeZ));
                     else foreach (int w in p.Windows) list.Add(PoisonProps.OpenWindow(mapper.WindowRects[w], mapper.FacadeZ));
                     break;
                 case Effect.Reach:

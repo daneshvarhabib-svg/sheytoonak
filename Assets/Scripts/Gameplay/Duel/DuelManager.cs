@@ -695,7 +695,7 @@ namespace Sheytoonak
 
         /// <summary>Window index to row index (bottom = 0), for the value table and the HUD.</summary>
         /// <summary>How wide a run of windows a painted vehicle hides (metres of facade); 0 = not a vehicle.</summary>
-        public static float VehicleReach(string id) => id == "bus" ? 8.5f : id == "truck" ? 7.5f : id == "cart" ? 3.2f : 0f;
+        public static float VehicleReach(string id) => id == "bus" ? 8.5f : id == "truck" ? 7.5f : id == "cart" ? 3.2f : id == "barrels" ? 5.5f : 0f;
 
         public int RowOf(int window)
         {

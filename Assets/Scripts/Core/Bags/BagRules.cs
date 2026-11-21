@@ -37,7 +37,13 @@ namespace Sheytoonak.Core.Bags
         // one tool a card every ~30 wins; 4/8/16/24 give each tool ~1.7 cards a day (ToolLevelsTests keeps the calendar).
         static readonly int[] Cards = { 4, 8, 16, 24 };
         /// <summary>Cards per bag size, for the level calendar.</summary>
-        public static int CardsIn(BagSize s) => Cards[(int)s];
+        // ⚠️ 2026-11-21: three heroes a day are being added (user: «روزی ۳ قهرمان»). A bag's cards are spread over every
+        // tool of the game, so with 22 tools instead of 16 the same bags would have reached level 2 in ten days, and
+        // the user's calendar (2026-11-09: level 2 in under a week, 3 in a month, 4 in a season, 5 in a year) would
+        // slip further with every hero. The count in a bag therefore grows with the roster: the numbers in Cards are
+        // for the first sixteen tools (eight heroes), and a bag holds that many times tools/16.
+        public const int BaseTools = 16;
+        public static int CardsIn(BagSize s) => (Cards[(int)s] * Sheytoonak.Core.Duel.StarterHeroes.All.Length * 2 + BaseTools / 2) / BaseTools;
         /// <summary>What a bag of this size holds, said up front (store rules on random rewards: docs/STORE_RISK.fa.md §2 #8).</summary>
         public static int ShardsMinIn(BagSize s) => ShardsMin[(int)s];
         public static int ShardsMaxIn(BagSize s) => ShardsMax[(int)s];
@@ -139,7 +145,7 @@ namespace Sheytoonak.Core.Bags
         {
             var rng = new Random(unchecked(b.CycleIndex * 7919 + (int)b.Size * 104729 + 17));
             int s = (int)b.Size;
-            var cards = new string[tools == null || tools.Length == 0 ? 0 : Cards[s]];
+            var cards = new string[tools == null || tools.Length == 0 ? 0 : CardsIn(b.Size)];
             for (int i = 0; i < cards.Length; i++) cards[i] = tools[rng.Next(tools.Length)];
             return new BagContents { Shards = rng.Next(ShardsMin[s], ShardsMax[s] + 1), UpgradeCards = cards };
         }

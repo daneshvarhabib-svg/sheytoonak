@@ -177,7 +177,7 @@ namespace Sheytoonak.Prototype
             if (xMin > xMax) { foreach (var r in covered) { xMin = Mathf.Min(xMin, r.xMin); xMax = Mathf.Max(xMax, r.xMax); top = Mathf.Max(top, r.yMax); } }
             // a vehicle keeps its real length (bus 11, lorry 8.5, cart 3.5 m) even in front of a shop front wider than
             // itself: it parks on the middle of the covered glass (the rules count the window as hidden by its centre)
-            float realLen = id == "cart" ? 3.5f : id == "truck" ? 8.5f : 11f;
+            float realLen = id == "cart" ? 3.5f : id == "truck" ? 8.5f : id == "barrels" ? 6f : 11f;
             float len = Mathf.Clamp(xMax - xMin + 1.4f, realLen * 0.8f, realLen), w = 2.5f;
             // ⚠️ the bus stands ~3 m in front of the facade, so seen from the low camera its roof reads much higher
             // than its real height (run 30: it hid the middle row too). Size it so its front roof edge lands just above
@@ -202,7 +202,7 @@ namespace Sheytoonak.Prototype
                 // «گاری گاهی سایزش خیلی بزرگه … اتوبوس هم گاهی خیلی بزرگ می‌شه … نمی‌دونم قوانین سایز چیه». Rule now: every
                 // vehicle has its real height (bus 3.4 m, lorry 3.6 m, cart 2.4 m), allowed to stretch at most 20 % so it
                 // hides the house's lowest row; DuelManager.TargetsFor only gives it windows its length reaches.
-                float real = id == "cart" ? 2.4f : id == "truck" ? 3.6f : 3.4f;
+                float real = id == "cart" ? 2.4f : id == "truck" ? 3.6f : id == "barrels" ? 2.3f : 3.4f; // the two porters are men, not a wagon
                 h = Mathf.Clamp(h, real, real * 1.2f);
                 var r = Spr(busArt, root, new Vector3(0f, 0f, -w * 0.5f), h);
                 r.flipX = !busArt.name.StartsWith("cart"); // caravan and hay wagon are painted facing left; all come in from the left
@@ -449,6 +449,61 @@ namespace Sheytoonak.Prototype
             Part(PrimitiveType.Sphere, root, new Vector3(0f, r.height * 0.05f, -0.25f), Vector3.one * Mathf.Min(0.45f, r.height * 0.32f), skin);
             Part(PrimitiveType.Cube, root, new Vector3(0f, -r.height * 0.3f, -0.2f), new Vector3(r.width * 0.45f, r.height * 0.3f, 0.25f), cloth);
             return root.gameObject;
+        }
+
+        // ------------------------------------------------------------------ shutters (Close, nour)
+
+        /// <summary>
+        /// Nour's shutters. User (2026-11-21): «پنجره‌ها تو خونه های مختلف متفاوتن. چطوری می‌شینه رو پنجره که ضایع نباشه؟».
+        /// The picture is not stretched as one piece: it is two leaves (Art/Poison/shutters_l / _r), each a nine-slice
+        /// sprite, so the outer post and the top and bottom rails keep their real thickness on a wide, a narrow or a
+        /// tall window and only the planks between them stretch. The pair is a little larger than the window and hangs
+        /// on the wall in front of it (an arch or a stone frame disappears behind it), with a thin shadow under it.
+        /// The two leaves swing shut from the sides.
+        /// </summary>
+        public static GameObject Shutters(MonoBehaviour host, Rect r, float facadeZ)
+        {
+            var root = new GameObject("Poison shutters").transform;
+            root.position = new Vector3(r.center.x, r.center.y, facadeZ - 0.05f);
+            float w = r.width * 1.16f, h = r.height * 1.14f;
+            var shade = new GameObject("shadow").AddComponent<SpriteRenderer>();
+            shade.transform.SetParent(root, false); shade.transform.localPosition = new Vector3(0.05f, -0.07f, 0.01f);
+            shade.sprite = Sprite.Create(Texture2D.whiteTexture, new Rect(0, 0, Texture2D.whiteTexture.width, Texture2D.whiteTexture.height), new Vector2(0.5f, 0.5f), Texture2D.whiteTexture.width);
+            shade.transform.localScale = new Vector3(w, h, 1f); shade.color = new Color(0f, 0f, 0f, 0.35f);
+            var leaves = new List<Transform>();
+            for (int side = 0; side < 2; side++)
+            {
+                var tex = Resources.Load<Texture2D>("Art/Poison/shutters_" + (side == 0 ? "l" : "r"));
+                if (tex == null) continue;
+                // the leaf is drawn so that the post is `post` metres wide whatever the window: pixels per unit from
+                // the leaf's height on a usual window, borders = the post (outer side), a sliver (inner side), the rails
+                float ppu = tex.height / Mathf.Clamp(h, 1.1f, 2.2f);
+                float post = tex.width * 0.36f, sliver = tex.width * 0.04f, rail = tex.height * 0.17f;
+                var border = side == 0 ? new Vector4(post, rail, sliver, rail) : new Vector4(sliver, rail, post, rail); // left, bottom, right, top
+                var sp = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(side == 0 ? 0f : 1f, 0.5f), ppu, 0, SpriteMeshType.FullRect, border);
+                var leaf = new GameObject(side == 0 ? "left leaf" : "right leaf").AddComponent<SpriteRenderer>();
+                leaf.transform.SetParent(root, false);
+                leaf.transform.localPosition = new Vector3(side == 0 ? -w * 0.5f : w * 0.5f, 0f, 0f); // hinged on its outer edge
+                leaf.sprite = sp; leaf.drawMode = SpriteDrawMode.Sliced; leaf.size = new Vector2(w * 0.5f, h);
+                leaf.color = new Color(0.93f, 0.90f, 0.86f); // a touch of the house's warm light on the dark wood
+                leaves.Add(leaf.transform);
+            }
+            host.StartCoroutine(SwingShut(root, leaves, shade));
+            return root.gameObject;
+        }
+
+        static IEnumerator SwingShut(Transform root, List<Transform> leaves, SpriteRenderer shade)
+        {
+            float a0 = shade.color.a;
+            for (float t = 0f; t < 1f; t += Time.deltaTime / 0.28f)
+            {
+                if (root == null) yield break;
+                float k = 1f - (1f - t) * (1f - t);
+                foreach (var l in leaves) if (l != null) l.localScale = new Vector3(Mathf.Lerp(0.08f, 1f, k), 1f, 1f);
+                shade.color = new Color(0f, 0f, 0f, a0 * k);
+                yield return null;
+            }
+            foreach (var l in leaves) if (l != null) l.localScale = Vector3.one;
         }
 
         // ------------------------------------------------------------------ carpet (Close, rima)
@@ -698,6 +753,8 @@ namespace Sheytoonak.Prototype
                     case "complaint": root.position = heroPos + new Vector3(0f, 1.9f, 0f); Spr(art, root, Vector3.zero, 0.7f); break; // waved over the head
                     case "umbrella": root.position = heroPos + new Vector3(0f, 0f, 0.25f); Spr(art, root, Vector3.zero, 3.3f); break; // medieval repaint: a market awning on four poles, the hero stands under it
                     case "flashlight": root.position = heroPos + new Vector3(0f, 1.2f, 0.2f); Spr(art, root, Vector3.zero, 0.75f); break; // an iron candle lantern (was an electric torch)
+                    case "scarecrow": root.position = heroPos + new Vector3(heroPos.x < 0f ? -0.9f : 0.9f, 0f, 0.35f); Spr(art, root, Vector3.zero, 2.4f); break; // planted beside the hero
+                    case "hook_pole": root.position = heroPos + new Vector3(heroPos.x < 0f ? 0.5f : -0.5f, 0.2f, 0.2f); Spr(art, root, Vector3.zero, 3.2f); break; // held up toward the roof
                     case "net": root.position = heroPos + new Vector3(heroPos.x < 0f ? 0.4f : -0.4f, 1.7f, 0.2f); Spr(art, root, Vector3.zero, 1.2f); break; // raised over the head
                     default: root.position = heroPos + Vector3.up * 1.4f; Spr(art, root, Vector3.zero, 0.22f); break; // pebble
                 }

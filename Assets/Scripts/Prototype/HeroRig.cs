@@ -142,7 +142,7 @@ namespace Sheytoonak.Prototype
         // میکنی این تنوع رو ببین». Every picture fills the same height on screen, so a short hero drawn short would still
         // stand as tall as the rest: his height on the street is set here (1 = the usual).
         static readonly Dictionary<string, float> Statures = new Dictionary<string, float>
-        { ["zaatar"] = 0.92f, ["rima"] = 0.95f, ["fulla"] = 0.96f, ["um_arabiyat"] = 1.03f, ["hamada"] = 0.84f, ["bubakr"] = 1.12f, ["shadi"] = 1.05f };
+        { ["zaatar"] = 0.92f, ["rima"] = 0.95f, ["fulla"] = 0.96f, ["um_arabiyat"] = 1.03f, ["hamada"] = 0.84f, ["bubakr"] = 1.12f, ["shadi"] = 1.05f, ["nour"] = 1.08f, ["samir"] = 0.97f };
         public static float Stature(string id) => id != null && Statures.TryGetValue(id, out var s) ? s : 1f;
 
         public static bool Has(string id) => id != null && (HasFrames(id) || (Tables.ContainsKey(id) && Resources.Load<Texture2D>("Art/Heroes/" + id + "_rig/torso") != null));
