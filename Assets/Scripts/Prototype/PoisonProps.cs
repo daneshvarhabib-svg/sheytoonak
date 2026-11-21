@@ -570,6 +570,37 @@ namespace Sheytoonak.Prototype
             while (t != null) { t.position = p0 + new Vector3(Mathf.Sin(Time.time * 0.6f) * 0.8f, Mathf.Sin(Time.time * 1.3f) * 0.1f, 0f); yield return null; }
         }
 
+        // ------------------------------------------------------------------ eclipse (Accuracy)
+
+        /// <summary>Shadi's eclipse: the moon over the sun at the top of the picture and the whole street in shadow,
+        /// darker at each level. Both hang on the camera and are drawn over every sprite of the street (the HUD is
+        /// IMGUI and stays bright).</summary>
+        public static GameObject Eclipse(int level = 1)
+        {
+            var cam = Camera.main;
+            var root = new GameObject("Poison eclipse").transform;
+            if (cam == null) return root.gameObject;
+            root.SetParent(cam.transform, false);
+            float z = cam.nearClipPlane + 0.6f;
+            float h = cam.orthographic ? cam.orthographicSize * 2f : 2f * z * Mathf.Tan(cam.fieldOfView * 0.5f * Mathf.Deg2Rad), w = h * cam.aspect;
+            var dark = new GameObject("shadow").AddComponent<SpriteRenderer>();
+            dark.transform.SetParent(root, false); dark.transform.localPosition = new Vector3(0f, 0f, z);
+            dark.sprite = Sprite.Create(Texture2D.whiteTexture, new Rect(0, 0, Texture2D.whiteTexture.width, Texture2D.whiteTexture.height), new Vector2(0.5f, 0.5f), Texture2D.whiteTexture.width);
+            dark.transform.localScale = new Vector3(w * 1.1f, h * 1.1f, 1f);
+            dark.color = new Color(0.02f, 0.03f, 0.10f, 0.36f + 0.06f * (Mathf.Clamp(level, 1, 5) - 1));
+            dark.sortingOrder = 30000;
+            var art = Art("eclipse", 0.5f);
+            if (art != null)
+            {
+                var sun = new GameObject("moon over the sun").AddComponent<SpriteRenderer>();
+                sun.transform.SetParent(root, false); sun.sprite = art; sun.sortingOrder = 30001;
+                float size = h * 0.24f / art.bounds.size.y;
+                sun.transform.localPosition = new Vector3(0f, h * 0.33f, z - 0.01f);
+                sun.transform.localScale = Vector3.one * size;
+            }
+            return root.gameObject;
+        }
+
         // ------------------------------------------------------------------ wind (Accuracy)
 
         /// <summary>White streaks blowing across in front of the facade while the wind poison lasts.</summary>

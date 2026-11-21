@@ -96,6 +96,12 @@ namespace Sheytoonak.Core.Duel
                 // (the original design: Bubakr's light answers Shadi's darkness, docs/HEROES.fa.md); the fishing net ("net",
                 // Chance) waits as Shadi's antidote until his pictures arrive.
                 new Tool("flashlight", "فانوس", Effect.Accuracy, 1)),
+            // The ninth hero (user 2026-11-21: «روزی ۳ قهرمان … روی همون لیست بریم جلو», docs/HEROES.fa.md): the old
+            // astronomer. His eclipse darkens the street and scatters the kick (Accuracy, like the wind: the lantern and
+            // the vane answer it); his fishing net takes birds out of the air (Chance).
+            new HeroDef("shadi", "شادي الفلكيّ المسقطي",
+                new Tool("eclipse", "كسوف", Effect.Accuracy, 1, Lifetime.OneTurn),
+                new Tool("net", "شبكة الصيد", Effect.Chance, 1)),
         };
 
         public static HeroDef Get(string id)

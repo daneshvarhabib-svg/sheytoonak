@@ -872,7 +872,8 @@ namespace Sheytoonak.Prototype
                     if (p.Tool.Id == "rain") { var cloud = PoisonProps.Rain(this, new Vector3(0f, 4.2f, mapper.FacadeZ - 3f), p.Tool.Power); if (cloud != null) list.Add(cloud); }
                     break;
                 case Effect.Accuracy:
-                    list.Add(PoisonProps.Wind(this, mapper.FacadeZ, p.Tool.Power));
+                    if (p.Tool.Id == "eclipse") list.Add(PoisonProps.Eclipse(p.Tool.Power));
+                    else list.Add(PoisonProps.Wind(this, mapper.FacadeZ, p.Tool.Power));
                     break;
                 case Effect.Chance:
                     StartCoroutine(PigeonsWhile(p));
