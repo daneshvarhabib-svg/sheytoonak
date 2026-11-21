@@ -1,0 +1,27 @@
+RALLY 7.59 kick Left from (0.00, 0.11, 0.45) v=(22.92, 4.79, 15.69)
+RALLY 7.60 ground (0.00, 0.00, 0.45) active=True returning=False bounces=0
+RALLY 8.38 facade (18.18, 0.75, 13.00) active=True returning=False hitWindow=-1 window=-1
+RALLY 10.34 ground (0.09, 0.00, 0.86) active=True returning=True bounces=0
+RALLY 10.34 rekick#1 Left from (0.08, 0.05, 0.86) q=0.60 v=(23.12, 4.97, 15.36)
+RALLY 11.14 facade (18.17, 0.94, 13.00) active=True returning=False hitWindow=-1 window=-1
+RALLY 13.10 ground (0.09, 0.00, 0.86) active=True returning=True bounces=0
+RALLY 13.11 rekick#2 Left from (0.07, 0.09, 0.85) q=0.60 v=(23.64, 4.90, 15.34)
+RALLY 13.90 facade (18.60, 0.89, 13.00) active=True returning=False hitWindow=-1 window=-1
+RALLY 15.86 ground (0.10, 0.00, 0.86) active=True returning=True bounces=0
+RALLY 15.89 rekick#3 Left from (0.03, 0.19, 0.84) q=0.68 v=(0.61, 9.57, 15.38)
+RALLY 16.68 facade (0.47, 4.67, 13.00) active=True returning=False hitWindow=-1 window=-1
+RALLY 18.86 ground (0.07, 0.00, 4.31) active=True returning=True bounces=0
+RALLY 20.46 ground (-0.06, 0.00, 3.77) active=True returning=True bounces=1
+RALLY 20.87 finish hits=3 window=-1 rolls=True at (-0.06, 1.16, 3.80)
+RALLY 22.86 kick Right from (0.00, 0.11, 0.45) v=(3.40, 9.05, 15.69)
+RALLY 22.86 ground (0.00, 0.00, 0.45) active=True returning=False bounces=0
+RALLY 23.64 facade (2.69, 4.12, 13.00) active=True returning=False hitWindow=-1 window=12
+RALLY 24.75 finish hits=0 window=12 rolls=False at (2.69, 4.12, 12.89)
+RALLY 29.83 kick Right from (0.00, 0.11, 0.45) v=(-18.63, 8.39, 15.69)
+RALLY 29.84 ground (0.00, 0.00, 0.45) active=True returning=False bounces=0
+RALLY 31.16 ground (-7.26, 0.00, 4.79) active=True returning=False bounces=0
+RALLY 31.54 finish hits=0 window=-1 rolls=True at (-7.24, 1.06, 5.01)
+RALLY 42.69 kick Right from (0.00, 0.11, 0.45) v=(1.90, 5.35, 15.69)
+RALLY 42.70 ground (0.00, 0.00, 0.45) active=True returning=False bounces=0
+RALLY 43.48 facade (1.51, 1.19, 13.00) active=True returning=False hitWindow=-1 window=20
+RALLY 44.55 finish hits=0 window=20 rolls=False at (1.51, 1.19, 12.89)
