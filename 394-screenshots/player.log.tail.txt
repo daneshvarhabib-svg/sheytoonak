@@ -21,7 +21,7 @@ exture_buffer_range GL_ARB_texture_compression_bptc GL_ARB_texture_compression_r
 pth_stencil GL_ATI_blend_equation_separate GL_ATI_meminfo GL_ATI_texture_float GL_ATI_texture_mirror_once GL_EXT_EGL_image_storage GL_EXT_EGL_image_storage_compression GL_EXT_EGL_sync GL_EXT_abgr GL_EXT_blend_equation_separate GL_EXT_debug_label GL_EXT_depth_bounds_test GL_EXT_draw_buffers2 GL_EXT_draw_instanced GL_EXT_framebuffer_blit GL_EXT_framebuffer_multisample GL_EXT_framebuffer_multisample_blit_scaled GL_EXT_framebuffer_object GL_EXT_framebuffer_sRGB GL_EXT_memory_object GL_EXT_memory_object_fd GL_EXT_packed_depth_stencil GL_EXT_packed_float GL_EXT_pixel_buffer_object GL_EXT_polygon_offset_clamp GL_EXT_provoking_vertex GL_EXT_shader_clock GL_EXT_shader_framebuffer_fetch GL_EXT_shader_framebuffer_fetch_non_coherent GL_EXT_shader_image_load_formatted GL_EXT_shader_integer_mix GL_EXT_texture_array GL_EXT_texture_compression_dxt1 GL_EXT_texture_compression_rgtc GL_EXT_texture_compression_s3tc GL_EXT_texture_filter_anisotropic GL_EXT_texture_filter_minmax GL_EXT_texture_integer GL_EXT_texture_mirror_clamp 
 GL_EXT_texture_sRGB GL_EXT_texture_sRGB_R8 GL_EXT_texture_sRGB_RG8 GL_EXT_texture_sRGB_decode GL_EXT_texture_shadow_lod GL_EXT_texture_shared_exponent GL_EXT_texture_snorm GL_EXT_texture_storage GL_EXT_texture_swizzle GL_EXT_timer_query GL_EXT_transform_feedback GL_EXT_vertex_array_bgra GL_EXT_vertex_attrib_64bit GL_IBM_multimode_draw_arrays GL_INTEL_shader_atomic_float_minmax GL_KHR_blend_equation_advanced GL_KHR_blend_equation_advanced_coherent GL_KHR_context_flush_control GL_KHR_debug GL_KHR_no_error GL_KHR_parallel_shader_compile GL_KHR_robust_buffer_access_behavior GL_KHR_robustness GL_KHR_texture_compression_astc_ldr GL_KHR_texture_compression_astc_sliced_3d GL_MESA_framebuffer_flip_y GL_MESA_pack_invert GL_MESA_shader_integer_functions GL_MESA_texture_signed_rgba GL_NVX_gpu_memory_info GL_NV_alpha_to_coverage_dither_control GL_NV_conditional_render GL_NV_copy_image GL_NV_depth_clamp GL_NV_packed_depth_stencil GL_NV_sample_locations GL_NV_shader_atomic_float GL_NV_texture_barrier GL_OES_EGL_image GL_OV
 R_multiview GL_OVR_multiview2 GL_S3_s3tc
-OPENGL LOG: Creating OpenGL 4.5 graphics device ; Context level  <OpenGL 4.5> ; Context handle 523526512
+OPENGL LOG: Creating OpenGL 4.5 graphics device ; Context level  <OpenGL 4.5> ; Context handle 698372256
 ALSA lib confmisc.c:855:(parse_card) [error.core] cannot find card '0'
 ALSA lib conf.c:5211:(_snd_config_evaluate) [error.core] function snd_func_card_inum returned error: No such file or directory
 ALSA lib confmisc.c:422:(snd_func_concat) [error.core] error evaluating strings
@@ -43,8 +43,8 @@ ALSA lib pcm.c:2722:(snd_pcm_open_noupdate) [error.pcm] Unknown PCM default
 FMOD failed to initialize the output device.: "Error initializing output device. " (60)
 FMOD failed to initialize any audio devices, running on emulated software output with no sound. Please check your audio drivers and/or hardware for malfunction.
 Begin MonoManager ReloadAssembly
-- Loaded All Assemblies, in  0.053 seconds
-- Finished resetting the current domain, in  0.002 seconds
+- Loaded All Assemblies, in  0.084 seconds
+- Finished resetting the current domain, in  0.003 seconds
 [Physics::Module] Selected backend.
 [Physics::Module] Name: PhysX
 [Physics::Module] Id: 0xf2b8ea05
@@ -55,91 +55,28 @@ Default vsync count 1
 requesting resize 1600 x 720
 resizing window to 1600 x 720
 Desktop is 1600 x 720 @ 0 Hz
-UnloadTime: 0.553946 ms
+UnloadTime: 0.483821 ms
 SHEYTOONAK SHOTS armed: /home/runner/work/sheytoonak/sheytoonak/shots gfx=OpenGLCore 1600x720
 SHEYTOONAK SHOTS bootstrap found
-SHEYTOONAK SHOTS frame 1 t=2.9s focus=False
-SHEYTOONAK SHOTS frame 2 t=4.9s focus=False
-SHEYTOONAK SHOTS frame 3 t=5.1s focus=False
+SHEYTOONAK SHOTS frame 1 t=3.0s focus=False
+SHEYTOONAK SHOTS frame 2 t=4.7s focus=False
+SHEYTOONAK SHOTS frame 3 t=4.9s focus=False
 SHEYTOONAK SHOT /home/runner/work/sheytoonak/sheytoonak/shots/00-splash.png
 SHEYTOONAK SHOT /home/runner/work/sheytoonak/sheytoonak/shots/01-start.png
 SHEYTOONAK SHOT /home/runner/work/sheytoonak/sheytoonak/shots/02a-draft.png
-RALLY 4.30 kick Right from (0.00, 0.11, 0.45) v=(19.52, 8.76, 15.69)
-RALLY 4.30 ground (0.00, 0.00, 0.45) active=True returning=False bounces=0
-RALLY 5.08 facade (15.48, 3.89, 13.00) active=True returning=False hitWindow=-1 window=15
+RALLY 4.77 kick Right from (0.00, 0.11, 0.45) v=(5.10, 5.59, 15.69)
+RALLY 4.78 ground (0.00, 0.00, 0.45) active=True returning=False bounces=0
+RALLY 5.56 facade (4.04, 1.38, 13.00) active=True returning=False hitWindow=-1 window=19
 SHEYTOONAK SHOT /home/runner/work/sheytoonak/sheytoonak/shots/02-stage.png
-RALLY 6.22 finish hits=0 window=15 rolls=False at (15.48, 3.89, 12.89)
+RALLY 6.72 finish hits=0 window=19 rolls=False at (4.04, 1.38, 12.89)
 SHEYTOONAK SHOT /home/runner/work/sheytoonak/sheytoonak/shots/03-my-turn.png
 SHEYTOONAK SHOT /home/runner/work/sheytoonak/sheytoonak/shots/03a-selected.png
 SHEYTOONAK SHOT /home/runner/work/sheytoonak/sheytoonak/shots/03b-at-ball.png
-RALLY 8.13 kick Left from (0.00, 0.11, 0.45) v=(22.92, 4.79, 15.69)
-RALLY 8.14 ground (0.00, 0.00, 0.45) active=True returning=False bounces=0
+RALLY 8.80 kick Left from (0.00, 0.11, 0.45) v=(22.60, 5.00, 15.69)
+RALLY 8.80 ground (0.00, 0.00, 0.45) active=True returning=False bounces=0
+RALLY 9.58 facade (17.92, 0.91, 13.00) active=True returning=False hitWindow=-1 window=-1
 SHEYTOONAK SHOT /home/runner/work/sheytoonak/sheytoonak/shots/04-kick-air.png
-RALLY 8.92 facade (18.18, 0.75, 13.00) active=True returning=False hitWindow=-1 window=-1
 SHEYTOONAK SHOT /home/runner/work/sheytoonak/sheytoonak/shots/05-kick-hit.png
-RALLY 10.88 ground (0.09, 0.00, 0.86) active=True returning=True bounces=0
-RALLY 10.94 rekick#1 Left from (-0.04, 0.35, 0.81) q=1.00 v=(22.25, 4.49, 15.23)
+RALLY 11.54 ground (0.09, 0.00, 0.86) active=True returning=True bounces=0
+RALLY 11.55 rekick#1 Left from (0.07, 0.07, 0.86) q=0.60 v=(22.86, 5.11, 15.32)
 SHEYTOONAK SHOT /home/runner/work/sheytoonak/sheytoonak/shots/05r-hit1a.png
-RALLY 11.72 facade (17.60, 0.77, 13.00) active=True returning=False hitWindow=-1 window=-1
-SHEYTOONAK SHOTS frame 150 t=17.4s focus=False
-SHEYTOONAK SHOT /home/runner/work/sheytoonak/sheytoonak/shots/05r-hit1b.png
-RALLY 13.68 ground (0.09, 0.00, 0.86) active=True returning=True bounces=0
-RALLY 13.69 rekick#2 Left from (0.07, 0.08, 0.85) q=0.60 v=(21.29, 4.71, 14.95)
-SHEYTOONAK SHOT /home/runner/work/sheytoonak/sheytoonak/shots/05r-hit2a.png
-RALLY 14.50 facade (17.20, 0.67, 13.00) active=True returning=False hitWindow=-1 window=-1
-SHEYTOONAK SHOT /home/runner/work/sheytoonak/sheytoonak/shots/05r-hit2b.png
-RALLY 16.46 ground (0.09, 0.00, 0.86) active=True returning=True bounces=0
-RALLY 16.51 rekick#3 Left from (-0.01, 0.29, 0.83) q=0.89 v=(0.83, 9.27, 15.18)
-SHEYTOONAK SHOT /home/runner/work/sheytoonak/sheytoonak/shots/05r-hit3a.png
-RALLY 17.30 facade (0.63, 4.55, 13.00) active=True returning=False hitWindow=-1 window=-1
-SHEYTOONAK SHOT /home/runner/work/sheytoonak/sheytoonak/shots/05r-hit3b.png
-RALLY 19.48 ground (0.10, 0.00, 4.73) active=True returning=True bounces=0
-SHEYTOONAK SHOT /home/runner/work/sheytoonak/sheytoonak/shots/06-after.png
-RALLY 21.06 ground (0.01, 0.00, 5.33) active=True returning=True bounces=1
-RALLY 21.47 finish hits=3 window=-1 rolls=True at (-0.02, 1.21, 5.54)
-SHEYTOONAK SHOT /home/runner/work/sheytoonak/sheytoonak/shots/07-poison-0.png
-SHEYTOONAK SHOTS frame 300 t=28.9s focus=False
-RALLY 23.76 kick Right from (0.00, 0.11, 0.45) v=(-2.55, 9.17, 15.69)
-RALLY 23.78 ground (0.00, 0.00, 0.46) active=True returning=False bounces=0
-RALLY 24.56 facade (-2.02, 4.22, 13.00) active=True returning=False hitWindow=-1 window=11
-RALLY 25.66 finish hits=0 window=11 rolls=False at (-2.02, 4.22, 12.89)
-SHEYTOONAK SHOT /home/runner/work/sheytoonak/sheytoonak/shots/07-poison-1.png
-SHEYTOONAK SHOT /home/runner/work/sheytoonak/sheytoonak/shots/07-poison-2.png
-SHEYTOONAK SHOT /home/runner/work/sheytoonak/sheytoonak/shots/07c-carpet-mid.png
-RALLY 31.92 kick Right from (0.00, 0.11, 0.45) v=(-17.73, 8.42, 15.69)
-RALLY 31.94 ground (0.00, 0.00, 0.45) active=True returning=False bounces=0
-RALLY 32.72 facade (-14.06, 3.63, 13.00) active=True returning=False hitWindow=-1 window=-1
-SHEYTOONAK SHOT /home/runner/work/sheytoonak/sheytoonak/shots/07d-carpet-down.png
-SHEYTOONAK SHOT /home/runner/work/sheytoonak/sheytoonak/shots/07e-carpet-falling.png
-RALLY 34.68 ground (-0.07, 0.00, 0.86) active=True returning=True bounces=0
-SHEYTOONAK SHOTS frame 450 t=40.6s focus=False
-SHEYTOONAK SHOT /home/runner/work/sheytoonak/sheytoonak/shots/07f-carpet-down-street.png
-RALLY 36.10 ground (1.81, 0.00, 0.90) active=True returning=True bounces=1
-RALLY 36.98 ground (3.30, 0.00, 0.95) active=True returning=True bounces=2
-RALLY 37.52 ground (4.30, 0.00, 0.98) active=True returning=True bounces=3
-RALLY 37.86 ground (5.06, 0.00, 1.00) active=True returning=True bounces=4
-RALLY 37.99 stuck timer
-RALLY 37.99 finish hits=0 window=-1 rolls=True at (5.35, 0.11, 1.01)
-SHEYTOONAK SHOT /home/runner/work/sheytoonak/sheytoonak/shots/08-bot-turn.png
-SHEYTOONAK SHOT /home/runner/work/sheytoonak/sheytoonak/shots/09-later.png
-SHEYTOONAK SHOT /home/runner/work/sheytoonak/sheytoonak/shots/09b-result.png
-SHEYTOONAK SHOTS frame 600 t=52.2s focus=False
-SHEYTOONAK SHOT /home/runner/work/sheytoonak/sheytoonak/shots/10-challenge.png
-SHEYTOONAK SHOT /home/runner/work/sheytoonak/sheytoonak/shots/11-home.png
-SHEYTOONAK SHOT /home/runner/work/sheytoonak/sheytoonak/shots/12-bags.png
-SHEYTOONAK SHOT /home/runner/work/sheytoonak/sheytoonak/shots/13-loot.png
-SHEYTOONAK SHOT /home/runner/work/sheytoonak/sheytoonak/shots/14-heroes.png
-SHEYTOONAK SHOT /home/runner/work/sheytoonak/sheytoonak/shots/14b-upgrade.png
-SHEYTOONAK SHOT /home/runner/work/sheytoonak/sheytoonak/shots/15-shop.png
-SHEYTOONAK SHOT /home/runner/work/sheytoonak/sheytoonak/shots/15b-shop-bottom.png
-SHEYTOONAK SHOT /home/runner/work/sheytoonak/sheytoonak/shots/16-shop-bought.png
-SHEYTOONAK SHOT /home/runner/work/sheytoonak/sheytoonak/shots/17-missions.png
-SHEYTOONAK SHOTS frame 750 t=67.3s focus=False
-SHEYTOONAK SHOT /home/runner/work/sheytoonak/sheytoonak/shots/18-jar.png
-SHEYTOONAK SHOT /home/runner/work/sheytoonak/sheytoonak/shots/19-map.png
-SHEYTOONAK SHOTS done in /home/runner/work/sheytoonak/sheytoonak/shots
-[Physics::Module] Cleanup current backned.
-[Physics::Module] Id: 0xf2b8ea05
-Input System module state changed to: ShutdownInProgress.
-Input System polling thread exited.
-Input System module state changed to: Shutdown.
