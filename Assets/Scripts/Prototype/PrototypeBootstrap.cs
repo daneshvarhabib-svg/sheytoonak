@@ -236,7 +236,7 @@ namespace Sheytoonak.Prototype
             // User (2026-11-05): the 3:1 paintings (2172x724) replace the 2.3:1 ones; houses 13–22 stay in code until their 3:1
             // versions arrive («فعلا این سه تا رو داشته باش تا باقی برسن»).
             // test (user, 2026-11-05): one 3:1 painting with the top row 8 % below the edge, alone, to see if it fills the frame
-            var houses = new[] { House36(), House37(), House38(), House39(), House40(), House41(), House42(), House43(), House44() }; // 19, 17, 22, 19, 16, 17, 14, 24, 19 windows; the curse windows make every round's total odd
+            var houses = new[] { House36(), House37(), House38(), House39(), House40(), House41(), House42(), House43(), House44(), House45(), House46(), House47() }; // 19, 17, 22, 19, 16, 17, 14, 24, 19 windows; the curse windows make every round's total odd
             allHouses = houses;
 
             // Player: foot position + window mapping. No body: the game is first-person (POV).
@@ -492,6 +492,38 @@ namespace Sheytoonak.Prototype
                 R(804f, 512f, 922f, 662f), R(1076f, 512f, 1197f, 662f), R(1363f, 499f, 1494f, 670f), R(1644f, 512f, 1766f, 662f), R(1933f, 512f, 2051f, 668f),
             },
             0.25f, 1.95f, 0f, 1.2f, null, "Art/house_44_broken", R(1150f, 210f, 1250f, 250f));
+
+        // Three more houses a day (user 2026-11-21: «روزی ۳ قهرمان و سه خونه جدید»). The window boxes are measured on the
+        // broken paintings (the black holes, tools: scratch script; house 46 by its regular grid, its basalt is as dark as the holes).
+        // The dyer's house: limestone stained indigo, saffron and madder, 7 + 7 + 4 = 18 (even: one sealed).
+        HouseDefinition House45() => MakePaintedHouse("البيت ٤٥", "Art/house_45", 2172f, 724f, Wide3W,
+            new[]
+            {
+                R(127f, 43f, 250f, 172f), R(407f, 41f, 530f, 166f), R(702f, 41f, 826f, 170f), R(1007f, 42f, 1129f, 168f), R(1303f, 41f, 1424f, 166f), R(1635f, 40f, 1756f, 171f), R(1916f, 42f, 2035f, 165f),
+                R(131f, 345f, 242f, 471f), R(412f, 346f, 522f, 469f), R(710f, 346f, 818f, 464f), R(1016f, 346f, 1122f, 464f), R(1322f, 346f, 1418f, 467f), R(1644f, 346f, 1751f, 467f), R(1924f, 346f, 2032f, 470f),
+                R(500f, 572f, 608f, 675f), R(823f, 557f, 928f, 670f), R(1173f, 557f, 1272f, 668f), R(1531f, 558f, 1637f, 670f),
+            },
+            0.25f, 1.95f, 0f, 1.2f, null, "Art/house_45_broken", R(940f, 480f, 1010f, 540f));
+
+        // The merchant's house: black basalt and white limestone stripes, arched frames, a studded door, 7 + 9 + 6 = 22 (even).
+        HouseDefinition House46() => MakePaintedHouse("البيت ٤٦", "Art/house_46", 2172f, 724f, Wide3W,
+            new[]
+            {
+                R(279f, 94f, 359f, 198f), R(545f, 94f, 625f, 198f), R(822f, 94f, 902f, 198f), R(1059f, 94f, 1139f, 198f), R(1307f, 94f, 1387f, 198f), R(1570f, 94f, 1650f, 198f), R(1834f, 94f, 1914f, 198f),
+                R(140f, 316f, 220f, 420f), R(384f, 316f, 464f, 420f), R(604f, 316f, 684f, 420f), R(822f, 316f, 902f, 420f), R(1069f, 316f, 1149f, 420f), R(1294f, 316f, 1374f, 420f), R(1525f, 316f, 1605f, 420f), R(1723f, 316f, 1803f, 420f), R(1969f, 316f, 2049f, 420f),
+                R(281f, 548f, 361f, 656f), R(541f, 548f, 621f, 656f), R(821f, 548f, 901f, 656f), R(1298f, 548f, 1378f, 656f), R(1569f, 548f, 1649f, 656f), R(1834f, 548f, 1914f, 656f),
+            },
+            0.25f, 1.95f, 0f, 1.2f, null, "Art/house_46_broken", R(600f, 222f, 760f, 246f));
+
+        // The potter's house: mud brick, shelves of jars between the rows, 5 + 5 + 5 = 15.
+        HouseDefinition House47() => MakePaintedHouse("البيت ٤٧", "Art/house_47", 2172f, 724f, Wide3W,
+            new[]
+            {
+                R(262f, 80f, 361f, 179f), R(648f, 77f, 750f, 179f), R(1028f, 76f, 1128f, 179f), R(1419f, 79f, 1518f, 178f), R(1813f, 80f, 1912f, 179f),
+                R(261f, 310f, 363f, 409f), R(651f, 311f, 747f, 409f), R(1030f, 310f, 1129f, 409f), R(1418f, 310f, 1521f, 409f), R(1815f, 310f, 1914f, 409f),
+                R(262f, 538f, 363f, 639f), R(648f, 538f, 750f, 639f), R(1033f, 538f, 1132f, 639f), R(1424f, 538f, 1523f, 639f), R(1817f, 538f, 1916f, 639f),
+            },
+            0.25f, 1.95f, 0f, 1.2f, null, "Art/house_47_broken", R(430f, 250f, 570f, 298f));
 
         // Houses 28–35 (3:1 but 5–9 windows) left the pool on 2026-11-07 (user: «حداقل ۱۱ تا پنجره قابل شکستن … باید بمونن»).
 
