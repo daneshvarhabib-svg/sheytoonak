@@ -1,0 +1,27 @@
+RALLY 7.00 kick Left from (0.00, 0.11, 0.45) v=(19.65, 5.18, 15.69)
+RALLY 7.02 ground (0.00, 0.00, 0.45) active=True returning=False bounces=0
+RALLY 7.80 facade (15.58, 1.05, 13.00) active=True returning=False hitWindow=-1 window=-1
+RALLY 9.76 ground (0.08, 0.00, 0.86) active=True returning=True bounces=0
+RALLY 9.78 rekick#1 Left from (0.06, 0.12, 0.86) q=0.60 v=(19.16, 5.02, 14.89)
+RALLY 10.58 facade (15.54, 0.91, 13.00) active=True returning=False hitWindow=-1 window=-1
+RALLY 12.54 ground (0.08, 0.00, 0.86) active=True returning=True bounces=0
+RALLY 12.54 rekick#2 Left from (0.08, 0.03, 0.86) q=0.60 v=(18.51, 5.13, 14.91)
+RALLY 13.36 facade (15.00, 1.01, 13.00) active=True returning=False hitWindow=-1 window=14
+RALLY 14.51 finish hits=2 window=14 rolls=False at (15.00, 1.01, 12.89)
+RALLY 16.52 kick Right from (0.00, 0.11, 0.45) v=(1.79, 5.46, 15.69)
+RALLY 16.54 ground (0.00, 0.00, 0.45) active=True returning=False bounces=0
+RALLY 17.32 facade (1.42, 1.28, 13.00) active=True returning=False hitWindow=-1 window=-1
+RALLY 19.28 ground (0.01, 0.00, 0.86) active=True returning=True bounces=0
+RALLY probe: no live rebound before hit 3
+RALLY 20.54 ground (-0.07, 0.00, 1.26) active=True returning=True bounces=1
+RALLY 20.86 finish hits=0 window=-1 rolls=True at (-0.11, 0.83, 1.47)
+RALLY 27.20 kick Right from (0.00, 0.11, 0.45) v=(1.30, 5.18, 15.69)
+RALLY 27.20 ground (0.00, 0.00, 0.45) active=True returning=False bounces=0
+RALLY 28.30 ground (1.12, 0.00, 5.34) active=True returning=False bounces=0
+RALLY 28.66 finish hits=0 window=-1 rolls=True at (1.26, 0.62, 5.52)
+RALLY 37.53 kick Right from (0.00, 0.11, 0.45) v=(-2.53, 5.34, 15.69)
+RALLY 37.54 ground (0.00, 0.00, 0.45) active=True returning=False bounces=0
+RALLY 38.32 facade (-2.00, 1.18, 13.00) active=True returning=False hitWindow=-1 window=-1
+RALLY 40.28 ground (-0.01, 0.00, 0.86) active=True returning=True bounces=0
+RALLY 41.54 ground (0.09, 0.00, 1.26) active=True returning=True bounces=1
+RALLY 41.84 finish hits=0 window=-1 rolls=True at (0.15, 0.79, 1.47)
