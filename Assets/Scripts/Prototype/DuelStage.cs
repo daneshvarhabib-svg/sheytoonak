@@ -926,13 +926,18 @@ namespace Sheytoonak.Prototype
         /// حرکت داشته باشه؛ بیاد تو کادر و با چوب کار فرش رو یسره کنه». A masked man with the long hooked pole comes in
         /// from the left like the water carrier, stops under the rug (or the shutters), reaches up (hook_puller_0),
         /// heaves (hook_puller_1) and it comes down; then the next one, then he leaves to the right.
-        /// ⚠️ he has two painted poses and no walk sheet yet: he comes in with the step bob only.
+        /// He walks on his own six-pose sheet (hook_walker + hook_walker_walk1..18, the pole on his shoulder); the two
+        /// working pictures are seen from behind and are a second renderer shown only while he stands and pulls.
         /// </summary>
         IEnumerator HookScene(List<GameObject> targets)
         {
             var man = new GameObject("Hook man").transform;
+            // the man is 55 % of the walking picture's height and 54 % of the working one's: both make him 1.78 m
+            var walker = PoisonProps.Vehicle("hook_walker", man, 3.2f, false);
             var r = PoisonProps.Vehicle("hook_puller_0", man, 3.3f, false);
             var reach = r != null ? r.sprite : null; var heave = PoisonProps.Picture("hook_puller_1");
+            if (r != null && walker != null) r.enabled = false;
+            System.Action<bool> working = on => { if (walker != null && r != null) { r.enabled = on; walker.enabled = !on; } };
             if (r == null) { foreach (var g in targets) if (g != null) { if (g.name == "Poison carpet") StartCoroutine(RugFall(g)); else Destroy(g); } Destroy(man.gameObject); yield break; }
             float z = mapper.FacadeZ - 0.7f, edge = StreetLife.OffScreenX(z, 1f, 30f);
             Vector3 at = new Vector3(-edge, 0f, z);
@@ -947,7 +952,7 @@ namespace Sheytoonak.Prototype
                     man.position = Vector3.Lerp(from, to, 1f - (1f - k) * (1f - k)) + Vector3.up * Mathf.Abs(Mathf.Sin(k * secs * 9f)) * 0.04f;
                     yield return null;
                 }
-                at = to; man.position = at; r.sprite = reach;
+                at = to; man.position = at; r.sprite = reach; working(true);
                 yield return new WaitForSeconds(0.3f);
                 if (heave != null) r.sprite = heave;
                 yield return new WaitForSeconds(0.12f);
@@ -957,7 +962,7 @@ namespace Sheytoonak.Prototype
                     else StartCoroutine(ShuttersOpen(g));
                 }
                 yield return new WaitForSeconds(0.45f);
-                r.sprite = reach;
+                r.sprite = reach; working(false);
             }
             float gone = edge - at.x + 2f;
             for (float k = 0f; k < 1f && man != null; k += Time.deltaTime / 1.8f)
