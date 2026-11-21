@@ -906,6 +906,79 @@ namespace Sheytoonak.Prototype
                 lifted.Clear();
             }
             if (a.Id == "plank") StartCoroutine(SuckPuddle());
+            if (a.Id == "hook_pole" && liftedClose.Count > 0)
+            {
+                var mine = new List<GameObject>(liftedClose); liftedClose.Clear();
+                StartCoroutine(HookScene(mine));
+            }
+        }
+
+        readonly List<GameObject> liftedClose = new List<GameObject>();
+        IEnumerator CloseFallback(GameObject go)
+        {
+            yield return null; yield return null;
+            if (go == null || !liftedClose.Remove(go)) yield break;
+            if (go.name == "Poison carpet") StartCoroutine(RugFall(go)); else Destroy(go); // the rug push, or anything else
+        }
+
+        /// <summary>
+        /// Samir's antidote. User (2026-11-21): «پادزهرش هم بدون بدن یه انسان مسخره است» and «مرد چوب به دست مثل سقا باید
+        /// حرکت داشته باشه؛ بیاد تو کادر و با چوب کار فرش رو یسره کنه». A masked man with the long hooked pole comes in
+        /// from the left like the water carrier, stops under the rug (or the shutters), reaches up (hook_puller_0),
+        /// heaves (hook_puller_1) and it comes down; then the next one, then he leaves to the right.
+        /// ⚠️ he has two painted poses and no walk sheet yet: he comes in with the step bob only.
+        /// </summary>
+        IEnumerator HookScene(List<GameObject> targets)
+        {
+            var man = new GameObject("Hook man").transform;
+            var r = PoisonProps.Vehicle("hook_puller_0", man, 3.3f, false);
+            var reach = r != null ? r.sprite : null; var heave = PoisonProps.Picture("hook_puller_1");
+            if (r == null) { foreach (var g in targets) if (g != null) { if (g.name == "Poison carpet") StartCoroutine(RugFall(g)); else Destroy(g); } Destroy(man.gameObject); yield break; }
+            float z = mapper.FacadeZ - 0.7f, edge = StreetLife.OffScreenX(z, 1f, 30f);
+            Vector3 at = new Vector3(-edge, 0f, z);
+            targets.Sort((p, q) => (p != null ? p.transform.position.x : 0f).CompareTo(q != null ? q.transform.position.x : 0f));
+            foreach (var g in targets)
+            {
+                if (g == null) continue;
+                Vector3 to = new Vector3(g.transform.position.x - 0.1f, 0f, z), from = at;
+                float secs = Mathf.Clamp(Mathf.Abs(to.x - from.x) / 7f, 0.35f, 1.6f);
+                for (float k = 0f; k < 1f && man != null; k += Time.deltaTime / secs)
+                {
+                    man.position = Vector3.Lerp(from, to, 1f - (1f - k) * (1f - k)) + Vector3.up * Mathf.Abs(Mathf.Sin(k * secs * 9f)) * 0.04f;
+                    yield return null;
+                }
+                at = to; man.position = at; r.sprite = reach;
+                yield return new WaitForSeconds(0.3f);
+                if (heave != null) r.sprite = heave;
+                yield return new WaitForSeconds(0.12f);
+                if (g != null)
+                {
+                    if (g.name == "Poison carpet") StartCoroutine(RugFall(g, false));
+                    else StartCoroutine(ShuttersOpen(g));
+                }
+                yield return new WaitForSeconds(0.45f);
+                r.sprite = reach;
+            }
+            float gone = edge - at.x + 2f;
+            for (float k = 0f; k < 1f && man != null; k += Time.deltaTime / 1.8f)
+            {
+                man.position = at + Vector3.right * gone * k * k + Vector3.up * Mathf.Abs(Mathf.Sin(k * 16f)) * 0.04f;
+                yield return null;
+            }
+            if (man != null) Destroy(man.gameObject);
+        }
+
+        /// <summary>The hook pulls the two leaves open; they fold back to their hinges and are gone.</summary>
+        IEnumerator ShuttersOpen(GameObject go)
+        {
+            for (float k = 0f; k < 1f && go != null; k += Time.deltaTime / 0.3f)
+            {
+                foreach (Transform leaf in go.transform)
+                    if (leaf.name.EndsWith("leaf")) leaf.localScale = new Vector3(Mathf.Lerp(1f, 0.05f, k * k), 1f, 1f);
+                    else { var sr = leaf.GetComponent<SpriteRenderer>(); if (sr != null) sr.color = new Color(0f, 0f, 0f, 0.35f * (1f - k)); }
+                yield return null;
+            }
+            if (go != null) Destroy(go);
         }
 
         IEnumerator FartLingers(GameObject cloud)
@@ -1095,7 +1168,11 @@ namespace Sheytoonak.Prototype
                     if (go.name == "Poison bus" && p.TurnsLeft > 0) { lifted.Add(go); StartCoroutine(LiftFallback(go)); }
                     else if (go.name == "Poison bus") StartCoroutine(DriveOff(go)); // bus, lorry and cart all build under this name
                     // turns still left = an antidote lifted it: the rug is pushed off the roof; run out = rolled back up
-                    else if (go.name == "Poison carpet") StartCoroutine(p.TurnsLeft > 0 ? RugFall(go) : RugUp(go));
+                    // ... unless the antidote is Samir's hook pole (OnAntidote, a frame later): then the man with the pole
+                    // comes and pulls it down himself, so a lifted rug or shutter waits two frames for him (CloseFallback)
+                    else if (go.name == "Poison carpet" && p.TurnsLeft > 0) { liftedClose.Add(go); StartCoroutine(CloseFallback(go)); }
+                    else if (go.name == "Poison carpet") StartCoroutine(RugUp(go));
+                    else if (go.name == "Poison shutters" && p.TurnsLeft > 0) { liftedClose.Add(go); StartCoroutine(CloseFallback(go)); }
                     else Destroy(go);
                 }
             props.Remove(p);
@@ -1106,12 +1183,12 @@ namespace Sheytoonak.Prototype
         /// roof over the rug (Art/Poison/rug_pusher_0/1 when painted: leaning, then shoving), the rug lets go, drops with
         /// gravity, tips a little, slumps on the pavement and fades.
         /// </summary>
-        IEnumerator RugFall(GameObject go)
+        IEnumerator RugFall(GameObject go, bool fromRoof = true)
         {
             var t = go.transform; Vector3 top = t.position;
             var f0 = Resources.Load<Texture2D>("Art/Poison/rug_pusher_0"); var f1 = Resources.Load<Texture2D>("Art/Poison/rug_pusher_1");
             SpriteRenderer pusher = null;
-            if (f0 != null)
+            if (f0 != null && fromRoof) // pulled from the street by the hook pole: nobody on the roof
             {
                 pusher = new GameObject("Rug pusher").AddComponent<SpriteRenderer>();
                 pusher.sprite = Sprite.Create(f0, new Rect(0, 0, f0.width, f0.height), new Vector2(0.5f, 0f), 100f);

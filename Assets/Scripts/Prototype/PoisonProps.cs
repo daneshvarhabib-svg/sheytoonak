@@ -737,7 +737,7 @@ namespace Sheytoonak.Prototype
             if (a.Id == "rug_push") { root.position = heroPos; return root.gameObject; } // the stage pushes the rug off the roof (DuelStage.RugFall)
             // the stage plays these (user 2026-11-13): the tow truck (nails), Um al-Arabiyat's shove (complaint), the suction
             // tanker (plank) -- DuelStage.TowAway / PushAway / SuckPuddle
-            if (a.Id == "nails" || a.Id == "complaint" || a.Id == "plank") { root.position = heroPos; return root.gameObject; }
+            if (a.Id == "nails" || a.Id == "complaint" || a.Id == "plank" || a.Id == "hook_pole") { root.position = heroPos; return root.gameObject; } // hook_pole: DuelStage.HookScene
             var art = Art(a.Id, a.Id == "fart" || a.Id == "nails" || a.Id == "plank" || a.Id == "complaint" || a.Id == "flashlight" || a.Id == "net" ? 0.5f : 0f);
             if (art != null)
             {
