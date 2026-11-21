@@ -134,7 +134,8 @@ namespace Sheytoonak.Prototype
             var b = r.sprite; var list = new List<Sprite> { b };
             // a six-pose sheet (user 2026-11-19), cut on one canvas with the base picture: name_walk1.. is the whole cycle
             var cyc = new List<Sprite>();
-            for (int i = 1; i < 12; i++)
+            // (2026-11-21: with two in-betweens after every painted pose, tools/frames/rife_sets.py, a cycle is 18 pictures)
+            for (int i = 1; i < 40; i++)
             {
                 var tex = Resources.Load<Texture2D>("Art/" + folder + "/" + name + "_walk" + i);
                 if (tex == null) break;

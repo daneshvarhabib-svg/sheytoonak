@@ -635,7 +635,7 @@ namespace Sheytoonak.Prototype
             // barrow, steps beside it and sweeps the road ahead of it: the walking picture is swapped for the barrow alone
             // (the left 60 % of the same picture) and the sweeping man in front of it, broom head on the bird.
             var sweepS = new List<Sprite>(); SpriteRenderer sweepR = null, barrowR = null;
-            for (int i = 1; i < 12; i++)
+            for (int i = 1; i < 40; i++)
             {
                 var st = Resources.Load<Texture2D>("Art/Props/sweeper_sweep" + i);
                 if (st == null) break;
@@ -708,7 +708,7 @@ namespace Sheytoonak.Prototype
                 {
                     bool on = speed > 15f;
                     sweepR.enabled = on; barrowR.enabled = on; truck.enabled = !on;
-                    if (on) sweepR.sprite = sweepS[(int)(Time.time * 6.7f) % sweepS.Count]; // two strokes in the 1.8 s he sweeps
+                    if (on) sweepR.sprite = sweepS[(int)(Time.time * 1.12f * sweepS.Count) % sweepS.Count]; // the sheet is one stroke: two strokes in the 1.8 s he sweeps, however many pictures
                     return;
                 }
                 if (brushR == null) return;
@@ -1065,10 +1065,10 @@ namespace Sheytoonak.Prototype
             Vector3 s0 = puddle != null ? puddle.transform.localScale : Vector3.one;
             // six pictures of him pouring among his animals (user 2026-11-19), six a second while the puddle goes
             var pour = new List<Sprite>();
-            for (int i = 1; i < 12; i++) { var ps = PoisonProps.Picture("tanker_1_pour" + i); if (ps == null) break; pour.Add(ps); }
+            for (int i = 1; i < 40; i++) { var ps = PoisonProps.Picture("tanker_1_pour" + i); if (ps == null) break; pour.Add(ps); }
             for (float k = 0f; k < 1f; k += Time.deltaTime / 1.6f)
             {
-                if (pour.Count > 1 && r != null) r.sprite = pour[(int)(k * 1.6f * 6f) % pour.Count];
+                if (pour.Count > 1 && r != null) r.sprite = pour[(int)(k * 1.6f * pour.Count) % pour.Count];
                 if (puddle != null) puddle.transform.localScale = s0 * (1f - k);
                 yield return null;
             }

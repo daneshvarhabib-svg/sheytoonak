@@ -2083,7 +2083,7 @@ namespace Sheytoonak.Prototype
             if (!drumLooked)
             {
                 drumLooked = true; drumTex = Resources.Load<Texture2D>("Art/UI/searching");
-                for (int i = 1; i < 12; i++) { var bt = Resources.Load<Texture2D>("Art/UI/searching_" + i); if (bt == null) break; drumBeat.Add(bt); }
+                for (int i = 1; i < 40; i++) { var bt = Resources.Load<Texture2D>("Art/UI/searching_" + i); if (bt == null) break; drumBeat.Add(bt); }
             }
             float left = searchUntil - Time.unscaledTime; bool found = left < FoundSeconds;
             // the drum jumps on every beat (two a second) and stands still once someone answered
@@ -2093,7 +2093,7 @@ namespace Sheytoonak.Prototype
             {
                 // six pictures = two strokes = one second; the last picture (the stick on the hide) stays once someone answered
                 float el = SearchSeconds - left;
-                var bt = drumBeat[found ? drumBeat.Count - 1 : (int)(el * drumBeat.Count) % drumBeat.Count];
+                var bt = drumBeat[found ? drumBeat.Count * 5 / 6 : (int)(el * drumBeat.Count) % drumBeat.Count] /* the sixth PAINTED picture; the ones after it are in-betweens back to the first */;
                 float bh = Screen.height * 0.62f, bw = bh * bt.width / bt.height;
                 GUI.DrawTexture(new Rect(Screen.width * 0.5f - bw * 0.5f, Screen.height * 0.46f - bh * 0.5f, bw, bh), bt, ScaleMode.ScaleToFit);
             }
