@@ -2370,6 +2370,7 @@ namespace Sheytoonak.Prototype
             float areaY = top + barH + 12 * u, areaH = Screen.height - areaY - pad, w = Screen.width - pad * 2 - 4;
             float hSpecial = 230 * u, hOffers = Mathf.Max(areaH * 0.62f, 330 * u), hRow = 250 * u, hCode = 150 * u, g = 14 * u;
             float total = hSpecial + hOffers + hRow * 3 + hCode + g * 5;
+            shopScroll = DragScroll(new Rect(pad, areaY, w + 4, areaH), shopScroll, total - areaH, u);
             shopScroll = GUI.BeginScrollView(new Rect(pad, areaY, w + 4, areaH), shopScroll, new Rect(0, 0, w, total), GUIStyle.none, GUIStyle.none);
             var title = new GUIStyle(num) { fontSize = Mathf.RoundToInt(28 * u) }; title.normal.textColor = new Color(1f, 0.85f, 0.4f);
             float y = 0f;
@@ -2416,7 +2417,43 @@ namespace Sheytoonak.Prototype
             }
             y += hOffers + g;
 
-            // --- 3. bags: medium and large for shards, huge for lira (open at once)
+            // User (2026-11-21): «تو بخش دکان خرید تیله رو اضافه کنیم و یک بخش دیگه … برای تبدیل تیله به خرده شیشه / الآن فقط دو
+            // ردیف داریم که باید بشه ۴ ردیف». Both rows existed but sat under the bags, and the page could not be dragged
+            // with a finger, so on a phone only the first two rows were ever seen. They are rows 3 and 4 now.
+            // --- 3. marbles for money (through the store; «soon» until one is connected)
+            var lr = Panel(new Rect(0, y, w, hRow), Ar.T("بِلّي"), title, u);
+            var packs = Sheytoonak.Core.Bags.ShopCatalog.LiraPacks;
+            Row(lr, packs.Length, u, (k, r) =>
+            {
+                var pk = packs[k];
+                GUI.Label(new Rect(r.x, r.y + 2 * u, r.width, 26 * u), Ar.T(pk.NameAr), small);
+                float cs = r.height * 0.36f;
+                for (int c = 0; c < Mathf.Min(1 + k, 5); c++) LiraCoin(new Rect(r.center.x - cs * 0.5f + (c - k * 0.5f) * cs * 0.3f, r.y + 32 * u + (c % 2) * 6 * u, cs, cs), u);
+                var big2 = new GUIStyle(small) { fontSize = Mathf.RoundToInt(22 * u), fontStyle = FontStyle.Bold }; big2.normal.textColor = new Color(1f, 0.85f, 0.35f);
+                GUI.Label(new Rect(r.x, r.y + 40 * u + cs, r.width, 30 * u), Ar.N(pk.Lira), big2);
+                var pr = new Rect(r.x + 8 * u, r.yMax - 40 * u, r.width - 16 * u, 34 * u);
+                MoneyButton(pr, Sheytoonak.Gameplay.Store.StorePayments.PriceText(pk.Sku, pk.PriceCents), true, u, small);
+                if (GUI.Button(r, GUIContent.none, GUIStyle.none)) { touch?.IgnoreFor(0.3f); duelGame.BuyLira(k); }
+            });
+            y += hRow + g;
+
+            // --- 4. marbles broken into shards
+            var zr = Panel(new Rect(0, y, w, hRow), Ar.T("زجاج"), title, u);
+            var zp = Sheytoonak.Core.Bags.ShopCatalog.ShardPacks;
+            Row(zr, zp.Length, u, (k, r) =>
+            {
+                var pk = zp[k];
+                GUI.Label(new Rect(r.x, r.y + 2 * u, r.width, 26 * u), Ar.T(pk.NameAr), small);
+                float cs = r.height * 0.4f;
+                DuelHud.DrawIcon(new Rect(r.center.x - cs * 0.5f, r.y + 30 * u, cs, cs), "shards", Color.white);
+                GUI.Label(new Rect(r.x, r.y + 36 * u + cs, r.width, 30 * u), Ar.N(pk.Shards), small);
+                var pr = new Rect(r.x + 10 * u, r.yMax - 40 * u, r.width - 20 * u, 34 * u);
+                LiraButton(pr, pk.Lira, duelGame.LiraBank >= pk.Lira, u, small);
+                if (GUI.Button(r, GUIContent.none, GUIStyle.none)) { touch?.IgnoreFor(0.3f); duelGame.BuyShardPack(k); }
+            });
+            y += hRow + g;
+
+            // --- 5. bags: medium and large for shards, huge for lira (open at once)
             var br = Panel(new Rect(0, y, w, hRow), Ar.T("أكياس"), title, u);
             var sizes = new[] { Sheytoonak.Core.Bags.BagSize.Medium, Sheytoonak.Core.Bags.BagSize.Large, Sheytoonak.Core.Bags.BagSize.Huge };
             Row(br, sizes.Length, u, (k, r) =>
@@ -2446,39 +2483,6 @@ namespace Sheytoonak.Prototype
             });
             y += hRow + g;
 
-            // --- 4. lira for money (through the store; «soon» until one is connected)
-            var lr = Panel(new Rect(0, y, w, hRow), Ar.T("بِلّي"), title, u);
-            var packs = Sheytoonak.Core.Bags.ShopCatalog.LiraPacks;
-            Row(lr, packs.Length, u, (k, r) =>
-            {
-                var pk = packs[k];
-                GUI.Label(new Rect(r.x, r.y + 2 * u, r.width, 26 * u), Ar.T(pk.NameAr), small);
-                float cs = r.height * 0.36f;
-                for (int c = 0; c < Mathf.Min(1 + k, 5); c++) LiraCoin(new Rect(r.center.x - cs * 0.5f + (c - k * 0.5f) * cs * 0.3f, r.y + 32 * u + (c % 2) * 6 * u, cs, cs), u);
-                var big2 = new GUIStyle(small) { fontSize = Mathf.RoundToInt(22 * u), fontStyle = FontStyle.Bold }; big2.normal.textColor = new Color(1f, 0.85f, 0.35f);
-                GUI.Label(new Rect(r.x, r.y + 40 * u + cs, r.width, 30 * u), Ar.N(pk.Lira), big2);
-                var pr = new Rect(r.x + 8 * u, r.yMax - 40 * u, r.width - 16 * u, 34 * u);
-                MoneyButton(pr, Sheytoonak.Gameplay.Store.StorePayments.PriceText(pk.Sku, pk.PriceCents), true, u, small);
-                if (GUI.Button(r, GUIContent.none, GUIStyle.none)) { touch?.IgnoreFor(0.3f); duelGame.BuyLira(k); }
-            });
-            y += hRow + g;
-
-            // --- 5. shards for lira
-            var zr = Panel(new Rect(0, y, w, hRow), Ar.T("زجاج"), title, u);
-            var zp = Sheytoonak.Core.Bags.ShopCatalog.ShardPacks;
-            Row(zr, zp.Length, u, (k, r) =>
-            {
-                var pk = zp[k];
-                GUI.Label(new Rect(r.x, r.y + 2 * u, r.width, 26 * u), Ar.T(pk.NameAr), small);
-                float cs = r.height * 0.4f;
-                DuelHud.DrawIcon(new Rect(r.center.x - cs * 0.5f, r.y + 30 * u, cs, cs), "shards", Color.white);
-                GUI.Label(new Rect(r.x, r.y + 36 * u + cs, r.width, 30 * u), Ar.N(pk.Shards), small);
-                var pr = new Rect(r.x + 10 * u, r.yMax - 40 * u, r.width - 20 * u, 34 * u);
-                LiraButton(pr, pk.Lira, duelGame.LiraBank >= pk.Lira, u, small);
-                if (GUI.Button(r, GUIContent.none, GUIStyle.none)) { touch?.IgnoreFor(0.3f); duelGame.BuyShardPack(k); }
-            });
-            y += hRow + g;
-
             // --- 6. prize code
             var cr = Panel(new Rect(0, y, w, hCode), Ar.T("رمز جائزة"), title, u);
             var field = new GUIStyle(GUI.skin.textField) { fontSize = Mathf.RoundToInt(24 * u), alignment = TextAnchor.MiddleCenter };
@@ -2497,6 +2501,24 @@ namespace Sheytoonak.Prototype
             }
         }
         string shopNote, prizeCode; float shopNoteUntil; bool shopNoteHooked;
+
+        // IMGUI's scroll view answers a mouse wheel only; on a phone there is none, so a long page showed its first
+        // screen and nothing else. A finger dragged inside the area moves the page; once it has moved a little the
+        // button under the finger is let go, so a drag never buys anything.
+        bool dragScrolling; float dragScrollDist;
+        Vector2 DragScroll(Rect area, Vector2 scroll, float max, float u)
+        {
+            var e = Event.current;
+            if (e.type == EventType.MouseDown) { dragScrolling = area.Contains(e.mousePosition); dragScrollDist = 0f; }
+            else if (e.rawType == EventType.MouseUp) dragScrolling = false;
+            else if (e.type == EventType.MouseDrag && dragScrolling)
+            {
+                dragScrollDist += Mathf.Abs(e.delta.y);
+                scroll.y = Mathf.Clamp(scroll.y - e.delta.y, 0f, Mathf.Max(0f, max));
+                if (dragScrollDist > 10 * u) GUIUtility.hotControl = 0;
+            }
+            return scroll;
+        }
 
         /// <summary>A painted frame with a title; returns its rect.</summary>
         static Rect Panel(Rect r, string titleText, GUIStyle title, float u)
@@ -2670,6 +2692,7 @@ namespace Sheytoonak.Prototype
             float areaY = top + barH + 12 * u, areaH = Screen.height - areaY - pad;
             float gap = 12 * u, cw = (Screen.width - pad * 2 - gap * (cols - 1)) / cols, chh = Mathf.Max(areaH / rowsN - gap, 300 * u);
             var view = new Rect(0, 0, Screen.width - pad * 2 - 4, rowsN * (chh + gap));
+            heroesScroll = DragScroll(new Rect(pad, areaY, Screen.width - pad * 2, areaH), heroesScroll, view.height - areaH, u);
             heroesScroll = GUI.BeginScrollView(new Rect(pad, areaY, Screen.width - pad * 2, areaH), heroesScroll, view, GUIStyle.none, GUIStyle.none);
             var panel = DuelHud.Kit("panel");
             for (int i = 0; i < heroes.Length; i++)
