@@ -452,10 +452,14 @@ namespace Sheytoonak.Prototype
             else if (idleClip.Count > 0)
             {
                 // six nearly identical pictures of him breathing and shifting his weight, each melting into the next
-                const float hold = 0.8f;
+                // User (2026-11-22): «از نیمه دوم همین ویدیو نفس کشیدن رو دربیار». A hero whose idle is cut from a video has
+                // many real frames (more than twelve): they play at the video's own pace and are never blended.
+                bool filmed = idleClip.Count > 12;
+                float hold = filmed ? 1f / 24f : 0.8f;
                 if (wasMoving) { Cut(idleClip[0]); idleClock = 0f; }
                 idleClock += dt;
-                Show(idleClip[(int)(idleClock / hold) % idleClip.Count], hold);
+                var pose = idleClip[(int)(idleClock / hold) % idleClip.Count];
+                if (filmed) Cut(pose); else Show(pose, hold);
                 facing = home;
             }
             if (!Ready) readyT = 0f;
