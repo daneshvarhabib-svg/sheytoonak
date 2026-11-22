@@ -642,15 +642,18 @@ namespace Sheytoonak.Prototype
             dark.transform.SetParent(root, false); dark.transform.localPosition = new Vector3(0f, 0f, z);
             dark.sprite = Sprite.Create(Texture2D.whiteTexture, new Rect(0, 0, Texture2D.whiteTexture.width, Texture2D.whiteTexture.height), new Vector2(0.5f, 0.5f), Texture2D.whiteTexture.width);
             dark.transform.localScale = new Vector3(w * 1.1f, h * 1.1f, 1f);
-            dark.color = new Color(0.02f, 0.03f, 0.10f, 0.36f + 0.06f * (Mathf.Clamp(level, 1, 5) - 1));
+            dark.color = new Color(0.02f, 0.03f, 0.10f, 0.82f + 0.025f * (Mathf.Clamp(level, 1, 5) - 1));
+            // User (2026-11-22, screenshot): «صحنه رو خیلی خیلی خیلی تیره تر از این کنه که واقعا به سختی بشه دید» (was 0.36).
             dark.sortingOrder = 30000;
             var art = Art("eclipse", 0.5f);
             if (art != null)
             {
                 var sun = new GameObject("moon over the sun").AddComponent<SpriteRenderer>();
                 sun.transform.SetParent(root, false); sun.sprite = art; sun.sortingOrder = 30001;
-                float size = h * 0.24f / art.bounds.size.y;
-                sun.transform.localPosition = new Vector3(0f, h * 0.33f, z - 0.01f);
+                // User (same message): «این کسوف باید تو اسمون باشه نه رو ساختمون». The sky is only the top tenth of the
+                // frame, and the clock sits in its middle: a small sun, left of the clock, inside that strip.
+                float size = h * 0.11f / art.bounds.size.y;
+                sun.transform.localPosition = new Vector3(-w * 0.14f, h * 0.445f, z - 0.01f);
                 sun.transform.localScale = Vector3.one * size;
             }
             return root.gameObject;
