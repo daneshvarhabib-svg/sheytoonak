@@ -1,7 +1,8 @@
 # The walk of a hero from a generated video: one whole cycle (two steps, at most 40 frames) of the figure in columns
 # x0..x1, green keyed out, written as step_0..N-1. The figure is held on its own middle (hips), so a video in which
 # he really walks across the frame works too.
-#   python3 tools/frames/video_walk.py <hero> <frames_dir> <x0> <x1> [first_frame last_frame]
+#   python3 tools/frames/video_walk.py <hero> <frames_dir> <x0> <x1> [first_frame last_frame min_period]
+# A slow walk has a cycle longer than 40 frames (the rig's limit): give min_period (e.g. 40) and every second frame is kept.
 import sys, os, glob, numpy as np
 from PIL import Image
 from scipy import ndimage
@@ -19,6 +20,7 @@ def key(path):
 files = sorted(glob.glob(src + '/f_*.png'))
 last = int(sys.argv[6]) if len(sys.argv) > 6 else len(files)
 K = [key(f) for f in files[first:last]]
+PMIN = int(sys.argv[7]) if len(sys.argv) > 7 else 24
 def box(k):
     a = k[..., 3] > 128; ys = np.where(a.any(1))[0]; top, bot = ys.min(), ys.max()
     hip = np.where(a[top + (bot - top) * 35 // 100: top + (bot - top) * 55 // 100].any(0))[0]
@@ -32,9 +34,10 @@ def centred(i):   # the figure on a common canvas, hips in the middle, ground at
     return c
 C = [centred(i) for i in range(len(K))]
 legs = [np.array(Image.fromarray(c[c.shape[0] // 2:, :, :3] * (c[c.shape[0] // 2:, :, 3:] > 128)).convert('L').resize((80, 80))).astype(np.float32) for c in C]
-best = min(((np.abs(legs[a] - legs[a + p]).mean(), a, p) for p in range(24, 41) for a in range(len(C) - p)))
+best = min(((np.abs(legs[a] - legs[a + p]).mean(), a, p) for p in range(PMIN, PMIN + 17 if PMIN == 24 else 2 * PMIN + 1) for a in range(len(C) - p)))
 print('cycle: frames', first + best[1] + 1, '+', best[2], 'seam', round(float(best[0]), 2))
 cyc = C[best[1]:best[1] + best[2]]
+if len(cyc) > 40: cyc = cyc[::2]
 al = np.max([c[..., 3] for c in cyc], 0) > 128; xs = np.where(al.any(0))[0]; ys = np.where(al.any(1))[0]
 a0, a1, b0, b1 = max(0, xs.min() - 6), min(al.shape[1], xs.max() + 7), max(0, ys.min() - 6), min(al.shape[0], ys.max() + 7)
 W, H = a1 - a0, b1 - b0
