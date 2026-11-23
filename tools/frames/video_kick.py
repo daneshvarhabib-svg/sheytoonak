@@ -36,7 +36,8 @@ for f in glob.glob(D + 'kick_*.png*') + glob.glob(D + 'shot_*.png*'): os.remove(
 L = [l for l in open(D + 'frames.txt').read().split('\n') if l and not l.startswith(('kick_', 'shot_'))]
 for name, k in K.items():
     c = k[y0:y1, x0:x1].copy(); c[c[..., 3] < 8] = 0
-    im = Image.fromarray(c).resize((W * 3 // 5, H * 3 // 5), Image.LANCZOS)
+    im = Image.fromarray(c)
+    if H > 900: im = im.resize((W * 3 // 5, H * 3 // 5), Image.LANCZOS)   # a tall (portrait) video is more than the game shows
     if mirror: im = im.transpose(Image.FLIP_LEFT_RIGHT)
     im.save(D + name + '.png'); L.append(f'{name} {row}')
 open(D + 'frames.txt', 'w').write('\n'.join(L) + '\n'); print(W, H, n, row)
