@@ -9,7 +9,9 @@ first = int(sys.argv[5]) if len(sys.argv) > 5 else 40
 mirror = len(sys.argv) > 6
 D = f'/home/user/sheytoonak/Assets/Resources/Art/Heroes/{hero}_frames/'
 def key(path):
-    g = np.array(Image.open(path).convert('RGB')).astype(np.float32)[:, x0:x1]
+    src_im = Image.open(path)
+    if src_im.mode == 'RGBA': return np.array(src_im)[:, x0:x1]   # already cut out (seg_green.py): his own greens stay
+    g = np.array(src_im.convert('RGB')).astype(np.float32)[:, x0:x1]
     green = g[..., 1] - np.maximum(g[..., 0], g[..., 2]); al = np.clip(1 - (green - 25) / 55, 0, 1); al[(g[..., 1] > 120) & (green > 60)] = 0
     lab, n = ndimage.label(al > 0.5)
     if n > 1:

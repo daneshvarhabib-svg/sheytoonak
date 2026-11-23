@@ -11,7 +11,9 @@ mirror = len(sys.argv) > 6 and sys.argv[6] == 'mirror'
 skip = range(int(sys.argv[7]), int(sys.argv[8]) + 1) if len(sys.argv) > 8 else ()
 D = f'/home/user/sheytoonak/Assets/Resources/Art/Heroes/{hero}_frames/'
 def key(i):
-    g = np.array(Image.open(f'{src}/f_{i:03d}.png').convert('RGB')).astype(np.float32)
+    src_im = Image.open(f'{src}/f_{i:03d}.png')
+    if src_im.mode == 'RGBA': return np.array(src_im)   # already cut out (seg_green.py): his own greens stay
+    g = np.array(src_im.convert('RGB')).astype(np.float32)
     green = g[..., 1] - np.maximum(g[..., 0], g[..., 2]); al = np.clip(1 - (green - 25) / 55, 0, 1); al[(g[..., 1] > 120) & (green > 60)] = 0
     al[:, :3] = 0; al[:, -3:] = 0
     lab, n = ndimage.label(al > 0.5)
