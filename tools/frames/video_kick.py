@@ -1,12 +1,14 @@
 # The kick of a hero from a generated video: frames a..b (leg leaving the ground .. landed), green keyed out, written
 # as shot_0..N-1 (N <= 40); kick_0/kick_1 (the Ready stance) are the standing frame, both feet on the ground (user
 # 2026-11-22: «باید اول پاش رو زمین باشه»); kick_2..5 are spread over the clip. Pivot between the feet of the standing frame.
-#   python3 tools/frames/video_kick.py <hero> <frames_dir> <stand_frame> <first> <last> [mirror]
+#   python3 tools/frames/video_kick.py <hero> <frames_dir> <stand_frame> <first> <last> [mirror|-] [skip_from skip_to]
+# skip: frames left out (user 2026-11-23: «باید فقط اون بخشی رو استفاده کنی که کل پا تو کادره» -- the foot had left the frame).
 import sys, os, glob, numpy as np
 from PIL import Image
 from scipy import ndimage
 hero, src, st, a, b = sys.argv[1], sys.argv[2], int(sys.argv[3]), int(sys.argv[4]), int(sys.argv[5])
-mirror = len(sys.argv) > 6
+mirror = len(sys.argv) > 6 and sys.argv[6] == 'mirror'
+skip = range(int(sys.argv[7]), int(sys.argv[8]) + 1) if len(sys.argv) > 8 else ()
 D = f'/home/user/sheytoonak/Assets/Resources/Art/Heroes/{hero}_frames/'
 def key(i):
     g = np.array(Image.open(f'{src}/f_{i:03d}.png').convert('RGB')).astype(np.float32)
@@ -18,10 +20,10 @@ def key(i):
     lim = np.maximum(g[..., 0], g[..., 2]) + 10; g[..., 1] = np.where(g[..., 1] > lim, lim, g[..., 1])
     al[:, :3] = 0; al[:, -3:] = 0   # the video's own edge columns are not green
     return np.dstack([g, al * 255]).astype(np.uint8)
-assert b - a + 1 <= 40
-n = b - a + 1
-use = {'kick_0': st, 'kick_1': st, 'kick_2': a + n * 3 // 10, 'kick_3': a + n * 5 // 10, 'kick_4': a + n * 7 // 10, 'kick_5': b}
-for i in range(n): use[f'shot_{i}'] = a + i
+seq = [i for i in range(a, b + 1) if i not in skip]
+n = len(seq); assert n <= 40
+use = {'kick_0': st, 'kick_1': st, 'kick_2': seq[n * 3 // 10], 'kick_3': seq[n * 5 // 10], 'kick_4': seq[n * 7 // 10], 'kick_5': b}
+for i in range(n): use[f'shot_{i}'] = seq[i]
 K = {k: key(v) for k, v in use.items()}
 al = np.max([k[..., 3] for k in K.values()], 0) > 128
 xs = np.where(al.any(0))[0]; ys = np.where(al.any(1))[0]
