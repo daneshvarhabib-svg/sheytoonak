@@ -1,7 +1,7 @@
 # The walk of a hero from a generated video: one whole cycle (two steps, at most 40 frames) of the figure in columns
 # x0..x1, green keyed out, written as step_0..N-1. The figure is held on its own middle (hips), so a video in which
 # he really walks across the frame works too.
-#   python3 tools/frames/video_walk.py <hero> <frames_dir> <x0> <x1> [first_frame]
+#   python3 tools/frames/video_walk.py <hero> <frames_dir> <x0> <x1> [first_frame last_frame]
 import sys, os, glob, numpy as np
 from PIL import Image
 from scipy import ndimage
@@ -17,7 +17,8 @@ def key(path):
     lim = np.maximum(g[..., 0], g[..., 2]) + 10; g[..., 1] = np.where(g[..., 1] > lim, lim, g[..., 1])
     return np.dstack([g, al * 255]).astype(np.uint8)
 files = sorted(glob.glob(src + '/f_*.png'))
-K = [key(f) for f in files[first:]]
+last = int(sys.argv[6]) if len(sys.argv) > 6 else len(files)
+K = [key(f) for f in files[first:last]]
 def box(k):
     a = k[..., 3] > 128; ys = np.where(a.any(1))[0]; top, bot = ys.min(), ys.max()
     hip = np.where(a[top + (bot - top) * 35 // 100: top + (bot - top) * 55 // 100].any(0))[0]
