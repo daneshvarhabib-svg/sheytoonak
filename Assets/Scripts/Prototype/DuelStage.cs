@@ -139,11 +139,22 @@ namespace Sheytoonak.Prototype
         // sprite's pivot is at the feet, so a ~1 % slow stretch in y lifts the head and chest a touch and settles again.
         readonly Dictionary<SpriteRenderer, float> baseY = new Dictionary<SpriteRenderer, float>();
         readonly Dictionary<SpriteRenderer, float> breathPhase = new Dictionary<SpriteRenderer, float>();
+        const float NearGrow = 0.22f;
         void Breathe()
         {
             for (int side = 0; side < 2; side++)
                 for (int i = 0; i < 3; i++)
                 {
+                    // User (2026-11-24): «وقتی که بازیکن میاد پشت توپ بزرگتر بشه بدنش بر اساس نزدیکی به دوربین». The camera's
+                    // own perspective grows him only a little over the two metres from his place to the ball; the body
+                    // grows with every step toward the camera, up to NearGrow at the ball, and shrinks back on the way home.
+                    var root = Heroes[side][i];
+                    if (root != null)
+                    {
+                        float span = Mathf.Max(0.2f, homes[side][i].z - (foot.StrikeSpot.z - KickerNear));
+                        float near = Mathf.Clamp01((homes[side][i].z - root.position.z) / span);
+                        root.localScale = Vector3.one * (1f + NearGrow * Mathf.SmoothStep(0f, 1f, near));
+                    }
                     var r = painted[side][i];
                     if (r == null || !baseY.TryGetValue(r, out float by)) continue;
                     if (striking[side] != null && i == kickSlot[side]) continue; // the kick animation owns the scale
