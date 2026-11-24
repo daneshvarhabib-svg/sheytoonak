@@ -459,3 +459,22 @@
 - **هزینه:** کم (یک ضریب از رویِ روزِ هفته + برچسب). **خطر:** کم؛ فقط جایزهٔ هفتگی حدودِ ۳۰٪ بیشتر می‌شود.
 
 منابع: [Pass Royale — پشتیبانیِ Clash Royale](https://support.clashroyale.com/hc/en-us/articles/49484915388443-Pass-Royale) · [Update preview: Pass Royale revamp](https://supercell.com/en/games/clashroyale/blog/news/update-preview-pass-royale-revamp) · [Pass Royale season 2 (پله‌های آخرِ هفته)](https://supercell.com/en/games/clashroyale/blog/news/pass-royale-season-2) · [Friendly Battles — پشتیبانیِ Clash Royale](https://support.clashroyale.com/hc/en-us/articles/49484891151259-Friendly-Battles)
+
+## پیشنهادهای روزِ ۲۱ (۴ آذر) — زاویه: «حالتِ هفته» (Tavern Brawl در Hearthstone)
+
+### پ۶۳. «حارة المجانين»: هر هفته یک قاعدهٔ وارونه، در دکمهٔ جدا
+- **در منبع:** Tavern Brawl حالتی جدا از بازیِ اصلی است که قاعده‌اش هر هفته عوض می‌شود (دستهٔ آماده، قاعدهٔ ساختِ دسته، تقویت یا تضعیفِ کارت‌ها) و همیشه رایگان است.
+- **در بازیِ ما:** یک دکمهٔ دوم کنارِ «مبارزه». قاعدهٔ هفته از یک فهرستِ ثابت می‌چرخد: «همهٔ زهرها دو برابر می‌مانند»، «فقط طبقهٔ بالا امتیاز دارد»، «توپ سنگین است»، «هر دو طرف همان سه قهرمان». رتبه و جام عوض نمی‌شود. ⚠️ با پ۳ فرق دارد: آن مناسبتی بود، این هر هفته و در حالتِ جدا.
+- **هزینه:** متوسط (چند ضریب در `DuelRules` + دکمه + چرخشِ هفتگی + تستِ هر قاعده). **خطر:** هر قاعده باید با ربات هم معنا بدهد.
+
+### پ۶۴. «أوّل فوز في الأسبوع»: اولین بردِ هفته در حالتِ هفته یک کیسه می‌دهد
+- **در منبع:** اولین برد در Tavern Brawlِ هر هفته یک بستهٔ کارتِ رایگان می‌دهد؛ بازیکن تا چهارشنبهٔ بعد وقت دارد.
+- **در بازیِ ما:** اولین برد در «حارة المجانين» یک کیسهٔ متوسط؛ روی دکمه «جایزهٔ هفته: هنوز نگرفته‌ای · ۳ روز مانده». فقط یک بار در هفته.
+- **هزینه:** کم، بعد از پ۶۳. **خطر:** یک کیسه در هفته بیشتر؛ با تقویمِ سطح سنجیده شود.
+
+### پ۶۵. «بيت العنيد»: خانه‌ای که جواب می‌دهد (هفته‌های تک‌نفره)
+- **در منبع:** بعضی هفته‌های Tavern Brawl با حریفِ انسانی نیست و یک چالشِ تک‌نفره با قاعدهٔ خودش است.
+- **در بازیِ ما:** به‌جای حریف، خودِ خانه سخت می‌شود: کرکره‌ها هر چند ثانیه بسته و باز می‌شوند و ساکنان گاهی توپ را پس می‌اندازند. هدف: در سه دقیقه N پنجره. بدونِ حریف، بدونِ رتبه.
+- **هزینه:** متوسط تا زیاد (رفتارِ تازهٔ خانه + تنظیمِ سختی). **خطر:** اگر سخت یا تصادفی باشد، آزاردهنده می‌شود.
+
+منابع: [Hearthstone Tavern Brawls will change the rules once a week — GamesRadar](https://www.gamesradar.com/hearthstone-tavern-brawls-mode) · [Tavern Brawl beginner guide — TheGamer](https://www.thegamer.com/hearthstone-tavern-brawl-beginner-guide-tips-tricks-rewards/) · [Battle of the Bands (هفتهٔ تک‌نفره) — esports.gg](https://esports.gg/guides/hearthstone/new-hearthstone-tavern-brawl-battle-of-the-bands)
