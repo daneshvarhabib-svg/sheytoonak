@@ -1202,17 +1202,28 @@ namespace Sheytoonak.Prototype
         IEnumerator RugFall(GameObject go, bool fromRoof = true)
         {
             var t = go.transform; Vector3 top = t.position;
-            var f0 = Resources.Load<Texture2D>("Art/Poison/rug_pusher_0"); var f1 = Resources.Load<Texture2D>("Art/Poison/rug_pusher_1");
+            // user 2026-11-24 (her own video, «اضافاتش رو پاک کن فقط»): rug_pusher_0..N = the woman from the head down to the
+            // rug's top edge, cut out of the video (its own rolled rug, the wall and the watermark removed); she plays the push
+            // once and holds the last frame while the rug falls. Her bottom edge sits on the rug's top, behind it.
+            var fr = new List<Texture2D>();
+            for (int i = 0; ; i++) { var tx = Resources.Load<Texture2D>("Art/Poison/rug_pusher_" + i); if (tx == null) break; fr.Add(tx); }
             SpriteRenderer pusher = null;
-            if (f0 != null && fromRoof) // pulled from the street by the hook pole: nobody on the roof
+            if (fr.Count > 0 && fromRoof) // pulled from the street by the hook pole: nobody on the roof
             {
+                Sprite Sp(Texture2D x) => Sprite.Create(x, new Rect(0, 0, x.width, x.height), new Vector2(0.5f, 0f), 100f);
+                bool filmed = fr.Count > 2; // ⚠️ the old two painted frames were the whole body (hands at 0.55 m below her top)
                 pusher = new GameObject("Rug pusher").AddComponent<SpriteRenderer>();
-                pusher.sprite = Sprite.Create(f0, new Rect(0, 0, f0.width, f0.height), new Vector2(0.5f, 0f), 100f);
-                pusher.transform.position = top + new Vector3(0f, -0.55f, -0.02f); // her hands (and the rug's edge in them) at the parapet
-                pusher.transform.localScale = Vector3.one * (1.5f / pusher.sprite.bounds.size.y);
+                pusher.sprite = Sp(fr[0]);
+                pusher.transform.position = top + new Vector3(0f, filmed ? -0.04f : -0.55f, -0.02f);
+                pusher.transform.localScale = Vector3.one * ((filmed ? 1.0f : 1.5f) / pusher.sprite.bounds.size.y);
                 pusher.sortingOrder = -1;
-                yield return new WaitForSeconds(0.35f);
-                if (f1 != null && pusher != null) pusher.sprite = Sprite.Create(f1, new Rect(0, 0, f1.width, f1.height), new Vector2(0.5f, 0f), 100f);
+                if (filmed)
+                    for (int i = 1; i < fr.Count && pusher != null; i++) { yield return new WaitForSeconds(0.05f); pusher.sprite = Sp(fr[i]); }
+                else
+                {
+                    yield return new WaitForSeconds(0.35f);
+                    if (fr.Count > 1 && pusher != null) pusher.sprite = Sp(fr[1]);
+                }
             }
             yield return new WaitForSeconds(0.15f);
             float v = 0f, tilt = Random.Range(-8f, 8f);
