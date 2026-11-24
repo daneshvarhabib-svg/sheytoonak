@@ -18,6 +18,10 @@ for i in range(a, b + 1):
     # RGBA: the tools take the cut-out as it is, so a hero's own greens (vine leaves) are not keyed away
     from scipy import ndimage
     keep = m >= 70
+    # screen colour the model let through (between the legs, beside a hand): pure magenta or pure screen green
+    q = p.astype(int)
+    keep &= ~((q[..., 0] > 170) & (q[..., 2] > 170) & (q[..., 1] < 110))
+    keep &= ~((q[..., 1] > 170) & (q[..., 0] < 110) & (q[..., 2] < 110))
     pf = p.astype(int); white = keep & (pf.min(-1) > 150) & (pf.max(-1) - pf.min(-1) < 40)
     white = ndimage.binary_opening(white, iterations=3)
     if white.sum() > 800:
