@@ -699,6 +699,17 @@ namespace Sheytoonak.Prototype
         public static GameObject Pigeon()
         {
             var root = new GameObject("Pigeon").transform;
+            // User (2026-11-24): «بریم سراغ ویدیویی کردن حرکت زهرها». pigeon_fly_N are the real frames of one wing beat cut from
+            // a generated video (the bird's body in the middle of a common canvas, 1.26 m tall for the same 0.38 m bird);
+            // the video was slow motion, so the eighteen frames play in a third of a second like the three painted ones did.
+            var fly = new List<Sprite>();
+            for (int i = 0; i < 40; i++) { var fr = Art("pigeon_fly_" + i, 0.5f); if (fr == null) break; fly.Add(fr); }
+            if (fly.Count >= 6)
+            {
+                var sr = Spr(fly[0], root, Vector3.zero, 1.26f);
+                var f = sr.gameObject.AddComponent<Frames>(); f.r = sr; f.frames = fly.ToArray(); f.fps = fly.Count * 3f;
+                return root.gameObject;
+            }
             var p0 = Art("pigeon_0", 0.5f); var p1 = Art("pigeon_1", 0.5f); var p2 = Art("pigeon_2", 0.5f);
             if (p0 != null && p1 != null && p2 != null)
             {

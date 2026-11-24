@@ -1,7 +1,7 @@
 # A video that did not keep its green screen (a park, a dark studio, a magenta screen): the person is cut out with a
 # segmentation model (rembg, u2net_human_seg; runs here, nothing is sent anywhere) and put on pure green, so the
 # video_walk / video_idle / video_kick tools can read the frames.
-#   python3 tools/frames/seg_green.py <src_dir> <dst_dir> <first> <last> [x0 x1] [model]
+#   python3 tools/frames/seg_green.py <src_dir> <dst_dir> <first> <last> [x0 x1] [model] [noball]
 # model: u2net_human_seg (default; a person in a real scene) or isnet-general-use (plain backdrop; keeps a costume whole).
 # A white football the video added by itself is cut away (white, colourless pixels and the disc around them).
 import sys, os, numpy as np
@@ -24,7 +24,7 @@ for i in range(a, b + 1):
     keep &= ~((q[..., 1] > 170) & (q[..., 0] < 110) & (q[..., 2] < 110))
     pf = p.astype(int); white = keep & (pf.min(-1) > 150) & (pf.max(-1) - pf.min(-1) < 40)
     white = ndimage.binary_opening(white, iterations=3)
-    if white.sum() > 800:
+    if white.sum() > 800 and 'noball' not in sys.argv:   # noball: a grey-white subject (the pigeon) is not a football
         ys, xs = np.where(white); cy, cx = (ys.min() + ys.max()) / 2, (xs.min() + xs.max()) / 2
         r = max(ys.max() - ys.min(), xs.max() - xs.min()) / 2 * 1.12
         yy, xx = np.ogrid[:keep.shape[0], :keep.shape[1]]; keep &= (yy - cy) ** 2 + (xx - cx) ** 2 > r * r
