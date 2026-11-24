@@ -27,5 +27,9 @@ for i in range(a, b + 1):
     lab, n = ndimage.label(keep)
     if n > 1:
         sz = ndimage.sum(keep, lab, range(1, n + 1)); keep = lab == 1 + int(np.argmax(sz))   # the video's own ball goes
+    # a rim of green screen left on the outline: only there, pull the green down (inside, his own greens stay)
+    rim = keep & ~ndimage.binary_erosion(keep, iterations=4)
+    lim = np.maximum(p[..., 0], p[..., 2]).astype(int) + 8
+    p[..., 1] = np.where(rim & (p[..., 1] > lim), lim, p[..., 1]).astype(np.uint8)
     p[~keep] = (0, 255, 0)
     Image.fromarray(np.dstack([p, (keep * 255).astype(np.uint8)])).save(f'{dst}/f_{i:03d}.png')
