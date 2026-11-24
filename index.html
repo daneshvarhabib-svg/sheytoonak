@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>مدينة الفاجعة</title>
+<!-- Telegram mini app shell for the Unity web build (user 2026-11-15: launch in Telegram first, the store app later). -->
+<script>
+  // User (2026-11-17): «رو تلگرام هنوز ورژن قبلی این بازیکنه» -- the build was published but Telegram's web view kept
+  // the old page. CI stamps the build number here and in version.txt; a page that finds a newer number reloads itself
+  // under ?v=<number> (a new address, so nothing cached is reused). The #hash (Telegram's launch data) is kept.
+  (function () {
+    var V = '159';
+    if (V.indexOf('__') === 0 || !window.fetch) return;
+    fetch('version.txt?_=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.ok ? r.text() : ''; })
+      .then(function (t) {
+        t = (t || '').trim();
+        if (!/^\d+$/.test(t) || t === V) return;
+        var u = new URL(location.href);
+        if (u.searchParams.get('v') === t) return; // already tried this one: no reload loop
+        u.searchParams.set('v', t);
+        location.replace(u.toString());
+      }).catch(function () {});
+  })();
+</script>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+  html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #1b1410; color: #f3e6cf;
+               font-family: Tahoma, "Segoe UI", sans-serif; -webkit-user-select: none; user-select: none; overscroll-behavior: none; }
+  /* Telegram fullscreen puts its own close/menu buttons over the top of the page: keep the game inside both safe areas. */
+  #stage { position: fixed; inset: 0;
+           padding-top: calc(var(--tg-safe-area-inset-top, 0px) + var(--tg-content-safe-area-inset-top, 0px));
+           padding-bottom: calc(var(--tg-safe-area-inset-bottom, 0px) + var(--tg-content-safe-area-inset-bottom, 0px));
+           padding-left: calc(var(--tg-safe-area-inset-left, 0px) + var(--tg-content-safe-area-inset-left, 0px));
+           padding-right: calc(var(--tg-safe-area-inset-right, 0px) + var(--tg-content-safe-area-inset-right, 0px));
+           box-sizing: border-box; display: flex; align-items: center; justify-content: center; }
+  #box { position: relative; width: 100%; height: 100%; }
+  /* a desktop window opens tall and cannot be turned: there the landscape game is letterboxed instead */
+  #box.letter { height: auto; aspect-ratio: 20 / 9; max-height: 100%; }
+  #unity-canvas { width: 100%; height: 100%; display: block; background: #1b1410; touch-action: none; outline: none; }
+  .cover { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
+           gap: 18px; background: #1b1410; text-align: center; padding: 24px; box-sizing: border-box; z-index: 5; }
+  .hidden { display: none !important; }
+  #bar { width: min(70vw, 360px); height: 10px; border-radius: 5px; background: #3a2c22; overflow: hidden; }
+  #fill { width: 0; height: 100%; background: #e2a03f; transition: width .2s; }
+  #pct { font-size: 15px; opacity: .8; }
+  .big { font-size: 22px; font-weight: bold; }
+  #turn svg { width: 72px; height: 72px; animation: tilt 1.6s ease-in-out infinite; }
+  @keyframes tilt { 0%,30% { transform: rotate(0); } 60%,100% { transform: rotate(-90deg); } }
+  #tip { font-size: 16px; line-height: 1.6; max-width: min(86vw, 560px); min-height: 3.2em; color: #f6dfb2; transition: opacity .4s; }
+  #err { color: #ffb4a8; font-size: 14px; max-width: 90vw; direction: ltr; }
+</style>
+</head>
+<body>
+<div id="stage"><div id="box"><canvas id="unity-canvas" tabindex="-1"></canvas></div></div>
+
+<div id="load" class="cover">
+  <div class="big">مدينة الفاجعة</div>
+  <div id="bar"><div id="fill"></div></div>
+  <div id="pct">جاري التحميل…</div>
+  <div id="tip"></div>
+  <div id="err" class="hidden"></div>
+</div>
+
+<div id="turn" class="cover hidden">
+  <svg viewBox="0 0 64 64" fill="none" stroke="#e2a03f" stroke-width="4"><rect x="20" y="6" width="24" height="52" rx="5"/><circle cx="32" cy="50" r="2" fill="#e2a03f"/></svg>
+  <div class="big">لفّ الجوال بالعرض</div>
+</div>
+
+<script>
+(function () {
+  var tg = window.Telegram && window.Telegram.WebApp;
+  var inTg = !!(tg && tg.initData);
+  var mobile = inTg ? (tg.platform === 'android' || tg.platform === 'ios') : matchMedia('(pointer: coarse)').matches;
+  function ver(v) { try { return tg && tg.isVersionAtLeast(v); } catch (e) { return false; } }
+
+  if (inTg) {
+    tg.ready();
+    tg.expand();
+    try { tg.setHeaderColor('#1b1410'); tg.setBackgroundColor('#1b1410'); } catch (e) {}
+    // ⚠️ a vertical drag on the game (a kick swipe) would otherwise pull the mini app down and close it
+    if (ver('7.7')) tg.disableVerticalSwipes();
+    tg.enableClosingConfirmation();
+    if (mobile && ver('8.0')) {
+      try { tg.requestFullscreen(); } catch (e) {}
+      // ⚠️ the phone showed Telegram's own bar above the game (2026-11-15): some clients only grant fullscreen after a
+      // tap, so it is asked once more on the first touch
+      document.addEventListener('pointerdown', function once() {
+        document.removeEventListener('pointerdown', once);
+        try { if (!tg.isFullscreen) tg.requestFullscreen(); } catch (e) {}
+      });
+    }
+  }
+
+  var box = document.getElementById('box'), turn = document.getElementById('turn'), locked = false;
+  function layout() {
+    var portrait = window.innerHeight > window.innerWidth;
+    if (mobile) {
+      turn.classList.toggle('hidden', !portrait);
+      // lockOrientation keeps whatever the phone shows now, so it is called only once it is landscape
+      if (!portrait && inTg && !locked && ver('8.0')) { try { tg.lockOrientation(); locked = true; } catch (e) {} }
+    }
+    box.classList.toggle('letter', !mobile && portrait);
+  }
+  window.addEventListener('resize', layout);
+  if (inTg) { tg.onEvent('viewportChanged', layout); tg.onEvent('fullscreenChanged', layout); }
+  layout();
+
+  // «how to play» lines while the game downloads (user 2026-11-15); the same file as the draft subtitle, every line
+  // once before any repeats, six seconds each
+  var tipEl = document.getElementById('tip'), tipTimer = null;
+  fetch('tips.txt').then(function (r) { return r.ok ? r.text() : ''; }).then(function (text) {
+    var tips = text.split('\n').map(function (l) { return l.trim(); }).filter(Boolean), order = [], i = 0;
+    if (!tips.length) return;
+    function next() {
+      if (i >= order.length) {
+        order = tips.map(function (_, k) { return k; });
+        for (var k = order.length - 1; k > 0; k--) { var j = Math.floor(Math.random() * (k + 1)); var t = order[k]; order[k] = order[j]; order[j] = t; }
+        i = 0;
+      }
+      tipEl.style.opacity = 0;
+      setTimeout(function () { tipEl.textContent = tips[order[i++]]; tipEl.style.opacity = 1; }, 300);
+    }
+    next(); tipTimer = setInterval(next, 6000);
+  }).catch(function () {});
+
+  var canvas = document.getElementById('unity-canvas');
+  var fill = document.getElementById('fill'), pct = document.getElementById('pct'), err = document.getElementById('err');
+  var build = 'Build';
+  var config = {
+    dataUrl: build + '/420a25f5632c267c30649cdb6140beb3.data.unityweb',
+    frameworkUrl: build + '/8c1859331876253bf938f6edf2b1ee8c.framework.js.unityweb',
+    codeUrl: build + '/d766c56df653e44c6cb641a129763dea.wasm.unityweb',
+    streamingAssetsUrl: 'StreamingAssets',
+    companyName: "Sheytoonak",
+    productName: "مدينة الفاجعة",
+    productVersion: "0.1.0",
+    // ⚠️ first 1.5 on phones (GPU cost), but then the game saw only ~430 px of height and its text came out soft and its
+    // HUD too big for the screen (2026-11-15). The full device ratio, capped at 2.5.
+    devicePixelRatio: Math.min(window.devicePixelRatio || 1, 2.5),
+    showBanner: function (msg, type) { if (type === 'error') { err.textContent = msg; err.classList.remove('hidden'); } }
+  };
+  // ⚠️ user (2026-11-15, phone): «این‌جا گیر می‌کنه» at 0% -- the first visit downloads ~60 MB and the host does not
+  // always give the size, so the bar can sit still for a long time. A running clock shows it is alive, and after 20 s a
+  // line says the first time is slow and the next opens fast (the data is kept in the browser cache).
+  var lastPct = 0, t0 = Date.now();
+  var clock = setInterval(function () {
+    var secs = Math.round((Date.now() - t0) / 1000);
+    pct.textContent = 'جاري التحميل… ' + lastPct.toLocaleString('ar-EG') + '٪  (' + secs.toLocaleString('ar-EG') + ' ث)';
+    if (secs === 20) { var n = document.createElement('div'); n.id = 'slow'; n.textContent = 'أول مرّة بتاخد وقت، بعدين بتفتح بسرعة'; n.style.cssText = 'font-size:14px;opacity:.7'; pct.after(n); }
+  }, 1000);
+  var s = document.createElement('script');
+  s.src = build + '/5766c81792c10bb721539faf2b816335.loader.js';
+  s.onload = function () {
+    createUnityInstance(canvas, config, function (p) {
+      lastPct = Math.round(p * 100);
+      fill.style.width = lastPct + '%';
+    }).then(function () {
+      document.getElementById('load').classList.add('hidden');
+      clearInterval(clock);
+      if (tipTimer) clearInterval(tipTimer);
+      canvas.focus();
+    }).catch(function (e) {
+      clearInterval(clock);
+      pct.textContent = 'ما اشتغلت اللعبة';
+      err.textContent = String(e && e.message || e);
+      err.classList.remove('hidden');
+    });
+  };
+  s.onerror = function () { pct.textContent = 'ما اشتغلت اللعبة'; err.textContent = 'loader missing'; err.classList.remove('hidden'); };
+  document.body.appendChild(s);
+})();
+</script>
+</body>
+</html>
